@@ -1,5 +1,6 @@
-const routes = require('./routes')
+require('dotenv').config()
 
+const routes = require('./routes')
 const port = 4000
 
 const server = require('http').createServer()

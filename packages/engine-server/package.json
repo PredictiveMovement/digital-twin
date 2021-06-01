@@ -18,16 +18,19 @@
     "url": "git+https://github.com/Iteam1337/pm-mapbox-test.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "dev": "nodemon lib/index.js"
   },
   "bugs": {
     "url": "https://github.com/Iteam1337/pm-mapbox-test/issues"
   },
   "dependencies": {
-    "@iteam1337/engine": "file:../engine",
+    "@iteam1337/engine": "file:../simulation-engine",
+    "dotenv": "^10.0.0",
     "highland": "^2.13.5",
     "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
+    "nodemon": "^2.0.7",
     "socket.io": "^2.3.0"
   }
 }

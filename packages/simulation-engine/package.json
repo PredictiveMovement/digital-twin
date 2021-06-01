@@ -1,5 +1,5 @@
 {
-  "name": "engine",
+  "name": "simulation-engine",
   "version": "0.7.0",
   "description": "",
   "main": "index.js",
@@ -16,6 +16,7 @@
     "node-fetch": "^1.5.3",
     "point-in-polygon": "^1.0.1",
     "polyline": "^0.2.0",
+    "xlsx": "^0.17.0",
     "socket.io-client": "^1.4.6"
   },
   "directories": {

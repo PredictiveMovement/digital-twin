@@ -4,14 +4,14 @@ const engine = require('@iteam1337/engine')
 
 const cache = {}
 
-function register (io) {
+function register(io) {
   io.on('connection', function (socket) {
     console.log('connection', cache)
     _.merge([_.values(cache), engine.cars.fork()])
-      .doto(car => (cache[car.id] = car))
+      .doto((car) => (cache[car.id] = car))
       .pick(['position', 'status', 'id', 'tail', 'zone', 'speed', 'bearing'])
       .doto(
-        car =>
+        (car) =>
           (car.position = [
             car.position.lon,
             car.position.lat,
@@ -22,8 +22,13 @@ function register (io) {
       //.ratelimit(100, 100)
       .batchWithTimeOrCount(1000, 2000)
       .errors(console.error)
-      .each(cars => socket.volatile.emit('cars', cars))
-  })
+      .each((cars) => socket.volatile.emit('cars', cars))
+
+    engine.postombud
+      .fork()
+      .tap(console.log)
+      .each((postombud) => socket.volatile.emit('postombud', postombud))
+  }) //
 }
 
 module.exports = {
