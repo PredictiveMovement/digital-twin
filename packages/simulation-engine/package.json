@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon web/index.js",
     "test": "mocha -R spec tests/**",
-    "watch": "mocha -w -R spec tests/**"
+    "test-watch": "mocha -w -R spec tests/**"
   },
   "author": "Christian Landgren @ Iteam",
   "license": "UNLICENSED",
