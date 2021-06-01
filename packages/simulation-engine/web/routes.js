@@ -1,6 +1,6 @@
 const _ = require('highland')
 const moment = require('moment')
-const engine = require('@iteam1337/engine')
+const engine = require('../index')
 
 const cache = {}
 

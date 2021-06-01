@@ -4,25 +4,29 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon web/index.js",
     "test": "mocha -R spec tests/**",
     "watch": "mocha -w -R spec tests/**"
   },
   "author": "Christian Landgren @ Iteam",
   "license": "UNLICENSED",
   "dependencies": {
+    "dotenv": "^10.0.0",
     "highland": "^2.10.1",
     "moment": "^2.15.1",
     "moment-timezone": "^0.5.7",
     "node-fetch": "^1.5.3",
     "point-in-polygon": "^1.0.1",
     "polyline": "^0.2.0",
-    "xlsx": "^0.17.0",
-    "socket.io-client": "^1.4.6"
+    "socket.io": "^2.3.0",
+    "xlsx": "^0.17.0"
   },
   "directories": {
     "test": "tests"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Iteam1337/engine.git"
