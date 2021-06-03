@@ -1,6 +1,6 @@
 import React from "react";
 import io from "socket.io-client";
-import { SocketIOContext } from "./context";
+import { SocketIOContext } from "./socketIOContext";
 
 export const SocketIOProvider = ({ url, opts, children }) => {
   const socketRef = React.useRef();
