@@ -27,15 +27,12 @@ function register(io) {
 
     engine.postombud
       .fork()
-      .filter((postombud) => postombud.operator === "Postnord")
+      // .filter((postombud) => postombud.position[1] === 65.830826)
       .batchWithTimeOrCount(1000, 2000)
       .errors(console.error)
       .each((postombud) => {
-        console.log("post", postombud);
         socket.emit("postombud", postombud);
       });
-
-    // socket.emit("postombud", "hej");
   });
 }
 
