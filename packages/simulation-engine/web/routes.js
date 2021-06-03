@@ -1,15 +1,16 @@
-const _ = require('highland')
-const moment = require('moment')
-const engine = require('../index')
+const _ = require("highland");
+const moment = require("moment");
+const engine = require("../index");
+const postombud = require("../streams/postombud");
 
-const cache = {}
+const cache = {};
 
 function register(io) {
-  io.on('connection', function (socket) {
-    console.log('connection', cache)
+  io.on("connection", function (socket) {
+    console.log("connection", cache);
     _.merge([_.values(cache), engine.cars.fork()])
       .doto((car) => (cache[car.id] = car))
-      .pick(['position', 'status', 'id', 'tail', 'zone', 'speed', 'bearing'])
+      .pick(["position", "status", "id", "tail", "zone", "speed", "bearing"])
       .doto(
         (car) =>
           (car.position = [
@@ -22,15 +23,22 @@ function register(io) {
       //.ratelimit(100, 100)
       .batchWithTimeOrCount(1000, 2000)
       .errors(console.error)
-      .each((cars) => socket.volatile.emit('cars', cars))
+      .each((cars) => socket.volatile.emit("cars", cars));
 
     engine.postombud
       .fork()
-      .tap(console.log)
-      .each((postombud) => socket.volatile.emit('postombud', postombud))
-  }) //
+      .filter((postombud) => postombud.operator === "Postnord")
+      .batchWithTimeOrCount(1000, 2000)
+      .errors(console.error)
+      .each((postombud) => {
+        console.log("post", postombud);
+        socket.emit("postombud", postombud);
+      });
+
+    // socket.emit("postombud", "hej");
+  });
 }
 
 module.exports = {
   register,
-}
+};

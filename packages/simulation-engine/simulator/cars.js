@@ -25,7 +25,7 @@ function generateCar(nr) {
 
 module.exports = _(range(1))
   .flatMap(generateCar)
-  .tap((car) => console.log("tap", car))
+  // .tap((car) => console.log("tap", car))
   .errors((err) => console.error("initialize error", err))
   .map((car) => _("moved", car))
   .errors((err) => console.error("move error", err))
