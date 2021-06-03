@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import ReactMapGL, { Layer, Source } from "react-map-gl";
+import React, { useState } from 'react'
+import ReactMapGL, { Layer, Source } from 'react-map-gl'
 
 const Map = ({ data }) => {
   const [mapState, setMapState] = useState({
     viewport: {
-      latitude: 61.8294925,
-      longitude: 16.0565493,
+      latitude: 66.0459355,
+      longitude: 17.866189,
       zoom: 8,
       pitch: 40,
     },
-  });
+  })
 
   return (
     <div>
@@ -25,14 +25,14 @@ const Map = ({ data }) => {
             id="point"
             type="circle"
             paint={{
-              "circle-radius": 10,
-              "circle-color": "#007cbf",
+              'circle-radius': 10,
+              'circle-color': '#007cbf',
             }}
           />
         </Source>
       </ReactMapGL>
     </div>
-  );
-};
+  )
+}
 
-export default Map;
+export default Map
