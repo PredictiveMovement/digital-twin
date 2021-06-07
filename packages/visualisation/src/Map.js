@@ -20,13 +20,23 @@ const Map = ({ data }) => {
         {...mapState.viewport}
         onViewportChange={(viewport) => setMapState({ viewport })}
       >
-        <Source id="my-data" type="geojson" data={data}>
+        <Source id="postombud" type="geojson" data={data.postombud}>
+          <Layer
+            id="point-post"
+            type="circle"
+            paint={{
+              'circle-radius': 10,
+              'circle-color': '#007cbf',
+            }}
+          />
+        </Source>
+        <Source id="cars" type="geojson" data={data.cars}>
           <Layer
             id="point"
             type="circle"
             paint={{
               'circle-radius': 10,
-              'circle-color': '#007cbf',
+              'circle-color': '#ffffff',
             }}
           />
         </Source>
