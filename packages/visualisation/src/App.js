@@ -14,7 +14,6 @@ const App = () => {
   })
 
   useSocket('postombud', (newPostombud) => {
-    console.log('got postombud', newPostombud)
     const features = [
       ...postombud.features.filter(
         (ombud) => !newPostombud.some((np) => np.id === ombud.id)
@@ -25,11 +24,9 @@ const App = () => {
       })),
     ]
     setPostombud(Object.assign({}, postombud, { features }))
-    console.log('postombud', postombud)
   })
 
   useSocket('cars', (newCars) => {
-    // console.log('got cars', newCars.length)
     const features = [
       ...cars.features.filter((car) => !newCars.some((nc) => nc.id === car.id)),
       ...newCars.map(({ id, tail, position }) => ({
@@ -40,7 +37,6 @@ const App = () => {
       })),
     ]
     setCars(Object.assign({}, cars, { features }))
-    console.log('cars', cars)
   })
 
   return (

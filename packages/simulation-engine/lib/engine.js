@@ -56,7 +56,7 @@ $assignments.fork().each((trip) =>
 
 module.exports = {
   assignments: $assignments.fork(),
-  cars: carPositions(postombud.fork()).fork(),
-  bookings: newBookings.fork(),
+  cars: carPositions(postombud.observe()),
   postombud: postombud.fork(),
+  bookings: newBookings.fork(),
 }
