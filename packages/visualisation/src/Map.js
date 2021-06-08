@@ -16,7 +16,7 @@ const Map = ({ data }) => {
       <ReactMapGL
         width="100%"
         height="100vh"
-        mapStyle="mapbox://styles/mapbox/dark-v10"
+        mapStyle="mapbox://styles/mapbox/streets-v11"
         {...mapState.viewport}
         onViewportChange={(viewport) => setMapState({ viewport })}
       >
