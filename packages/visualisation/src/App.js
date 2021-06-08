@@ -13,6 +13,11 @@ const App = () => {
     features: [],
   })
 
+  const [pink, setPink] = React.useState({
+    type: 'FeatureCollection',
+    features: [],
+  })
+
   useSocket('postombud', (newPostombud) => {
     const features = [
       ...postombud.features.filter(
@@ -39,9 +44,23 @@ const App = () => {
     setCars(Object.assign({}, cars, { features }))
   })
 
+  useSocket('pink', (newPink) => {
+    const features = [
+      ...pink.features.filter(
+        (pink) => !newPink.some((nc) => nc.id === pink.id)
+      ),
+      ...newPink.map(({ id, tail, position }) => ({
+        type: 'Feature',
+        id,
+        tail,
+        geometry: { type: 'Point', coordinates: position },
+      })),
+    ]
+    setPink(Object.assign({}, pink, { features }))
+  })
   return (
     <>
-      <Map data={{ postombud, cars }} />
+      <Map data={{ postombud, cars, pink }} />
     </>
   )
 }

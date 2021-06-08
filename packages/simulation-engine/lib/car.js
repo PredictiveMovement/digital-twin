@@ -29,6 +29,7 @@ class Car extends EventEmitter {
       'navigateFromTo meters',
       distance.haversine(position, this.position)
     )
+    console.log('positions', this.position, this.heading)
     this.heading = position
     return osrm
       .route(this.position, this.heading)
@@ -86,10 +87,17 @@ class Car extends EventEmitter {
   }
 
   async updatePosition(position, date) {
-    const moved = distance.haversine(position, this.position) > 10 // meters
+    const moved = distance.haversine(position, this.position) >= 15 // meters
     const bearing = distance.bearing(position, this.position)
     this.position = position
     this.bearing = bearing
+
+    console.log('MOOVING', moved)
+    console.log(
+      'moving car + id',
+      distance.haversine(position, this.heading),
+      this.id
+    )
     this.lastPositions.push({ position: position, date: date || Date.now() })
     this.matchZone()
     if (moved) {
@@ -99,11 +107,16 @@ class Car extends EventEmitter {
         await this.matchPositionsToMap()
       }*/
       this.emit('moved', this)
-
       return this
     } else {
+      // console.log(
+      //   'stopped car + 1',
+      //   distance.haversine(this.heading, this.position),
+      //   this.id
+      // )
       this.emit('stopped', this)
-      if (distance.haversine(this.heading, this.position) < 50) {
+      if (distance.haversine(this.heading, this.position) <= 100) {
+        console.log('dropOff')
         this.dropOff()
       }
     }

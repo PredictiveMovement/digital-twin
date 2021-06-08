@@ -3,6 +3,7 @@ const newBookings = require('../simulator/bookings')
 // var carPositions = require('../simulator/cars') // require('../streams/cars')
 //const carPositions = require('../streams/cars')
 const carPositions = require('../simulator/cars')
+const pinkPositons = require('../simulator/pink')
 // const newBookings = require('../streams/bookings')
 const price = require('./price')
 const dispatch = require('./dispatch')
@@ -57,6 +58,7 @@ $assignments.fork().each((trip) =>
 module.exports = {
   assignments: $assignments.fork(),
   cars: carPositions(postombud.observe()),
+  pink: pinkPositons.fork(),
   postombud: postombud.fork(),
   bookings: newBookings.fork(),
 }
