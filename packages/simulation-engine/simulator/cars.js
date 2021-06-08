@@ -32,7 +32,7 @@ function generateCar(
 module.exports = (startingPoints) =>
   _(startingPoints)
     .fork()
-    .filter((ombud) => ombud.kommun === 'Göteborg')
+    .filter((ombud) => ombud.kommun === 'Arjeplog')
     .ratelimit(20, 1000)
     .flatMap((postombud) =>
       // generateCar(
@@ -41,7 +41,7 @@ module.exports = (startingPoints) =>
       //   postombud.position
       // )
       _(
-        range(50).map((i) =>
+        range(1).map((i) =>
           generateCar(
             carId++,
             address.randomize(postombud.position),

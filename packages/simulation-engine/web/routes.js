@@ -25,7 +25,7 @@ function register(io) {
 
     engine.postombud
       .fork()
-      // .filter((postombud) => postombud.kommun === "Arjeplog")
+      .filter((postombud) => postombud.kommun === 'Arjeplog')
       .batchWithTimeOrCount(1000, 2000)
       .errors(console.error)
       .each((postombud) => {
