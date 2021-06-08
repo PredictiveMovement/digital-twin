@@ -1,19 +1,28 @@
 # Proof of concept for Digital Twin with Predictive Movement
 
-## How to get started
+There are two packages in here, the [simulation](packages/simulation-engine) which creates and moves vehicles and stuff, and the [visualisation](packages/visualisation) that shows a map with things moving around.
 
-### Engine-ui
+## Simulation
 
-add .env with the mapbox token `REACT_APP_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>`
+Add an .env file with 
+```
+postombud_file=<filename>
+postombud_sheet=Sammanställning korr
+```
+
+Create a folder named data and put the .xlsx file with the above filename in it
 
 ```
-npm install
-npm run start
+npm ci
+npm run dev
 ```
 
-### Engine-server
+## Visualisation
+
+Add .env with the mapbox token `REACT_APP_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>`
 
 ```
-npm install
-node .
+npm ci
+npm start
 ```
+
