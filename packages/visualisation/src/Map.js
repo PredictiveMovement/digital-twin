@@ -47,7 +47,7 @@ const Map = ({ data }) => {
             type="circle"
             paint={{
               'circle-radius': 10,
-              'circle-color': '#FFC0CB',
+              'circle-color': '#FF69B4',
             }}
           />
         </Source>
