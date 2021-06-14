@@ -1,0 +1,14 @@
+{
+  "name": "timetest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "heap": "^0.2.6"
+  }
+}
