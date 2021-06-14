@@ -36,19 +36,34 @@ const bookingStream = _(function (push, next) {
       next()
     })
     .catch(err => push(err))
-})
+
+}
+)
 
 module.exports = bookingStream
 
-// const queue = bookingStream.fork()
+// const queue = bookingStream
 
-// const nextBooking = () => new Promise(resolve => queue.pull((err, booking) => resolve(booking)))
+// const carStream
+
+// const nextBooking = () =>
+//   queue
+//     .throttle(1000)
+//     .map((booking) => {
+//       // console.log('inside next booking')
+//       return booking
+//     })
+//     .each(booking => {
+//       console.log("inside each", booking)
+//     })
+// nextBooking()
+// new Promise(resolve => queue.pull((err, booking) => resolve(booking)))
 // // car 1
 // setInterval(() => {
-//   nextBooking().then(booking => console.log('car 1 booking', booking))
+//   nextBooking().(booking => console.log('car 1 booking', booking))
 // }, 1000)
 
 // // car 2
 // setInterval(() => {
-//   nextBooking().then(booking => console.log('car 2 booking', booking))
+//   nextBooking().(booking => console.log('car 2 booking', booking))
 // }, 1000)

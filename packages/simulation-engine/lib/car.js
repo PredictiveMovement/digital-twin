@@ -44,6 +44,7 @@ class Car extends EventEmitter {
   }
 
   handleBooking(booking) {
+    console.debug('handleBooking')
     this.busy = true
     this.history.push({ status: 'handleBooking', date: new Date(), booking })
     this.booking = booking

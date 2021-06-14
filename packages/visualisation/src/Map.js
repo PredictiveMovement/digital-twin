@@ -35,19 +35,19 @@ const Map = ({ data }) => {
             id="point"
             type="circle"
             paint={{
-              'circle-radius': 10,
+              'circle-radius': 5,
               'circle-color': '#ffffff',
             }}
           />
         </Source>
 
-        <Source id="postombud" type="geojson" data={data.pink}>
+        <Source id="pink" type="geojson" data={data.pink}>
           <Layer
             id="point-pink"
             type="circle"
             paint={{
               'circle-radius': 10,
-              'circle-color': '#FF69B4',
+              'circle-color': '#FF69B4'
             }}
           />
         </Source>
