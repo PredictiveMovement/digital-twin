@@ -1,16 +1,16 @@
 const _ = require('highland')
-const newBookings = require('../simulator/bookings')
+const bookings = require('../simulator/bookings')
 // var carPositions = require('../simulator/cars') // require('../streams/cars')
 //const carPositions = require('../streams/cars')
 const carPositions = require('../simulator/cars')
-const pinkPositons = require('../simulator/pink')
-// const newBookings = require('../streams/bookings')
+// const bookings = require('../streams/bookings')
 const price = require('./price')
 const dispatch = require('./dispatch')
 const carFinder = require('./carFinder')
 const postombud = require('../streams/postombud')
 
-const $finder = newBookings
+/*
+const $finder = bookings
   .fork()
   .take(3)
   .tap((booking) =>
@@ -54,11 +54,11 @@ $assignments.fork().each((trip) =>
                 Car #${trip.car.id} has accepted the booking and is on its way
                 ============`)
 )
+*/
 
 module.exports = {
-  assignments: $assignments.fork(),
-  cars: carPositions(postombud.observe()),
-  pink: pinkPositons.fork(),
+  // assignments: $assignments.fork(),
+  cars: carPositions.fork(),
   postombud: postombud.fork(),
-  bookings: newBookings.fork(),
+  bookings: bookings.fork(),
 }

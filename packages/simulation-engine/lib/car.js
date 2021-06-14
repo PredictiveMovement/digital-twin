@@ -11,6 +11,7 @@ class Car extends EventEmitter {
     this.position = position
     this.history = []
     this.status = status
+    this.bookings = []
     this.lastPositions = []
     this.on('error', (err) => console.error('car error', err))
   }
@@ -37,31 +38,39 @@ class Car extends EventEmitter {
         route.started = new Date()
         this.heading.route = route
         this.simulate(this.heading)
-        return this.heading
+        return this
       })
       .catch(console.error)
   }
 
-  pickup(trip) {
+  handleBooking(booking) {
     this.busy = true
-    this.history.push({ status: 'pickup', date: new Date(), trip })
-    this.trip = trip
-    trip.car = this
-    trip.pickupDateTime = new Date(Date.now() + trip.estimate.tta * 1000)
-    this.pickupLocation = trip.booking.departure
-    return trip
+    this.history.push({ status: 'handleBooking', date: new Date(), booking })
+    this.booking = booking
+    booking.car = this
+    booking.bookingReceivedDateTime = new Date()
+    this.navigateTo(booking.departure)
+    return booking
+  }
+
+  pickup() {
+    if (this.booking) {
+      this.booking.departureDateTime = new Date()
+      this.navigateTo(this.booking.destination)
+    }
+    this.emit('pickup', this)
   }
 
   dropOff() {
-    console.log('inside dropoff', this.trip)
-    if (this.trip) {
+    if (this.booking) {
       this.busy = false
-      this.trip.dropOffDateTime = new Date()
-      this.trip = null
+      this.booking.dropOffDateTime = new Date()
+      this.booking = null
     }
     this.simulate(false)
     this.emit('dropoff', this)
   }
+
 
   offer(offer) {
     // Fake the approval offer
@@ -71,8 +80,7 @@ class Car extends EventEmitter {
         offer.car = this
         offer.approved = (Math.random() < 0.5 && new Date()) || undefined
         console.log(
-          `Car #${this.id} ${
-            offer.approved ? 'approved' : 'rejected'
+          `Car #${this.id} ${offer.approved ? 'approved' : 'rejected'
           } the booking `
         )
         this.history.push({
@@ -92,12 +100,6 @@ class Car extends EventEmitter {
     this.position = position
     this.bearing = bearing
 
-    console.log('MOOVING', moved)
-    console.log(
-      'moving car + id',
-      distance.haversine(position, this.heading),
-      this.id
-    )
     this.lastPositions.push({ position: position, date: date || Date.now() })
     this.matchZone()
     if (moved) {
@@ -116,8 +118,13 @@ class Car extends EventEmitter {
       // )
       this.emit('stopped', this)
       if (distance.haversine(this.heading, this.position) <= 100) {
-        console.log('dropOff')
-        this.dropOff()
+        if (this.booking && distance.haversine(this.position, this.booking.departure) < 15) {
+          console.log('pickup')
+          this.pickup()
+        } else {
+          console.log('dropOff')
+          this.dropOff()
+        }
       }
     }
   }
