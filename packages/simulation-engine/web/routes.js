@@ -1,39 +1,38 @@
 const _ = require('highland')
-// const engine = require('../index')
-// const $available_cars = require('../simulator/ljusdal/pinkCompany.js')
-// const $bookings = require('../simulator/ljusdal/bookings.js')
+const $hubs = require('../streams/postombud')
 
-// const $car_positions = _()
+const viewport = [
+    [12.789348659070175, 59.66324274595559],
+    [14.986614284069821, 60.48531682744461],
+]
 
-// const last_car_positions = new Map()
+function in_viewport(viewport, point) {
+    const [sw, ne] = viewport
+    const [west, south] = sw
+    const [east, north] = ne
 
-// $available_cars
-//   .zip($bookings)
-//   .each(([car, booking]) => {
+    return (
+        west <= point.lon && point.lon <= east
+        &&
+        south <= point.lat && point.lat <= north
+    )
+}
 
-//     car.on('dropoff', () => {
-//       console.debug('car dropoff')
-//       $available_cars.write(car)
-//     })
-
-//     car.on('moved', () => {
-//       // console.debug('car moved')
-//       const obj = { id: car.id, position: car.position }
-//       $car_positions.write(obj)
-//       last_car_positions[car.id] = obj
-//     })
-
-//     car.handleBooking(booking)
-//   })
 
 function register(io) {
   io.on('connection', function (socket) {
     console.debug('connection')
+    
+    socket.on('viewport', (viewport) => {
+      console.debug('ye', viewport)
 
-    // socket.on('viewport', (viewport) => {
-    //   // $cars.filter(contains(viewport))
-    //   // socket.emit()
-    // })
+      $hubs()
+          .filter(hub => in_viewport(viewport, hub.position))
+          .map(hub => ({type: 'hub', position: hub.position, id: hub.id}))
+          .toArray(hubs => {
+            socket.emit('hubs:join', hubs)
+          })
+    })
   })
 }
 

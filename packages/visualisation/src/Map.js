@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
+import {useDebounce} from '@react-hook/debounce'
 import ReactMapGL, { Layer, Source, WebMercatorViewport } from 'react-map-gl'
 
-const Map = ({ data }) => {
+const Map = ({ data, onViewportChange }) => {
   const [mapState, setMapState] = useState({
     viewport: {
       width: 800,
@@ -13,8 +14,10 @@ const Map = ({ data }) => {
     },
   })
 
-  const bounds = new WebMercatorViewport(mapState.viewport).getBounds()
+  const [bounds, setBounds] = useDebounce(new WebMercatorViewport(mapState.viewport).getBounds(), 500)
+  
   useEffect(() => {
+    onViewportChange(bounds)
     console.log({ bounds })
   }, [bounds])
 
@@ -26,36 +29,18 @@ const Map = ({ data }) => {
         height="100vh"
         mapStyle="mapbox://styles/mapbox/streets-v11"
         {...mapState.viewport}
-        onViewportChange={(viewport) => setMapState({ viewport })}
+        onViewportChange={(viewport) => {
+          setMapState({ viewport })
+          setBounds(new WebMercatorViewport(viewport).getBounds())
+        }}
       >
-        <Source id="postombud" type="geojson" data={data.postombud}>
+        <Source id="hubs" type="geojson" data={data.hubs}>
           <Layer
-            id="point-post"
+            id="hub-point"
             type="circle"
             paint={{
-              'circle-radius': 10,
+              'circle-radius': 7,
               'circle-color': '#007cbf',
-            }}
-          />
-        </Source>
-        <Source id="cars" type="geojson" data={data.cars}>
-          <Layer
-            id="point"
-            type="circle"
-            paint={{
-              'circle-radius': 5,
-              'circle-color': '#ffffff',
-            }}
-          />
-        </Source>
-
-        <Source id="pink" type="geojson" data={data.pink}>
-          <Layer
-            id="point-pink"
-            type="circle"
-            paint={{
-              'circle-radius': 10,
-              'circle-color': '#FF69B4'
             }}
           />
         </Source>

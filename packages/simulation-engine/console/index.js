@@ -1,21 +1,22 @@
-const $hubs = require('../streams/postombud')
+// const $hubs = require('../streams/postombud')
 
-const viewport = [[0.0, 61.0], [19.0, 15.0]]
+// const viewport = [
+//     [12.789348659070175, 59.66324274595559],
+//     [14.986614284069821, 60.48531682744461],
+// ]
 
-function in_viewport(viewport, point) {
-    const [upper_left, lower_right] = viewport
-    const [top_left_lon, top_left_lat] = upper_left
-    const [bottom_right_lon, bottom_right_lat] = lower_right
-    const longitude_is = (
-        top_left_lon <= point.lon && point.lon <= bottom_right_lon
-    )
-    const latitude_is = (
-        bottom_right_lat <= point.lat && point.lat <= top_left_lat
-    )
+// function in_viewport(viewport, point) {
+//     const [sw, ne] = viewport
+//     const [west, south] = sw
+//     const [east, north] = ne
 
-    // console.debug(point, upper_left, lower_right, longitude_is, latitude_is)
-    return longitude_is && latitude_is
-}
+//     return (
+//         west <= point.lon && point.lon <= east
+//         &&
+//         south <= point.lat && point.lat <= north
+//     )
+// }
 
-$hubs
-    .filter(hub => in_viewport(viewport, hub.position))
+// $hubs
+//     .filter(hub => in_viewport(viewport, hub.position))
+//     .each(hub => console.log(hub))

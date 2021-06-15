@@ -5,7 +5,6 @@ const path = require('path')
 const postombud = readXlsx(
   path.join(
     process.cwd(),
-    '../',
     'data/Ombudsnät 2021_till Predictive Movement.xlsx'
   ),
   `Sammanställning korr`
@@ -17,4 +16,4 @@ const postombud = readXlsx(
   kommun: KOMMUNNAMN,
 }))
 
-module.exports = _(postombud)
+module.exports = () => _(postombud)
