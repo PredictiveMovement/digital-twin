@@ -1,15 +1,23 @@
-import React, { useState } from 'react'
-import ReactMapGL, { Layer, Source } from 'react-map-gl'
+import React, { useState, useEffect } from 'react'
+import ReactMapGL, { Layer, Source, WebMercatorViewport } from 'react-map-gl'
 
 const Map = ({ data }) => {
   const [mapState, setMapState] = useState({
     viewport: {
+      width: 800,
+      height: 600,
       latitude: 61.8295161,
       longitude: 16.0740589,
       zoom: 8,
-      pitch: 40,
+      pitch: 0,
     },
   })
+
+  const bounds = new WebMercatorViewport(mapState.viewport).getBounds()
+  useEffect(() => {
+    console.log({ bounds })
+  }, [bounds])
+
 
   return (
     <div>

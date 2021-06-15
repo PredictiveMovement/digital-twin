@@ -45,7 +45,7 @@ const App = () => {
   })
 
   useSocket('pink', (newPink) => {
-    console.debug('pink', newPink)
+    // console.debug('pink', newPink)
     const features = [
       ...pink.features.filter(
         (pink) => !newPink.some((nc) => nc.id === pink.id)
