@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import {useDebounce} from '@react-hook/debounce'
-import ReactMapGL, { Layer, Source, WebMercatorViewport } from 'react-map-gl'
+import { useDebounce } from '@react-hook/debounce'
+import ReactMapGL, { Layer, Source, WebMercatorViewport, Popup } from 'react-map-gl'
+import Pins from './components/pin'
 
 const Map = ({ data, onViewportChange }) => {
   const [mapState, setMapState] = useState({
@@ -15,11 +16,14 @@ const Map = ({ data, onViewportChange }) => {
   })
 
   const [bounds, setBounds] = useDebounce(new WebMercatorViewport(mapState.viewport).getBounds(), 500)
-  
+  const [popupInfo, setPopupInfo] = useState(null);
+
   useEffect(() => {
     onViewportChange(bounds)
     console.log({ bounds })
   }, [bounds])
+
+  console.log('cars', data.cars)
 
 
   return (
@@ -34,8 +38,10 @@ const Map = ({ data, onViewportChange }) => {
           setBounds(new WebMercatorViewport(viewport).getBounds())
         }}
       >
-        <Source id="hubs" type="geojson" data={data.hubs}>
+        <Pins data={data.hubs} onClick={setPopupInfo} />
+        {/* <Source id="hubs" type="geojson" data={data.hubs}>
           <Layer
+            onClick={() => console.log('hej')}
             id="hub-point"
             type="circle"
             paint={{
@@ -43,9 +49,34 @@ const Map = ({ data, onViewportChange }) => {
               'circle-color': '#007cbf',
             }}
           />
+        </Source> */}
+        <Source id="bookings" type="geojson" data={data.bookings}>
+          <Layer
+            id="booking-point"
+            type="circle"
+            paint={{
+              'circle-radius': 7,
+              'circle-color': '#FF0000',
+            }}
+          />
+        </Source>
+        <Source id="cars" type="geojson" data={data.cars}>
+          <Layer
+            id="car-point"
+            type="circle"
+            paint={{
+              'circle-radius': 7,
+              'circle-color': '#3ad134',
+            }}
+          />
         </Source>
       </ReactMapGL>
-    </div>
+      {popupInfo &&
+        <div style={{ position: 'absolute', top: '10px', left: '10px', backgroundColor: 'white', padding: '8px' }}>
+          <pre>{JSON.stringify(popupInfo, null, 2)}</pre>
+        </div>
+      }
+    </div >
   )
 }
 

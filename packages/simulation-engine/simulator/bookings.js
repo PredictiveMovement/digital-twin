@@ -2,4 +2,4 @@
 const _ = require('highland')
 const ljusdal = require('./ljusdal/bookings')
 
-module.exports = _.merge([])
+module.exports = _.merge([ljusdal])

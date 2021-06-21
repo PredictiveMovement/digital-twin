@@ -12,6 +12,7 @@ function randomize(center = start, retry = 20) {
     lon: center.lon + (Math.random() - 0.5) / 2,
     lat: center.lat + (Math.random() - 0.5) / 5,
   }
+
   return nearest(randomPoint).then((pos) =>
     pos === null ? randomize(center, retry--) : pos
   )

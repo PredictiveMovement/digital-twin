@@ -35,6 +35,7 @@ class Car extends EventEmitter {
     return osrm
       .route(this.position, this.heading)
       .then((route) => {
+        console.debug('route', route)
         route.started = new Date()
         this.heading.route = route
         this.simulate(this.heading)
@@ -44,7 +45,7 @@ class Car extends EventEmitter {
   }
 
   handleBooking(booking) {
-    console.debug('handleBooking')
+    console.debug('handleBooking', booking)
     this.busy = true
     this.history.push({ status: 'handleBooking', date: new Date(), booking })
     this.booking = booking
@@ -60,6 +61,7 @@ class Car extends EventEmitter {
       this.navigateTo(this.booking.destination)
     }
     this.emit('pickup', this)
+    this.emit('update', ['pickup', this])
   }
 
   dropOff() {
@@ -70,6 +72,7 @@ class Car extends EventEmitter {
     }
     this.simulate(false)
     this.emit('dropoff', this)
+    this.emit('update', ['dropoff', this])
   }
 
 
@@ -96,11 +99,13 @@ class Car extends EventEmitter {
   }
 
   async updatePosition(position, date) {
+    const distanceToTarget = distance.haversine(position, this.position)
     const moved = distance.haversine(position, this.position) >= 15 // meters
     const bearing = distance.bearing(position, this.position)
     this.position = position
     this.bearing = bearing
 
+    console.log('updatePosition', distanceToTarget, bearing)
     this.lastPositions.push({ position: position, date: date || Date.now() })
     this.matchZone()
     if (moved) {
@@ -110,15 +115,19 @@ class Car extends EventEmitter {
         await this.matchPositionsToMap()
       }*/
       this.emit('moved', this)
+      this.emit('update', ['moved', this])
       return this
     } else {
-      // console.log(
-      //   'stopped car + 1',
-      //   distance.haversine(this.heading, this.position),
-      //   this.id
-      // )
+      console.log(
+        'stopped car + 1',
+        distance.haversine(this.heading, this.position),
+        this.id
+      )
+
+      clearInterval(this._interval)
       this.emit('stopped', this)
-      if (distance.haversine(this.heading, this.position) <= 100) {
+      this.emit('update', ['stopped', this])
+      if (distance.haversine(this.heading, this.position) <= 10) {
         if (this.booking && distance.haversine(this.position, this.booking.departure) < 15) {
           console.log('pickup')
           this.pickup()
