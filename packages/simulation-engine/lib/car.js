@@ -25,6 +25,10 @@ class Car extends EventEmitter {
     }, Math.random() * 3000)
   }
 
+  ready() {
+    this.emit('ready')
+  }
+
   navigateTo(position) {
     console.log(
       'navigateFromTo meters',
@@ -65,10 +69,13 @@ class Car extends EventEmitter {
   }
 
   dropOff() {
+    console.log('dropoff')
     if (this.booking) {
       this.busy = false
       this.booking.dropOffDateTime = new Date()
       this.booking = null
+      this.emit('ready', this)
+      console.log('ready')
     }
     this.simulate(false)
     this.emit('dropoff', this)
@@ -100,12 +107,13 @@ class Car extends EventEmitter {
 
   async updatePosition(position, date) {
     const distanceToTarget = distance.haversine(position, this.position)
-    const moved = distance.haversine(position, this.position) >= 15 // meters
+    const moved = distance.haversine(position, this.position) >= 1 // meters
     const bearing = distance.bearing(position, this.position)
     this.position = position
     this.bearing = bearing
 
-    console.log('updatePosition', distanceToTarget, bearing)
+
+    console.log('updatePosition', distanceToTarget, bearing, moved)
     this.lastPositions.push({ position: position, date: date || Date.now() })
     this.matchZone()
     if (moved) {

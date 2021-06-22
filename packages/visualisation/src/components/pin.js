@@ -5,14 +5,14 @@ const ICON = `M20.2,15.7L20.2,15.7c1.1-1.6,1.8-3.6,1.8-5.7c0-5.6-4.5-10-10-10S2,
   c0,0,0.1,0.1,0.1,0.2c0.2,0.3,0.4,0.6,0.7,0.9c2.6,3.1,7.4,7.6,7.4,7.6s4.8-4.5,7.4-7.5c0.2-0.3,0.5-0.6,0.7-0.9
   C20.1,15.8,20.2,15.8,20.2,15.7z`;
 
+
 const SIZE = 20;
 
 // Important for perf: the markers never change, avoid rerender when the map viewport changes
 function Pins(props) {
-    const { data, onClick } = props;
+    const { data, onClick, color } = props;
     console.log('pin', data)
-    // return null
-    return data.features.map(({ geometry: { coordinates } }, index) => {
+    return data.map(({ geometry: { coordinates } }, index) => {
         return (
             <Marker key={`marker-${index}`} longitude={coordinates.longitude} latitude={coordinates.latitude} >
                 <svg
@@ -20,7 +20,7 @@ function Pins(props) {
                     viewBox="0 0 24 24"
                     style={{
                         cursor: 'pointer',
-                        fill: '#007cbf',
+                        fill: color,
                         stroke: 'none',
                         transform: `translate(${-SIZE / 2}px,${-SIZE}px)`,
                     }}

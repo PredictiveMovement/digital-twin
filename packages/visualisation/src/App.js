@@ -7,14 +7,8 @@ import { useSocket } from './hooks/useSocket'
 const App = () => {
   const socket = useContext(SocketIOContext);
 
-  const [hubs, setHubs] = React.useState({
-    type: 'FeatureCollection',
-    features: [],
-  })
-  const [bookings, setBookings] = React.useState({
-    type: 'FeatureCollection',
-    features: [],
-  })
+  const [hubs, setHubs] = React.useState([])
+  const [bookings, setBookings] = React.useState([])
 
   const [cars, setCars] = React.useState([
 
@@ -35,37 +29,34 @@ const App = () => {
 
   useSocket('hubs:join', (newHubs) => {
     console.log(`received ${newHubs.length} hubs`)
-    const features = [
-      ...newHubs.map(({ position }) => ({
+    setHubs(
+      newHubs.map(({ position }) => ({
         type: 'Feature',
-        geometry: { type: 'Point', coordinates: { longitude: position.lon, latitude: position.lat } },
-      })),
-    ]
-    setHubs(Object.assign({}, hubs, { features }))
+        geometry: { type: 'Point', coordinates: { 'longitude': position.lon, 'latitude': position.lat } },
+      }))
+    )
   })
 
   useSocket('bookings:join', (newBookings) => {
     console.log(`received ${newBookings.length} bookings`)
-    const features = [
-
-      ...newBookings.map(({ position }) => ({
-
+    setBookings(
+      newBookings.map(({ position }) => ({
         type: 'Feature',
         geometry: {
           type: 'Point', coordinates: { 'longitude': position.lon, 'latitude': position.lat }
         },
-      })),
-    ]
-    setBookings(Object.assign({}, bookings, { features: bookings.features.concat(features) }));
+      }))
+    )
   })
 
   useSocket('car:event', ({ event, ...car }) => {
+    console.debug('car:event', event, car)
     const idx = cars.findIndex(c => car.id === c.id)
     // if (idx < 0) {
     const newCars = [
       {
         type: 'Feature',
-        geometry: { type: 'Point', coordinates: { 'longitude': car.position.lon, 'latitude': car.position.lat } },
+        geometry: { type: 'Point', coordinates: [car.position.lon, car.position.lat] },
       },
     ]
     setCars(newCars)
@@ -84,7 +75,7 @@ const App = () => {
   return (
     <>
       <Map
-        data={{ hubs, bookings, cars: { type: 'FeatureCollection', features: cars } }}
+        data={{ hubs, bookings, cars }}
         onViewportChange={(viewport) => {
           socket.emit('viewport', viewport)
         }}

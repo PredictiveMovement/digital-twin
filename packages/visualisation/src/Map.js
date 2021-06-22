@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDebounce } from '@react-hook/debounce'
-import ReactMapGL, { Layer, Source, WebMercatorViewport, Popup } from 'react-map-gl'
+import ReactMapGL, { Layer, Source, WebMercatorViewport } from 'react-map-gl'
 import Pins from './components/pin'
 
 const Map = ({ data, onViewportChange }) => {
@@ -23,7 +23,7 @@ const Map = ({ data, onViewportChange }) => {
     console.log({ bounds })
   }, [bounds])
 
-  console.log('cars', data.cars)
+  console.log('bookings', data.bookings)
 
 
   return (
@@ -38,7 +38,7 @@ const Map = ({ data, onViewportChange }) => {
           setBounds(new WebMercatorViewport(viewport).getBounds())
         }}
       >
-        <Pins data={data.hubs} onClick={setPopupInfo} />
+        {/* <Pins data={data.hubs} onClick={setPopupInfo} color='#007cbf' /> */}
         {/* <Source id="hubs" type="geojson" data={data.hubs}>
           <Layer
             onClick={() => console.log('hej')}
@@ -50,17 +50,22 @@ const Map = ({ data, onViewportChange }) => {
             }}
           />
         </Source> */}
+        <Pins data={data.bookings} onClick={setPopupInfo} color='#FF0000' />
+        {/* 
         <Source id="bookings" type="geojson" data={data.bookings}>
-          <Layer
-            id="booking-point"
-            type="circle"
-            paint={{
-              'circle-radius': 7,
-              'circle-color': '#FF0000',
-            }}
-          />
-        </Source>
-        <Source id="cars" type="geojson" data={data.cars}>
+        <Layer
+        id="booking-point"
+        type="circle"
+        paint={{
+          'circle-radius': 7,
+          'circle-color': '#FF0000',
+        }}
+        />
+      </Source> */}
+        <Source id="cars" type="geojson" data={{
+          type: 'FeatureCollection',
+          features: data.cars
+        }}>
           <Layer
             id="car-point"
             type="circle"

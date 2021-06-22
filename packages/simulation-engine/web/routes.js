@@ -1,7 +1,7 @@
 const _ = require('highland')
 const $hubs = require('../streams/postombud')
 const $bookings = require('../simulator/bookings')
-const $cars = require('../simulator/ljusdal/pinkCompany')
+const $cars = require('../simulator/cars').fork()
 
 const viewport = [
   [12.789348659070175, 59.66324274595559],
@@ -19,52 +19,45 @@ function in_viewport(viewport, point) {
     south <= point.lat && point.lat <= north
   )
 }
-
+/*
+  Antaganden:
+  Simuleringen ska köra även om ingen tittar på den
+  Alla klienter ska (ha chansen att) få alla uppdateringar
+  En långsam observatör/klient/browser ska inte sakta ner simuleringen för alla
+  dvs -> strömmar internt men event emitter ut till klienterna?
+*/
 
 function register(io) {
+
   io.on('connection', function (socket) {
     console.debug('connection')
 
-    socket.on('viewport', (viewport) => {
-      console.debug('viewport')
-      $hubs()
-        .filter(hub => in_viewport(viewport, hub.position))
-        .map(hub => ({ type: 'hub', position: hub.position, id: hub.id }))
-        .toArray(hubs => {
-          socket.emit('hubs:join', hubs)
-        })
+    $hubs()
+      .fork()
+      // .filter(hub => in_viewport(viewport, hub.position))
+      .map(hub => ({ type: 'hub', position: hub.position, id: hub.id }))
+      .toArray(hubs => {
+        socket.emit('hubs:join', hubs)
+      })
 
-      const $relevantBookings =
-        $bookings
-          .fork()
-          .filter(booking => in_viewport(viewport, booking.destination) || in_viewport(viewport, booking.departure))
+    $bookings.observe()
+      // .filter(booking => in_viewport(viewport, booking.destination) || in_viewport(viewport, booking.departure))
+      .map(booking => ({ type: 'booking', position: booking.destination, id: booking.id }))
+      .batchWithTimeOrCount(1000, 200)
+      .each(bookings => {
+        console.log('bookings', bookings.length)
+        socket.emit('bookings:join', bookings)
+      })
 
-      $relevantBookings
-        .fork()
-        .map(booking => ({ type: 'booking', position: booking.destination, id: booking.id }))
-        .batchWithTimeOrCount(1000, 200)
-        .each(bookings => {
-          // console.log('bookings', bookings.length)
-          socket.emit('bookings:join', bookings)
-        })
-
-      $cars
-        .fork()
-        .tap(() => console.log("car fork"))
-        .zip($relevantBookings.fork())
-        .tap(([car, booking]) => {
-          console.debug('tappetytap')
-          car.handleBooking(booking)
-        })
-        .flatMap(([car]) => {
-          return _('update', car)
-        })
-        .each(([event, car]) => {
-          console.debug({ event })
-          socket.emit('car:event', { event, type: 'car', position: car.position, id: car.id })
-
-        })
-    })
+    $cars.fork()
+      .tap(() => console.log("car fork"))
+      .flatMap((car) => {
+        return _('update', car)
+      })
+      .each(([event, car]) => {
+        console.debug({ event })
+        socket.emit('car:event', { event, type: 'car', position: car.position, busy: car.busy, id: car.id })
+      })
   })
 }
 
