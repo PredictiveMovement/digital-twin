@@ -1,7 +1,7 @@
 const _ = require('highland')
 const $hubs = require('../streams/postombud')
 const $bookings = require('../simulator/bookings')
-const $cars = require('../simulator/cars').fork()
+const $cars = require('../simulator/cars')
 
 const viewport = [
   [12.789348659070175, 59.66324274595559],
@@ -21,19 +21,29 @@ function in_viewport(viewport, point) {
 }
 /*
   Antaganden:
-  Simuleringen ska köra även om ingen tittar på den
-  Alla klienter ska (ha chansen att) få alla uppdateringar
-  En långsam observatör/klient/browser ska inte sakta ner simuleringen för alla
+  1. ? Simuleringen ska köra även om ingen tittar på den
+  2. Alla klienter ska (ha chansen att) få alla uppdateringar
+  3. En långsam observatör/klient/browser ska inte sakta ner simuleringen för alla
   dvs -> strömmar internt men event emitter ut till klienterna?
 */
 
 function register(io) {
 
+  $cars.fork()
+    .flatMap((car) => {
+      return _('update', car)
+    })
+    .each(([event, car]) => {
+      console.debug('hej', { event })
+      // Convert the car stream to an event emitter sending to anyone that's connected
+      io.emit('car:event', { event, type: 'car', position: car.position, busy: car.busy, id: car.id })
+    })
+
   io.on('connection', function (socket) {
     console.debug('connection')
 
     $hubs()
-      .fork()
+      .fork() // this works because there's a new stream for every connection
       // .filter(hub => in_viewport(viewport, hub.position))
       .map(hub => ({ type: 'hub', position: hub.position, id: hub.id }))
       .toArray(hubs => {
@@ -47,16 +57,6 @@ function register(io) {
       .each(bookings => {
         console.log('bookings', bookings.length)
         socket.emit('bookings:join', bookings)
-      })
-
-    $cars.fork()
-      .tap(() => console.log("car fork"))
-      .flatMap((car) => {
-        return _('update', car)
-      })
-      .each(([event, car]) => {
-        console.debug({ event })
-        socket.emit('car:event', { event, type: 'car', position: car.position, busy: car.busy, id: car.id })
       })
   })
 }

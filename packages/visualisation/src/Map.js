@@ -20,11 +20,7 @@ const Map = ({ data, onViewportChange }) => {
 
   useEffect(() => {
     onViewportChange(bounds)
-    console.log({ bounds })
   }, [bounds])
-
-  console.log('bookings', data.bookings)
-
 
   return (
     <div>

@@ -22,7 +22,7 @@ class Car extends EventEmitter {
     this._interval = setInterval(() => {
       const newPosition = interpolate.route(heading.route, new Date())
       if (newPosition) this.updatePosition(newPosition)
-    }, Math.random() * 3000)
+    }, Math.random() * 500)
   }
 
   ready() {
@@ -113,7 +113,7 @@ class Car extends EventEmitter {
     this.bearing = bearing
 
 
-    console.log('updatePosition', distanceToTarget, bearing, moved)
+    console.log(`Car#${this.id}: updatePosition`, distanceToTarget, bearing, moved)
     this.lastPositions.push({ position: position, date: date || Date.now() })
     this.matchZone()
     if (moved) {
@@ -155,6 +155,7 @@ class Car extends EventEmitter {
       // console.log(`car #${this.id} logged in to zone #${this.zone}`)
     }
   }
+
 
   matchPositionsToMap() {
     console.log('match')

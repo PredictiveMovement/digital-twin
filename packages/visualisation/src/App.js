@@ -10,21 +10,7 @@ const App = () => {
   const [hubs, setHubs] = React.useState([])
   const [bookings, setBookings] = React.useState([])
 
-  const [cars, setCars] = React.useState([
-
-    {
-      "type": "Feature",
-      "geometry": {
-        "coordinates": [
-          16.059734545454543,
-          61.821003030303025
-        ],
-        "type": 'Point',
-
-      },
-    },
-  ]
-  )
+  const [cars, setCars] = React.useState([])
 
 
   useSocket('hubs:join', (newHubs) => {
@@ -68,7 +54,6 @@ const App = () => {
     //     cars.slice(idx)
     //   )
     // }
-    console.debug('car:event', car)
   })
 
 
