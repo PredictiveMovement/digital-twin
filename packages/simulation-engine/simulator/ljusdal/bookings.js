@@ -26,6 +26,7 @@ function randomizeBooking(center) {
 
 const bookingStream = postombud()
   .fork()
+  .filter((postombud) => postombud.kommun === 'Ljusdal') // only ljusdal for now
   .flatMap(postombud => _(randomizeBooking(postombud.position))) // one booking per postombud
 
 module.exports = bookingStream

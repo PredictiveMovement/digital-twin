@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
 const _ = require('highland')
-const ljusdal = require('./ljusdal/pinkCompany')
+const { theStream } = require('./ljusdal/pinkCompany')
 
-module.exports = _.merge([ljusdal])
+module.exports = _.merge([theStream])

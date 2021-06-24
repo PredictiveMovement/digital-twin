@@ -2,6 +2,7 @@ const _ = require('highland')
 const $hubs = require('../streams/postombud')
 const $bookings = require('../simulator/bookings')
 const $cars = require('../simulator/cars')
+const { booking_backlog } = require('../simulator/ljusdal/pinkCompany')
 
 const viewport = [
   [12.789348659070175, 59.66324274595559],
@@ -45,6 +46,7 @@ function register(io) {
     $hubs()
       .fork() // this works because there's a new stream for every connection
       // .filter(hub => in_viewport(viewport, hub.position))
+      .filter(hub => hub.kommun === 'Ljusdal')
       .map(hub => ({ type: 'hub', position: hub.position, id: hub.id }))
       .toArray(hubs => {
         socket.emit('hubs:join', hubs)

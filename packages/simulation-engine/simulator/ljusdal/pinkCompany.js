@@ -9,11 +9,18 @@ const Car = require('../../lib/car')
 // const center = { lat: 61.829182, lon: 16.0896213 } //ljusdal
 const hub = { lat: 61.820734, lon: 16.058911 }
 const bookings = require('./bookings').fork()
+let booking_backlog = []
 
 const NR_CARS = 1
+const NR_BOOKINGS = 10
 
 // bookings.each(b => console.log('b: ', b))
 
+
+for (let i = 0; i < NR_BOOKINGS; i++) {
+  bookings.fork()
+    .pull((err, booking) => booking_backlog.push(booking))
+}
 
 /*
  * Return an array with the provided length
@@ -27,18 +34,20 @@ function generateCar(nr) {
   car.position = hub
   car.on('ready', () => {
     console.log('ready, handle new booking')
-    bookings.pull((err, booking) => car.handleBooking(booking))
+    // TODO: take booking from backlog instead of creating a new one
+    bookings.fork()
+      .pull((err, booking) => car.handleBooking(booking))
   })
   car.ready()
 
   return car;
 
-  // TODO: pull a booking from the bookings stream. Send it to the car and wait for an event hwe
-  // bookings.
+
 
 }
 
 const theStream = _(range(NR_CARS)).map((idx) => generateCar(idx))
 
-module.exports = theStream;
+// TODO: also export the booking backlog so frontend can show it
+module.exports = { theStream, booking_backlog };
 

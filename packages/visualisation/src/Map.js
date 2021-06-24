@@ -22,6 +22,7 @@ const Map = ({ data, onViewportChange }) => {
     onViewportChange(bounds)
   }, [bounds])
 
+  // console.log('hubs: ', data.hubs)
   return (
     <div>
       <ReactMapGL
@@ -34,7 +35,7 @@ const Map = ({ data, onViewportChange }) => {
           setBounds(new WebMercatorViewport(viewport).getBounds())
         }}
       >
-        {/* <Pins data={data.hubs} onClick={setPopupInfo} color='#007cbf' /> */}
+        <Pins data={data.hubs} onClick={setPopupInfo} color='#007cbf' />
         {/* <Source id="hubs" type="geojson" data={data.hubs}>
           <Layer
             onClick={() => console.log('hej')}
@@ -46,7 +47,7 @@ const Map = ({ data, onViewportChange }) => {
             }}
           />
         </Source> */}
-        <Pins data={data.bookings} onClick={setPopupInfo} color='#FF0000' />
+        {/* <Pins data={data.bookings} onClick={setPopupInfo} color='#FF0000' /> */}
         {/* 
         <Source id="bookings" type="geojson" data={data.bookings}>
         <Layer
