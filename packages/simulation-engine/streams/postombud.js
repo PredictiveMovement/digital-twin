@@ -1,4 +1,3 @@
-const _ = require('highland')
 const { readXlsx } = require('../adapters/xlsx')
 const path = require('path')
 
@@ -16,4 +15,4 @@ const postombud = readXlsx(
   kommun: KOMMUNNAMN,
 }))
 
-module.exports = () => _(postombud)
+module.exports = () => postombud

@@ -1,4 +1,4 @@
-/* 
+/*
  * Simulates bookings related to Ljusdal 
  */
 
