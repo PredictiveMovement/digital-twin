@@ -30,16 +30,16 @@ class Car extends EventEmitter {
   }
 
   navigateTo(position) {
-    console.log(
-      'navigateFromTo meters',
-      distance.haversine(position, this.position)
-    )
-    console.log('positions', this.position, this.heading)
+    // console.log(
+    //   'navigateFromTo meters',
+    //   distance.haversine(position, this.position)
+    // )
+    // console.log('positions', this.position, this.heading)
     this.heading = position
     return osrm
       .route(this.position, this.heading)
       .then((route) => {
-        console.debug('route', route)
+        // console.debug('route', route)
         route.started = new Date()
         this.heading.route = route
         this.simulate(this.heading)
@@ -49,7 +49,7 @@ class Car extends EventEmitter {
   }
 
   handleBooking(booking) {
-    console.debug('handleBooking', booking)
+    console.debug('handleBooking', booking.id)
     this.busy = true
     this.history.push({ status: 'handleBooking', date: new Date(), booking })
     this.booking = booking
@@ -69,13 +69,13 @@ class Car extends EventEmitter {
   }
 
   dropOff() {
-    console.log('dropoff')
+    // console.log('dropoff')
     if (this.booking) {
       this.busy = false
       this.booking.dropOffDateTime = new Date()
       this.booking = null
       this.emit('ready', this)
-      console.log('ready')
+      // console.log('ready')
     }
     this.simulate(false)
     this.emit('dropoff', this)
@@ -90,10 +90,10 @@ class Car extends EventEmitter {
         // TODO: send push notfication
         offer.car = this
         offer.approved = (Math.random() < 0.5 && new Date()) || undefined
-        console.log(
-          `Car #${this.id} ${offer.approved ? 'approved' : 'rejected'
-          } the booking `
-        )
+        // console.log(
+        //   `Car #${this.id} ${offer.approved ? 'approved' : 'rejected'
+        //   } the booking `
+        // )
         this.history.push({
           status: 'offered',
           date: new Date(),
@@ -113,7 +113,7 @@ class Car extends EventEmitter {
     this.bearing = bearing
 
 
-    console.log(`Car#${this.id}: updatePosition`, distanceToTarget, bearing, moved)
+    // console.log(`Car#${this.id}: updatePosition`, distanceToTarget, bearing, moved)
     this.lastPositions.push({ position: position, date: date || Date.now() })
     this.matchZone()
     if (moved) {
@@ -126,21 +126,21 @@ class Car extends EventEmitter {
       this.emit('update', ['moved', this])
       return this
     } else {
-      console.log(
-        'stopped car + 1',
-        distance.haversine(this.heading, this.position),
-        this.id
-      )
+      // console.log(
+      //   'stopped car + 1',
+      //   distance.haversine(this.heading, this.position),
+      //   this.id
+      // )
 
       clearInterval(this._interval)
       this.emit('stopped', this)
       this.emit('update', ['stopped', this])
       if (distance.haversine(this.heading, this.position) <= 10) {
         if (this.booking && distance.haversine(this.position, this.booking.departure) < 15) {
-          console.log('pickup')
+          // console.log('pickup')
           this.pickup()
         } else {
-          console.log('dropOff')
+          // console.log('dropOff')
           this.dropOff()
         }
       }
@@ -158,7 +158,7 @@ class Car extends EventEmitter {
 
 
   matchPositionsToMap() {
-    console.log('match')
+    // console.log('match')
     return osrm
       .match(
         this.lastPositions.filter(

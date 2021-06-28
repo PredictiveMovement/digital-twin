@@ -6,8 +6,6 @@ import Pins from './components/pin'
 const Map = ({ data, onViewportChange }) => {
   const [mapState, setMapState] = useState({
     viewport: {
-      width: 800,
-      height: 600,
       latitude: 61.8295161,
       longitude: 16.0740589,
       zoom: 8,
@@ -20,9 +18,8 @@ const Map = ({ data, onViewportChange }) => {
 
   useEffect(() => {
     onViewportChange(bounds)
-  }, [bounds])
+  }, [bounds, onViewportChange])
 
-  // console.log('hubs: ', data.hubs)
   return (
     <div>
       <ReactMapGL
@@ -36,6 +33,7 @@ const Map = ({ data, onViewportChange }) => {
         }}
       >
         <Pins data={data.hubs} onClick={setPopupInfo} color='#007cbf' />
+
         {/* <Source id="hubs" type="geojson" data={data.hubs}>
           <Layer
             onClick={() => console.log('hej')}

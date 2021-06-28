@@ -14,6 +14,7 @@ function in_viewport(viewport, point) {
   const [west, south] = sw
   const [east, north] = ne
 
+
   return (
     west <= point.lon && point.lon <= east
     &&
@@ -28,6 +29,9 @@ function in_viewport(viewport, point) {
   dvs -> strömmar internt men event emitter ut till klienterna?
 */
 
+
+// booking_backlog.fork().each(b => console.log(`b: ${b.id}`))
+
 function register(io) {
 
   $cars.fork()
@@ -35,17 +39,37 @@ function register(io) {
       return _('update', car)
     })
     .each(([event, car]) => {
-      console.debug('hej', { event })
+      // console.debug('hej', { event })
       // Convert the car stream to an event emitter sending to anyone that's connected
       io.emit('car:event', { event, type: 'car', position: car.position, busy: car.busy, id: car.id })
     })
 
+
+
+  // booking_backlog
+  //   .fork()
+  //   .each(booking => {
+  //     console.log(`emitting ${booking.id}`)
+  //     io.emit('booking:backlog', {
+  //       // HEJ: 'hej'
+  //       id: booking.id,
+  //       'hej': 'hej '
+  //       // departure: booking.departure,
+  //       // destination: booking.destination,
+  //       // booking_date: booking.bookingDate,
+  //       // assigned_car: booking.car.id
+  //     })
+  //   })
+
   io.on('connection', function (socket) {
+    socket.emit('test:debug', 'this works ye?')
+
     console.debug('connection')
 
     $hubs()
       .fork() // this works because there's a new stream for every connection
       // .filter(hub => in_viewport(viewport, hub.position))
+      .tap(hub => console.log('hubb,', hub))
       .filter(hub => hub.kommun === 'Ljusdal')
       .map(hub => ({ type: 'hub', position: hub.position, id: hub.id }))
       .toArray(hubs => {
@@ -53,7 +77,6 @@ function register(io) {
       })
 
     $bookings.observe()
-      // .filter(booking => in_viewport(viewport, booking.destination) || in_viewport(viewport, booking.departure))
       .map(booking => ({ type: 'booking', position: booking.destination, id: booking.id }))
       .batchWithTimeOrCount(1000, 200)
       .each(bookings => {

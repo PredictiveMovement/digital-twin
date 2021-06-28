@@ -12,6 +12,13 @@ const App = () => {
 
   const [cars, setCars] = React.useState([])
 
+  // useSocket('test:debug', message => {
+  //   console.debug(`test:debug: ${message}`)
+  // })
+
+  // useSocket('booking:backlog', (bookingBacklog) => {
+  //   console.log('bookingBacklog', bookingBacklog)
+  // })
 
   useSocket('hubs:join', (newHubs) => {
     console.log(`received ${newHubs.length} hubs`)
@@ -36,7 +43,7 @@ const App = () => {
   })
 
   useSocket('car:event', ({ event, ...car }) => {
-    console.debug('car:event', event, car)
+    // console.debug('car:event', event, car)
     const idx = cars.findIndex(c => car.id === c.id)
     // if (idx < 0) {
     const newCars = [
