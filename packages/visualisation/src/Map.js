@@ -3,7 +3,7 @@ import { useDebounce } from '@react-hook/debounce'
 import ReactMapGL, { Layer, Source, WebMercatorViewport } from 'react-map-gl'
 import Pins from './components/pin'
 
-const Map = ({ data, onViewportChange }) => {
+const Map = ({ data }) => {
   const [mapState, setMapState] = useState({
     viewport: {
       latitude: 61.8295161,
@@ -16,9 +16,10 @@ const Map = ({ data, onViewportChange }) => {
   const [bounds, setBounds] = useDebounce(new WebMercatorViewport(mapState.viewport).getBounds(), 500)
   const [popupInfo, setPopupInfo] = useState(null);
 
-  useEffect(() => {
-    onViewportChange(bounds)
-  }, [bounds, onViewportChange])
+  // useEffect(() => {
+  //   onViewportChange(bounds)
+  // }, [bounds, onViewportChange])
+
 
   return (
     <div>
@@ -29,7 +30,7 @@ const Map = ({ data, onViewportChange }) => {
         {...mapState.viewport}
         onViewportChange={(viewport) => {
           setMapState({ viewport })
-          setBounds(new WebMercatorViewport(viewport).getBounds())
+          // setBounds(new WebMercatorViewport(viewport).getBounds())
         }}
       >
         <Pins data={data.hubs} onClick={setPopupInfo} color='#007cbf' />
@@ -45,7 +46,7 @@ const Map = ({ data, onViewportChange }) => {
             }}
           />
         </Source> */}
-        {/* <Pins data={data.bookings} onClick={setPopupInfo} color='#FF0000' /> */}
+        <Pins data={data.bookings} onClick={setPopupInfo} color='#FF0000' />
         {/* 
         <Source id="bookings" type="geojson" data={data.bookings}>
         <Layer
@@ -57,9 +58,9 @@ const Map = ({ data, onViewportChange }) => {
         }}
         />
       </Source> */}
-        <Source id="cars" type="geojson" data={{
+        <Source id="car" type="geojson" data={{
           type: 'FeatureCollection',
-          features: data.cars
+          features: data.car
         }}>
           <Layer
             id="car-point"

@@ -6,9 +6,9 @@ import reportWebVitals from "./reportWebVitals";
 import { SocketIOProvider } from "./context/socketIOProvider";
 
 ReactDOM.render(
-  <SocketIOProvider url="http://localhost:4000">
-    <App />
-  </SocketIOProvider>,
+  // <SocketIOProvider url="http://localhost:4000">
+  <App />,
+  // </SocketIOProvider>,
   document.getElementById("root")
 );
 

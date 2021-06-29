@@ -1,7 +1,7 @@
 const _ = require('highland')
 const hubs = require('../streams/postombud')
-//const $bookings = require('../simulator/bookings')
-//const $cars = require('../simulator/cars')
+const bookings = require('../simulator/bookings')
+const cars = require('../simulator/cars')
 //const { booking_backlog } = require('../simulator/ljusdal/pinkCompany')
 
 const viewport = [
@@ -21,20 +21,21 @@ function in_viewport(viewport, point) {
     south <= point.lat && point.lat <= north
   )
 }
-/*
-  Antaganden:
-  1. ? Simuleringen ska köra även om ingen tittar på den
-  2. Alla klienter ska (ha chansen att) få alla uppdateringar
-  3. En långsam observatör/klient/browser ska inte sakta ner simuleringen för alla
-  dvs -> strömmar internt men event emitter ut till klienterna?
-*/
-
 
 // booking_backlog.fork().each(b => console.log(`b: ${b.id}`))
 
 function register(server) {
+
   server.get('/hubs', function (req, res) {
     res.send(hubs().filter((hub) => hub.kommun === 'Ljusdal'))
+  })
+
+  server.get('/bookings', async function (req, res) {
+    res.send(await (Promise.all(bookings)))
+  })
+
+  server.get('/cars', function (req, res) {
+    res.send(cars())
   })
 
   /*
