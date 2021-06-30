@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useDebounce } from '@react-hook/debounce'
 import ReactMapGL, { Layer, Source, WebMercatorViewport } from 'react-map-gl'
-import Pins from './components/pin'
+import Pins from './components/Pin'
+import ButtonWrapper from './components/ButtonWrapper'
+import PopUp from './components/PopUp'
+
 
 const Map = ({ data }) => {
   const [mapState, setMapState] = useState({
@@ -14,12 +17,11 @@ const Map = ({ data }) => {
   })
 
   const [bounds, setBounds] = useDebounce(new WebMercatorViewport(mapState.viewport).getBounds(), 500)
-  const [popupInfo, setPopupInfo] = useState(null);
+  const [popUpInfo, setPopUpInfo] = useState(null);
 
   // useEffect(() => {
   //   onViewportChange(bounds)
   // }, [bounds, onViewportChange])
-
 
   return (
     <div>
@@ -33,7 +35,7 @@ const Map = ({ data }) => {
           // setBounds(new WebMercatorViewport(viewport).getBounds())
         }}
       >
-        <Pins data={data.hubs} onClick={setPopupInfo} color='#007cbf' />
+        <Pins data={data.hubs} onClick={setPopUpInfo} color='#007cbf' />
 
         {/* <Source id="hubs" type="geojson" data={data.hubs}>
           <Layer
@@ -46,7 +48,7 @@ const Map = ({ data }) => {
             }}
           />
         </Source> */}
-        <Pins data={data.bookings} onClick={setPopupInfo} color='#FF0000' />
+        <Pins data={data.bookings} onClick={setPopUpInfo} color='#FF0000' booking={true} />
         {/* 
         <Source id="bookings" type="geojson" data={data.bookings}>
         <Layer
@@ -72,10 +74,9 @@ const Map = ({ data }) => {
           />
         </Source>
       </ReactMapGL>
-      {popupInfo &&
-        <div style={{ position: 'absolute', top: '10px', left: '10px', backgroundColor: 'white', padding: '8px' }}>
-          <pre>{JSON.stringify(popupInfo, null, 2)}</pre>
-        </div>
+      <ButtonWrapper turnOnPM={() => console.log('Turn on PM')} turnOffPM={() => console.log('Turn off PM')} />
+      {popUpInfo &&
+        <PopUp popUpInfo={popUpInfo} onClick={setPopUpInfo} />
       }
     </div >
   )

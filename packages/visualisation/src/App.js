@@ -38,11 +38,12 @@ const App = () => {
       .then(res => res.json())
       .then(res => {
         setCars(
-          res.map(({ position }) => ({
+          res.map(({ position, time }) => ({
             type: 'Feature',
             geometry: {
               type: 'Point', coordinates: [position.lon, position.lat]
             },
+            time: time
           }))
         )
       });
@@ -54,7 +55,9 @@ const App = () => {
     geometry: {
       type: 'Point', coordinates: [15.798747, 61.865193]
     },
+    time: 0,
   }])
+
 
 
   React.useEffect(() => {
@@ -69,7 +72,6 @@ const App = () => {
     console.log('we have', cars.length, 'cars', index)
     setCar([cars[index]]);
   }, [index]);
-
 
   // useSocket('test:debug', message => {
   //   console.debug(`test:debug: ${message}`)
