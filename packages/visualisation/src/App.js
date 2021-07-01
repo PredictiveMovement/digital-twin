@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import Map from './Map.js'
 
 const App = () => {
-
   const [hubs, setHubs] = React.useState([])
   const [bookings, setBookings] = React.useState([])
   const [cars, setCars] = React.useState([])
@@ -32,11 +31,17 @@ const App = () => {
       .then(res => res.json())
       .then(res => {
         setBookings(
-          res.map(({ departure }) => ({
+          res.map(({ departure, destination }) => ({
             type: 'Feature',
             geometry: {
               type: 'Point', coordinates: { 'longitude': departure.lon, 'latitude': departure.lat }
             },
+            destination: {
+              coordinates: {
+                'longitude': destination.lon,
+                'latitude': destination.lat
+              }
+            }
           }))
         )
       });
@@ -73,11 +78,9 @@ const App = () => {
 
   return (
     <>
-
       <Map
         data={{ hubs, bookings, car }}
       />
-
     </>
   )
 }

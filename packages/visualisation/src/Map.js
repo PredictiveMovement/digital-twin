@@ -43,8 +43,8 @@ const Map = ({ data }) => {
           <Popup
             tipSize={5}
             anchor="top"
-            longitude={popUpInfo.longitude}
-            latitude={popUpInfo.latitude}
+            longitude={popUpInfo.departure.longitude}
+            latitude={popUpInfo.departure.latitude}
             closeOnClick={false}
             onClose={setPopUpInfo}
           >

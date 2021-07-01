@@ -15,7 +15,7 @@ const SIZE = 20;
 // Important for perf: the markers never change, avoid rerender when the map viewport changes
 function Pins(props) {
     const { data, onClick, color, } = props;
-    return data.map(({ geometry: { coordinates } }, index) => {
+    return data.map(({ geometry: { coordinates }, destination }, index) => {
         return (
             <Marker key={`marker-${index}`} longitude={coordinates.longitude} latitude={coordinates.latitude} >
                 {/* <img style={{
@@ -38,7 +38,7 @@ function Pins(props) {
                         stroke: 'none',
                         transform: `translate(${-SIZE / 2}px,${-SIZE}px)`,
                     }}
-                    onClick={() => { onClick(coordinates) }}
+                    onClick={() => { onClick({ departure: { 'longitude': coordinates.longitude, 'latitude': coordinates.latitude }, destination: { 'longitude': destination.coordinates.longitude, 'latitude': destination.coordinates.latitude } }) }}
                 >
                     <path d={ICON} />
                 </svg>
