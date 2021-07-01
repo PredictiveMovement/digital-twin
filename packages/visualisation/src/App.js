@@ -13,8 +13,9 @@ const App = () => {
       type: 'Point', coordinates: [15.798747, 61.865193]
     },
     time: 0,
+    event: "car:position"
   }])
-  const speed = 20;
+  const speed = 10;
 
   useEffect(() => {
     fetch('http://localhost:4000/hubs')
@@ -44,12 +45,13 @@ const App = () => {
       .then(res => res.json())
       .then(res => {
         setCars(
-          res.map(({ position, time }) => ({
+          res.map(({ position, time, event }) => ({
             type: 'Feature',
             geometry: {
               type: 'Point', coordinates: [position.lon, position.lat]
             },
-            time: time
+            time,
+            event
           }))
         )
       });

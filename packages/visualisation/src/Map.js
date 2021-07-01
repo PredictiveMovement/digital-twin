@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useDebounce } from '@react-hook/debounce'
-import ReactMapGL, { Layer, Source, WebMercatorViewport } from 'react-map-gl'
+import ReactMapGL, { Layer, Source, WebMercatorViewport, Popup } from 'react-map-gl'
 import Pins from './components/Pin'
 import ButtonWrapper from './components/ButtonWrapper'
-import PopUp from './components/PopUp'
+import InfoBox from './components/InfoBox'
 
 
 const Map = ({ data }) => {
@@ -37,29 +37,21 @@ const Map = ({ data }) => {
       >
         <Pins data={data.hubs} onClick={setPopUpInfo} color='#007cbf' />
 
-        {/* <Source id="hubs" type="geojson" data={data.hubs}>
-          <Layer
-            onClick={() => console.log('hej')}
-            id="hub-point"
-            type="circle"
-            paint={{
-              'circle-radius': 7,
-              'circle-color': '#007cbf',
-            }}
-          />
-        </Source> */}
         <Pins data={data.bookings} onClick={setPopUpInfo} color='#FF0000' booking={true} />
-        {/* 
-        <Source id="bookings" type="geojson" data={data.bookings}>
-        <Layer
-        id="booking-point"
-        type="circle"
-        paint={{
-          'circle-radius': 7,
-          'circle-color': '#FF0000',
-        }}
-        />
-      </Source> */}
+
+        {popUpInfo && (
+          <Popup
+            tipSize={5}
+            anchor="top"
+            longitude={popUpInfo.longitude}
+            latitude={popUpInfo.latitude}
+            closeOnClick={false}
+            onClose={setPopUpInfo}
+          >
+            <InfoBox popUpInfo={popUpInfo} onClick={setPopUpInfo} />
+          </Popup>
+        )}
+
         <Source id="car" type="geojson" data={{
           type: 'FeatureCollection',
           features: data.car
@@ -75,9 +67,6 @@ const Map = ({ data }) => {
         </Source>
       </ReactMapGL>
       <ButtonWrapper turnOnPM={() => console.log('Turn on PM')} turnOffPM={() => console.log('Turn off PM')} />
-      {popUpInfo &&
-        <PopUp popUpInfo={popUpInfo} onClick={setPopUpInfo} />
-      }
     </div >
   )
 }
