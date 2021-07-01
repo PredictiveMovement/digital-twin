@@ -38,7 +38,12 @@ function Pins(props) {
                         stroke: 'none',
                         transform: `translate(${-SIZE / 2}px,${-SIZE}px)`,
                     }}
-                    onClick={() => { onClick({ departure: { 'longitude': coordinates.longitude, 'latitude': coordinates.latitude }, destination: { 'longitude': destination.coordinates.longitude, 'latitude': destination.coordinates.latitude } }) }}
+                    onClick={() => {
+                        destination ?
+                            onClick({ departure: { 'longitude': coordinates.longitude, 'latitude': coordinates.latitude }, destination: { 'longitude': destination.coordinates.longitude, 'latitude': destination.coordinates.latitude } })
+                            :
+                            onClick({ departure: { 'longitude': coordinates.longitude, 'latitude': coordinates.latitude } })
+                    }}
                 >
                     <path d={ICON} />
                 </svg>
