@@ -71,67 +71,11 @@ const App = () => {
     };
   }, [index, cars]);
 
-
-  // useSocket('test:debug', message => {
-  //   console.debug(`test:debug: ${message}`)
-  // })
-
-  // useSocket('booking:backlog', (bookingBacklog) => {
-  //   console.log('bookingBacklog', bookingBacklog)
-  // })
-
-  // useSocket('hubs:join', (newHubs) => {
-  //   console.log(`received ${newHubs.length} hubs`)
-  //   setHubs(
-  //     newHubs.map(({ position }) => ({
-  //       type: 'Feature',
-  //       geometry: { type: 'Point', coordinates: { 'longitude': position.lon, 'latitude': position.lat } },
-  //     }))
-  //   )
-  // })
-
-  // useSocket('bookings:join', (newBookings) => {
-  //   console.log(`received ${newBookings.length} bookings`)
-  //   setBookings(
-  //     newBookings.map(({ position }) => ({
-  //       type: 'Feature',
-  //       geometry: {
-  //         type: 'Point', coordinates: { 'longitude': position.lon, 'latitude': position.lat }
-  //       },
-  //     }))
-  //   )
-  // })
-
-  // useSocket('car:event', ({ event, ...car }) => {
-  //   // console.debug('car:event', event, car)
-  //   const idx = cars.findIndex(c => car.id === c.id)
-  //   // if (idx < 0) {
-  //   const newCars = [
-  //     {
-  //       type: 'Feature',
-  //       geometry: { type: 'Point', coordinates: [car.position.lon, car.position.lat] },
-  //     },
-  //   ]
-  //   setCars(newCars)
-
-  //   // } else {
-  //   //   setCars(
-  //   //     cars.slice(0, idx),
-  //   //     car,
-  //   //     cars.slice(idx)
-  //   //   )
-  //   // }
-  // })
-
-
   return (
     <>
 
       <Map
         data={{ hubs, bookings, car }}
-      // onViewportChange={(viewport) => {
-      //   socket.emit('viewport', viewport)
-      // }}
       />
 
     </>

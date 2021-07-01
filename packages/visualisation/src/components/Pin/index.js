@@ -38,7 +38,7 @@ function Pins(props) {
                         stroke: 'none',
                         transform: `translate(${-SIZE / 2}px,${-SIZE}px)`,
                     }}
-                    onClick={() => { onClick(coordinates); console.log(coordinates); }}
+                    onClick={() => { onClick(coordinates) }}
                 >
                     <path d={ICON} />
                 </svg>
