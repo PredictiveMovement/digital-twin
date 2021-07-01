@@ -17,7 +17,7 @@ function Pins(props) {
     return data.map(({ geometry: { coordinates } }, index) => {
         return (
             <Marker key={`marker-${index}`} longitude={coordinates.longitude} latitude={coordinates.latitude} >
-                <img style={{
+                {/* <img style={{
                     cursor: 'pointer',
                     fill: color,
                     stroke: 'none',
@@ -27,8 +27,8 @@ function Pins(props) {
                     width={28}
                     height={28}
                     alt={'truck'}
-                    onClick={() => onClick(coordinates)} />
-                {/* <svg
+                    onClick={() => onClick(coordinates)} /> */}
+                <svg
                     height={SIZE}
                     viewBox="0 0 24 24"
                     style={{
@@ -39,8 +39,8 @@ function Pins(props) {
                     }}
                     onClick={() => onClick(coordinates)}
                 >
-                    <path d={truck} />
-                </svg> */}
+                    <path d={ICON} />
+                </svg>
             </Marker >
         )
     }

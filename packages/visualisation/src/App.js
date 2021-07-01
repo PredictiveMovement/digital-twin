@@ -1,14 +1,20 @@
 import React, { useEffect } from 'react'
-import { useContext } from "react";
 import Map from './Map.js'
 
 const App = () => {
 
   const [hubs, setHubs] = React.useState([])
   const [bookings, setBookings] = React.useState([])
-
-  const [index, setIndex] = React.useState(0)
   const [cars, setCars] = React.useState([])
+  const [index, setIndex] = React.useState(0);
+  const [car, setCar] = React.useState([{
+    type: 'Feature',
+    geometry: {
+      type: 'Point', coordinates: [15.798747, 61.865193]
+    },
+    time: 0,
+  }])
+  const speed = 20;
 
   useEffect(() => {
     fetch('http://localhost:4000/hubs')
@@ -50,28 +56,19 @@ const App = () => {
 
   }, [])
 
-  const [car, setCar] = React.useState([{
-    type: 'Feature',
-    geometry: {
-      type: 'Point', coordinates: [15.798747, 61.865193]
-    },
-    time: 0,
-  }])
+  useEffect(() => {
+    let timeout;
+    if (index < cars.length - 1) {
+      setCar([cars[index]])
+      const timeUntilNext = (cars[index + 1].time - cars[index].time) * speed;
+      timeout = setTimeout(() => setIndex(index + 1), timeUntilNext);
+    }
 
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [index, cars]);
 
-
-  React.useEffect(() => {
-    const timerId = setInterval(
-      () => { setIndex(index => index + 1) },
-      500
-    );
-    return () => clearInterval(timerId);
-  }, []);
-
-  React.useEffect(() => {
-    console.log('we have', cars.length, 'cars', index)
-    setCar([cars[index]]);
-  }, [index]);
 
   // useSocket('test:debug', message => {
   //   console.debug(`test:debug: ${message}`)
