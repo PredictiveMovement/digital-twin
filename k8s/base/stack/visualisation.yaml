@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: visualisation
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+  type: LoadBalancer
+  selector:
+    app: visualisation
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visualisation
+spec:
+  selector:
+    matchLabels:
+      app: visualisation
+  template:
+    metadata:
+      labels:
+        app: visualisation
+    spec:
+      containers:
+        - name: visualisation
+          image: iteam1337/pm-digital-twin-visualisation
+          ports:
+            - containerPort: 3000
+          env:
+            - name: REACT_APP_MAPBOX_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: REACT_APP_MAPBOX_ACCESS_TOKEN
+                  name: mapbox-access-token
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: visualisation-ingress
+  annotations:
+    kubernetes.io/ingress.class: "public"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts:
+        - digital-twin.iteamdev.io
+      secretName: visualisation-prod-tls
+  rules:
+    - host: digital-twin.iteamdev.io
+      http:
+        paths:
+          - backend:
+              serviceName: visualisation
+              servicePort: 3000
