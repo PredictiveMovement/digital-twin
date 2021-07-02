@@ -30,3 +30,8 @@ So the mapbox token is required in runtime. In case the secret needs to be re-cr
 # create mapbox secret
 kubectl -n digital-twin create secret generic mapbox-access-token --from-literal=REACT_APP_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>
 ```
+
+```bash
+# redeploy
+skaffold run
+```
