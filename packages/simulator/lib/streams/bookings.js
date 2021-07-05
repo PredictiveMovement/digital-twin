@@ -8,12 +8,12 @@ const address = require('../address');
 const postombud$ = require('./postombud')
 
 let id = 1
-function randomizeBooking(center) {
+function randomizeBooking(center, prefix) {
   return from(address.randomize(center))
     .pipe(
       map(nearCenter => {
         return {
-          id: id++,
+          id: `${prefix}-${id++}`,
           bookingDate: new Date(),
           departure: center,
           destination: nearCenter,
@@ -22,6 +22,12 @@ function randomizeBooking(center) {
     )
 }
 
-module.exports = postombud$.pipe(
-  mergeMap(booking => randomizeBooking(booking.position)),
-)
+// module.exports = postombud$.pipe(
+//   mergeMap(booking => randomizeBooking(booking.position)),
+// )
+
+module.exports = function generate(prefix) {
+  return postombud$.pipe(
+    mergeMap(booking => randomizeBooking(booking.position, prefix))
+  )
+}

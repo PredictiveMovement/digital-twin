@@ -3,22 +3,23 @@ const osrm = require('./osrm')
 const extractPoints = require('./extractPoints')
 const { map, mergeMap, finalize, last, concatWith, concatMap, withLatestFrom } = require('rxjs/operators')
 
-class Car  {
+class Car {
   constructor(id, position, pool) {
     this.id = id
-    this.position = position
+    this.start_position = position // TODO: Update position after dropoff, so future booking start from right place
     this.pool = pool
   }
 
-
   handleBookings(bookings, time_offset = 0) {
-    const generators = bookings.map(b => (time) => this._handleBooking(b, time))
+    const generators = bookings.map(b => {
+      return (time) => this._handleBooking(b, time)
+    })
     return from(generators).pipe(
-      concatMap(gen => {
-        const events$ = gen(time_offset)
+      concatMap(generator => {
+        const events$ = generator(time_offset)
         events$
           .pipe(last())
-          .subscribe(e => {time_offset += e.time})
+          .subscribe(e => { time_offset += e.time })
         return events$
       }),
       finalize(() => {
@@ -30,45 +31,41 @@ class Car  {
   _handleBooking(booking, time_offset) {
     console.debug(`car#${this.id} handle_booking booking_id:${booking.id} time_offset ${time_offset}`)
 
-    const pickupPoints$ = from(osrm.route(this.position, booking.departure))
-      .pipe(mergeMap(extractPoints))
-
-    const pickupEvents$ = 
-      pickupPoints$.pipe(
-        map(point => ({type: 'car:position', /*position: point.position, car_id: this.id,*/ time: time_offset + point.passed})),
+    const pickupRoute$ = from(osrm.route(this.start_position, booking.departure))
+      .pipe(
+        mergeMap(extractPoints),
+        map(point => ({ type: 'car:position', /*position: point.position, car_id: this.id,*/ time: time_offset + point.passed })),
       )
 
-    const loadEvent$ = pickupEvents$.pipe(
+    const pickupEvent$ = pickupRoute$.pipe(
       last(),
       map(event => {
         // TODO: How long should it take to from arriving at the package's position to next departure?
-        return {type: 'car:pickup', position: event.position, car_id: this.id, time: event.time, booking_id: booking.id}
+        return { type: 'car:pickup', position: event.position, car_id: this.id, time: event.time, booking_id: booking.id }
       })
     )
 
-    const dropoffPoints$ = from(osrm.route(booking.departure, booking.destination))
-      .pipe(mergeMap(extractPoints))
-
-    const dropoffEvents$ = dropoffPoints$
+    const dropoffRoute$ = from(osrm.route(booking.departure, booking.destination))
       .pipe(
-        withLatestFrom(loadEvent$),
+        mergeMap(extractPoints),
+        withLatestFrom(pickupEvent$),
         map(([point, loadEvent]) => (
-          {type: 'car:position', /*position: point.position, car_id: this.id,*/ time: point.passed + loadEvent.time, passed: point.passed}
+          { type: 'car:position', /*position: point.position, car_id: this.id,*/ time: point.passed + loadEvent.time, passed: point.passed }
         )),
       )
 
-    const deliverEvent$ = dropoffEvents$.pipe(
+    const deliverEvent$ = dropoffRoute$.pipe(
       last(),
       map(event => {
         // TODO: Currently takes 0 time to pick a package up
-        return {type: 'car:deliver', position: event.position, car_id: this.id, time: event.time, booking_id: booking.id}
+        return { type: 'car:deliver', position: event.position, car_id: this.id, time: event.time, booking_id: booking.id }
       })
     )
 
-    return pickupEvents$.pipe(
+    return pickupRoute$.pipe(
       concatWith(
-        loadEvent$,
-        dropoffEvents$,
+        pickupEvent$,
+        dropoffRoute$,
         deliverEvent$,
       ),
       finalize(() => {
