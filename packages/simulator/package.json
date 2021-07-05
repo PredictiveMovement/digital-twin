@@ -1,0 +1,19 @@
+{
+  "name": "packages",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx nodemon run.js"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "node-fetch": "^2.6.1",
+    "polyline": "^0.2.0",
+    "rxjs": "^7.1.0",
+    "socket.io": "^4.1.2",
+    "xlsx": "^0.17.0"
+  }
+}
