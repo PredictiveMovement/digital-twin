@@ -4,7 +4,7 @@ import Map from './Map.js'
 const App = () => {
   const [hubs, setHubs] = React.useState([])
   const [bookings, setBookings] = React.useState([])
-  const [cars, setCars] = React.useState([])
+  const [carEvents, setCarEvents] = React.useState([])
   const [index, setIndex] = React.useState(0);
   const [car, setCar] = React.useState([{
     type: 'Feature',
@@ -14,7 +14,7 @@ const App = () => {
     time: 0,
     event: "car:position"
   }])
-  const CAR_SPEED = 40;
+  const CAR_SPEED = 100;
 
   useEffect(() => {
     fetch('http://localhost:4000/hubs')
@@ -49,14 +49,15 @@ const App = () => {
     fetch('http://localhost:4000/cars')
       .then(res => res.json())
       .then(res => {
-        setCars(
-          res.map(({ position, time, event }) => ({
+        setCarEvents(
+          res.map(({ position, time, event, booking_id }) => ({
             type: 'Feature',
             geometry: {
               type: 'Point', coordinates: [position.lon, position.lat]
             },
+            event,
             time,
-            event
+            bookingId: booking_id
           }))
         )
       });
@@ -65,16 +66,23 @@ const App = () => {
 
   useEffect(() => {
     let timeout;
-    if (index < cars.length - 1) {
-      setCar([cars[index]])
-      const timeUntilNext = (cars[index + 1].time - cars[index].time) * CAR_SPEED;
+    if (index < carEvents.length - 1) {
+      setCar([carEvents[index]])
+
+      let timeUntilNext = (carEvents[index + 1].time - carEvents[index].time) * CAR_SPEED;
+      if (carEvents[index].event === 'car:pickup') {
+        console.log('car is picking up a package', carEvents[index].bookingId)
+        const PICKUP_DELAY = 5 // should probably come from data in the future
+        timeUntilNext += PICKUP_DELAY * CAR_SPEED
+      }
+
       timeout = setTimeout(() => setIndex(index + 1), timeUntilNext);
     }
 
     return () => {
       clearTimeout(timeout);
     };
-  }, [index, cars]);
+  }, [index, carEvents]);
 
   return (
     <>

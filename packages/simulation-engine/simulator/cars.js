@@ -1,7 +1,7 @@
 // const { theStream } = require('./ljusdal/pinkCompany')
 const car_events = [{ "event": "car:position", "position": { "lat": 61.821, "lon": 16.05972 }, "car_id": 1, "time": 0 },
 { "event": "car:position", "position": { "lat": 61.82105, "lon": 16.05996 }, "car_id": 1, "time": 3.3 },
-{ "event": "car:position", "position": { "lat": 61.82104, "lon": 16.06024 }, "car_id": 1, "time": 6.699999999999999 },
+{ "event": "car:pickup", "booking_id": 0, "position": { "lat": 61.82104, "lon": 16.06024 }, "car_id": 1, "time": 6.699999999999999 },
 { "event": "car:position", "position": { "lat": 61.82096, "lon": 16.06084 }, "car_id": 1, "time": 14.6 },
 { "event": "car:position", "position": { "lat": 61.82096, "lon": 16.06107 }, "car_id": 1, "time": 17.5 },
 { "event": "car:position", "position": { "lat": 61.82097, "lon": 16.06135 }, "car_id": 1, "time": 21 },

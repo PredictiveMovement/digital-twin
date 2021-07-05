@@ -22,7 +22,6 @@ const Map = ({ data }) => {
   // useEffect(() => {
   //   onViewportChange(bounds)
   // }, [bounds, onViewportChange])
-
   return (
     <div>
       <ReactMapGL
@@ -59,9 +58,11 @@ const Map = ({ data }) => {
           <Layer
             id="car-point"
             type="circle"
+
+            // onClick={() => console.log('hej')}
             paint={{
               'circle-radius': 7,
-              'circle-color': '#3ad134',
+              'circle-color': data.car[0].event === 'car:pickup' ? '#FFA500' : '#3ad134',
             }}
           />
         </Source>
