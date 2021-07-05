@@ -14,7 +14,7 @@ const App = () => {
     time: 0,
     event: "car:position"
   }])
-  const speed = 10;
+  const speed = 40;
 
   useEffect(() => {
     fetch('http://localhost:4000/hubs')
