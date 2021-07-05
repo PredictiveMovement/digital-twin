@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { useDebounce } from '@react-hook/debounce'
-import ReactMapGL, { Layer, Source, WebMercatorViewport, Popup } from 'react-map-gl'
+// import { useDebounce } from '@react-hook/debounce'
+import ReactMapGL, { Layer, Source, Popup } from 'react-map-gl'
 import Pins from './components/Pin'
 import ButtonWrapper from './components/ButtonWrapper'
 import InfoBox from './components/InfoBox'
@@ -16,7 +16,7 @@ const Map = ({ data }) => {
     },
   })
 
-  const [bounds, setBounds] = useDebounce(new WebMercatorViewport(mapState.viewport).getBounds(), 500)
+  // const [bounds, setBounds] = useDebounce(new WebMercatorViewport(mapState.viewport).getBounds(), 500)
   const [popUpInfo, setPopUpInfo] = useState(null);
 
   // useEffect(() => {

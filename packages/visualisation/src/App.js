@@ -14,7 +14,7 @@ const App = () => {
     time: 0,
     event: "car:position"
   }])
-  const speed = 10;
+  const CAR_SPEED = 40;
 
   useEffect(() => {
     fetch('http://localhost:4000/hubs')
@@ -67,7 +67,7 @@ const App = () => {
     let timeout;
     if (index < cars.length - 1) {
       setCar([cars[index]])
-      const timeUntilNext = (cars[index + 1].time - cars[index].time) * speed;
+      const timeUntilNext = (cars[index + 1].time - cars[index].time) * CAR_SPEED;
       timeout = setTimeout(() => setIndex(index + 1), timeUntilNext);
     }
 
