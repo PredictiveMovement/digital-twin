@@ -1,47 +1,58 @@
 import React, { useState } from 'react'
-import ReactMapGL, { Layer, Source } from 'react-map-gl'
+// import { useDebounce } from '@react-hook/debounce'
+import ReactMapGL, { Popup } from 'react-map-gl'
+import Pins from './components/Pin'
+import ButtonWrapper from './components/ButtonWrapper'
+import InfoBox from './components/InfoBox'
+
 
 const Map = ({ data }) => {
   const [mapState, setMapState] = useState({
     viewport: {
-      latitude: 66.0459355,
-      longitude: 17.866189,
+      latitude: 61.8295161,
+      longitude: 16.0740589,
       zoom: 8,
-      pitch: 40,
+      pitch: 0,
     },
   })
 
+  // const [bounds, setBounds] = useDebounce(new WebMercatorViewport(mapState.viewport).getBounds(), 500)
+  const [popUpInfo, setPopUpInfo] = useState(null);
+
+  // useEffect(() => {
+  //   onViewportChange(bounds)
+  // }, [bounds, onViewportChange])
   return (
     <div>
       <ReactMapGL
         width="100%"
         height="100vh"
-        mapStyle="mapbox://styles/mapbox/dark-v10"
+        mapStyle="mapbox://styles/mapbox/streets-v11"
         {...mapState.viewport}
-        onViewportChange={(viewport) => setMapState({ viewport })}
+        onViewportChange={(viewport) => {
+          setMapState({ viewport })
+          // setBounds(new WebMercatorViewport(viewport).getBounds())
+        }}
       >
-        <Source id="postombud" type="geojson" data={data.postombud}>
-          <Layer
-            id="point-post"
-            type="circle"
-            paint={{
-              'circle-radius': 10,
-              'circle-color': '#007cbf',
-            }}
-          />
-        </Source>
-        <Source id="cars" type="geojson" data={data.cars}>
-          <Layer
-            id="point"
-            type="circle"
-            paint={{
-              'circle-radius': 10,
-              'circle-color': '#ffffff',
-            }}
-          />
-        </Source>
+        <Pins data={data.hubs} onClick={setPopUpInfo} type={'hub'} />
+        <Pins data={data.bookings} onClick={setPopUpInfo} type={'booking'} />
+        <Pins data={data.car} onClick={setPopUpInfo} type={'car'} />
+
+        {popUpInfo && (
+          <Popup
+            tipSize={5}
+            anchor="top"
+            longitude={popUpInfo.position.longitude}
+            latitude={popUpInfo.position.latitude}
+            closeOnClick={false}
+            onClose={setPopUpInfo}
+          >
+            <InfoBox popUpInfo={popUpInfo} onClick={setPopUpInfo} />
+          </Popup>
+        )}
       </ReactMapGL>
-    </div>
+      <ButtonWrapper turnOnPM={() => console.log('Turn on PM')} turnOffPM={() => console.log('Turn off PM')} />
+    </div >
   )
 }
 
