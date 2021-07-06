@@ -21,7 +21,6 @@ module.exports = {
       .forEach(() => pool.emit('join', generateCar(pool)))
   },
   join$: fromEvent(pool, 'join'),
-  data$: fromEvent(pool, 'data')
 }
 
 

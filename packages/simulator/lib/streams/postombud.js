@@ -15,7 +15,7 @@ const readXlsx = (path, sheet) => {
 };
 
 const postombud = readXlsx(
-  `${process.cwd()}/data/thefile.xlsx`,
+  `${process.cwd()}/data/Ombudsnät2021.xlsx`,
   `Sammanställning korr`
 ).map(({ X_WGS84, Y_WGS84, LevFrekv, OPERATÖR, DB_ID, KOMMUNNAMN }) => ({
   position: { lon: parseFloat(X_WGS84, 10), lat: parseFloat(Y_WGS84, 10) },
@@ -25,8 +25,10 @@ const postombud = readXlsx(
   kommun: KOMMUNNAMN,
 }))
 
-module.exports = from(postombud)
-  .pipe(
-    filter(f => f.kommun == 'Ljusdal'),
-    // take(2)
-  )
+// module.exports = from(postombud)
+//   .pipe(
+//     filter(f => f.kommun == 'Ljusdal'),
+//     // take(2)
+//   )
+
+module.exports = postombud.filter(f => f.kommun === 'Ljusdal')

@@ -62,7 +62,7 @@ const Map = ({ data }) => {
             // onClick={() => console.log('hej')}
             paint={{
               'circle-radius': 7,
-              'circle-color': data.car[0].event === 'car:pickup' ? '#FFA500' : '#3ad134',
+              'circle-color': data.car[0].event === 'car:pickup' | 'car:deliver' ? '#FFA500' : '#3ad134',
             }}
           />
         </Source>

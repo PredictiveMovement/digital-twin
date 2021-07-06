@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx nodemon run.js"
+    "dev": "npx nodemon web/index.js",
+    "dev:cli": "npx nodemon run.js"
   },
   "author": "",
   "license": "UNLICENSED",
   "dependencies": {
     "dotenv": "^10.0.0",
+    "express": "^4.17.1",
     "node-fetch": "^2.6.1",
     "polyline": "^0.2.0",
     "rxjs": "^7.1.0",

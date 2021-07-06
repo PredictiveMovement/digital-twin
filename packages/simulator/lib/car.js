@@ -5,7 +5,7 @@ const { map, mergeMap, finalize, last, concatWith, concatMap, withLatestFrom } =
 
 class Car {
   constructor(id, position, pool) {
-    this.id = id
+    this.id = `car-${id}`
     this.start_position = position // TODO: Update position after dropoff, so future booking start from right place
     this.pool = pool
   }
@@ -34,7 +34,7 @@ class Car {
     const pickupRoute$ = from(osrm.route(this.start_position, booking.departure))
       .pipe(
         mergeMap(extractPoints),
-        map(point => ({ type: 'car:position', /*position: point.position, car_id: this.id,*/ time: time_offset + point.passed })),
+        map(point => ({ type: 'car:position', position: point.position, car_id: this.id, time: time_offset + point.passed })),
       )
 
     const pickupEvent$ = pickupRoute$.pipe(
@@ -50,7 +50,7 @@ class Car {
         mergeMap(extractPoints),
         withLatestFrom(pickupEvent$),
         map(([point, loadEvent]) => (
-          { type: 'car:position', /*position: point.position, car_id: this.id,*/ time: point.passed + loadEvent.time, passed: point.passed }
+          { type: 'car:position', position: point.position, car_id: this.id, time: point.passed + loadEvent.time, passed: point.passed }
         )),
       )
 
