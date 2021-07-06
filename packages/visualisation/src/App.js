@@ -9,11 +9,12 @@ const App = () => {
   const [car, setCar] = React.useState([{
     type: 'Feature',
     geometry: {
-      type: 'Point', coordinates: [15.798747, 61.865193]
+      type: 'Point', coordinates: { 'longitude': 15.798747, 'latitude': 61.865193 }
     },
     time: 0,
-    event: "car:position"
+    eventType: "car:position"
   }])
+
   const CAR_MS_PER_S = 50;
 
   useEffect(() => {
@@ -54,7 +55,7 @@ const App = () => {
           res.map(({ position, time, type, booking_id }) => ({
             type: 'Feature',
             geometry: {
-              type: 'Point', coordinates: [position.lon, position.lat]
+              type: 'Point', coordinates: { 'longitude': position.lon, 'latitude': position.lat }
             },
             eventType: type,
             time,
@@ -70,7 +71,7 @@ const App = () => {
     if (index <= carEvents.length - 1) {
       setCar([carEvents[index]])
 
-      let timeUntilNext = index == carEvents.length - 1 
+      let timeUntilNext = index === carEvents.length - 1
         ? 0
         : (carEvents[index + 1].time - carEvents[index].time) * CAR_MS_PER_S
       if (carEvents[index].eventType === 'car:pickup') {
@@ -80,7 +81,7 @@ const App = () => {
       } else if (carEvents[index].eventType === 'car:deliver') {
         console.log('car is delivering up a package', carEvents[index].bookingId)
         const DELIVER_DELAY = 8 // should probably come from data in the future
-        timeUntilNext += DELIVER_DELAY * CAR_MS_PER_S 
+        timeUntilNext += DELIVER_DELAY * CAR_MS_PER_S
       }
 
       timeout = setTimeout(() => setIndex(index + 1), timeUntilNext);
