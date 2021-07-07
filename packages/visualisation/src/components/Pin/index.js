@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Marker } from 'react-map-gl';
 
-import pinBlue from '../../icons/pinBlue.png'
-import pinRed from '../../icons/pinRed.png'
-import truck from '../../icons/truck.png'
+import truck from '../../icons/truck.svg'
+import booking from '../../icons/booking.svg'
+import hub from '../../icons/hub.png'
 
 
 const SIZE = 20;
@@ -20,7 +20,7 @@ function Pins(props) {
                     stroke: 'none',
                     transform: `translate(${-SIZE / 2}px,${-SIZE}px)`,
                 }}
-                    src={type === 'hub' ? pinRed : type === 'booking' ? pinBlue : truck}
+                    src={type === 'hub' ? hub : type === 'booking' ? booking : truck}
                     width={28}
                     height={28}
                     alt={type}

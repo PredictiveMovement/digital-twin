@@ -3,30 +3,13 @@ import Map from './Map.js'
 
 
 function interpolatedPosition(fromEvent, toEvent, time) {
-
-  const currentTime = ((time - fromEvent.startedAt) / 1000)
-  // const currentTime = time - fromEvent.startedAt
-  const progress = (currentTime - fromEvent.time) / fromEvent.duration
-  // or
-  // var progress = (currentTime - start.passed) / (end.passed - start.passed)
-  // const speed = Math.round(((fromEvent.meters) / 1000) / (fromEvent.duration / 60 / 60))
-
+  const weHaveBeenDrivingFor = (time - fromEvent.time)
+  const progress = weHaveBeenDrivingFor / fromEvent.duration
 
   const interpolatedPosition = {
-    latitude: fromEvent.geometry.coordinates.latitude + (toEvent.geometry.coordinates.latitude - fromEvent.geometry.coordinates.latitude) * progress,
-    longitude: fromEvent.geometry.coordinates.longitude + (toEvent.geometry.coordinates.longitude - fromEvent.geometry.coordinates.longitude) * progress,
-    // speed: speed,
-    // instruction: fromEvent,
-    // toEvent: {
-    //   lat: toEvent.geometry.latitude,
-    //   lon: toEvent.geometry.longitude,
-    //   instruction: toEvent
-    // }
+    latitude: fromEvent.geometry.coordinates.latitude * (1 - progress) + toEvent.geometry.coordinates.latitude * progress,
+    longitude: fromEvent.geometry.coordinates.longitude * (1 - progress) + toEvent.geometry.coordinates.longitude * progress,
   }
-  // if (!Number.isFinite(interpolatedPosition.latitude) || interpolatedPosition.latitude < -90 || interpolatedPosition.latitude > 90) {
-  //   debugger;
-  // }
-  debugger;
   return interpolatedPosition
 }
 
@@ -137,16 +120,22 @@ const App = () => {
   useEffect(() => {
     const startTime = (new Date()).getTime()
     function onFrame() {
+      const SPEED = 7
       if (Object.keys(carEvents).length === 0) return
 
       const currentTime = (new Date()).getTime()
-      const elapsed = (currentTime - startTime) * 10
+      const elapsed = (currentTime - startTime) * SPEED
+      //console.log('elapsed', elapsed)
 
       setCurrentCarPositions(currentPositions => {
         const changes = {}
 
         Object.entries(carEvents).forEach(([carId, events]) => {
           const currentEvent = currentPositions[carId]
+          if (currentEvent.isStopped) {
+            console.log('STOPPPPP')
+            return null;
+          }
 
           if (currentEvent.eventType === 'car:pickup') {
             console.log('car is picking up a package', currentEvent.bookingId)
@@ -154,27 +143,36 @@ const App = () => {
             console.log('car is delivering up a package', currentEvent.bookingId)
           }
 
-
-          if (elapsed < currentEvent.time * 1000) {
+          if (elapsed <= (currentEvent.time + currentEvent.duration) * 1000) {
             const nextEvent = events[currentEvent.index + 1]
             if (nextEvent != null) {
-              // const position = interpolatedPosition(currentEvent, nextEvent, elapsed)
+              const position = interpolatedPosition(currentEvent, nextEvent, elapsed / 1000)
               // [next_event.carId]: interpolated_position(previous_event, next_event)
               changes[currentEvent.carId] = {
                 ...currentEvent,
-                // geometry: {
-                //   type: 'Point', coordinates: position
-                // }
+                geometry: {
+                  type: 'Point', coordinates: position
+                }
               }
             }
-          } else if (elapsed >= currentEvent.time * 1000) {
+          } else {
             const nextEvent = events[currentEvent.index + 1]
             if (nextEvent != null) {
-              console.log(`increasing event index for car:${nextEvent.carId} from:${currentEvent.index} to:${currentEvent.index + 1}`)
+              // console.log(`increasing event index for car:${nextEvent.carId} from:${currentEvent.index} to:${currentEvent.index + 1}`)
+              // console.log('next event', nextEvent)
               changes[nextEvent.carId] = {
                 ...nextEvent,
-                startedAt: elapsed,
-                index: currentEvent.index + 1
+                index: currentEvent.index + 1,
+                geometry: {
+                  type: 'Point',
+                  coordinates: nextEvent.geometry.coordinates
+                }
+
+              }
+            } else {
+              changes[currentEvent.carId] = {
+                ...currentEvent,
+                isStopped: true,
               }
             }
           }
@@ -183,12 +181,6 @@ const App = () => {
 
         return { ...currentPositions, ...changes }
       })
-
-
-
-      //   return c;
-      // })
-
       requestAnimationFrame(onFrame)
     }
     requestAnimationFrame(onFrame)
