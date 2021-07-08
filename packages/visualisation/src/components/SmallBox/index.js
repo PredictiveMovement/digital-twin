@@ -15,7 +15,7 @@ font-weight: ${(props) => props.thin ? 300 : 400};
 color: white;
 `
 
-function InfoBox({ popupInfo }) {
+function SmallBox({ popupInfo }) {
     return (
         <Wrapper>
             <div style={{ marginBottom: '1rem' }}>
@@ -30,4 +30,4 @@ function InfoBox({ popupInfo }) {
     );
 }
 
-export default React.memo(InfoBox);
+export default React.memo(SmallBox);
