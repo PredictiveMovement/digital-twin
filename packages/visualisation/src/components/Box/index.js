@@ -11,31 +11,30 @@ display: flex;
 flex-direction: column;
 justify-content: space-space-between;
 background-color: #10C57B;
-padding: 1rem;
+padding: 1.2rem;
 border-radius: 4px;
-width: 338px;
 height: 158px;
 justify-content: space-between;
 `
 
-
 const Paragraph = styled.p`
 margin: 0;
+font-family: 'Roboto', sans-serif;
+font-weight: ${(props) => props.thin ? 300 : 400};
 color: white;
 `
 
-
-const Box = () => {
+const Box = ({ totalCars, totalBookings, bookingsFromHub }) => {
     return (
         <Wrapper>
             <div>
-                <Paragraph>Just nu kör 10 lastbilar i Ljusdal</Paragraph>
+                <Paragraph>Just nu kör {totalCars} lastbilar i Ljusdal</Paragraph>
                 <Paragraph>Co2: XXX</Paragraph>
-                <Paragraph>Antal bokningar:</Paragraph>
-                <Paragraph>Antal paket upphämtade från avlastningscentralen:</Paragraph>
+                <Paragraph>Antal bokningar: {totalBookings} st</Paragraph>
+                <Paragraph>Antal paket upphämtade från avlastningscentralen: {bookingsFromHub} st</Paragraph>
             </div>
             <div>
-                <Paragraph>Medel fyllnadsgrad per bil:</Paragraph>
+                <Paragraph thin>Medel fyllnadsgrad per bil:</Paragraph>
                 <ProgressBar completed={60} />
             </div>
         </Wrapper>

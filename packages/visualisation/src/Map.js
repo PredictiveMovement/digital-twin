@@ -22,6 +22,7 @@ const Map = ({ data }) => {
   // useEffect(() => {
   //   onViewportChange(bounds)
   // }, [bounds, onViewportChange])
+
   return (
     <div>
       <ReactMapGL
@@ -34,7 +35,7 @@ const Map = ({ data }) => {
           // setBounds(new WebMercatorViewport(viewport).getBounds())
         }}
       >
-        <Box />
+        <Box totalCars={data.totalCars} totalBookings={data.bookings.length} bookingsFromHub={30} />
 
         <Pins data={data.hubs} onClick={setPopUpInfo} type={'hub'} />
         <Pins data={data.bookings} onClick={setPopUpInfo} type={'booking'} />

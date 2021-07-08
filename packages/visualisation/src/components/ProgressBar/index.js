@@ -6,6 +6,7 @@ const Wrapper = styled.div`
   align-items: center;
   margin-top: 0.5rem;
 `
+
 const Percentage = styled.p`
   padding-left: 0.5rem;
   margin: 0;
@@ -33,7 +34,6 @@ const Total = styled.div`
   height: 13px;
   border-radius: 6px;
 `
-
 
 const ProgressBar = ({ completed }) => {
   return (

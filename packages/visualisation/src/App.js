@@ -133,7 +133,6 @@ const App = () => {
         Object.entries(carEvents).forEach(([carId, events]) => {
           const currentEvent = currentPositions[carId]
           if (currentEvent.isStopped) {
-            console.log('STOPPPPP')
             return null;
           }
 
@@ -189,7 +188,7 @@ const App = () => {
   return (
     <>
       <Map
-        data={{ hubs, bookings, car: Object.values(currentCarPositions) }}
+        data={{ hubs, bookings, car: Object.values(currentCarPositions), totalCars: Object.entries(carEvents).length }}
       />
     </>
   )
