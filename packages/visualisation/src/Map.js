@@ -4,7 +4,7 @@ import ReactMapGL, { Popup } from 'react-map-gl'
 import Pins from './components/Pin'
 import ButtonWrapper from './components/ButtonWrapper'
 import InfoBox from './components/InfoBox'
-
+import Box from './components/Box'
 
 const Map = ({ data }) => {
   const [mapState, setMapState] = useState({
@@ -34,6 +34,8 @@ const Map = ({ data }) => {
           // setBounds(new WebMercatorViewport(viewport).getBounds())
         }}
       >
+        <Box />
+
         <Pins data={data.hubs} onClick={setPopUpInfo} type={'hub'} />
         <Pins data={data.bookings} onClick={setPopUpInfo} type={'booking'} />
         <Pins data={data.car} onClick={setPopUpInfo} type={'car'} />

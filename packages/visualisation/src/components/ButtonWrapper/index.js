@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 const Wrapper = styled.div`
 position: absolute;
-bottom: 50px;
+bottom: 40px;
 left: 20px;
 display: flex;
 flex-direction: column;
@@ -19,6 +19,7 @@ padding: 20px 45px;
 margin: 5px 0px;
 font-size: 20px;
 font-weight: bold;
+font-family: Arial;
 cursor: pointer;
 opacity: 0.6;
 `
