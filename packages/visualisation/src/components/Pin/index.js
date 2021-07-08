@@ -3,7 +3,7 @@ import { Marker } from 'react-map-gl';
 
 import truck from '../../icons/truck.svg'
 import booking from '../../icons/booking.svg'
-import hub from '../../icons/hub.png'
+import hub from '../../icons/hub.svg'
 
 
 const SIZE = 20;
