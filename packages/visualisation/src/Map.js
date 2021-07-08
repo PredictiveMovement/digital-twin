@@ -17,7 +17,7 @@ const Map = ({ data }) => {
   })
 
   // const [bounds, setBounds] = useDebounce(new WebMercatorViewport(mapState.viewport).getBounds(), 500)
-  const [popUpInfo, setPopUpInfo] = useState(null);
+  const [popupInfo, setPopupInfo] = useState(null);
 
   // useEffect(() => {
   //   onViewportChange(bounds)
@@ -37,20 +37,20 @@ const Map = ({ data }) => {
       >
         <Box totalCars={data.totalCars} totalBookings={data.bookings.length} bookingsFromHub={30} />
 
-        <Pins data={data.hubs} onClick={setPopUpInfo} type={'hub'} />
-        <Pins data={data.bookings} onClick={setPopUpInfo} type={'booking'} />
-        <Pins data={data.car} onClick={setPopUpInfo} type={'car'} />
+        <Pins data={data.hubs} onClick={setPopupInfo} type={'hub'} />
+        <Pins data={data.bookings} onClick={setPopupInfo} type={'booking'} />
+        <Pins data={data.car} onClick={setPopupInfo} type={'car'} />
 
-        {popUpInfo && (
+        {popupInfo && (
           <Popup
             tipSize={5}
             anchor="top"
-            longitude={popUpInfo.position.longitude}
-            latitude={popUpInfo.position.latitude}
+            longitude={popupInfo.position.longitude}
+            latitude={popupInfo.position.latitude}
             closeOnClick={false}
-            onClose={setPopUpInfo}
+            onClose={setPopupInfo}
           >
-            <InfoBox popUpInfo={popUpInfo} onClick={setPopUpInfo} />
+            <InfoBox popupInfo={popupInfo} onClick={setPopupInfo} />
           </Popup>
         )}
       </ReactMapGL>

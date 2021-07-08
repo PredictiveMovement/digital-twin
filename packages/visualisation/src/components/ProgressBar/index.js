@@ -27,6 +27,7 @@ const Filler = styled.div`
   background-color: white;
   text-align: 'right';
   border-radius: 4px;
+  transition: 'width 1s ease-in-out';
 `
 
 const Total = styled.div`
