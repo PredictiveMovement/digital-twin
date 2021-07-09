@@ -20,6 +20,7 @@ margin: 5px 0px;
 font-size: 20px;
 font-weight: bold;
 cursor: pointer;
+opacity: 0.6;
 `
 
 const ButtonWrapper = ({ turnOnPM, turnOffPM }) => {

@@ -3,12 +3,9 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { SocketIOProvider } from "./context/socketIOProvider";
 
 ReactDOM.render(
-  // <SocketIOProvider url="http://localhost:4000">
   <App />,
-  // </SocketIOProvider>,
   document.getElementById("root")
 );
 
