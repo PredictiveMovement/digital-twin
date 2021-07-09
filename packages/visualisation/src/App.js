@@ -20,6 +20,8 @@ const App = () => {
 
   useEffect(() => {
     fetch(`${simulatorUrl}/hubs`)
+      .then(res => res.json())
+      .then(res => {
         setHubs(
           res.map(({ position }) => ({
             type: 'Feature',
@@ -28,6 +30,8 @@ const App = () => {
       });
 
     fetch(`${simulatorUrl}/bookings`)
+      .then(res => res.json())
+      .then(res => {
         setBookings(
           res.map(({ departure, destination }) => ({
             type: 'Feature',
@@ -45,6 +49,8 @@ const App = () => {
       });
 
     fetch(`${simulatorUrl}/car_events`)
+      .then(res => res.json())
+      .then(res => {
         setCarEvents(
           res.map(({ position, time, type, booking_id }) => ({
             type: 'Feature',
