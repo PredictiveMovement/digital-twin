@@ -4,9 +4,8 @@ metadata:
   name: visualisation
 spec:
   ports:
-    - port: 3000
-      targetPort: 3000
-  type: LoadBalancer
+    - port: 80
+      targetPort: 80
   selector:
     app: visualisation
 ---
@@ -27,13 +26,19 @@ spec:
         - name: visualisation
           image: iteam1337/pm-digital-twin-visualisation
           ports:
-            - containerPort: 3000
-          env:
-            - name: REACT_APP_MAPBOX_ACCESS_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  key: REACT_APP_MAPBOX_ACCESS_TOKEN
-                  name: mapbox-access-token
+            - containerPort: 80
+          # env:
+          #   - name: REACT_APP_MAPBOX_ACCESS_TOKEN
+          #     valueFrom:
+          #       secretKeyRef:
+          #         key: REACT_APP_MAPBOX_ACCESS_TOKEN
+          #         name: mapbox-access-tokens
+          #   - name: REACT_APP_SIMULATOR_URL
+          #     valueFrom:
+          #       secretKeyRef:
+          #         key: REACT_APP_SIMULATOR_URL
+          #         name: simulator-url
+              
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
@@ -53,4 +58,4 @@ spec:
         paths:
           - backend:
               serviceName: visualisation
-              servicePort: 3000
+              servicePort: 80
