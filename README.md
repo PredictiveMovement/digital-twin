@@ -32,6 +32,11 @@ kubectl -n digital-twin create secret generic mapbox-access-token --from-literal
 ```
 
 ```bash
+# set the simulator url
+export REACT_APP_SIMULATOR=https://digital-twin-engine.iteamdev.io
+```
+
+```bash
 # redeploy
 skaffold run
 ```

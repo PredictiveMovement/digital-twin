@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import Map from './Map.js'
+const simulatorUrl = process.env.REACT_APP_SIMULATOR || 'http://localhost:4000'
 
 const App = () => {
   const [hubs, setHubs] = React.useState([])
@@ -18,9 +19,7 @@ const App = () => {
   const CAR_MS_PER_S = 50;
 
   useEffect(() => {
-    fetch('http://localhost:4000/hubs')
-      .then(res => res.json())
-      .then(res => {
+    fetch(`${simulatorUrl}/hubs`)
         setHubs(
           res.map(({ position }) => ({
             type: 'Feature',
@@ -28,9 +27,7 @@ const App = () => {
           })))
       });
 
-    fetch('http://localhost:4000/bookings')
-      .then(res => res.json())
-      .then(res => {
+    fetch(`${simulatorUrl}/bookings`)
         setBookings(
           res.map(({ departure, destination }) => ({
             type: 'Feature',
@@ -47,10 +44,7 @@ const App = () => {
         )
       });
 
-    fetch('http://localhost:4000/car_events')
-      .then(res => res.json())
-      .then(res => {
-        console.log("got cars", res)
+    fetch(`${simulatorUrl}/car_events`)
         setCarEvents(
           res.map(({ position, time, type, booking_id }) => ({
             type: 'Feature',
