@@ -5,12 +5,13 @@ metadata:
 build:
   artifacts:
     - image: iteam1337/pm-digital-twin-simulation-engine
-      context: packages/simulation-engine
+      context: packages/simulator
     - image: iteam1337/pm-digital-twin-visualisation
       context: packages/visualisation
       docker:
         buildArgs:
           REACT_APP_MAPBOX_ACCESS_TOKEN: "{{.REACT_APP_MAPBOX_ACCESS_TOKEN}}"
+          REACT_APP_SIMULATOR_URL: "{{.REACT_APP_SIMULATOR_URL}}"
 deploy:
   kustomize:
     paths:

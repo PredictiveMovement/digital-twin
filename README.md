@@ -22,18 +22,12 @@ npm start
 
 ## Kubernetes
 
-For now, the visualisation runs the dev server since something goes wrong when building it to a static html+js site.
-
-So the mapbox token is required in runtime. In case the secret needs to be re-created in the cluster, run the following command substituting `<YOUR TOKEN>` with, you know, your token.
-
-```bash
-# create mapbox secret
-kubectl -n digital-twin create secret generic mapbox-access-token --from-literal=REACT_APP_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>
-```
+The visualisation is running with ngiex and you will have to export these variables before running.
 
 ```bash
 # set the simulator url
-export REACT_APP_SIMULATOR=https://digital-twin-engine.iteamdev.io
+    export REACT_APP_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>
+    export REACT_APP_SIMULATOR_URL=https://digital-twin-engine.iteamdev.io
 ```
 
 ```bash

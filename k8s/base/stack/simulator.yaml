@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: simulator
-          image: iteam1337/pm-digital-twin-simulator
+          image: iteam1337/pm-digital-twin-simulation-engine
           ports:
             - containerPort: 4000
 ---

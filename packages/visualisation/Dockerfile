@@ -1,23 +1,24 @@
 FROM node:14.9-slim AS builder
 
-ARG REACT_APP_MAPBOX_ACCESS_TOKEN
-ARG REACT_APP_SIMULATOR
-
 WORKDIR /app
-
-ADD ./package-lock.json .
-ADD ./package.json .
-
+COPY ./package-lock.json .
+COPY ./package.json .
 RUN npm ci
 
-ADD public/ ./public
-ADD src/ ./src
-ADD .prettierrc .
+COPY public/ ./public
+COPY  src/ ./src
+COPY .prettierrc .
 
-# NOTE: run as node process for now...
-CMD npm run start
+ARG REACT_APP_MAPBOX_ACCESS_TOKEN
+ARG REACT_APP_SIMULATOR_URL
 
-# TODO: figure out what is wrong with the static build
-# RUN npm run build
-# FROM nginx
-# COPY --from=builder /app/build /usr/share/nginx/html
+RUN npm run build
+
+# production environment
+FROM nginx:1.16.0-alpine
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/build /usr/share/nginx/html
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
