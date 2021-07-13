@@ -6,7 +6,6 @@ spec:
   ports:
     - port: 4000
       targetPort: 4000
-  type: LoadBalancer
   selector:
     app: simulator
 ---
