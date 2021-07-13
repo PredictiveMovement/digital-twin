@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import ReactMapGL, { Popup } from 'react-map-gl'
 import Pins from './components/Pin'
 import ButtonWrapper from './components/ButtonWrapper'
-import SmallBox from './components/SmallBox'
+import PopupBox from './components/PopupBox'
 import Box from './components/Box'
 
 const Map = ({ data }) => {
@@ -50,7 +50,7 @@ const Map = ({ data }) => {
             closeOnClick={false}
             onClose={setPopupInfo}
           >
-            <SmallBox popupInfo={popupInfo} onClick={setPopupInfo} />
+            <PopupBox popupInfo={popupInfo} onClick={setPopupInfo} />
           </Popup>
         )}
       </ReactMapGL>
