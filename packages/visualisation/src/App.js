@@ -87,36 +87,6 @@ const App = () => {
 
   }, [])
 
-  // useEffect(() => {
-  //   let timeout;
-  //   if (index <= carEvents.length - 1) {
-  //     const event = carEvents[index]
-  //     setCurrentCarPositions({
-  //       ...currentCarPositions,
-  //       [event.carId]: event
-  //     })
-
-  //     let timeUntilNext = index === carEvents.length - 1
-  //       ? 0
-  //       : (carEvents[index + 1].time - carEvents[index].time) * CAR_MS_PER_S
-  //     if (carEvents[index].eventType === 'car:pickup') {
-  //       console.log('car is picking up a package', carEvents[index].bookingId)
-  //       const PICKUP_DELAY = 5 // should probably come from data in the future
-  //       timeUntilNext += PICKUP_DELAY * CAR_MS_PER_S
-  //     } else if (carEvents[index].eventType === 'car:deliver') {
-  //       console.log('car is delivering up a package', carEvents[index].bookingId)
-  //       const DELIVER_DELAY = 8 // should probably come from data in the future
-  //       timeUntilNext += DELIVER_DELAY * CAR_MS_PER_S
-  //     }
-
-  //     timeout = setTimeout(() => setIndex(index + 1), timeUntilNext);
-  //   }
-
-  //   return () => {
-  //     clearTimeout(timeout);
-  //   };
-  // }, [index, carEvents, currentCarPositions]);
-
   useEffect(() => {
     const startTime = (new Date()).getTime()
     function onFrame() {
