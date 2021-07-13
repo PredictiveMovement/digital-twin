@@ -27,6 +27,13 @@ spec:
           image: iteam1337/pm-digital-twin-simulation-engine
           ports:
             - containerPort: 4000
+          volumeMounts:
+            - name: ombudsnat
+              mountPath: /app/data
+      volumes:
+        - name: ombudsnat
+          hostPath:
+            path: /storage/predictivemovement/ombudsnat
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
