@@ -4,7 +4,11 @@ import ReactMapGL, { Popup } from 'react-map-gl'
 import Pins from './components/Pin'
 import ButtonWrapper from './components/ButtonWrapper'
 import InfoBox from './components/InfoBox'
-
+import mapboxgl from 'mapbox-gl'
+// @ts-ignore
+mapboxgl.workerClass =
+  // eslint-disable-next-line import/no-webpack-loader-syntax
+  require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default
 
 const Map = ({ data }) => {
   const [mapState, setMapState] = useState({
