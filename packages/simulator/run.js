@@ -25,7 +25,12 @@ const events$ = pink$
 let events = []
 let bookings = []
 
-events$.subscribe(e => events.push(e))
+events$
+  .pipe(toArray())
+  .subscribe(ev => {
+    ev.sort((a, b) => a.time - b.time)
+    events.push(...ev)
+  })
 
 pink_bookings$
   // .pipe(mergeWith(red_bookings$))

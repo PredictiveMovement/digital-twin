@@ -31,17 +31,25 @@ class Car {
   _handleBooking(booking, time_offset) {
     console.debug(`car#${this.id} handle_booking booking_id:${booking.id} time_offset ${time_offset}`)
 
+    function pointStandardEvent(point) {
+      return {
+        position: point.position,
+        meters: point.meters,
+        duration: point.duration,
+      }
+    }
+
     const pickupRoute$ = from(osrm.route(this.start_position, booking.departure))
       .pipe(
         mergeMap(extractPoints),
-        map(point => ({ type: 'car:position', position: point.position, car_id: this.id, time: time_offset + point.passed })),
+        map(point => ({ ...pointStandardEvent(point), type: 'car:position', car_id: this.id, time: time_offset + point.passed })),
       )
 
     const pickupEvent$ = pickupRoute$.pipe(
       last(),
       map(event => {
         // TODO: How long should it take to from arriving at the package's position to next departure?
-        return { type: 'car:pickup', position: event.position, car_id: this.id, time: event.time, booking_id: booking.id }
+        return ({ ...pointStandardEvent(event), type: 'car:pickup', position: event.position, car_id: this.id, time: event.time, booking_id: booking.id })
       })
     )
 
@@ -50,7 +58,7 @@ class Car {
         mergeMap(extractPoints),
         withLatestFrom(pickupEvent$),
         map(([point, loadEvent]) => (
-          { type: 'car:position', position: point.position, car_id: this.id, time: point.passed + loadEvent.time, passed: point.passed }
+          { ...pointStandardEvent(point), type: 'car:position', car_id: this.id, time: point.passed + loadEvent.time }
         )),
       )
 
@@ -58,7 +66,7 @@ class Car {
       last(),
       map(event => {
         // TODO: Currently takes 0 time to pick a package up
-        return { type: 'car:deliver', position: event.position, car_id: this.id, time: event.time, booking_id: booking.id }
+        return { ...pointStandardEvent(event), type: 'car:deliver', position: event.position, car_id: this.id, time: event.time, booking_id: booking.id }
       })
     )
 
