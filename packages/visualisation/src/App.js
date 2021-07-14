@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import Map from './Map.js'
 
-
-// TODO: decouple events, waypoints and geometry from each other, it's all a mess right now
 function interpolatePosition(fromEvent, toEvent, time) {
   const weHaveBeenDrivingFor = (time - fromEvent.time)
   // if it takes no time drive we're already there
   const progress = fromEvent.duration === 0 ? 1 : weHaveBeenDrivingFor / fromEvent.duration
 
   const interpolatedPosition = {
-    latitude: fromEvent.geometry.coordinates.latitude * (1 - progress) + toEvent.geometry.coordinates.latitude * progress,
-    longitude: fromEvent.geometry.coordinates.longitude * (1 - progress) + toEvent.geometry.coordinates.longitude * progress,
+    latitude: fromEvent.position.lat * (1 - progress) + toEvent.position.lat * progress,
+    longitude: fromEvent.position.lon * (1 - progress) + toEvent.position.lon * progress,
   }
   return interpolatedPosition
 }
@@ -56,14 +54,9 @@ const App = () => {
     fetch('http://localhost:4000/car_events')
       .then(res => res.json())
       .then(res => {
-        // TODO: do we really want to map over this potentially huuuuuge array?
-        // we will still loop over it later to process it, we could create the geometry then
         setCarEvents(
           res.map(({ car_id, position, time, type, booking_id, meters, duration }) => ({
-            type: 'Feature',
-            geometry: {
-              type: 'Point', coordinates: { 'longitude': position.lon, 'latitude': position.lat }
-            },
+            position,
             eventType: type,
             time,
             duration,
@@ -78,6 +71,8 @@ const App = () => {
 
   useEffect(() => {
     const startTime = (new Date()).getTime()
+    // TODO: maybe these should be handled via react somehow,
+    // some times I get two instances of the simulation running at the same time but maybe that's due to the dev move
     let carEventIndex = 0
     let currentCarWaypoints = {}
 
