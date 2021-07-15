@@ -3,8 +3,8 @@ import Map from './Map.js'
 
 function interpolatePosition(fromEvent, toEvent, time) {
   const weHaveBeenDrivingFor = (time - fromEvent.time)
-  // if it takes no time drive we're already there
-  const progress = fromEvent.duration === 0 ? 1 : weHaveBeenDrivingFor / fromEvent.duration
+  const progress = Math.min(weHaveBeenDrivingFor / fromEvent.duration, 1)
+  console.log(progress)
 
   const interpolatedPosition = {
     latitude: fromEvent.position.lat * (1 - progress) + toEvent.position.lat * progress,
@@ -55,7 +55,9 @@ const App = () => {
       .then(res => res.json())
       .then(res => {
         setCarEvents(
-          res.map(({ car_id, position, time, type, booking_id, meters, duration }) => ({
+          res
+          // .filter(({car_id}) => car_id === 'car-pink-2')
+          .map(({ car_id, position, time, type, booking_id, meters, duration }) => ({
             position,
             eventType: type,
             time,
@@ -77,10 +79,10 @@ const App = () => {
     let currentCarWaypoints = {}
 
     function onFrame() {
-      const SPEED = 7
-      const eventsLeft = () => (carEventIndex < carEvents.length)
+      const SPEED = 1 // * the actual speed
+      const areEventsLeft = () => (carEventIndex < carEvents.length)
       // TODO: why are we only processing 592 events when 615 are returned from api? bug?
-      if (!eventsLeft()) {
+      if (!areEventsLeft()) {
         console.log('Reached end of carEvents, doing nothing')
         return null
       }
@@ -90,7 +92,8 @@ const App = () => {
       setCurrentCarPositions(currentPositions => {
         // make list of all events to be processed
         let currentEvents = []
-        while (eventsLeft() && elapsed >= carEvents[carEventIndex].time) {
+        // TODO: make a function for this
+        while (areEventsLeft() && elapsed >= carEvents[carEventIndex].time) {
           currentEvents.push(carEvents[carEventIndex])
           ++carEventIndex
         }
@@ -112,6 +115,9 @@ const App = () => {
               break;
             case 'car:deliver':
               console.log('car is delivering package', event.bookingId)
+              // // console.log('event ======> ', event)
+              // console.log('bookings ===> ', bookings)
+              //debugger
               break;
             default:
               console.error('Error unknown eventType', event)

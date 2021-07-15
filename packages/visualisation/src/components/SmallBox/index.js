@@ -20,7 +20,7 @@ function SmallBox({ popupInfo }) {
         <Wrapper>
             <div style={{ marginBottom: '1rem' }}>
                 <Paragraph>{popupInfo.type === 'hub' ? 'Postombud' : popupInfo.type === 'booking' ? 'Bokning' : 'Lastbil'}</Paragraph>
-                <Paragraph>SNX</Paragraph>
+                
             </div>
             <div>
                 <Paragraph thin>Fyllnadsgrad</Paragraph>
