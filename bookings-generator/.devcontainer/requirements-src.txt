@@ -1,0 +1,7 @@
+pandas
+sklearn
+fastapi
+uvicorn
+matplotlib
+perlin-noise
+opensimplex

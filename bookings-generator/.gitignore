@@ -1,0 +1,9 @@
+# OSX
+.DS_Store
+
+# Project
+data/
+tmp/
+
+# Python
+__pycache__
