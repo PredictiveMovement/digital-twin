@@ -5,5 +5,9 @@
 data/
 tmp/
 
+# VSC
+!.vscode
+!.env
+
 # Python
 __pycache__
