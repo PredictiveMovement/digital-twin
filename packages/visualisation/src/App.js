@@ -4,7 +4,7 @@ import Map from './Map.js'
 function interpolatePosition(fromEvent, toEvent, time) {
   const weHaveBeenDrivingFor = (time - fromEvent.time)
   const progress = Math.min(weHaveBeenDrivingFor / fromEvent.duration, 1)
-  console.log(progress)
+  // console.log(progress)
 
   const interpolatedPosition = {
     latitude: fromEvent.position.lat * (1 - progress) + toEvent.position.lat * progress,
@@ -56,17 +56,17 @@ const App = () => {
       .then(res => {
         setCarEvents(
           res
-          // .filter(({car_id}) => car_id === 'car-pink-2')
-          .map(({ car_id, position, time, type, booking_id, meters, duration }) => ({
-            position,
-            eventType: type,
-            time,
-            duration,
-            bookingId: booking_id,
-            carId: car_id,
-            meters
-          })
-        ))
+            // .filter(({car_id}) => car_id === 'car-pink-2')
+            .map(({ car_id, position, time, type, booking_id, meters, duration }) => ({
+              position,
+              eventType: type,
+              time,
+              duration,
+              bookingId: booking_id,
+              carId: car_id,
+              meters
+            })
+            ))
       })
 
   }, [])
@@ -79,7 +79,7 @@ const App = () => {
     let currentCarWaypoints = {}
 
     function onFrame() {
-      const SPEED = 1 // * the actual speed
+      const SPEED = 20 // * the actual speed
       const areEventsLeft = () => (carEventIndex < carEvents.length)
       // TODO: why are we only processing 592 events when 615 are returned from api? bug?
       if (!areEventsLeft()) {
@@ -124,7 +124,7 @@ const App = () => {
         // move cars according to their waypoints and current time
         const changes = Object.fromEntries(Object.entries(currentCarWaypoints).map(([carName, car]) =>
           [
-            carName, 
+            carName,
             { geometry: { type: 'Point', coordinates: interpolatePosition(car.from, car.to, elapsed) } }
           ]
         ))

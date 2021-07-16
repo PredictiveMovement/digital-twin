@@ -15,6 +15,7 @@ padding: 1.2rem;
 border-radius: 4px;
 height: 158px;
 justify-content: space-between;
+z-index: 1;
 `
 
 const Paragraph = styled.p`
