@@ -115,7 +115,6 @@ const App = () => {
               break;
             case 'car:deliver':
               console.log('car is delivering package', event.bookingId)
-              // console.log('bookings ===> ', bookings)
               //debugger
               break;
             default:
