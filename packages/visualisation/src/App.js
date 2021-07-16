@@ -115,7 +115,6 @@ const App = () => {
               break;
             case 'car:deliver':
               console.log('car is delivering package', event.bookingId)
-              //debugger
               break;
             default:
               console.error('Error unknown eventType', event)
