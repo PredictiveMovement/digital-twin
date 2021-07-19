@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import Map from './Map.js'
 
-
-function interpolatedPosition(fromEvent, toEvent, time) {
+function interpolatePosition(fromEvent, toEvent, time) {
   const weHaveBeenDrivingFor = (time - fromEvent.time)
-  const progress = weHaveBeenDrivingFor / fromEvent.duration
+  const progress = Math.min(weHaveBeenDrivingFor / fromEvent.duration, 1)
+  // console.log(progress)
 
   const interpolatedPosition = {
-    latitude: fromEvent.geometry.coordinates.latitude * (1 - progress) + toEvent.geometry.coordinates.latitude * progress,
-    longitude: fromEvent.geometry.coordinates.longitude * (1 - progress) + toEvent.geometry.coordinates.longitude * progress,
+    latitude: fromEvent.position.lat * (1 - progress) + toEvent.position.lat * progress,
+    longitude: fromEvent.position.lon * (1 - progress) + toEvent.position.lon * progress,
   }
   return interpolatedPosition
 }
@@ -16,12 +16,10 @@ function interpolatedPosition(fromEvent, toEvent, time) {
 const App = () => {
   const [hubs, setHubs] = useState([])
   const [bookings, setBookings] = useState([])
-  const [carEvents, setCarEvents] = useState({})
-  const [index, setIndex] = useState(0);
+  const [carEvents, setCarEvents] = useState([])
+  //const [carEventIndex, setCarEventIndex] = useState(0);
 
   const [currentCarPositions, setCurrentCarPositions] = useState({})
-
-  const CAR_MS_PER_S = 50;
 
   useEffect(() => {
     fetch('http://localhost:4000/hubs')
@@ -56,98 +54,80 @@ const App = () => {
     fetch('http://localhost:4000/car_events')
       .then(res => res.json())
       .then(res => {
-        console.log("got cars", res)
-        const result = {}
-        res.forEach(({ car_id, position, time, type, booking_id, meters, duration }) => {
-          if (result[car_id] == null) result[car_id] = []
-
-          result[car_id].push({
-            type: 'Feature',
-            geometry: {
-              type: 'Point', coordinates: { 'longitude': position.lon, 'latitude': position.lat }
-            },
-            eventType: type,
-            time,
-            duration,
-            bookingId: booking_id,
-            carId: car_id,
-            meters
-          })
-        })
-        setCarEvents(result)
-        setCurrentCarPositions(
-          Object.entries(result).reduce(
-            (acc, [carId, events]) => (
-              { ...acc, [carId]: { ...events[0], index: 0 } }
-            ),
-            {}
-          ),
-        )
-      });
+        setCarEvents(
+          res
+            // .filter(({car_id}) => car_id === 'car-pink-2')
+            .map(({ car_id, position, time, type, booking_id, meters, duration }) => ({
+              position,
+              eventType: type,
+              time,
+              duration,
+              bookingId: booking_id,
+              carId: car_id,
+              meters
+            })
+            ))
+      })
 
   }, [])
 
   useEffect(() => {
     const startTime = (new Date()).getTime()
-    function onFrame() {
-      const SPEED = 7
-      if (Object.keys(carEvents).length === 0) return
+    // TODO: maybe these should be handled via react somehow,
+    // some times I get two instances of the simulation running at the same time but maybe that's due to the dev move
+    let carEventIndex = 0
+    let currentCarWaypoints = {}
 
+    function onFrame() {
+      const SPEED = 20 // * the actual speed
+      const areEventsLeft = () => (carEventIndex < carEvents.length)
+      // TODO: why are we only processing 592 events when 615 are returned from api? bug?
+      if (!areEventsLeft()) {
+        console.log('Reached end of carEvents, doing nothing')
+        return null
+      }
       const currentTime = (new Date()).getTime()
-      const elapsed = (currentTime - startTime) * SPEED
-      //console.log('elapsed', elapsed)
+      const elapsed = ((currentTime - startTime) / 1000) * SPEED
 
       setCurrentCarPositions(currentPositions => {
-        const changes = {}
+        // make list of all events to be processed
+        let currentEvents = []
+        // TODO: make a function for this
+        while (areEventsLeft() && elapsed >= carEvents[carEventIndex].time) {
+          currentEvents.push(carEvents[carEventIndex])
+          ++carEventIndex
+        }
 
-        Object.entries(carEvents).forEach(([carId, events]) => {
-          const currentEvent = currentPositions[carId]
-          if (currentEvent.isStopped) {
-            return null;
-          }
-
-          if (currentEvent.eventType === 'car:pickup') {
-            console.log('car is picking up a package', currentEvent.bookingId)
-          } else if (currentEvent.eventType === 'car:deliver') {
-            console.log('car is delivering up a package', currentEvent.bookingId)
-          }
-
-          if (elapsed <= (currentEvent.time + currentEvent.duration) * 1000) {
-            const nextEvent = events[currentEvent.index + 1]
-            if (nextEvent != null) {
-              const position = interpolatedPosition(currentEvent, nextEvent, elapsed / 1000)
-              // [next_event.carId]: interpolated_position(previous_event, next_event)
-              changes[currentEvent.carId] = {
-                ...currentEvent,
-                geometry: {
-                  type: 'Point', coordinates: position
-                }
+        // iterate over those new events and update car waypoints
+        currentEvents.forEach(event => {
+          switch (event.eventType) {
+            case 'car:position':
+              // car has reached next waypoint
+              const oldWaypoints = currentCarWaypoints[event.carId]
+              if (oldWaypoints === undefined) { // first time we see this car just make it appear
+                currentCarWaypoints[event.carId] = { from: event, to: event }
+              } else { // change were it's going
+                currentCarWaypoints[event.carId] = { from: oldWaypoints.to, to: event }
               }
-            }
-          } else {
-            const nextEvent = events[currentEvent.index + 1]
-            if (nextEvent != null) {
-              // console.log(`increasing event index for car:${nextEvent.carId} from:${currentEvent.index} to:${currentEvent.index + 1}`)
-              // console.log('next event', nextEvent)
-              changes[nextEvent.carId] = {
-                ...nextEvent,
-                index: currentEvent.index + 1,
-                geometry: {
-                  type: 'Point',
-                  coordinates: nextEvent.geometry.coordinates
-                }
-
-              }
-            } else {
-              changes[currentEvent.carId] = {
-                ...currentEvent,
-                isStopped: true,
-              }
-            }
+              break;
+            case 'car:pickup':
+              console.log('car is picking up package', event.bookingId)
+              break;
+            case 'car:deliver':
+              console.log('car is delivering package', event.bookingId)
+              break;
+            default:
+              console.error('Error unknown eventType', event)
           }
-
         })
 
+        // move cars according to their waypoints and current time
+        const changes = Object.fromEntries(Object.entries(currentCarWaypoints).map(([carName, car]) =>
+          [
+            carName,
+            { geometry: { type: 'Point', coordinates: interpolatePosition(car.from, car.to, elapsed) } }
+          ]
+        ))
         return { ...currentPositions, ...changes }
       })
       requestAnimationFrame(onFrame)
@@ -158,7 +138,7 @@ const App = () => {
   return (
     <>
       <Map
-        data={{ hubs, bookings, car: Object.values(currentCarPositions), totalCars: Object.entries(carEvents).length }}
+        data={{ hubs, bookings, car: Object.values(currentCarPositions), totalCars: Object.values(currentCarPositions).length }}
       />
     </>
   )
