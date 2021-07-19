@@ -12,7 +12,12 @@ import generator.times_weight as time_weight
 import generator.weight_score as weight_score
 import generator.random_weight_address as random_weight_address
 import generator.weight_plot as weight_plot
+import generator.gpkg_data_poc as gpkg_data_poc
 
+# ---
+# --- load gpkg data
+# ---
+gpkg_data_poc.load()
 
 # ---
 # --- load location weights

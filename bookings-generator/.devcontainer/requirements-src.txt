@@ -5,3 +5,4 @@ uvicorn
 matplotlib
 perlin-noise
 opensimplex
+fiona
