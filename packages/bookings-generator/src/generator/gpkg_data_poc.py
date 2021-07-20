@@ -12,34 +12,44 @@ def _is_in_bounds(polygon):
 
 
 def load():
-    source_fileName = "data/raw/Totalbefolkning_1km_191231.gpkg"
-    destination_filename = "data/raw/Totalbefolkning_1km_191231_updated.gpkg"
-    print("=====> loading source gpkg file")
+    source_fileName = 'data/raw/Totalbefolkning_1km_191231.gpkg'
+    print('=====> loading source gpkg file')
 
-    with fiona.open(source_fileName, "r") as source:
-        crs = source.crs
-        driver = source.driver
-        schema = source.schema
-        schema["properties"]["packages"] = "float"
-
-        # ---
-        # source schema has geometry MultiPolygon and all features seem to have geometry Polygon
-        # the difference in geometry type makes the write to destination throw errors
-        # we set geometry to Polygon and the write seems to work fine
-        # ---
-        schema["geometry"] = "Polygon"
-
-        print("=====> writing destination gpkg file")
-
+    with fiona.open(source_fileName, 'r') as source:
         count = 0
-        with fiona.open(destination_filename, "w", driver, schema, crs) as destination:
-            for feature in source:
-                if not _is_in_bounds(feature["geometry"]["coordinates"][0]):
-                    continue
-                count += 1
-                population = feature["properties"]["pop"]
-                feature["properties"]["packages"] = population / 10
-                destination.write(feature)
-        print(f"Found {count} matching entries")
+        output = []
 
-    print("=====> completed writing destination gpkg file")
+        for feature in source:
+            if not _is_in_bounds(feature['geometry']['coordinates'][0]):
+                continue
+            count += 1
+            population = feature['properties']['pop']
+            feature['properties']['packages'] = population / 10
+            output.append({'position': feature['geometry']['coordinates'][0],
+                           'population': population,
+                           'packages': feature['properties']['packages']})
+
+        print(f'Read {count} matching entries')
+    return output
+
+
+def write(input):
+    destination_filename = 'data/raw/Totalbefolkning_1km_191231_updated.gpkg'
+    crs = {'init': 'epsg:3006'}
+    driver = 'GPKG'
+    schema = {'properties': {'pop': 'int', 'packages': 'float'},
+              'geometry': 'Polygon'}
+
+    print('=====> writing destination gpkg file')
+    with fiona.open(destination_filename, 'w', driver, schema, crs) as destination:
+        for place in input:
+            feature = {
+                'type': 'Feature',
+                'properties': {'pop': place['population'], 'packages': place['packages']},
+                'geometry': {
+                    'type': 'Polygon',
+                    'coordinates': [place['position']]
+                }
+            }
+            destination.write(feature)
+    print('=====> completed writing destination gpkg file')
