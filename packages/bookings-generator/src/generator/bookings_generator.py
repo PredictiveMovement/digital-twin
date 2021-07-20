@@ -15,34 +15,35 @@ import generator.weight_plot as weight_plot
 import generator.gpkg_data_poc as gpkg_data_poc
 
 # ---
-# --- load gpkg data
+# --- load geopackage data
 # ---
-gpkg_data_poc.load()
+
+population = gpkg_data_poc.load()
+gpkg_data_poc.write(population)
 
 # ---
 # --- load location weights
 # ---
 #df_address = addresses.load_dummy_by_county('Norrbotten')
-df_address = addresses.load_1km_grid()
+#df_address = addresses.load_1km_grid()
 
 # add weights
-address_weight_columns = []
+#address_weight_columns = []
 
 #dummy_weights.add_random(df_address, address_weight_columns)
 #dummy_weights.add_series(df_address, address_weight_columns)
 
-df_address = population_weight.add_beftotalt(df_address,
-                                             address_weight_columns)
+#df_address = population_weight.add_beftotalt(df_address, address_weight_columns)
 
-perlin_weight.add_perlin(df_address, address_weight_columns)
+#perlin_weight.add_perlin(df_address, address_weight_columns)
 #perlin_weight.add_perlin_with_population(df_address, address_weight_columns)
 #perlin_weight.add_perlin_factor_population(df_address, address_weight_columns)
 
 #simplex_weight.add_simplex(df_address, address_weight_columns)
 
 # calculate weight score
-weight_score.min_max_scale(df_address, address_weight_columns)
-weight_score.calculate(df_address, address_weight_columns)
+#weight_score.min_max_scale(df_address, address_weight_columns)
+#weight_score.calculate(df_address, address_weight_columns)
 
 # print(df_address)
 
@@ -53,30 +54,30 @@ weight_score.calculate(df_address, address_weight_columns)
 df_time = times.load_year_days()
 
 # add weights
-time_weight_columns = []
+#time_weight_columns = []
 
 #dummy_weights.add_random(df_time, time_weight_columns)
 #dummy_weights.add_series(df_time, time_weight_columns)
 #dummy_weights.add_equal(df_time, time_weight_columns)
 
-time_weight.add_manual(df_time, time_weight_columns)
-time_weight.add_perlin_with_manual(df_time, time_weight_columns)
+#time_weight.add_manual(df_time, time_weight_columns)
+#time_weight.add_perlin_with_manual(df_time, time_weight_columns)
 
 # calculate weight score
-weight_score.min_max_scale(df_time, time_weight_columns)
-weight_score.calculate(df_time, time_weight_columns)
+#weight_score.min_max_scale(df_time, time_weight_columns)
+#weight_score.calculate(df_time, time_weight_columns)
 
 # weight to integer booking numbers
-yearly_booking_number = times.load_yearly_booking_number()
-times.transform_weight_to_bookings_number(df_time, yearly_booking_number)
+#yearly_booking_number = times.load_yearly_booking_number()
+#times.transform_weight_to_bookings_number(df_time, yearly_booking_number)
 
 # times.log_diff_to_bookings_limit(df_time, yearly_booking_number)
 # print(df_time)
 
 
 # --- visualization
-weight_plot.plot_weights_line(df_address)
-weight_plot.plot_numbers_line(df_time)
+# weight_plot.plot_weights_line(df_address)
+# weight_plot.plot_numbers_line(df_time)
 
 
 def get_bookings(from_date, to_date):

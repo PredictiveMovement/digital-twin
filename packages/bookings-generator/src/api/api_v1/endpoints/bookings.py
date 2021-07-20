@@ -28,4 +28,5 @@ def get_bookings_by_from_to_date(from_date: datetime, to_date: datetime):
         "from": from_date,
         "to": to_date,
         "index": bookings_index
+        # TODO: should return a bunch of {position and time}
     }
