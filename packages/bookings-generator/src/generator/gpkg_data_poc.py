@@ -1,17 +1,17 @@
 import fiona
 
 
-def _is_in_bounds(polygon):
+def _is_in_bounds(polygon, upper_left, lower_right):
     # this is the area around Ljusdal in SWEREF99TM
     # upper left N 6869841.085 , E 537429.637
     # lower right N 6832795.482 , E 588303.781
     for point in polygon:
-        if 537429.637 < point[0] < 588303.781 and 6832795.482 < point[1] < 6869841.085:
+        if upper_left[1] < point[0] < lower_right[1] and lower_right[0] < point[1] < upper_left[0]:
             return True
     return False
 
 
-def load():
+def read(upper_left, lower_right):
     source_fileName = 'data/raw/Totalbefolkning_1km_191231.gpkg'
     print('=====> loading source gpkg file')
 
@@ -20,14 +20,12 @@ def load():
         output = []
 
         for feature in source:
-            if not _is_in_bounds(feature['geometry']['coordinates'][0]):
+            if not _is_in_bounds(feature['geometry']['coordinates'][0], upper_left, lower_right):
                 continue
             count += 1
             population = feature['properties']['pop']
-            feature['properties']['packages'] = population / 10
             output.append({'position': feature['geometry']['coordinates'][0],
-                           'population': population,
-                           'packages': feature['properties']['packages']})
+                           'population': population})
 
         print(f'Read {count} matching entries')
     return output
