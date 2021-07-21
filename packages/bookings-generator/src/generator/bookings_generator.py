@@ -1,5 +1,6 @@
-from datetime import datetime
+import datetime
 from sweref99 import projections
+import random
 
 import generator.df_addresses as addresses
 import generator.df_times as times
@@ -13,7 +14,7 @@ import generator.times_weight as time_weight
 import generator.weight_score as weight_score
 import generator.random_weight_address as random_weight_address
 import generator.weight_plot as weight_plot
-import generator.gpkg_data_poc as gpkg_data_poc
+import generator.gpkg_data as gpkg_data
 
 # ---
 # --- load geopackage data
@@ -87,26 +88,57 @@ def _wgs84_to_sweref(point):
     return (northing, easting)
 
 
+def _sweref_to_wgs84(point):
+    tm = projections.make_transverse_mercator("SWEREF_99_TM")
+
+    northing, easting = point[0], point[1]
+    lat, lon = tm.grid_to_geodetic(northing, easting)
+    print(f"{northing:.2f} N {easting:.2f} E : {lat:.6f}° N {lon:.6f}°E")
+    return (lat, lon)
+
+
 def _add_bookings(place, duration):
     # assumption one package per person per month
     return place | {'packages': round(place['population'] * duration.days / 30)}
+
+
+def _random_position_in(area):
+    east_size = area[2][0] - area[0][0]
+    north_size = area[1][1] - area[0][1]
+    origo = area[0]
+    easting = origo[0] + random.random() * east_size
+    northing = origo[1] + random.random() * north_size
+    return (northing, easting)  # convert from order E N to N E
+
+
+def _random_time_in(from_date, to_date):
+    duration = to_date - from_date
+    return from_date + random.random() * duration
 
 
 def get_bookings(upper_left, lower_right, from_date, to_date):
     # Area around Ljusdal
     # upper left N 6869841.085 , E 537429.637
     # lower right N 6832795.482 , E 588303.781
-    places = gpkg_data_poc.read(
+    places = gpkg_data.read(
         _wgs84_to_sweref(upper_left),
         _wgs84_to_sweref(lower_right))
     duration = to_date - from_date
     places_with_packages = map(
         lambda place: _add_bookings(place, duration), places)
 
-    # TODO: randomize place[packages] number of positions within the square
-
-    gpkg_data_poc.write(places_with_packages)
-    return places_with_packages
+    booking_positions = []
+    for place in places_with_packages:
+        for _ in range(place['packages']):
+            booking_positions.append({
+                'position': _sweref_to_wgs84(_random_position_in(place['area'])),
+                'time': _random_time_in(from_date, to_date)
+            })
+    #map(_random_position_in, places_with_packages)
+    #booking_positions_wgs = map(_sweref_to_wgs84, booking_positions)
+#    booking_positions = [_create_booking(place) for place in places_with_packages]
+    # gpkg_data.write(places_with_packages)
+    return list(booking_positions)
 
     # calculate weight score dynamically if needed here
 
@@ -117,12 +149,3 @@ def get_bookings(upper_left, lower_right, from_date, to_date):
     # pick addresses
     #bookings_index = random_weight_address.pick(df_address, numbers)
     # return bookings_index
-
-
-# if __name__ == "__main__":
-#   iso88601 = "%Y-%m-%dT%H:%M:%S%z"
-#   from_date = datetime.strptime('2008-03-15T00:00:00+01:00', iso88601)
-#   to_date = datetime.strptime('2008-03-16T00:00:00+01:00', iso88601)
-
-#   bookings_index = get_bookings(from_date, to_date)
-#   print(f'Bookings index: {bookings_index}')

@@ -24,7 +24,7 @@ def read(upper_left, lower_right):
                 continue
             count += 1
             population = feature['properties']['pop']
-            output.append({'position': feature['geometry']['coordinates'][0],
+            output.append({'area': feature['geometry']['coordinates'][0],
                            'population': population})
 
         print(f'Read {count} matching entries')
@@ -46,7 +46,7 @@ def write(input):
                 'properties': {'pop': place['population'], 'packages': place['packages']},
                 'geometry': {
                     'type': 'Polygon',
-                    'coordinates': [place['position']]
+                    'coordinates': [place['area']]
                 }
             }
             destination.write(feature)
