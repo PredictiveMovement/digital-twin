@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: simulator
+spec:
+  ports:
+    - port: 4000
+      targetPort: 4000
+  selector:
+    app: simulator
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulator
+spec:
+  selector:
+    matchLabels:
+      app: simulator
+  template:
+    metadata:
+      labels:
+        app: simulator
+    spec:
+      containers:
+        - name: simulator
+          image: iteam1337/pm-digital-twin-simulation-engine
+          ports:
+            - containerPort: 4000
+          volumeMounts:
+            - name: ombudsnat
+              mountPath: /app/data
+      volumes:
+        - name: ombudsnat
+          hostPath:
+            path: /storage/predictivemovement/ombudsnat
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: simulator-ingress
+  annotations:
+    kubernetes.io/ingress.class: "public"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts:
+        - digital-twin-engine.iteamdev.io
+      secretName: simulator-prod-tls
+  rules:
+    - host: digital-twin-engine.iteamdev.io
+      http:
+        paths:
+          - backend:
+              serviceName: simulator
+              servicePort: 4000

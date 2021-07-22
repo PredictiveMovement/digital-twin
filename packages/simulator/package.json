@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "npx nodemon web/index.js",
-    "dev:cli": "npx nodemon run.js"
+    "dev:cli": "npx nodemon run.js",
+    "start": "node web/index.js"
   },
   "author": "",
   "license": "UNLICENSED",

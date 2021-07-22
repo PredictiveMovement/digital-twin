@@ -3,6 +3,11 @@ import React, { useState } from 'react'
 import ReactMapGL, { Popup } from 'react-map-gl'
 import Pins from './components/Pin'
 import ButtonWrapper from './components/ButtonWrapper'
+import mapboxgl from 'mapbox-gl'
+// @ts-ignore
+mapboxgl.workerClass =
+  // eslint-disable-next-line import/no-webpack-loader-syntax
+  require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default
 import PopupBox from './components/PopupBox'
 import Box from './components/Box'
 

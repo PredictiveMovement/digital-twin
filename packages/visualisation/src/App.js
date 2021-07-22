@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Map from './Map.js'
+const simulatorUrl =
+  process.env.REACT_APP_SIMULATOR_URL || 'http://localhost:4000'
 
 function interpolatePosition(fromEvent, toEvent, time) {
   const weHaveBeenDrivingFor = (time - fromEvent.time)
@@ -22,36 +24,44 @@ const App = () => {
   const [currentCarPositions, setCurrentCarPositions] = useState({})
 
   useEffect(() => {
-    fetch('http://localhost:4000/hubs')
-      .then(res => res.json())
-      .then(res => {
+    fetch(`${simulatorUrl}/hubs`)
+      .then((res) => res.json())
+      .then((res) => {
         setHubs(
           res.map(({ position }) => ({
             type: 'Feature',
-            geometry: { type: 'Point', coordinates: { 'longitude': position.lon, 'latitude': position.lat } },
-          })))
-      });
+            geometry: {
+              type: 'Point',
+              coordinates: { longitude: position.lon, latitude: position.lat },
+            },
+          }))
+        )
+      })
 
-    fetch('http://localhost:4000/bookings')
-      .then(res => res.json())
-      .then(res => {
+    fetch(`${simulatorUrl}/bookings`)
+      .then((res) => res.json())
+      .then((res) => {
         setBookings(
           res.map(({ departure, destination }) => ({
             type: 'Feature',
             geometry: {
-              type: 'Point', coordinates: { 'longitude': destination.lon, 'latitude': destination.lat }
+              type: 'Point',
+              coordinates: {
+                longitude: destination.lon,
+                latitude: destination.lat,
+              },
             },
             destination: {
               coordinates: {
-                'longitude': destination.lon,
-                'latitude': destination.lat
-              }
-            }
+                longitude: destination.lon,
+                latitude: destination.lat,
+              },
+            },
           }))
         )
-      });
+      })
 
-    fetch('http://localhost:4000/car_events')
+    fetch(`${simulatorUrl}/car_events`)
       .then(res => res.json())
       .then(res => {
         setCarEvents(
