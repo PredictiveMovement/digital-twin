@@ -1,8 +1,8 @@
 # Predictive Movement - Digitial Twin - Bookings Generator
 
-Create folder `/data/raw/` and place the `Totalbefolkning_1km_191231.gpkg` found in drive in there
+Create folder `/src/data/raw/` and place the `Totalbefolkning_1km_191231.gpkg` found in drive in there
 
-Start with: `/workspaces/digital-twin/bookings-generator/src $ uvicorn main:app --reload`
+Start with: `cd src && uvicorn main:app --reload`
 
 IF VSC should do Auto-Port-Forward, if not you have to do it manually.
 
