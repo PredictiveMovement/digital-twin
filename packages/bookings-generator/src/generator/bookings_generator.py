@@ -84,7 +84,6 @@ def _wgs84_to_sweref(point):
 
     lat, lon = point[0], point[1]
     northing, easting = tm.geodetic_to_grid(lat, lon)
-    print(f"{lat:.6f}° N {lon:.6f}°E : {northing:.2f} N {easting:.2f} E")
     return (northing, easting)
 
 
@@ -93,7 +92,6 @@ def _sweref_to_wgs84(point):
 
     northing, easting = point[0], point[1]
     lat, lon = tm.grid_to_geodetic(northing, easting)
-    print(f"{northing:.2f} N {easting:.2f} E : {lat:.6f}° N {lon:.6f}°E")
     return (lat, lon)
 
 
