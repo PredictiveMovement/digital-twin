@@ -1,0 +1,13 @@
+{
+    "editor.rulers": [
+        79
+    ],
+    "files.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/.pytest_cache": true,
+        "**/__pycache__": true,
+        "**/.ipynb_checkpoints": true
+    },
+    "python.envFile": "${workspaceFolder}/.env"
+}

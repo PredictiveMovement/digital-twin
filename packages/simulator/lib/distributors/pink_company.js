@@ -4,7 +4,7 @@ const Pool = require('../pool')
 
 const hub = { lat: 61.820734, lon: 16.058911 }
 let id = 1
-const CAR_COUNT = 1
+const CAR_COUNT = 2
 
 function generateCar(pool) {
   const next_id = id++
