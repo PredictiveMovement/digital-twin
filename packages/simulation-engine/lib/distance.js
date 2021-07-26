@@ -8,13 +8,6 @@ function convertPosition (pos) {
   }
 }
 
-function closestCars (cars, position) {
-  return _(cars)
-    .map(car => ({ distance: pythagoras(car.position, position), car: car }))
-    .sortBy((a, b) => a.distance - b.distance)
-    .errors(err => console.error('closestCars', err))
-}
-
 function pythagoras (from, to) {
   from = convertPosition(from)
   to = convertPosition(to)
@@ -46,4 +39,16 @@ function bearing (p1, p2) {
   return Math.round(Math.atan2(Math.cos(p1.lat) * Math.sin(p2.lat) - Math.sin(p1.lat) * Math.cos(p2.lat) * Math.cos(p2.lon - p1.lon), Math.sin(p2.lon - p1.lon) * Math.cos(p2.lat)) * 180 / Math.PI)
 }
 
-module.exports = {closestCars, pythagoras, haversine, bearing}
+/* Add meters to a position
+*/
+function addMeters(p1, meters) {
+  p1 = convertPosition(p1)
+  const R = 6371000
+
+  lat  = p1.lat + (meters.y / R) * (180 / Math.pi);
+  lon = p1.lon + (meters.x / R) * (180 / Math.pi) / cos(p1.lat * Math.pi/180);
+  
+  return {lon, lat}
+}
+
+module.exports = {pythagoras, haversine, bearing, convertPosition, addMeters}
