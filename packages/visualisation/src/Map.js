@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import ReactMapGL, { Layer, Source } from 'react-map-gl'
 
-const Map = ({ data }) => {
+const Map = ({ postombud, cars, bookings }) => {
   const [mapState, setMapState] = useState({
     viewport: {
       latitude: 66.0459355,
@@ -20,22 +20,34 @@ const Map = ({ data }) => {
         {...mapState.viewport}
         onViewportChange={(viewport) => setMapState({ viewport })}
       >
-        <Source id="postombud" type="geojson" data={data.postombud}>
+        <Source id="postombud" type="geojson" data={postombud}>
           <Layer
             id="point-post"
             type="circle"
             paint={{
-              'circle-radius': 10,
+              'circle-radius': 4,
               'circle-color': '#007cbf',
             }}
           />
         </Source>
-        <Source id="cars" type="geojson" data={data.cars}>
+        
+        <Source id="bookings" type="geojson" data={bookings}>
           <Layer
-            id="point"
+            id="booking"
             type="circle"
             paint={{
-              'circle-radius': 10,
+              'circle-radius': 4,
+              'circle-color': '#fab',
+            }}
+          />
+        </Source>
+
+        <Source id="cars" type="geojson" data={cars}>
+          <Layer
+            id="car"
+            type="circle"
+            paint={{
+              'circle-radius': 8,
               'circle-color': '#ffffff',
             }}
           />

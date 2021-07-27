@@ -7,6 +7,7 @@ const { haversine, addMeters } = require('../lib/distance')
 const perlin = require('perlin-noise')
 
 const xy = (i, size = 1000) => ({ x: i % size, y: Math.floor(i / size) })
+let id = 0
 
 // generate a pattern of random positions so we can take x out of these and get a natural pattern of these positions
 const randomPositions = perlin
@@ -38,8 +39,8 @@ function generateBookingsInKommun(kommun, metersFromOmbud = 10000) {
   )
 
   const bookings = addresses.pipe(
-    concatMap(({ area, ombud, position }) =>
-      address.randomize(position).then((address) => ({ ombud, address }))
+    concatMap(({ ombud, position }) =>
+      address.randomize(position).then((address) => ({ id: id++, ombud, address }))
     )
   )
   return bookings

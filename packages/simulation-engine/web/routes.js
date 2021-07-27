@@ -8,23 +8,26 @@ function register(io) {
     engine.cars
       .pipe(
         mergeMap((car) => fromEvent(car, 'moved').pipe(map(() => car))),
-        map(({ position: { lon, lat }, id, tail, speed, bearing }) => ({
+        map(({ position: { lon, lat }, id, heading, speed, bearing }) => ({
           id,
-          tail,
+          heading,
           speed,
           bearing,
           position: [lon, lat],
         })),
-        tap((car) => console.log('got car', car)),
         bufferTime(500)
       )
       .subscribe((cars) => {
-        console.log('cars', cars)
         socket.volatile.emit('cars', cars)
       })
 
     engine.postombud.pipe(toArray()).subscribe((postombud) => {
       socket.emit('postombud', postombud)
+    })
+
+    engine.bookings.pipe(bufferTime(500)).subscribe((bookings) => {
+      console.log('got bookings', bookings)
+      if (bookings.length) socket.emit('bookings', bookings)
     })
   })
 }
