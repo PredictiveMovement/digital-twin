@@ -7,9 +7,9 @@ function register(io) {
   io.on('connection', function (socket) {
     engine.cars
       .pipe(
-        mergeMap(car => fromEvent(car, 'moved')),
+        mergeMap(car => fromEvent(car, 'moved').pipe(map(() => car))),
+        map(({position: {lon, lat}, id, tail, speed, bearing}) => ({id, tail, speed, bearing, position: [lon, lat]})),
         tap(car => console.log('got car', car)),
-        map(car => ({...car, position: [car.position.lon, car.position.lat, car.position.date]})),
         window(interval(500)) // batch these updates every interval
       )
       .subscribe((cars) => socket.volatile.emit('cars', cars))

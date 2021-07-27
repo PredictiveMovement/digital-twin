@@ -62,19 +62,20 @@ class Car extends EventEmitter {
   }
 
   
-  async updatePosition(position, date) {
-    const moved = distance.haversine(position, this.position) > 10 // meters
-    const bearing = distance.bearing(position, this.position)
+  async updatePosition(position, date = Date.now()) {
+    const lastPosition = this.lastPositions[this.lastPositions.length-1] || position
+    const metersMoved = distance.haversine(lastPosition, position)
+    const bearing = distance.bearing(lastPosition, position)
+    const speed = (metersMoved / 1000) / (lastPosition.date - date) / 60 / 60
     this.position = position
     this.bearing = bearing
-    this.lastPositions.push({ position: position, date: date || Date.now() })
-    if (moved) {
+    this.speed = speed
+    this.lastPositions.push({ position, date })
+    if (metersMoved > 10) {
       this.emit('moved', this)
     } else {
       this.emit('stopped', this)
-      if (distance.haversine(this.heading, this.position) < 50) {
-        this.dropOff()
-      }
+      if (distance.haversine(this.heading, this.position) < 50) this.dropOff()
     }
   }
 }
