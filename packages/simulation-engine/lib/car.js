@@ -24,10 +24,6 @@ class Car extends EventEmitter {
   }
 
   navigateTo(position) {
-    console.log(
-      'navigateFromTo meters',
-      distance.haversine(position, this.position)
-    )
     this.heading = position
     return osrm
       .route(this.position, this.heading)
@@ -40,13 +36,11 @@ class Car extends EventEmitter {
       .catch(console.error)
   }
 
-  pickup(trip) {
+  pickup(booking) {
     this.busy = true
-    this.history.push({ status: 'pickup', date: new Date(), trip })
-    this.trip = trip
-    trip.car = this
-    trip.pickupDateTime = new Date(Date.now() + trip.estimate.tta * 1000)
-    this.pickupLocation = trip.booking.departure
+    this.history.push({ status: 'pickup', date: new Date(), booking })
+    this.booking = booking
+    booking.car = this
     return trip
   }
 
@@ -70,7 +64,7 @@ class Car extends EventEmitter {
     this.position = position
     this.bearing = bearing
     this.speed = speed
-    this.lastPositions.push({ position, date })
+    this.lastPositions.push({ ...position, date })
     if (metersMoved > 10) {
       this.emit('moved', this)
     } else {
