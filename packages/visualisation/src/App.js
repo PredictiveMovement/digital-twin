@@ -13,6 +13,11 @@ const App = () => {
     features: [],
   })
 
+  const [bookings, setBookings] = React.useState({
+    type: 'FeatureCollection',
+    features: [],
+  })
+
   useSocket('postombud', (newPostombud) => {
     const features = [
       ...postombud.features.filter(
@@ -29,19 +34,31 @@ const App = () => {
   useSocket('cars', (newCars) => {
     const features = [
       ...cars.features.filter((car) => !newCars.some((nc) => nc.id === car.id)),
-      ...newCars.map(({ id, tail, position }) => ({
+      ...newCars.map(({ id, heading, position }) => ({
         type: 'Feature',
         id,
-        tail,
+        heading,
         geometry: { type: 'Point', coordinates: position },
       })),
     ]
     setCars(Object.assign({}, cars, { features }))
   })
 
+  useSocket('bookings', (newBookings) => {
+    const features = [
+      ...bookings.features,
+      ...newBookings.map(({ address }) => ({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [address.lon, address.lat] },
+      })),
+    ]
+    console.log({ features })
+    setBookings(Object.assign({}, bookings, { features }))
+  })
+
   return (
     <>
-      <Map data={{ postombud, cars }} />
+      <Map postombud={postombud} cars={cars} bookings={bookings} />
     </>
   )
 }
