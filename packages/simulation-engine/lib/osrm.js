@@ -22,8 +22,18 @@ module.exports = {
   },
   nearest (position) {
     const coordinates = [position.lon, position.lat].join(',')
-    return fetch(`${osrmUrl}/nearest/v1/driving/${coordinates}`)
-      .then(response => response.json())
+    const url = `${osrmUrl}/nearest/v1/driving/${coordinates}`
+    console.log('url', url)
+    const promise = fetch(url)
+      .then(response => {
+        console.log('got response')
+
+        return response.json()
+      }, err => {
+        console.log("Got err", err)
+      })
+
+    return promise
   },
   match (positions) {
     const coordinates = positions.map(pos => [pos.position.lon, pos.position.lat].join(',')).join(';')
