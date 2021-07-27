@@ -1,4 +1,5 @@
 const osrm = require('../lib/osrm')
+const assert = require('assert')
 //var start = { lat: 59.34421956363667, lon: 17.89501190185547 }
 const tegnergatan = { lat: 59.338947, lon: 18.057236 }
 const ljusdal = { lat: 61.829182, lon: 16.0896213 }
@@ -19,6 +20,10 @@ function randomize(center = start, retry = 20) {
 
 function nearest(position) {
   // get a correct street address
+  console.log('*** finding nearest address to ', position)
+  assert(position.lon, 'Longitude required')
+  assert(position.lat, 'Latitude required')
+  
   return osrm.nearest(position).then((data) => {
     // if we randomized in the middle of nowhere, or a street with no name, try again?
     if (!data.waypoints || !data.waypoints.length) return null
@@ -26,6 +31,7 @@ function nearest(position) {
     const nearest = data.waypoints[0]
     const [lon, lat] = nearest.location
     const name = nearest.name
+    console.log('found nearest', name)
     return { lon, lat, name }
   })
 }
