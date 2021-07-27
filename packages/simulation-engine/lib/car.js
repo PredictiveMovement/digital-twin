@@ -2,7 +2,6 @@ const osrm = require('../lib/osrm')
 const distance = require('./distance')
 const interpolate = require('./interpolate')
 const EventEmitter = require('events')
-const findZone = require('../lib/zones')
 
 class Car extends EventEmitter {
   constructor(id, position, status) {
@@ -69,63 +68,14 @@ class Car extends EventEmitter {
     this.position = position
     this.bearing = bearing
     this.lastPositions.push({ position: position, date: date || Date.now() })
-    this.matchZone()
     if (moved) {
-      /*
-      Use this to match real world position to the road network
-      if (this.lastPositions.length > 1 && date) {
-        await this.matchPositionsToMap()
-      }*/
       this.emit('moved', this)
-
-      return this
     } else {
       this.emit('stopped', this)
       if (distance.haversine(this.heading, this.position) < 50) {
         this.dropOff()
       }
     }
-  }
-
-  matchZone() {
-    const newZone = findZone(this.position)
-    if (newZone && this.zone !== newZone[0]) {
-      this.zone = newZone[0]
-      this.emit('zone', this)
-      // console.log(`car #${this.id} logged in to zone #${this.zone}`)
-    }
-  }
-
-  matchPositionsToMap() {
-    console.log('match')
-    return osrm
-      .match(
-        this.lastPositions.filter(
-          (pos) => pos.date > Date.now() - 4 * 60 * 1000
-        )
-      )
-      .then((match) => {
-        //console.log('matched route', ms, 'ms')
-        const matching =
-          match.matchings && match.matchings.length && match.matchings[0]
-        if (!matching) return this
-        const points = interpolate.points(matching)
-        points.reverse().reduce((time, point) => {
-          point.time = time - (point.duration * 1000 || 0) // hack: find purer way later
-          point.speed = !point.meters
-            ? 0
-            : Math.round(point.meters / 1000 / (point.duration / 60 / 60))
-          return point.time
-        }, new Date(this.lastPositions.slice(-1).pop().date).valueOf())
-
-        this.tail = points
-          .map((point) => [...point.position, point.time, point.speed])
-          .reverse() // reverse back
-        this.speed = points.length ? points[0].speed : 0
-        //this.tail = polyline.decode(matching.geometry)
-        return this
-      })
-      .catch((err) => console.error('match', err))
   }
 }
 

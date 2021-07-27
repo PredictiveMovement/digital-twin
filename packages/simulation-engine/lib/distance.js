@@ -1,6 +1,3 @@
-const _ = require('highland')
-
-
 function convertPosition (pos) {
   return {
     lon: pos.longitude || pos.lon || pos.lng,
