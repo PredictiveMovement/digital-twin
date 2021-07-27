@@ -1,13 +1,13 @@
 const _ = require('highland')
-const newBookings = require('../simulator/bookings')
+const newBookings = require('../../simulator/bookings')
 // var carPositions = require('../simulator/cars') // require('../streams/cars')
 //const carPositions = require('../streams/cars')
-const carPositions = require('../simulator/cars')
+const carPositions = require('../../simulator/cars')
 // const newBookings = require('../streams/bookings')
 const price = require('./price')
 const dispatch = require('./dispatch')
 const carFinder = require('./carFinder')
-const postombud = require('../streams/postombud')
+const postombud = require('../../streams/postombud')
 
 const $finder = newBookings
   .fork()
