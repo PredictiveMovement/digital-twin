@@ -1,7 +1,14 @@
 const engine = require('../index')
 // const postombud = require("../streams/postombud");
 const { fromEvent, interval, of } = require('rxjs')
-const { window, map, toArray, mergeMap, tap, bufferTime } = require('rxjs/operators')
+const {
+  window,
+  map,
+  toArray,
+  mergeMap,
+  tap,
+  bufferTime,
+} = require('rxjs/operators')
 
 function register(io) {
   io.on('connection', function (socket) {
@@ -25,10 +32,15 @@ function register(io) {
       socket.emit('postombud', postombud)
     })
 
-    engine.bookings.pipe(bufferTime(500)).subscribe((bookings) => {
-      console.log('got bookings', bookings)
-      if (bookings.length) socket.emit('bookings', bookings)
-    })
+    engine.bookings
+      .pipe(
+        map(({ address: { name, position }, id }) => ({ id, name, position })),
+        bufferTime(500)
+      )
+      .subscribe((bookings) => {
+        console.log('got bookings', bookings)
+        if (bookings.length) socket.emit('bookings', bookings)
+      })
   })
 }
 

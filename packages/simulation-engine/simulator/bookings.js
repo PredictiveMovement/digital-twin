@@ -1,6 +1,6 @@
 const { from } = require('rxjs')
 const { map, filter, concatMap, mergeMap } = require('rxjs/operators')
-const address = require('./address')
+const pelias = require('../lib/pelias')
 const postombud = require('../streams/postombud')
 const population = require('../streams/population')
 const { haversine, addMeters } = require('../lib/distance')
@@ -40,7 +40,7 @@ function generateBookingsInKommun(kommun, metersFromOmbud = 10000) {
 
   const bookings = addresses.pipe(
     concatMap(({ ombud, position }) =>
-      address.randomize(position).then((address) => ({ id: id++, ombud, address }))
+      pelias.nearest(position).then((address) => ({ id: id++, ombud, address }))
     )
   )
   return bookings
