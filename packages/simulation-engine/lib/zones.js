@@ -1,5 +1,5 @@
 const inside = require('point-in-polygon')
-const zones = []
+const zones = [] // could be used for kommun, city centers, etc
 
 const transformed = zones.map(zone => {
   const coords = zone.coordinates.map(coord => ([coord.longitude, coord.latitude]))

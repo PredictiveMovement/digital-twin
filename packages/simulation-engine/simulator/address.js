@@ -1,11 +1,8 @@
 const osrm = require('../lib/osrm')
 const assert = require('assert')
-//var start = { lat: 59.34421956363667, lon: 17.89501190185547 }
-const tegnergatan = { lat: 59.338947, lon: 18.057236 }
-const ljusdal = { lat: 61.829182, lon: 16.0896213 }
-const start = ljusdal
 
-function randomize(center = start, retry = 20) {
+function randomize(center, retry = 20) {
+  assert(center, 'Center is required')
   if (retry < 0)
     throw new Error('Randomize in loop try nr' + retry + JSON.stringify(center))
 
@@ -20,7 +17,6 @@ function randomize(center = start, retry = 20) {
 
 function nearest(position) {
   // get a correct street address
-  console.log('*** finding nearest address to ', position)
   assert(position.lon, 'Longitude required')
   assert(position.lat, 'Latitude required')
   
@@ -31,7 +27,6 @@ function nearest(position) {
     const nearest = data.waypoints[0]
     const [lon, lat] = nearest.location
     const name = nearest.name
-    console.log('found nearest', name)
     return { lon, lat, name }
   })
 }
