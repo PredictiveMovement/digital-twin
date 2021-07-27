@@ -47,9 +47,9 @@ const App = () => {
   useSocket('bookings', (newBookings) => {
     const features = [
       ...bookings.features,
-      ...newBookings.map(({ address }) => ({
+      ...newBookings.map(({ position }) => ({
         type: 'Feature',
-        geometry: { type: 'Point', coordinates: [address.lon, address.lat] },
+        geometry: { type: 'Point', coordinates: [position.lon, position.lat] },
       })),
     ]
     console.log({ features })
