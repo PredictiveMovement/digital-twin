@@ -62,29 +62,7 @@ class Car extends EventEmitter {
     this.emit('dropoff', this)
   }
 
-  offer(offer) {
-    // Fake the approval offer
-    return new Promise((resolve, reject) => {
-      setTimeout((_) => {
-        // TODO: send push notfication
-        offer.car = this
-        offer.approved = (Math.random() < 0.5 && new Date()) || undefined
-        console.log(
-          `Car #${this.id} ${
-            offer.approved ? 'approved' : 'rejected'
-          } the booking `
-        )
-        this.history.push({
-          status: 'offered',
-          date: new Date(),
-          offer,
-          approved: !!offer.approved,
-        })
-        resolve(offer)
-      }, Math.random() * 10000)
-    })
-  }
-
+  
   async updatePosition(position, date) {
     const moved = distance.haversine(position, this.position) > 10 // meters
     const bearing = distance.bearing(position, this.position)

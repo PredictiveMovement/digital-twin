@@ -1,4 +1,4 @@
-const _ = require('highland')
+const { from } = require('rxjs')
 const { readXlsx } = require('../adapters/xlsx')
 
 const volumePackages = readXlsx(
@@ -24,4 +24,4 @@ const volumePackages = readXlsx(
   })
 )
 
-module.exports = _(volumePackages)
+module.exports = from(volumePackages)

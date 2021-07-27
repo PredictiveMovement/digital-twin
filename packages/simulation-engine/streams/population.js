@@ -1,32 +1,27 @@
-const csv = require('csv-reader')
-const _ = require('highland')
-const fs = require('fs')
-const input = fs.createReadStream(
-  process.cwd() + '/data/5arsklasser_1km.csv',
-  'utf8'
-)
+const parse = require('csv-parse')
+const { from } = require('rxjs')
+const { map } = require('rxjs/operators')
+const { readCsv } = require('../adapters/csv')
 const coords = require('swe-coords')
-const {convertPosition} = require('../lib/distance')
+const { convertPosition } = require('../lib/distance')
 
-function execute() {
-  const befolkning = _(
-    input.pipe(
-      new csv({
-        parseNumbers: false,
-        skipHeader: true,
-        parseBooleans: true,
-        trim: true,
-      })
-    )
-  ).map(([id, area, north_east, ...ages]) => ({
-    id,
-    area,
-    north_east,
-    position: convertPosition(coords.toLatLng(north_east.slice(6), north_east.slice(0, 6))),
-    ages,
-    total: ages.reduce((a,b) => parseFloat(a, 10) + parseFloat(b, 10), 0)
-  }))
-  return befolkning
+// read the SWEREF99 x,y combined string for a square km and return a WGS84 lat lon object
+// TODO: understand if the coordinate is the center of the square or the top left corner (if so, maybe add an offset to the position to get the center)
+function parseRuta(ruta) {
+  return convertPosition(coords.toLatLng(ruta.slice(6), ruta.slice(0, 6)))
 }
 
-module.exports = execute
+function read() {
+  return from(readCsv(process.cwd() + '/data/5arsklasser_1km.csv')).pipe(
+    map(({ id, rutstorl: area, ruta, beftotalt: total, ...ages }) => ({
+      id,
+      area,
+      ruta,
+      position: parseRuta(ruta),
+      ages,
+      total,
+    }))
+  )
+}
+
+module.exports = read()

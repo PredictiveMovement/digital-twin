@@ -41,12 +41,12 @@ function bearing (p1, p2) {
 
 /* Add meters to a position
 */
-function addMeters(p1, meters) {
+function addMeters(p1, {x, y}) {
   p1 = convertPosition(p1)
   const R = 6371000
 
-  lat  = p1.lat + (meters.y / R) * (180 / Math.pi);
-  lon = p1.lon + (meters.x / R) * (180 / Math.pi) / cos(p1.lat * Math.pi/180);
+  lat  = p1.lat + (y / R) * (180 / Math.PI);
+  lon = p1.lon + (x / R) * (180 / Math.PI) / Math.cos(p1.lat * Math.PI/180);
   
   return {lon, lat}
 }
