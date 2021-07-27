@@ -1,7 +1,7 @@
-const carPositions = require('../simulator/cars')
+const carPositions = require('../../simulator/cars')
 const cars = new Map()
-const distance = require('./distance')
-const osrm = require('./osrm')
+const distance = require('../distance')
+const osrm = require('../osrm')
 const _ = require('highland')
 
 _(carPositions).fork()

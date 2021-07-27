@@ -1,4 +1,4 @@
-const osrm = require('./osrm')
+const osrm = require('../osrm')
 const _ = require('highland')
 
 function fastestCars (cars, destination) {

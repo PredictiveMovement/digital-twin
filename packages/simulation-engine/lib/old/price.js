@@ -1,4 +1,4 @@
-const osrm = require('./osrm')
+const osrm = require('../osrm')
 
 const kr_per_meter = 13.60 / 1000
 const kr_per_second = 575 / 60 / 60
