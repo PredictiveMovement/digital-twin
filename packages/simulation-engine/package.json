@@ -11,7 +11,6 @@
   "author": "Christian Landgren @ Iteam",
   "license": "UNLICENSED",
   "dependencies": {
-    "@ngageoint/geopackage": "^3.0.9",
     "@programmerare/sweden_crs_transformations": "^1.0.0",
     "csv-parse": "^4.16.0",
     "csv-reader": "^1.0.8",

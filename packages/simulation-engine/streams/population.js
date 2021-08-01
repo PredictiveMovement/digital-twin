@@ -1,5 +1,5 @@
 const parse = require('csv-parse')
-const { from } = require('rxjs')
+const { from, toArray } = require('rxjs')
 const { map } = require('rxjs/operators')
 const { readCsv } = require('../adapters/csv')
 const coords = require('swe-coords')
