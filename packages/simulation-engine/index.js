@@ -8,7 +8,7 @@ const postombud = require('./streams/postombud')
 const volumePackages = require('./streams/volumePackages')
 
 module.exports = {
-  bookings: generateBookingsInKommun('Arjeplog', 10000), // volumePackages.pipe(concatMap(kommun => generateBookingsInKommun(kommun.namn))),
+  bookings: generateBookingsInKommun('Arjeplog'), // volumePackages.pipe(concatMap(kommun => generateBookingsInKommun(kommun.namn))),
   cars: generateCarsInKommun('Arjeplog', 10),
   volumePackages,
   postombud
