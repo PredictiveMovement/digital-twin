@@ -13,15 +13,15 @@ function parseRuta(ruta) {
 
 function read() {
   return from(readCsv(process.cwd() + '/data/5arsklasser_1km.csv')).pipe(
-    map(({ id, rutstorl: area, ruta, beftotalt: total, ...ages }) => ({
+    map(({ id, rutstorl: area, ruta, beftotalt: population, ...ages }) => ({
       id,
       area,
       ruta,
       position: parseRuta(ruta),
       ages: Object.values(ages).map(nr => parseFloat(nr, 10)),
-      total: parseFloat(total, 10),
+      population: parseFloat(population, 10),
     })),
-    filter(p => p.total > 0) // only keep squares with people living there. 
+    filter(p => p.population > 0) // only keep squares with people living there. 
   )
 }
 
