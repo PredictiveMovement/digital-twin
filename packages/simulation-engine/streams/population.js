@@ -1,5 +1,5 @@
 const parse = require('csv-parse')
-const { from, toArray } = require('rxjs')
+const { from, toArray, filter } = require('rxjs')
 const { map } = require('rxjs/operators')
 const { readCsv } = require('../adapters/csv')
 const coords = require('swe-coords')
@@ -18,9 +18,10 @@ function read() {
       area,
       ruta,
       position: parseRuta(ruta),
-      ages,
-      total,
-    }))
+      ages: Object.values(ages).map(nr => parseFloat(nr, 10)),
+      total: parseFloat(total, 10),
+    })),
+    filter(p => p.total > 0) // only keep squares with people living there. 
   )
 }
 
