@@ -34,7 +34,7 @@ function register(io) {
 
     engine.bookings
       .pipe(
-        map(({ address: { name, position }, id }) => ({ id, name, position })),
+        map(({ destination: { name, position }, id }) => ({ id, name, position })),
         bufferTime(500)
       )
       .subscribe((bookings) => {

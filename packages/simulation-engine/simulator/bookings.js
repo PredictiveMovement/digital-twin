@@ -1,8 +1,8 @@
 const { from } = require('rxjs')
-const { map, filter, concatMap, mergeMap } = require('rxjs/operators')
+const { map, filter, concatMap, mergeMap, toArray, tap } = require('rxjs/operators')
 const pelias = require('../lib/pelias')
 const postombud = require('../streams/postombud')
-const population = require('../streams/population')
+const kommuner = require('../streams/kommuner')
 const { haversine, addMeters } = require('../lib/distance')
 const perlin = require('perlin-noise')
 
@@ -13,34 +13,42 @@ let id = 0
 const randomPositions = perlin
   .generatePerlinNoise(1000, 1000)
   .map((probability, i) => ({ ...xy(i), probability }))
-  .sort((a, b) => b.probability - a.probability)
+  .sort((a, b) => b.probability - a.probability) // sort them so we can just pick how many we want
 
-function generateBookingsInKommun(kommun, metersFromOmbud = 10000) {
-  const areas = from(postombud).pipe(
-    filter((ombud) => ombud.kommun === kommun),
-    concatMap((ombud) =>
-      from(population).pipe(
-        map((area) => ({ ombud, area })),
-        filter(
-          ({ area, ombud }) =>
-            haversine(ombud.position, area.position) < metersFromOmbud
+function generateBookingsInKommun(kommunName) {
+  const kommun = from(kommuner).pipe(
+    filter((k) => k.name.startsWith(kommunName)) // supports Arjeplog ~= Arjeplogs kommun
+  )
+
+  let before 
+  const squares = kommun.pipe(concatMap((kommun) =>
+      from(kommun.squares).pipe(concatMap((square) =>
+          from(postombud).pipe(
+            map((ombud) => ({
+              ...ombud,
+              distance: haversine(ombud.position, square.position),
+            })),
+            toArray(),
+            map((ombud) => ombud.sort((a, b) => a.distance - b.distance).pop()),
+            map((nearestOmbud) => ({ ...square, nearestOmbud }))
+          )
         )
       )
     )
   )
 
-  const addresses = areas.pipe(
-    mergeMap(({ area, ombud }) =>
+  const addresses = squares.pipe(
+    mergeMap(( {total, nearestOmbud, position} ) =>
       randomPositions
-        .slice(0, area.total)
-        .map(({ x, y }) => addMeters(area.position, { x, y }))
-        .map((position) => ({ area, ombud, position }))
+        .slice(0, total) // one address per person in this square km2
+        .map(({ x, y }) => addMeters(position, { x, y }))
+        .map((position) => ({ nearestOmbud, position }))
     )
   )
 
   const bookings = addresses.pipe(
-    concatMap(({ ombud, position }) =>
-      pelias.nearest(position).then((address) => ({ id: id++, ombud, address }))
+    concatMap(({ nearestOmbud, position }) =>
+      pelias.nearest(position).then((address) => ({ id: id++, destination: address, pickup: nearestOmbud }))
     )
   )
   return bookings
