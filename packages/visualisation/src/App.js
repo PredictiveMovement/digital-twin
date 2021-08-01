@@ -52,7 +52,6 @@ const App = () => {
         geometry: { type: 'Point', coordinates: [position.lon, position.lat] },
       })),
     ]
-    console.log({ features })
     setBookings(Object.assign({}, bookings, { features }))
   })
 

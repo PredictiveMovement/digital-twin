@@ -1,5 +1,12 @@
 const { from } = require('rxjs')
-const { map, filter, concatMap, mergeMap, toArray, tap } = require('rxjs/operators')
+const {
+  map,
+  filter,
+  concatMap,
+  mergeMap,
+  toArray,
+  tap,
+} = require('rxjs/operators')
 const pelias = require('../lib/pelias')
 const postombud = require('../streams/postombud')
 const kommuner = require('../streams/kommuner')
@@ -17,13 +24,14 @@ const randomPositions = perlin
 
 function generateBookingsInKommun(kommunName) {
   const kommun = from(kommuner).pipe(
-    filter((k) => k.name.startsWith(kommunName)) // supports Arjeplog ~= Arjeplogs kommun
+    filter((k) => k.name.startsWith(kommunName)) // supports "Arjeplog" ~= "Arjeplogs kommun"
   )
 
-  let before 
-  const squares = kommun.pipe(concatMap((kommun) =>
-      from(kommun.squares).pipe(concatMap((square) =>
-          from(postombud).pipe(
+  const squares = kommun.pipe(
+    concatMap((kommun) =>
+      from(kommun.squares).pipe(
+        concatMap((square) =>
+          from(kommun.postombud).pipe(
             map((ombud) => ({
               ...ombud,
               distance: haversine(ombud.position, square.position),
@@ -38,9 +46,9 @@ function generateBookingsInKommun(kommunName) {
   )
 
   const addresses = squares.pipe(
-    mergeMap(( {total, nearestOmbud, position} ) =>
+    concatMap(({ population, nearestOmbud, position }) =>
       randomPositions
-        .slice(0, total) // one address per person in this square km2
+        .slice(0, population) // one address per person in this square km2
         .map(({ x, y }) => addMeters(position, { x, y }))
         .map((position) => ({ nearestOmbud, position }))
     )
@@ -48,7 +56,13 @@ function generateBookingsInKommun(kommunName) {
 
   const bookings = addresses.pipe(
     concatMap(({ nearestOmbud, position }) =>
-      pelias.nearest(position).then((address) => ({ id: id++, destination: address, pickup: nearestOmbud }))
+      pelias
+        .nearest(position)
+        .then((address) => ({
+          id: id++,
+          destination: address,
+          pickup: nearestOmbud,
+        }))
     )
   )
   return bookings
