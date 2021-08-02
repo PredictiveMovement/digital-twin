@@ -15,17 +15,38 @@ const {
 } = require('rxjs/operators')
 const data = require('../data/kommuner.json')
 const population = require('./population')
-const volumePackages = require('./volumePackages')
+const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
 const inside = require('point-in-polygon')
 
-function findPopulationSquaresInKommun(kommun) {
+function addPopulationSquares(kommun) {
   return population.pipe(
     filter(({ position: { lon, lat } }) =>
       kommun.geometry.coordinates.some(coordinates => inside([lon, lat], coordinates))
     ),
     map(({ position, population }) => ({ position, population })), // only keep the essentials to save memory
-    toArray()
+    toArray(),
+    map(squares => ({ ...kommun, squares, population: squares.reduce((a, b) => a + b.total, 0)}))
+  )
+}
+
+function addPackageVolumes(kommun) {
+  return packageVolumes.pipe(
+      first((vp) => kommun.name.startsWith(vp.name), {}),
+      map(
+        (packages) => ({
+          ...kommun,
+          packages,
+        })
+      ),
+    )
+}
+
+function addPostombud(kommun) {
+  return postombud.pipe(
+    filter((ombud) => kommun.name.startsWith(ombud.kommun)),
+    toArray(),
+    map((postombud) => ({ ...kommun, postombud }))
   )
 }
 
@@ -49,43 +70,20 @@ function read() {
       })
     ),
     tap((kommun) => console.log('*** read squares...', kommun.name)),
-    mergeMap((kommun) => findPopulationSquaresInKommun(kommun).pipe(
-        map(squares => ({ ...kommun, squares }))
-    )),
+    mergeMap(addPopulationSquares),
     tap((kommun) => console.log('*** read packages...', kommun.name)),
-    concatMap((kommun) =>
-      from(volumePackages).pipe(
-        first((vp) => kommun.name.startsWith(vp.name), {}),
-        map(
-          ({
-            totalPaket: total = 0,
-            totalB2B: B2B = 0,
-            totalB2C: B2C = 0,
-            totalC2X: C2X = 0,
-            paketBrev: brev = 0,
-          }) => ({
-            ...kommun,
-            packages: { total, B2B, B2C, C2X, brev },
-          })
-        ),
-        map(kommun => ({...kommun, population: kommun.squares.reduce((a, b) => a + b.total, 0)}))
-      )
-    ),
+    concatMap(addPackageVolumes),
     tap((kommun) => console.log('*** read ombud...', kommun.name)),
-    concatMap((kommun) =>
-      from(postombud).pipe(
-        filter((ombud) => kommun.name.startsWith(ombud.kommun)),
-        toArray(),
-        map((postombud) => ({ ...kommun, postombud }))
-      )
-    ),
+    concatMap(addPostombud),
     map(kommun => ({...kommun, unhandledBookings: new Subject()})),
     map(kommun => ({...kommun, cars: new ReplaySubject()})),
     shareReplay()
   )
+  
 }
 
 const kommuner = module.exports = read()
+
 
 // kommuner.pipe(filter((k) => k.name === 'Arjeplogs kommun')).subscribe((kommun) => console.dir(kommun, { depth: null }))
 //population.pipe(take(50)).subscribe(p => console.dir(p,  { depth: null }))

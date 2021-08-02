@@ -47,16 +47,17 @@ function generateBookingsInKommun(kommunName) {
   )
 
   const randomPointsInSquares = squaresWithNearestPostombud.pipe(
-    map(({ population, nearestOmbud, position }) => 
+    // generate points in random patterns within each square
+    mergeMap(({ population, nearestOmbud, position }) => 
       randomPositions
         .slice(0, population) // one address per person in this square km2
-        .map(({ x, y }) => 
-          addMeters(position, { x, y }))
+        .map(({ x, y }) => addMeters(position, { x, y }))
         .map((position) => 
           ({ nearestOmbud, position })
         )
     ),
-    mergeMap(a => 
+    toArray(),
+    mergeMap(a =>
       from(a.sort(() => Math.random() - 0.5))
     ), // pick a random adress
   )

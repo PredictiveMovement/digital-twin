@@ -6,7 +6,6 @@ const { generateCarsInKommun } = require('./simulator/cars')
 const { dispatch } = require('./simulator/dispatchCentral')
 const kommuner = require('./streams/kommuner')
 const postombud = require('./streams/postombud')
-const volumePackages = require('./streams/volumePackages')
 
 const WORKING_DAYS = 200
 const pilots = kommuner.pipe(
@@ -36,7 +35,6 @@ const engine = (module.exports = {
     )),
   ),
   dispatchedBookings,
-  volumePackages,
   postombud,
   kommuner,
 })
