@@ -1,6 +1,7 @@
 const { from } = require('rxjs')
 const {
   map,
+  first,
   filter,
   concatMap,
   mergeMap,
@@ -23,11 +24,11 @@ const randomPositions = perlin
 
 function generateBookingsInKommun(kommunName) {
   const kommun = from(kommuner).pipe(
-    filter((k) => k.name.startsWith(kommunName)) // supports "Arjeplog" ~= "Arjeplogs kommun"
+    first((k) => k.name.startsWith(kommunName)) // supports "Arjeplog" ~= "Arjeplogs kommun"
   )
 
   // a square is a km2 box with a population total. We will here populate each square with nearest postombud
-  const squares = kommun.pipe(
+  const squaresWithNearestPostombud = kommun.pipe(
     mergeMap((kommun) =>
       from(kommun.squares).pipe(
         mergeMap((square) =>
@@ -45,18 +46,22 @@ function generateBookingsInKommun(kommunName) {
     )
   )
 
-  const addresses = squares.pipe(
-    mergeMap(({ population, nearestOmbud, position }) =>
+  const randomPointsInSquares = squaresWithNearestPostombud.pipe(
+    map(({ population, nearestOmbud, position }) => 
       randomPositions
         .slice(0, population) // one address per person in this square km2
-        .map(({ x, y }) => addMeters(position, { x, y }))
-        .map((position) => ({ nearestOmbud, position }))
+        .map(({ x, y }) => 
+          addMeters(position, { x, y }))
+        .map((position) => 
+          ({ nearestOmbud, position })
+        )
     ),
-    toArray(),
-    mergeMap(a => from(a.sort(() => Math.random() - 0.5))), // pick a random adress
+    mergeMap(a => 
+      from(a.sort(() => Math.random() - 0.5))
+    ), // pick a random adress
   )
 
-  const bookings = addresses.pipe(
+  const bookings = randomPointsInSquares.pipe(
     concatMap(({ nearestOmbud, position }) =>
       pelias
         .nearest(position)
@@ -71,3 +76,5 @@ function generateBookingsInKommun(kommunName) {
 }
 
 module.exports = { generateBookingsInKommun }
+
+// generateBookingsInKommun('Arjeplog').subscribe(boooking => console.dir(booking))

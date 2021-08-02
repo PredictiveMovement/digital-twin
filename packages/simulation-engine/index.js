@@ -9,11 +9,14 @@ const postombud = require('./streams/postombud')
 const volumePackages = require('./streams/volumePackages')
 
 const WORKING_DAYS = 200
-const pilots = kommuner.pipe(filter((kommun) =>
-  ['Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
-    kommun.name.startsWith(pilot)
-  )
-))
+const pilots = kommuner.pipe(
+  filter((kommun) =>
+    ['Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
+      kommun.name.startsWith(pilot)
+    ),
+  ),
+  shareReplay()
+)
 
 const dispatchedBookings = pilots.pipe(mergeMap((kommun) => dispatch(kommun.cars, kommun.bookings)))
 
@@ -25,7 +28,7 @@ const engine = (module.exports = {
         tap((booking) => kommun.unhandledBookings.next(booking))
       )
     ),
-    shareReplay(200)
+    shareReplay()
   ),
   cars: pilots.pipe(
     mergeMap((kommun) => generateCarsInKommun(kommun, 10).pipe(
@@ -38,3 +41,5 @@ const engine = (module.exports = {
   kommuner,
 })
 
+// engine.bookings.subscribe(booking => console.log('b', booking.id))
+// engine.cars.subscribe(car => console.log('c', car.id))
