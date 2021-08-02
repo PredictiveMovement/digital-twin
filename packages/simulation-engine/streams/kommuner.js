@@ -1,4 +1,4 @@
-const { from, lastValueFrom, shareReplay, Subject } = require('rxjs')
+const { from, lastValueFrom, shareReplay, Subject, ReplaySubject } = require('rxjs')
 const {
   map,
   filter,
@@ -72,6 +72,7 @@ async function read() {
       )
     ),
     map(kommun => ({...kommun, unhandledBookings: new Subject()})),
+    map(kommun => ({...kommun, cars: new ReplaySubject()})),
     shareReplay()
   )
 }

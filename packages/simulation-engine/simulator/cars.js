@@ -12,10 +12,6 @@ function generateCar(nr, from, to) {
   car.position = from
   car.navigateTo(to)
   console.log('initiated car', car.id)
-  car.on('dropoff', () => {
-    console.log('arrived at dropoff', car.id)
-    address.randomize(from).then((position) => car.navigateTo(position))
-  })
   return car
 }
 

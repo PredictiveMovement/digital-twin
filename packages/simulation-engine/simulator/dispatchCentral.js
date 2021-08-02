@@ -9,7 +9,7 @@ const dispatch = (cars, bookings) => {
       toArray(),
       map((cars) => cars.sort((a, b) => haversine(a.distance, b.distance))), 
       // naive dispatch, just pick the first car that is closest to the pickup
-      map(car => car.pickup(booking))
+      map(car => car.handleBooking(booking))
     )
   )
 }

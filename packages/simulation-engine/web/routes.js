@@ -38,7 +38,6 @@ function register(io) {
         bufferTime(500)
       )
       .subscribe((bookings) => {
-        console.log('got bookings', bookings)
         if (bookings.length) socket.emit('bookings', bookings)
       })
   })
