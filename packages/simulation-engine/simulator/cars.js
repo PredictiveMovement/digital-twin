@@ -1,6 +1,6 @@
-const postombud = require('../streams/postombud')
 const address = require('./address')
 const Car = require('../lib/car')
+const { from } = require('rxjs')
 let carId = 0
 
 const { filter, take, mergeMap } = require('rxjs/operators')
@@ -20,9 +20,8 @@ function generateCar(nr, from, to) {
 }
 
 function generateCarsInKommun(kommun, numberOfCars) {
-  return postombud.pipe(
-    filter((ombud) => ombud.kommun === kommun),
-    take(numberOfCars),
+  return from(kommun.postombud).pipe(
+    take(numberOfCars), // TODO: handle more cars than postombud
     mergeMap(async (postombud) =>
       generateCar(
         carId++,

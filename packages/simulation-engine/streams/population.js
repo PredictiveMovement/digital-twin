@@ -1,5 +1,5 @@
 const parse = require('csv-parse')
-const { from, toArray, filter } = require('rxjs')
+const { from, shareReplay, filter } = require('rxjs')
 const { map } = require('rxjs/operators')
 const { readCsv } = require('../adapters/csv')
 const coords = require('swe-coords')
@@ -21,7 +21,8 @@ function read() {
       ages: Object.values(ages).map(nr => parseFloat(nr, 10)),
       population: parseFloat(population, 10),
     })),
-    filter(p => p.population > 0) // only keep squares with people living there. 
+    filter(p => p.population > 0), // only keep squares with people living there. 
+    shareReplay()
   )
 }
 
