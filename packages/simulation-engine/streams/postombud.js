@@ -1,9 +1,9 @@
-const { from } = require('rxjs')
+const { from, shareReplay } = require('rxjs')
 const { map } = require('rxjs/operators')
 const { readXlsx } = require('../adapters/xlsx')
 
 function execute() {
-  console.log('read postombud')
+  console.log('*** read postombud')
   return from(readXlsx(
     `${process.cwd()}/data/${process.env.postombud_file || 'ombud.xlsx'}`,
     `${process.env.postombud_sheet || 'Sammanställning korr'}`
@@ -14,7 +14,8 @@ function execute() {
       frequency: LevFrekv,
       id: DB_ID,
       kommun: KOMMUNNAMN,
-    }))
+    })),
+    shareReplay()
   )
 }
 
