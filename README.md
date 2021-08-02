@@ -4,14 +4,6 @@ There are two packages in here, the [simulation](packages/simulation-engine) whi
 
 ## Simulation
 
-Add an .env file with 
-```
-postombud_file=<filename>
-postombud_sheet=Sammanställning korr
-```
-
-Create a folder named data and put the .xlsx file with the above filename in it
-
 ```
 npm ci
 npm run dev

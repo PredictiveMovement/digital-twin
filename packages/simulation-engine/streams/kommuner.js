@@ -1,9 +1,14 @@
+/**
+ * TODO: Describe the stream that this file exports and what its data means
+ */
+
 const { from, lastValueFrom, shareReplay, Subject, ReplaySubject } = require('rxjs')
 const {
   map,
   filter,
   toArray,
   concatMap,
+  mergeMap,
   first,
   tap,
   mergeAll,
@@ -14,8 +19,17 @@ const volumePackages = require('./volumePackages')
 const postombud = require('./postombud')
 const inside = require('point-in-polygon')
 
-async function read() {
-  const squares = await lastValueFrom(population.pipe(toArray())) // read the stream once, for performance reasons
+function findPopulationSquaresInKommun(kommun) {
+  return population.pipe(
+    filter(({ position: { lon, lat } }) =>
+      kommun.geometry.coordinates.some(coordinates => inside([lon, lat], coordinates))
+    ),
+    map(({ position, population }) => ({ position, population })), // only keep the essentials to save memory
+    toArray()
+  )
+}
+
+function read() {
   return from(data).pipe(
     map(
       ({
@@ -35,15 +49,9 @@ async function read() {
       })
     ),
     tap((kommun) => console.log('*** read squares...', kommun.name)),
-    map((kommun) => ({
-      ...kommun,
-      squares: squares
-        .filter(({ position: { lon, lat } }) =>
-          inside([lon, lat], kommun.geometry.coordinates[0])
-        )
-        .map(({ position, population }) => ({ position, population })) // only keep the essentials to save memory
-        .sort((a, b) => b.population - a.population),
-    })),
+    mergeMap((kommun) => findPopulationSquaresInKommun(kommun).pipe(
+        map(squares => ({ ...kommun, squares }))
+    )),
     tap((kommun) => console.log('*** read packages...', kommun.name)),
     concatMap((kommun) =>
       from(volumePackages).pipe(
@@ -77,9 +85,9 @@ async function read() {
   )
 }
 
-const kommuner = (module.exports = from(read()).pipe(mergeAll())) // we receive a promise so here we convert it to a stream
+const kommuner = module.exports = read()
 
-//kommuner.pipe(filter((k) => k.name === 'Arjeplogs kommun')).subscribe((kommun) => console.dir(kommun, { depth: null }))
+// kommuner.pipe(filter((k) => k.name === 'Arjeplogs kommun')).subscribe((kommun) => console.dir(kommun, { depth: null }))
 //population.pipe(take(50)).subscribe(p => console.dir(p,  { depth: null }))
 
 //console.log('inside?', inside([17.1181455372, 58.6721047703], kommun))
