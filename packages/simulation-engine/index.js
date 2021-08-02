@@ -1,5 +1,5 @@
 const { from, shareReplay } = require('rxjs')
-const { mergeMap, take, filter, tap } = require('rxjs/operators')
+const { mergeMap, concatMap, take, filter, tap, share } = require('rxjs/operators')
 
 const { generateBookingsInKommun } = require('./simulator/bookings')
 const { generateCarsInKommun } = require('./simulator/cars')
@@ -19,12 +19,16 @@ const pilots = kommuner.pipe(
 
 const dispatchedBookings = pilots.pipe(mergeMap((kommun) => dispatch(kommun.cars, kommun.bookings)))
 
-const engine = (module.exports = {
+const engine = {
   bookings: pilots.pipe(
-    mergeMap((kommun) =>
-      generateBookingsInKommun(kommun.name).pipe(
-        take(Math.ceil(kommun.packages.total / WORKING_DAYS)), // how many bookings do we want?
-        tap((booking) => kommun.unhandledBookings.next(booking))
+    mergeMap((kommun) => 
+      generateBookingsInKommun(kommun).pipe(
+        // take(Math.ceil(kommun.packageVolumes.total / WORKING_DAYS)), // how many bookings do we want?
+        tap((booking) => {
+          kommun.unhandledBookings.next(booking)
+          kommun.bookings.next(booking)
+        }),
+        // tap(() => kommun.emit('update', kommun) )
       )
     ),
     shareReplay()
@@ -36,8 +40,16 @@ const engine = (module.exports = {
   ),
   dispatchedBookings,
   postombud,
-  kommuner,
-})
+  kommuner
+}
 
-// engine.bookings.subscribe(booking => console.log('b', booking.id))
-// engine.cars.subscribe(car => console.log('c', car.id))
+
+// engine.bookings.subscribe(booking => console.log('b', booking.id)) 
+//engine.cars.subscribe(car => console.log('c', car.id))
+
+// engine.kommuner.pipe(
+//   mergeMap(kommun => kommun.bookings)
+// ).subscribe(e => console.log('kb', ))
+
+
+module.exports = engine

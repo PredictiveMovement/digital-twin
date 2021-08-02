@@ -22,55 +22,41 @@ const randomPositions = perlin
   .map((probability, i) => ({ ...xy(i), probability }))
   .sort((a, b) => b.probability - a.probability) // sort them so we can just pick how many we want
 
-function generateBookingsInKommun(kommunName) {
-  const kommun = from(kommuner).pipe(
-    first((k) => k.name.startsWith(kommunName)) // supports "Arjeplog" ~= "Arjeplogs kommun"
-  )
-
+function generateBookingsInKommun(kommun) {
   // a square is a km2 box with a population total. We will here populate each square with nearest postombud
-  const squaresWithNearestPostombud = kommun.pipe(
-    mergeMap((kommun) =>
-      from(kommun.squares).pipe(
-        mergeMap((square) =>
-          from(kommun.postombud).pipe(
-            map((ombud) => ({
-              ...ombud,
-              distance: haversine(ombud.position, square.position),
-            })),
-            toArray(),
-            map((ombud) => ombud.sort((a, b) => a.distance - b.distance).pop()),
-            map((nearestOmbud) => ({ ...square, nearestOmbud }))
-          )
-        )
+  const squaresWithNearestPostombud = kommun.squares.pipe(
+    mergeMap((square) =>
+      kommun.postombud.pipe(
+        map((ombud) => ({
+          ...ombud,
+          distance: haversine(ombud.position, square.position),
+        })),
+        toArray(),
+        map((ombud) => ombud.sort((a, b) => a.distance - b.distance).pop()),
+        map((nearestOmbud) => ({ ...square, nearestOmbud }))
       )
     )
   )
 
   const randomPointsInSquares = squaresWithNearestPostombud.pipe(
     // generate points in random patterns within each square
-    mergeMap(({ population, nearestOmbud, position }) => 
+    mergeMap(({ population, nearestOmbud, position }) =>
       randomPositions
         .slice(0, population) // one address per person in this square km2
         .map(({ x, y }) => addMeters(position, { x, y }))
-        .map((position) => 
-          ({ nearestOmbud, position })
-        )
+        .map((position) => ({ nearestOmbud, position }))
     ),
-    toArray(),
-    mergeMap(a =>
-      from(a.sort(() => Math.random() - 0.5))
-    ), // pick a random adress
+    toArray(), // convert to array to be able to sort the addresses
+    mergeMap((a) => from(a.sort(() => Math.random() - 0.5))) // pick a random adress
   )
 
   const bookings = randomPointsInSquares.pipe(
     concatMap(({ nearestOmbud, position }) =>
-      pelias
-        .nearest(position)
-        .then((address) => ({
-          id: id++,
-          pickup: nearestOmbud,
-          destination: address,
-        }))
+      pelias.nearest(position).then((address) => ({
+        id: id++,
+        pickup: nearestOmbud,
+        destination: address,
+      }))
     )
   )
   return bookings
@@ -78,4 +64,7 @@ function generateBookingsInKommun(kommunName) {
 
 module.exports = { generateBookingsInKommun }
 
-// generateBookingsInKommun('Arjeplog').subscribe(boooking => console.dir(booking))
+// kommuner.pipe(
+//   first(k => k.name.startsWith('Arjeplog')),
+//   mergeMap(k => generateBookingsInKommun(k))
+// ).subscribe(booking => console.dir(booking))
