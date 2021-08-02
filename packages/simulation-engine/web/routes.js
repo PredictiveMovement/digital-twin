@@ -17,7 +17,7 @@ function register(io) {
         mergeMap((car) => fromEvent(car, 'moved').pipe(map(() => car))),
         map(({ position: { lon, lat }, id, heading, speed, bearing }) => ({
           id,
-          heading,
+          // heading, // contains route to plot or interpolate on client side.
           speed,
           bearing,
           position: [lon, lat],

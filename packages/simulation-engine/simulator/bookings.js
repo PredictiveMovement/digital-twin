@@ -5,7 +5,6 @@ const {
   concatMap,
   mergeMap,
   toArray,
-  tap,
 } = require('rxjs/operators')
 const pelias = require('../lib/pelias')
 const postombud = require('../streams/postombud')
@@ -27,10 +26,11 @@ function generateBookingsInKommun(kommunName) {
     filter((k) => k.name.startsWith(kommunName)) // supports "Arjeplog" ~= "Arjeplogs kommun"
   )
 
+  // a square is a km2 box with a population total. We will here populate each square with nearest postombud
   const squares = kommun.pipe(
-    concatMap((kommun) =>
+    mergeMap((kommun) =>
       from(kommun.squares).pipe(
-        concatMap((square) =>
+        mergeMap((square) =>
           from(kommun.postombud).pipe(
             map((ombud) => ({
               ...ombud,
@@ -46,12 +46,14 @@ function generateBookingsInKommun(kommunName) {
   )
 
   const addresses = squares.pipe(
-    concatMap(({ population, nearestOmbud, position }) =>
+    mergeMap(({ population, nearestOmbud, position }) =>
       randomPositions
         .slice(0, population) // one address per person in this square km2
         .map(({ x, y }) => addMeters(position, { x, y }))
         .map((position) => ({ nearestOmbud, position }))
-    )
+    ),
+    toArray(),
+    mergeMap(a => from(a.sort(() => Math.random() - 0.5))), // pick a random adress
   )
 
   const bookings = addresses.pipe(
