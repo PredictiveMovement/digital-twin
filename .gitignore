@@ -5,5 +5,4 @@ npm-debug.log
 packages/map/lib
 node_modules
 .env
-data/
 .vscode/
