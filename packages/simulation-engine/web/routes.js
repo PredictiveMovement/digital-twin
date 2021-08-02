@@ -1,6 +1,6 @@
 const engine = require('../index')
 // const postombud = require("../streams/postombud");
-const { fromEvent, interval, of } = require('rxjs')
+const { fromEvent, interval, of, from } = require('rxjs')
 const {
   window,
   map,
@@ -8,6 +8,10 @@ const {
   mergeMap,
   tap,
   bufferTime,
+  scan,
+  reduce,
+  concatMap,
+  throttleTime
 } = require('rxjs/operators')
 
 function register(io) {
@@ -39,6 +43,25 @@ function register(io) {
       )
       .subscribe((bookings) => {
         if (bookings.length) socket.emit('bookings', bookings)
+      })
+
+
+    engine.kommuner
+      .pipe(
+        mergeMap(
+          ({bookings, name, geometry}) =>  {
+            return bookings.pipe(
+              scan((a) => a + 1, 0), 
+              map(totalBookings => ({
+                name, geometry, totalBookings
+              })),
+              // Max 1 per second per kommun
+              throttleTime(1000)
+            )
+          }),
+      )
+      .subscribe(data => {
+        socket.emit('kommun', [data])
       })
   })
 }

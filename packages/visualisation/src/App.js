@@ -18,6 +18,18 @@ const App = () => {
     features: [],
   })
 
+  const [kommuner, setKommuner] = React.useState({})
+
+  useSocket('kommun', newKommuner => {
+    console.debug('kommuner', newKommuner)
+    setKommuner(kommuner => {
+      return newKommuner.reduce(
+        (acc, kommun) => ({...acc, [kommun.name]: kommun}),
+        kommuner 
+      )
+    })
+  })
+
   useSocket('postombud', (newPostombud) => {
     const features = [
       ...postombud.features.filter(
@@ -57,7 +69,15 @@ const App = () => {
 
   return (
     <>
-      <Map postombud={postombud} cars={cars} bookings={bookings} />
+      <Map 
+        postombud={postombud} 
+        cars={cars} 
+        bookings={bookings} 
+        kommuner={{
+          type: 'FeatureCollection',
+          features: Object.values(kommuner),
+        }} 
+      />
     </>
   )
 }
