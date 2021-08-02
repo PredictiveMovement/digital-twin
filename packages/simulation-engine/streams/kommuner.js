@@ -1,4 +1,4 @@
-const { from, lastValueFrom, shareReplay } = require('rxjs')
+const { from, lastValueFrom, shareReplay, Subject } = require('rxjs')
 const {
   map,
   filter,
@@ -59,8 +59,8 @@ async function read() {
             ...kommun,
             packages: { total, B2B, B2C, C2X, brev },
           })
-        )
-        // map(kommun => ({...kommun, population: kommun.squares.reduce((a, b) => a + b.total, 0)}))
+        ),
+        map(kommun => ({...kommun, population: kommun.squares.reduce((a, b) => a + b.total, 0)}))
       )
     ),
     tap((kommun) => console.log('*** read ombud...', kommun.name)),
@@ -71,6 +71,7 @@ async function read() {
         map((postombud) => ({ ...kommun, postombud }))
       )
     ),
+    map(kommun => ({...kommun, unhandledBookings: new Subject()})),
     shareReplay()
   )
 }

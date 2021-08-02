@@ -62,8 +62,8 @@ function generateBookingsInKommun(kommunName) {
         .nearest(position)
         .then((address) => ({
           id: id++,
-          destination: address,
           pickup: nearestOmbud,
+          destination: address,
         }))
     )
   )
