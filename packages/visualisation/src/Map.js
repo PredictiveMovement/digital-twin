@@ -75,7 +75,7 @@ const Map = ({ bookings }) => {
         ref={mapGlRef}
       >
 
-        {/* <Hubs iconSize={iconSize} /> */}
+        <Hubs iconSize={iconSize} />
         <Kommuner />
         <Cars iconSize={iconSize} />
         <Bookings iconSize={iconSize} />

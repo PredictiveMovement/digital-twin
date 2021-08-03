@@ -8,9 +8,10 @@ const kommuner = require('./streams/kommuner')
 const postombud = require('./streams/postombud')
 
 const WORKING_DAYS = 265
+const NR_CARS = 1
 const pilots = kommuner.pipe(
   filter((kommun) =>
-    ['Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
+    ['Arjeplog' /*, 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'*/].some((pilot) =>
       kommun.name.startsWith(pilot)
     ),
   ),
@@ -34,7 +35,7 @@ const engine = {
     shareReplay()
   ),
   cars: pilots.pipe(
-    mergeMap((kommun) => generateCarsInKommun(kommun, 10).pipe(
+    mergeMap((kommun) => generateCarsInKommun(kommun, NR_CARS).pipe(
       tap((car) => {
         console.log('*** adding car to kommun', car.id)
         kommun.cars.next(car)

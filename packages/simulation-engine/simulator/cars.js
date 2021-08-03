@@ -12,15 +12,15 @@ const postombud = require('../streams/postombud')
 function generateCar(nr, from, to) {
   const car = new Car(nr, [from, to])
   car.position = from
-  car.navigateTo(to)
+  //car.navigateTo(to)
   // wander around on the streets silently forever
-  car.on('stopped', async car => {
-    if (!car.busy) {
-      const next = await address.randomize(to)
-      // console.log('stopped moving to', next)
-      car.navigateTo(next)
-    }
-  })
+  // car.on('stopped', async car => {
+  //   if (!car.busy) {
+  //     const next = await address.randomize(to)
+  //     // console.log('stopped moving to', next)
+  //     car.navigateTo(next)
+  //   }
+  // })
   console.log('initiated car', car.id)
   return car
 }

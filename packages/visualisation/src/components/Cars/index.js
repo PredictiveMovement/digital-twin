@@ -41,7 +41,8 @@ export default function Cars({iconSize}) {
         id="cars"
         type="circle"
         paint={{
-          'circle-radius': SIZE_TO_CIRCLE_RADII[iconSize],
+          // 'circle-radius': SIZE_TO_CIRCLE_RADII[iconSize],
+          'circle-radius': 10,
           'circle-color': '#10C57B',
         }}
       />
