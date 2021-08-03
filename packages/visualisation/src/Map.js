@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import ReactMapGL, { Layer, Source } from 'react-map-gl'
+import ReactMapGL, { Layer, Source, Popup } from 'react-map-gl'
 
 const Map = ({ postombud, cars, bookings, kommuner }) => {
   const [mapState, setMapState] = useState({
@@ -10,6 +10,9 @@ const Map = ({ postombud, cars, bookings, kommuner }) => {
       pitch: 40,
     },
   })
+
+  const [showPopup, togglePopup] = React.useState(true);
+
 
   return (
     <div>
@@ -62,12 +65,14 @@ const Map = ({ postombud, cars, bookings, kommuner }) => {
             id='data'
             type='line'
             paint={{
-              'line-color': '#0080ff',
+              'line-color': 'rgba(0, 200, 40, 0.7)',
               'line-width': 3,
               'line-opacity': 0.3,
             }}
           />
         </Source>
+
+        
       </ReactMapGL>
     </div>
   )

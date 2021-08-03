@@ -17,13 +17,13 @@ const pilots = kommuner.pipe(
   shareReplay()
 )
 
-const dispatchedBookings = pilots.pipe(mergeMap((kommun) => dispatch(kommun.cars, kommun.bookings)))
+const dispatchedBookings = pilots.pipe(mergeMap((kommun) => dispatch(kommun.cars, kommun.unhandledBookings)))
 
 const engine = {
   bookings: pilots.pipe(
     mergeMap((kommun) => 
       generateBookingsInKommun(kommun).pipe(
-        // take(Math.ceil(kommun.packageVolumes.total / WORKING_DAYS)), // how many bookings do we want?
+        take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
         tap((booking) => {
           kommun.unhandledBookings.next(booking)
           kommun.bookings.next(booking)
@@ -35,7 +35,10 @@ const engine = {
   ),
   cars: pilots.pipe(
     mergeMap((kommun) => generateCarsInKommun(kommun, 10).pipe(
-      tap((car) => kommun.cars.next(car))
+      tap((car) => {
+        console.log('*** adding car to kommun', car.id)
+        kommun.cars.next(car)
+      })
     )),
   ),
   dispatchedBookings,
@@ -51,5 +54,6 @@ const engine = {
 //   mergeMap(kommun => kommun.bookings)
 // ).subscribe(e => console.log('kb', ))
 
+dispatchedBookings.subscribe(({car, booking}) => console.log('*** booking dispatched', car.id, booking.id))
 
 module.exports = engine

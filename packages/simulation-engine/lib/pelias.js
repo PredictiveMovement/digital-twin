@@ -7,6 +7,7 @@ module.exports = {
     const url = `${peliasUrl}/v1/reverse?point.lat=${position.lat}&point.lon=${position.lon}&size=1`
     const promise = fetch(url)
       .then((response) => {
+        if (!response.ok) throw "pelias error: " + response.statusText
         return response.json()
       })
       .then(({ features: [{ geometry, properties } = {}] = [] }) => ({
