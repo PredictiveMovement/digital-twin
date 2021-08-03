@@ -15,7 +15,7 @@ class Car extends EventEmitter {
     this.on('error', (err) => console.error('car error', err))
   }
 
-  simulate(heading, timeMultiplier = 60) {
+  simulate(heading, timeMultiplier = 30) {
     clearInterval(this._interval)
     this._timeStart = Date.now()
     this._timeMultiplier = timeMultiplier
@@ -24,7 +24,7 @@ class Car extends EventEmitter {
       const diff = Date.now() - this._timeStart
       const newPosition = interpolate.route(heading.route, Date.now() + diff * timeMultiplier)
       if (newPosition) this.updatePosition(newPosition)
-      console.log('interval', this.ema, this.speed, this.id)
+      // console.log('interval', this.ema, this.speed, this.id)
     }, Math.random() * 300)
   }
 
@@ -36,7 +36,7 @@ class Car extends EventEmitter {
         route.started = new Date()
         this.heading.route = route
         this.simulate(this.heading)
-        console.log('heading to', this.heading)
+        // console.log('heading to', this.heading)
         return this.heading
       })
       .catch(console.error)
@@ -58,7 +58,7 @@ class Car extends EventEmitter {
   }
 
   pickup() {
-    console.log('inside pickup', this.booking)
+    // console.log('inside pickup', this.booking)
     if (this.booking) {
       this.navigateTo(this.booking.destination.position)
       this.booking.pickupDateTime = new Date()
@@ -98,7 +98,7 @@ class Car extends EventEmitter {
       this.emit('moved', this)
     } else {
       this.emit('stopped', this)
-      console.log('stopped', this.id, this.booking?.pickup)
+      // console.log('stopped', this.id, this.booking?.pickup)
     }
     if (this.booking && distance.haversine(this.booking.pickup.position, this.position) < 50) this.pickup()
     if (this.booking && distance.haversine(this.booking.destination.position, this.position) < 50) this.dropOff()

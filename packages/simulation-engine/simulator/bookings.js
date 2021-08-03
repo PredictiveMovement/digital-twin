@@ -1,4 +1,4 @@
-const { from } = require('rxjs')
+const { from, range, concatAll } = require('rxjs')
 const {
   map,
   first,
@@ -7,8 +7,10 @@ const {
   concatMap,
   mergeMap,
   toArray,
+  mergeAll,
 } = require('rxjs/operators')
 const pelias = require('../lib/pelias')
+const { isInsideCoordinates } = require('../lib/polygon')
 const postombud = require('../streams/postombud')
 const kommuner = require('../streams/kommuner')
 const { haversine, addMeters } = require('../lib/distance')
@@ -52,13 +54,24 @@ function generateBookingsInKommun(kommun) {
   )
 
   const bookings = randomPointsInSquares.pipe(
-    concatMap(({ nearestOmbud, position }) =>
-      pelias.nearest(position).then((address) => ({
-        id: id++,
-        pickup: nearestOmbud,
-        destination: address,
-      })
+    mergeMap((point) => kommun.commercialAreas.pipe(
+      first(area => isInsideCoordinates(point.position, area.geometry.coordinates), false),
+      map(commercialArea => ({...point, isCommercial: !!commercialArea } ))
     )),
+    concatMap(({ nearestOmbud, position, isCommercial }) => {
+      // add more than one booking if this point is within a commercial area
+      const bookingsAtThisAdress = Math.ceil(Math.random() * (isCommercial ? 100 : 2)) // ? hur ska vi räkna en pall?
+      return pelias
+        .nearest(position)
+        .then((address) => range(1, bookingsAtThisAdress).pipe(
+          map(() => ({
+            id: id++,
+            pickup: nearestOmbud,
+            destination: address,
+          }))
+        ))
+    }),
+    mergeAll(),
     retry(5)
   )
   return bookings
