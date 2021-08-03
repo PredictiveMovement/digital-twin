@@ -9,6 +9,12 @@ const population = require('./population')
 const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
 const inside = require('point-in-polygon')
+const commercialAreas = from(require('../data/scb_companyAreas.json').features)
+
+
+function isInsideCoordinates({ lon, lat }, coordinates) {
+  return coordinates.some((coordinates) => inside([lon, lat], coordinates))
+}
 
 function getPopulationSquares({ geometry: { coordinates } }) {
   return population.pipe(
@@ -19,6 +25,14 @@ function getPopulationSquares({ geometry: { coordinates } }) {
     shareReplay()
   )
 }
+
+function getCommercialAreas(kommun) {
+  return commercialAreas.pipe(
+    filter(area => area.properties.KOMMUNKOD === kommun.id),
+    shareReplay()
+  )
+}
+
 
 function getPostombud(kommun) {
   return postombud.pipe(
@@ -44,6 +58,7 @@ class Kommun extends EventEmitter {
     this.population = this.squares.pipe(reduce((a, b) => a + b.population, 0))
     this.packageVolumes = packageVolumes.find(e => this.name.startsWith(e.name))
     this.postombud = getPostombud(this)
+    this.commercialAreas = getCommercialAreas(this)
   }
 }
 

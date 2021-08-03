@@ -7,7 +7,7 @@ const { dispatch } = require('./simulator/dispatchCentral')
 const kommuner = require('./streams/kommuner')
 const postombud = require('./streams/postombud')
 
-const WORKING_DAYS = 200
+const WORKING_DAYS = 265
 const pilots = kommuner.pipe(
   filter((kommun) =>
     ['Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>

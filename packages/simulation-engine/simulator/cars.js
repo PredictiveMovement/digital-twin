@@ -17,7 +17,7 @@ function generateCar(nr, from, to) {
   car.on('stopped', async car => {
     if (!car.busy) {
       const next = await address.randomize(to)
-      console.log('stopped moving to', next)
+      // console.log('stopped moving to', next)
       car.navigateTo(next)
     }
   })
