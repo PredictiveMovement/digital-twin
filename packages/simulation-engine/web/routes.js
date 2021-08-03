@@ -26,7 +26,7 @@ function register(io) {
           bearing,
           position: [lon, lat],
         })),
-        bufferTime(500)
+        bufferTime(100)
       )
       .subscribe((cars) => {
         socket.volatile.emit('cars', cars)

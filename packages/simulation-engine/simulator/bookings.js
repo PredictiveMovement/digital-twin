@@ -3,6 +3,7 @@ const {
   map,
   first,
   filter,
+  retry,
   concatMap,
   mergeMap,
   toArray,
@@ -56,8 +57,9 @@ function generateBookingsInKommun(kommun) {
         id: id++,
         pickup: nearestOmbud,
         destination: address,
-      }))
-    )
+      })
+    )),
+    retry(5)
   )
   return bookings
 }

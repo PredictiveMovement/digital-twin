@@ -15,15 +15,17 @@ class Car extends EventEmitter {
     this.on('error', (err) => console.error('car error', err))
   }
 
-  simulate(heading, timeMultiplier = 1) {
+  simulate(heading, timeMultiplier = 60) {
     clearInterval(this._interval)
-    // this._timeStart = new Date()
+    this._timeStart = Date.now()
+    this._timeMultiplier = timeMultiplier
     if (!heading) return
     this._interval = setInterval(() => {
-      // const diff = new Date() - this._timeStart
-      const newPosition = interpolate.route(heading.route, new Date())
+      const diff = Date.now() - this._timeStart
+      const newPosition = interpolate.route(heading.route, Date.now() + diff * timeMultiplier)
       if (newPosition) this.updatePosition(newPosition)
-    }, Math.random() * 3000)
+      console.log('interval', this.ema, this.speed, this.id)
+    }, Math.random() * 300)
   }
 
   navigateTo(position) {
@@ -34,6 +36,7 @@ class Car extends EventEmitter {
         route.started = new Date()
         this.heading.route = route
         this.simulate(this.heading)
+        console.log('heading to', this.heading)
         return this.heading
       })
       .catch(console.error)
@@ -44,19 +47,20 @@ class Car extends EventEmitter {
     if (!this.busy) {
       this.busy = true
       this.booking = booking
-      this.navigateTo(booking.pickup)
-      booking.car = this
+      this.booking.car = this
+      this.navigateTo(booking.pickup.position)
     } else {
       this.booking.receivedDateTime = new Date()
       this.queue.push(booking)
+      console.log('*** queued ', this.queue.length, 'bookings')
     }
-    return this
+    return booking
   }
 
   pickup() {
     console.log('inside pickup', this.booking)
     if (this.booking) {
-      this.navigateTo(this.booking.destination)
+      this.navigateTo(this.booking.destination.position)
       this.booking.pickupDateTime = new Date()
     }
     this.emit('pickup', this)
@@ -85,17 +89,19 @@ class Car extends EventEmitter {
     const metersMoved = distance.haversine(lastPosition, position)
     const bearing = distance.bearing(lastPosition, position)
     const [km, h] = [(metersMoved / 1000), (date - lastPosition.date) / 1000 / 60 / 60]
-    this.speed = km / h
+    this.speed = Math.round((km / h / (this._timeMultiplier || 1)) || 0)
     this.position = position
     this.bearing = bearing
     this.lastPositions.push({ ...position, date })
+    this.ema = distance.haversine(this.heading, this.position)
     if (this.speed > 10) {
       this.emit('moved', this)
     } else {
       this.emit('stopped', this)
-      if (this.booking && !this.booking.pickupDateTime && distance.haversine(this.booking.pickup, this.position) < 50) this.pickup()
-      if (this.booking && !this.booking.dropOffDateTime && distance.haversine(this.booking.destination, this.position) < 50) this.dropOff()
+      console.log('stopped', this.id, this.booking?.pickup)
     }
+    if (this.booking && distance.haversine(this.booking.pickup.position, this.position) < 50) this.pickup()
+    if (this.booking && distance.haversine(this.booking.destination.position, this.position) < 50) this.dropOff()
   }
 }
 
