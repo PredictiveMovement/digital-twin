@@ -6,7 +6,7 @@ function interpolatePositionFromRoute (route, time) {
   const current = futurePoints[0]
   const next = futurePoints[1]
 
-  if (!current || !next) return null
+  if (!current || !next) return points[points.length-1]
 
   const progress = (currentTime - current.passed) / current.duration
   // or
