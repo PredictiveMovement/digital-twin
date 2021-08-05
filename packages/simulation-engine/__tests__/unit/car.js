@@ -33,12 +33,9 @@ describe("A car", () => {
       id: 1,
       pickup: {
         position: ljusdal
-      },
-      destination: {
-        position: arjeplog
       }
     })
-    car.on('stopped', () => {
+    car.once('pickup', () => {
       expect(car.position?.lon).toEqual(ljusdal.lon)
       expect(car.position?.lat).toEqual(ljusdal.lat)
       done()
@@ -75,12 +72,12 @@ describe("A car", () => {
         position: arjeplog
       }
     })
-    car.on('pickup', () => {
+    car.once('pickup', () => {
       expect(car.position?.lon).toEqual(ljusdal.lon)
       expect(car.position?.lat).toEqual(ljusdal.lat)
     })
 
-    car.on('dropoff', () => {
+    car.once('dropoff', () => {
       expect(car.position?.lon).toEqual(arjeplog.lon)
       expect(car.position?.lat).toEqual(arjeplog.lat)
       done()
