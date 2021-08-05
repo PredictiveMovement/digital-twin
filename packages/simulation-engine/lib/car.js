@@ -23,10 +23,9 @@ class Car extends EventEmitter {
     if (!heading) return
     if (this.timeMultiplier === Infinity) return this.updatePosition(heading) // teleport mode
     this._interval = setInterval(() => {
-      console.log('interval')
       const diff = Date.now() - this._timeStart
-      const newPosition = interpolate.route(heading.route, Date.now() + diff * this.timeMultiplier)
-      this.updatePosition(newPosition ?? heading)
+      const newPosition = interpolate.route(heading.route, Date.now() + diff * this.timeMultiplier) ?? heading
+      this.updatePosition(newPosition)
       // console.log('interval', this.ema, this.speed, this.id)
     }, Math.random() * 300)
   }
@@ -38,8 +37,8 @@ class Car extends EventEmitter {
       .then((route) => {
         route.started = new Date()
         this.heading.route = route
+        if(!route.legs) throw new Error(`Route not found from: ${JSON.stringify(this.position)} to: ${JSON.stringify(this.heading)}`)
         this.simulate(this.heading)
-        console.log(`Car#${this.id}: heading to`, this.heading)
         return this.heading
       })
       .catch(console.error)
@@ -51,8 +50,8 @@ class Car extends EventEmitter {
       this.busy = true
       this.booking = booking
       this.booking.car = this
-      this.navigateTo(booking.pickup.position)
       this.status = 'Pickup'
+      this.navigateTo(booking.pickup.position)
     } else {
       this.booking.receivedDateTime = new Date()
       this.queue.push(booking)
@@ -62,18 +61,19 @@ class Car extends EventEmitter {
   }
 
   pickup() {
-    console.log(`Car#${this.id}: inside pickup`, this.booking)
-    if (this.booking) {
-      this.navigateTo(this.booking.destination.position)
-      this.status = 'Delivery'
-      this.booking.pickupDateTime = new Date()
-    }
     this.emit('pickup', this)
 
+    // wait one tick so the pickup event can be parsed before changing status
+    setImmediate(() => {
+      if (this.booking) {
+        this.status = 'Delivery'
+        this.navigateTo(this.booking.destination.position)
+        this.booking.pickupDateTime = new Date()
+      }
+    })
   }
 
   dropOff() {
-    console.log(`Car#${this.id}: inside dropoff`, this.booking)
     if (this.booking) {
       this.busy = false
       this.booking.dropOffDateTime = new Date()
@@ -83,6 +83,7 @@ class Car extends EventEmitter {
     } 
     const nextBooking = this.queue.shift(this.queue)
     if (nextBooking) {
+      console.log('handle next booking')
       this.handleBooking(nextBooking)
     } else {
       this.status = 'Ready'
@@ -101,15 +102,13 @@ class Car extends EventEmitter {
     this.bearing = bearing
     this.lastPositions.push({ ...position, date })
     this.ema = distance.haversine(this.heading, this.position)
-    if (this.speed > 10 || this.ema > 100) {
-      this.emit('moved', this)
-      console.log('*** moved', this.ema, this.speed)
-    } else {
-      this.emit('stopped', this)
+    this.emit('moved', this)
+    if (this.ema < 50) {
+    this.emit('stopped', this)
       this.simulate(false)
       if (this.booking) {
-       if (distance.haversine(this.booking.pickup.position, this.position) < 150) this.pickup()
-        if (distance.haversine(this.booking.destination.position, this.position) < 150) this.dropOff()
+        if (this.status === 'Pickup') this.pickup()
+        if (this.status === 'Delivery') this.dropOff()
       }
     }
   }

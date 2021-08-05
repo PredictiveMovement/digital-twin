@@ -5,8 +5,16 @@ function interpolatePositionFromRoute (route, time) {
   const futurePoints = points.filter(point => point.passed + point.duration > currentTime)
   const current = futurePoints[0]
   const next = futurePoints[1]
+  const lastPoint = points[points.length-1]
 
-  if (!current || !next) return points[points.length-1]
+  // when we reach the end
+  if (!current || !next) return {
+    lat: lastPoint.position.lat,
+    lon: lastPoint.position.lon,
+    speed: 0,
+    instruction: lastPoint,
+    next: null
+  }
 
   const progress = (currentTime - current.passed) / current.duration
   // or
