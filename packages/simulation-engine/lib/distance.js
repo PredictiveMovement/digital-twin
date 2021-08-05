@@ -29,7 +29,7 @@ function haversine (p1, p2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
   const d = R * c
 
-  return Math.round(d)
+  return Math.round(d) || 0
 }
 
 function bearing (p1, p2) {
