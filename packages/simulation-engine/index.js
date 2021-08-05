@@ -2,7 +2,7 @@ const { from, shareReplay } = require('rxjs')
 const { mergeMap, concatMap, take, filter, tap, share } = require('rxjs/operators')
 
 const { generateBookingsInKommun } = require('./simulator/bookings')
-const { generateCarsInKommun } = require('./simulator/cars')
+const { generateCars } = require('./simulator/cars')
 const { dispatch } = require('./simulator/dispatchCentral')
 const kommuner = require('./streams/kommuner')
 const postombud = require('./streams/postombud')
@@ -35,7 +35,10 @@ const engine = {
     shareReplay()
   ),
   cars: pilots.pipe(
-    mergeMap((kommun) => generateCarsInKommun(kommun, NR_CARS).pipe(
+    mergeMap(({postombud}), postombud),
+    map(ombud => ombud.position),
+    toArray(),
+    mergeMap((postombud) => generateCars(postombud, NR_CARS).pipe(
       tap((car) => {
         console.log('*** adding car to kommun', car.id)
         kommun.cars.next(car)

@@ -5,19 +5,15 @@
   "main": "web/index.js",
   "scripts": {
     "dev": "nodemon web/index.js",
-    "test": "mocha -R spec tests/**",
-    "test-watch": "mocha -w -R spec tests/**"
+    "test": "jest __tests__",
+    "watch": "jest --watch __tests__"
   },
-  "author": "Christian Landgren @ Iteam",
-  "license": "UNLICENSED",
+  "author": "Iteam",
+  "license": "MIT",
   "dependencies": {
-    "@programmerare/sweden_crs_transformations": "^1.0.0",
     "csv-parse": "^4.16.0",
-    "csv-reader": "^1.0.8",
     "dotenv": "^10.0.0",
-    "highland": "^2.10.1",
-    "moment": "^2.15.1",
-    "moment-timezone": "^0.5.7",
+    "nanoid": "^3.1.23",
     "node-fetch": "^1.5.3",
     "perlin-noise": "^0.0.1",
     "point-in-polygon": "^1.0.1",
@@ -25,10 +21,11 @@
     "rxjs": "^7.2.0",
     "socket.io": "^2.3.0",
     "swe-coords": "^1.0.0",
+    "jest": "^27.0.6",
     "xlsx": "^0.17.0"
   },
   "directories": {
-    "test": "tests"
+    "test": "__tests__"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
