@@ -1,5 +1,5 @@
-const { from, shareReplay } = require('rxjs')
-const { mergeMap, concatMap, take, filter, tap, share } = require('rxjs/operators')
+const { shareReplay } = require('rxjs')
+const { map, mergeMap, take, filter, tap, toArray } = require('rxjs/operators')
 
 const { generateBookingsInKommun } = require('./simulator/bookings')
 const { generateCars } = require('./simulator/cars')
@@ -8,10 +8,10 @@ const kommuner = require('./streams/kommuner')
 const postombud = require('./streams/postombud')
 
 const WORKING_DAYS = 265
-const NR_CARS = 1
+const NR_CARS = 15
 const pilots = kommuner.pipe(
   filter((kommun) =>
-    ['Arjeplog' /*, 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'*/].some((pilot) =>
+    ['Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
       kommun.name.startsWith(pilot)
     ),
   ),
@@ -35,15 +35,18 @@ const engine = {
     shareReplay()
   ),
   cars: pilots.pipe(
-    mergeMap(({postombud}), postombud),
-    map(ombud => ombud.position),
-    toArray(),
-    mergeMap((postombud) => generateCars(postombud, NR_CARS).pipe(
-      tap((car) => {
-        console.log('*** adding car to kommun', car.id)
-        kommun.cars.next(car)
-      })
-    )),
+    mergeMap(kommun => {
+      return kommun.postombud.pipe(
+        map(ombud => ombud.position),
+        toArray(),
+        mergeMap((postombud) => generateCars(postombud.reverse(), NR_CARS).pipe(
+          tap((car) => {
+            console.log('*** adding car to kommun', car.id)
+            kommun.cars.next(car)
+          })
+        )),
+      )
+    })
   ),
   dispatchedBookings,
   postombud,
