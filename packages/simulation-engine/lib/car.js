@@ -65,7 +65,7 @@ class Car extends EventEmitter {
 
     // wait one tick so the pickup event can be parsed before changing status
     setImmediate(() => {
-      if (this.booking) {
+      if (this.booking && this.booking.destination) {
         this.status = 'Delivery'
         this.navigateTo(this.booking.destination.position)
         this.booking.pickupDateTime = new Date()
