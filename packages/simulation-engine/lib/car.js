@@ -15,6 +15,7 @@ class Car extends EventEmitter {
     this.lastPositions = []
     this.timeMultiplier = timeMultiplier
     this.on('error', (err) => console.error('car error', err))
+    this.emit('moved', this)
   }
 
   simulate(heading) {
