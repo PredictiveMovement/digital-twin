@@ -3,7 +3,6 @@ const { map } = require('rxjs/operators')
 const { readXlsx } = require('../adapters/xlsx')
 
 function execute() {
-  console.log('*** read postombud')
   return from(readXlsx(
     `${process.cwd()}/data/${process.env.postombud_file || 'ombud.xlsx'}`,
     `${process.env.postombud_sheet || 'Sammanställning korr'}`
