@@ -1,6 +1,5 @@
-const { from, Subject } = require('rxjs')
-const { take, toArray } = require('rxjs/operators')
-const { generateCars } = require('../../simulator/cars')
+const { from, Subject, ReplaySubject, forkJoin, timer } = require('rxjs')
+const { take, scan, toArray, takeUntil, bufferTime, map, concatAll, windowTime } = require('rxjs/operators')
 const { dispatch } = require('../../simulator/dispatchCentral')
 const Car = require('../../lib/car')
 
@@ -57,6 +56,56 @@ describe("dispatch", () => {
           }
         )
       } else {
+        expect(id).toEqual(2)
+        done()
+      }
+    })
+
+    asyncBookings.next(
+      {
+        id: 1,
+        pickup: {position: ljusdal},
+        destination: {position: arjeplog}
+      }
+    )
+  })
+
+  it('should understand rxjs shareReplay', (done) => {
+    const cars = new ReplaySubject()
+    cars.next(1)
+    cars.next(2)
+
+    cars.pipe(takeUntil(timer(500)), toArray()).subscribe(([car1, car2]) => {
+      expect(car1).toEqual(1)
+      expect(car2).toEqual(2)
+
+      // try it again to make sure we can read it twice
+      cars.pipe(takeUntil(timer(500)), toArray()).subscribe(([car1, car2]) => {
+        expect(car1).toEqual(1)
+        expect(car2).toEqual(2)
+        done()
+      })
+    })
+  })
+
+  it('should have cars available even the second time', function (done) {
+    const asyncBookings = new Subject()
+    const cars = new ReplaySubject()
+    cars.next(new Car ({position: ljusdal}))
+    cars.next(new Car ({position: arjeplog}))
+
+    dispatch(cars, asyncBookings).subscribe(({booking: {id}, car: {position}}) => {
+      if (id === 1) {
+        expect(position).toEqual(ljusdal)
+        asyncBookings.next(
+          {
+            id: 2,
+            pickup: {position: arjeplog},
+            destination: {position: ljusdal}
+          }
+        )
+      } else {
+        expect(position).toEqual(arjeplog)
         expect(id).toEqual(2)
         done()
       }

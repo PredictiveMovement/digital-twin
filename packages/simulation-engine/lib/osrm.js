@@ -2,7 +2,6 @@ const fetch = require('node-fetch')
 const polyline = require('polyline')
 const osrmUrl = process.env.OSRM_URL || 'https://osrm.iteamdev.io' || 'http://localhost:5000'
 
-console.log('OSRM URL', osrmUrl)
 module.exports = {
   route (from, to) {
 
