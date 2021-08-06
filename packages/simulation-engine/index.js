@@ -1,5 +1,5 @@
 const { shareReplay } = require('rxjs')
-const { map, mergeMap, take, filter, tap, toArray } = require('rxjs/operators')
+const { map, mergeMap, concatMap, take, filter, tap, toArray } = require('rxjs/operators')
 
 const { generateBookingsInKommun } = require('./simulator/bookings')
 const { generateCars } = require('./simulator/cars')
@@ -18,7 +18,7 @@ const pilots = kommuner.pipe(
   shareReplay()
 )
 
-const dispatchedBookings = pilots.pipe(mergeMap((kommun) => dispatch(kommun.cars, kommun.unhandledBookings)))
+const dispatchedBookings = pilots.pipe(concatMap((kommun) => dispatch(kommun.cars, kommun.unhandledBookings)))
 
 const engine = {
   bookings: pilots.pipe(

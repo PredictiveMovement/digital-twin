@@ -47,8 +47,8 @@ class Kommun extends EventEmitter {
     this.zip = zip
     this.telephone = telephone
     this.unhandledBookings = new Subject()
-    this.cars = new Subject()
-    this.bookings = new Subject()
+    this.cars = new ReplaySubject()
+    this.bookings = new ReplaySubject()
     this.squares = getPopulationSquares(this)
     // don't we want reduce here?
     this.population = this.squares.pipe(reduce((a, b) => a + b.population, 0))
