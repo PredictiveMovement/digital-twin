@@ -3,6 +3,7 @@ const { take, toArray } = require('rxjs/operators')
 
 describe("cars", () => {
   const arjeplog = [{ lon: 17.886855, lat: 66.041054 }]
+
   it('should randomize at least 15 cars with initial positions', function (done) {
     generateCars(arjeplog, 15).pipe(toArray()).subscribe(initialCars => {
       try {
