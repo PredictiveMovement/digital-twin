@@ -2,7 +2,9 @@ const osrm = require('../lib/osrm')
 const distance = require('./distance')
 const interpolate = require('./interpolate')
 const EventEmitter = require('events')
+const Booking = require('./booking')
 const { safeId } = require('./id')
+const { assert } = require('console')
 
 class Car extends EventEmitter {
   constructor({id = safeId(), position, status = 'Ready', timeMultiplier = 60} = {}) {
@@ -46,17 +48,18 @@ class Car extends EventEmitter {
   }
 
   handleBooking(booking) {
+    assert(booking instanceof Booking, 'Booking needs to be of type Booking')
     this.history.push({ status: 'received_booking', date: new Date(), booking })
     if (!this.busy) {
       this.busy = true
       this.booking = booking
-      this.booking.car = this
+      booking.assigned(this)
       this.status = 'Pickup'
       this.navigateTo(booking.pickup.position)
     } else {
-      this.booking.receivedDateTime = new Date()
       this.queue.push(booking)
-      console.log(`*** Car#${this.id}: queued ${this.queue.length} bookings`)
+      booking.queued(this)
+      //console.log(`*** Car#${this.id}: queued ${this.queue.length} bookings`)
     }
     return booking
   }
@@ -67,9 +70,9 @@ class Car extends EventEmitter {
     // wait one tick so the pickup event can be parsed before changing status
     setImmediate(() => {
       if (this.booking && this.booking.destination) {
+        this.booking.pickedUp(this.position)
         this.status = 'Delivery'
         this.navigateTo(this.booking.destination.position)
-        this.booking.pickupDateTime = new Date()
       }
     })
   }
@@ -77,10 +80,10 @@ class Car extends EventEmitter {
   dropOff() {
     if (this.booking) {
       this.busy = false
-      this.booking.dropOffDateTime = new Date()
+      this.booking.droppedOff(this.position)
+      this.emit('dropoff', this)
       this.booking = null
       this.status = null
-      this.emit('dropoff', this)
     } 
     const nextBooking = this.queue.shift(this.queue)
     if (nextBooking) {

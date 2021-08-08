@@ -1,7 +1,8 @@
 const { from, Subject, ReplaySubject, forkJoin, timer } = require('rxjs')
-const { take, scan, toArray, takeUntil, bufferTime, map, concatAll, windowTime } = require('rxjs/operators')
+const { take, scan, toArray, takeUntil, bufferTime, map, concatAll, windowTime, shareReplay } = require('rxjs/operators')
 const { dispatch } = require('../../simulator/dispatchCentral')
 const Car = require('../../lib/car')
+const Booking = require('../../lib/booking')
 
 describe("dispatch", () => {
   const arjeplog = { lon: 17.886855, lat: 66.041054 }
@@ -10,12 +11,12 @@ describe("dispatch", () => {
   let bookings
 
   beforeEach(() => {
-    cars = from([new Car ({position: ljusdal}), new Car({position: arjeplog})])
-    bookings = from([{
+    cars = from([new Car ({position: ljusdal}), new Car({position: arjeplog})]).pipe(shareReplay())
+    bookings = from([new Booking({
       id: 0,
       pickup: {position: ljusdal},
       destination: {position: arjeplog}
-    }])
+    })])
   })
 
   it('should dispatch a booking to nearest car', function (done) {
@@ -27,14 +28,16 @@ describe("dispatch", () => {
 
   it('should dispatch two booking to each nearest car', function (done) {
     bookings = from([
-      {
+      new Booking({
+        id: 1337,
         pickup: {position: ljusdal},
         destination: {position: arjeplog}
-      },
-      {
+      }),
+      new Booking({
+        id: 1338,
         pickup: {position: arjeplog},
         destination: {position: ljusdal}
-      }
+      })
     ])
     dispatch(cars, bookings).pipe(toArray()).subscribe(([assignment1, assignment2]) => {
       expect(assignment1.car.position).toEqual(ljusdal)
@@ -48,44 +51,22 @@ describe("dispatch", () => {
     dispatch(cars, asyncBookings).subscribe(({booking: {id}, car}) => {
       if (id === 1) {
         expect(car.position).toEqual(ljusdal)
-        asyncBookings.next(
-          {
-            id: 2,
-            pickup: {position: arjeplog},
-            destination: {position: ljusdal}
-          }
-        )
+        asyncBookings.next(new Booking({
+          id: 2,
+          pickup: {position: arjeplog},
+          destination: {position: ljusdal}
+        }))
       } else {
         expect(id).toEqual(2)
         done()
       }
     })
 
-    asyncBookings.next(
-      {
-        id: 1,
-        pickup: {position: ljusdal},
-        destination: {position: arjeplog}
-      }
-    )
-  })
-
-  it('should understand rxjs shareReplay', (done) => {
-    const cars = new ReplaySubject()
-    cars.next(1)
-    cars.next(2)
-
-    cars.pipe(takeUntil(timer(500)), toArray()).subscribe(([car1, car2]) => {
-      expect(car1).toEqual(1)
-      expect(car2).toEqual(2)
-
-      // try it again to make sure we can read it twice
-      cars.pipe(takeUntil(timer(500)), toArray()).subscribe(([car1, car2]) => {
-        expect(car1).toEqual(1)
-        expect(car2).toEqual(2)
-        done()
-      })
-    })
+    asyncBookings.next(new Booking({
+      id: 1,
+      pickup: {position: ljusdal},
+      destination: {position: arjeplog}
+    }))
   })
 
   it('should have cars available even the second time', function (done) {
@@ -97,13 +78,11 @@ describe("dispatch", () => {
     dispatch(cars, asyncBookings).subscribe(({booking: {id}, car: {position}}) => {
       if (id === 1) {
         expect(position).toEqual(ljusdal)
-        asyncBookings.next(
-          {
-            id: 2,
-            pickup: {position: arjeplog},
-            destination: {position: ljusdal}
-          }
-        )
+        asyncBookings.next(new Booking({
+          id: 2,
+          pickup: {position: arjeplog},
+          destination: {position: ljusdal}
+        }))
       } else {
         expect(position).toEqual(arjeplog)
         expect(id).toEqual(2)
@@ -112,11 +91,42 @@ describe("dispatch", () => {
     })
 
     asyncBookings.next(
-      {
+      new Booking({
         id: 1,
         pickup: {position: ljusdal},
         destination: {position: arjeplog}
-      }
+      })
     )
   })
+
+
+  it('should dispatch two booking to one car', function (done) {
+    cars = from([new Car ({id: 1, position: ljusdal, timeMultiplier: Infinity})])
+    bookings = from([
+      new Booking({
+        id: 1337,
+        pickup: {position: ljusdal},
+        destination: {position: arjeplog}
+      }),
+      new Booking({
+        id: 1338,
+        pickup: {position: arjeplog},
+        destination: {position: ljusdal}
+      })
+    ])
+    dispatch(cars, bookings).pipe(toArray()).subscribe(([assignment1, assignment2]) => {
+      expect(assignment1.car.id).toEqual(1)
+      expect(assignment1.booking.id).toEqual(1337)
+      expect(assignment2.car.id).toEqual(1)
+      expect(assignment2.booking.id).toEqual(1338)
+      assignment1.booking.once('dropoff', (booking) => {
+        expect(booking.id).toEqual(1337)
+      })
+      assignment2.booking.once('dropoff', (booking) => {
+        expect(booking.id).toEqual(1338)
+        done()
+      })
+    })
+  })
+  
 })

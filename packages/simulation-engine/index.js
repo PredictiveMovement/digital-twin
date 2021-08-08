@@ -18,8 +18,6 @@ const pilots = kommuner.pipe(
   shareReplay()
 )
 
-const dispatchedBookings = pilots.pipe(concatMap((kommun) => dispatch(kommun.cars, kommun.unhandledBookings)))
-
 const engine = {
   bookings: pilots.pipe(
     mergeMap((kommun) => 
@@ -48,7 +46,10 @@ const engine = {
       )
     })
   ),
-  dispatchedBookings,
+  dispatchedBookings: pilots.pipe(
+    // TODO: add more than one dispatch central in each kommun = multiple fleets
+    concatMap((kommun) => dispatch(kommun.cars, kommun.unhandledBookings))
+  ),
   postombud,
   kommuner
 }
@@ -61,6 +62,6 @@ const engine = {
 //   mergeMap(kommun => kommun.bookings)
 // ).subscribe(e => console.log('kb', ))
 
-dispatchedBookings.subscribe(({car, booking}) => console.log('*** booking dispatched', car.id, booking.id))
+engine.dispatchedBookings.subscribe(({car, booking}) => console.log('*** booking dispatched', car.id, booking.id))
 
 module.exports = engine
