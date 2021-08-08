@@ -15,6 +15,7 @@ const postombud = require('../streams/postombud')
 const kommuner = require('../streams/kommuner')
 const { haversine, addMeters } = require('../lib/distance')
 const perlin = require('perlin-noise')
+const Booking = require('../lib/booking')
 
 const xy = (i, size = 1000) => ({ x: i % size, y: Math.floor(i / size) })
 let id = 0
@@ -64,7 +65,7 @@ function generateBookingsInKommun(kommun) {
       return pelias
         .nearest(position)
         .then((address) => range(1, bookingsAtThisAdress).pipe(
-          map(() => ({
+          map(() => new Booking({
             id: id++,
             pickup: nearestOmbud,
             destination: address,

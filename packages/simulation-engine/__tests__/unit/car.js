@@ -1,5 +1,6 @@
 const Car = require('../../lib/car')
 const { take, toArray } = require('rxjs/operators')
+const Booking = require('../../lib/booking')
 
 describe("A car", () => {
   const arjeplog = { lon: 17.886855, lat: 66.041054 }
@@ -29,12 +30,12 @@ describe("A car", () => {
 
   it('should be able to handle one booking and navigate to pickup', function (done) {
     const car = new Car({id: 1, position: arjeplog, timeMultiplier: Infinity})
-    car.handleBooking({
+    car.handleBooking(new Booking({
       id: 1,
       pickup: {
         position: ljusdal
       }
-    })
+    }))
     car.once('pickup', () => {
       expect(car.position?.lon).toEqual(ljusdal.lon)
       expect(car.position?.lat).toEqual(ljusdal.lat)
@@ -43,8 +44,8 @@ describe("A car", () => {
   })
 
   it('should be able to handle one booking and emit correct events', function (done) {
-    const car = new Car({id: 1, position: arjeplog, timeMultiplier: Infinity})
-    car.handleBooking({
+    const car = new Car({id: 1, position: arjeplog, timeMultiplier: Infinity}) 
+    car.handleBooking(new Booking({
       id: 1,
       pickup: {
         position: ljusdal
@@ -52,7 +53,7 @@ describe("A car", () => {
       destination: {
         position: arjeplog
       }
-    })
+    }))
     expect(car.status).toEqual('Pickup')
     car.on('pickup', () => {
       expect(car.position?.lon).toEqual(ljusdal.lon)
@@ -63,7 +64,7 @@ describe("A car", () => {
 
   it('should be able to pickup a booking and deliver it to its destination', function (done) {
     const car = new Car({id: 1, position: arjeplog, timeMultiplier: Infinity})
-    car.handleBooking({
+    car.handleBooking(new Booking({
       id: 1,
       pickup: {
         position: ljusdal
@@ -71,7 +72,7 @@ describe("A car", () => {
       destination: {
         position: arjeplog
       }
-    })
+    }))
     car.once('pickup', () => {
       expect(car.position?.lon).toEqual(ljusdal.lon)
       expect(car.position?.lat).toEqual(ljusdal.lat)
