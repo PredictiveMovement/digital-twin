@@ -17,13 +17,13 @@ const { haversine, addMeters } = require('../lib/distance')
 const perlin = require('perlin-noise')
 const Booking = require('../lib/booking')
 
-const xy = (i, size = 1000) => ({ x: i % size, y: Math.floor(i / size) })
+const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
 let id = 0
 
 // generate a pattern of random positions so we can take x out of these and get a natural pattern of these positions
 const randomPositions = perlin
-  .generatePerlinNoise(1000, 1000)
-  .map((probability, i) => ({ ...xy(i), probability }))
+  .generatePerlinNoise(100, 100)
+  .map((probability, i) => ({ x: xy(i).x * 10, y: xy(i).y * 10, probability }))
   .sort((a, b) => b.probability - a.probability) // sort them so we can just pick how many we want
 
 function generateBookingsInKommun(kommun) {
@@ -50,8 +50,6 @@ function generateBookingsInKommun(kommun) {
         .map(({ x, y }) => addMeters(position, { x, y }))
         .map((position) => ({ nearestOmbud, position }))
     ),
-    toArray(), // convert to array to be able to sort the addresses
-    mergeMap((a) => from(a.sort(() => Math.random() - 0.5))) // pick a random adress
   )
 
   const bookings = randomPointsInSquares.pipe(
@@ -59,6 +57,8 @@ function generateBookingsInKommun(kommun) {
       first(area => isInsideCoordinates(point.position, area.geometry.coordinates), false),
       map(commercialArea => ({...point, isCommercial: !!commercialArea } ))
     )),
+    toArray(), // convert to array to be able to sort the addresses
+    mergeMap((a) => from(a.sort((p) => Math.random() - 0.5 - (p.isCommercial ? 2 : 0)))),
     concatMap(({ nearestOmbud, position, isCommercial }) => {
       // add more than one booking if this point is within a commercial area
       const bookingsAtThisAdress = Math.ceil(Math.random() * (isCommercial ? 100 : 2)) // ? hur ska vi räkna en pall?
@@ -73,7 +73,7 @@ function generateBookingsInKommun(kommun) {
         ))
     }),
     mergeAll(),
-    retry(5)
+    //retry(5)
   )
   return bookings
 }

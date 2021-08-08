@@ -13,6 +13,7 @@ class Car extends EventEmitter {
     this.position = position
     this.history = []
     this.queue = []
+    this.capacity = 50 // bookings
     this.status = status
     this.lastPositions = []
     this.timeMultiplier = timeMultiplier
@@ -87,7 +88,6 @@ class Car extends EventEmitter {
     } 
     const nextBooking = this.queue.shift(this.queue)
     if (nextBooking) {
-      console.log('handle next booking')
       this.handleBooking(nextBooking)
     } else {
       this.status = 'Ready'

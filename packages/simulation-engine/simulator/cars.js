@@ -3,6 +3,7 @@ const Car = require('../lib/car')
 const { from, shareReplay } = require('rxjs')
 const { expand, concatMap, take, map, toArray, mergeAll, withLatestFrom } = require('rxjs/operators')
 let carId = 0
+const SPEED = 60 // multiplier.
 
 const shuffle = () => observable => observable.pipe( 
   toArray(),
@@ -17,7 +18,7 @@ function generateCars(initialPositions, numberOfCars) {
     take(numberOfCars),
     shuffle(),
     //concatMap(position => withLatestFrom(address.randomize(position))),
-    map((position) => new Car({id: carId++, position})),
+    map((position) => new Car({id: carId++, position, timeMultiplier: SPEED + Math.random() * 10})),
     shareReplay()
   )
 }
