@@ -13,6 +13,7 @@ class Car extends EventEmitter {
     this.position = position
     this.history = []
     this.queue = []
+    this.cargo = []
     this.capacity = 50 // bookings
     this.status = status
     this.lastPositions = []
@@ -53,7 +54,8 @@ class Car extends EventEmitter {
     this.history.push({ status: 'received_booking', date: new Date(), booking })
     if (!this.busy) {
       this.busy = true
-      this.booking = booking
+      // this.booking = booking
+      this.cargo.push(booking)
       booking.assigned(this)
       this.status = 'Pickup'
       this.navigateTo(booking.pickup.position)
@@ -67,9 +69,18 @@ class Car extends EventEmitter {
 
   pickup() {
     this.emit('pickup', this)
+    this.queue.sort((a, b) => haversine(this.position, a.pickup.position) - haversine(this.position, b.pickup.position))
 
     // wait one tick so the pickup event can be parsed before changing status
     setImmediate(() => {
+      this.queue
+        // see if we have more packages to deliver from this position
+        .filter(booking => haversine(this.position, booking.pickup.position) < 50)
+        .map(booking => {
+          booking.pickedUp(this.position)
+          this.cargo.push(booking)
+        })
+      this.booking = this.cargo.shift() // pick the first package and go there
       if (this.booking && this.booking.destination) {
         this.booking.pickedUp(this.position)
         this.status = 'Delivery'
@@ -83,9 +94,13 @@ class Car extends EventEmitter {
       this.busy = false
       this.booking.droppedOff(this.position)
       this.emit('dropoff', this)
-      this.booking = null
-      this.status = null
-    } 
+      this.cargo.sort((a, b) => haversine(this.position, a.destination.position) - haversine(this.position, b.destination.position))
+
+      this.booking = this.cargo.shift()
+      this.navigateTo(this.booking.destination.position)
+      return
+    }
+
     const nextBooking = this.queue.shift(this.queue)
     if (nextBooking) {
       this.handleBooking(nextBooking)

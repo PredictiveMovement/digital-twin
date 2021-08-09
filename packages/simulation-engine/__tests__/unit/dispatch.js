@@ -119,10 +119,10 @@ describe("dispatch", () => {
       expect(assignment1.booking.id).toEqual(1337)
       expect(assignment2.car.id).toEqual(1)
       expect(assignment2.booking.id).toEqual(1338)
-      assignment1.booking.once('dropoff', (booking) => {
+      assignment1.booking.once('delivered', (booking) => {
         expect(booking.id).toEqual(1337)
       })
-      assignment2.booking.once('dropoff', (booking) => {
+      assignment2.booking.once('delivered', (booking) => {
         expect(booking.id).toEqual(1338)
         done()
       })
