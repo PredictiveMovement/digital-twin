@@ -24,18 +24,20 @@ font-weight: ${(props) => props.thin ? 300 : 400};
 color: white;
 `
 
-const KommunStatisticsBox = ({ name, totalCars, totalBookings, bookingsFromHub }) => {
+const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, bookingsFromHub, totalCargo }) => {
     return (
         <Wrapper>
             <div>
                 <Paragraph>Just nu kör {totalCars} lastbilar i {name}</Paragraph>
-                <Paragraph>Co2: XXX</Paragraph>
+                <Paragraph>Total kapacitet: {totalCapacity}</Paragraph>
+                <Paragraph>Total cargo: {totalCargo}</Paragraph>
                 <Paragraph>Antal bokningar: {totalBookings} st</Paragraph>
+                <Paragraph>Co2: XXX</Paragraph>
                 <Paragraph>Antal paket upphämtade från avlastningscentralen: {bookingsFromHub} st</Paragraph>
             </div>
             <div>
                 <Paragraph thin>Medelfyllnadsgrad per bil:</Paragraph>
-                <ProgressBar completed={60} />
+                <ProgressBar completed={60 /* totalCapacity / totalCargo or so */} />
             </div>
         </Wrapper>
     )
