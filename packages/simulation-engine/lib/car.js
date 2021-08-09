@@ -1,5 +1,5 @@
 const osrm = require('../lib/osrm')
-const distance = require('./distance')
+const {haversine, bearing} = require('./distance')
 const interpolate = require('./interpolate')
 const EventEmitter = require('events')
 const Booking = require('./booking')
@@ -54,8 +54,7 @@ class Car extends EventEmitter {
     this.history.push({ status: 'received_booking', date: new Date(), booking })
     if (!this.busy) {
       this.busy = true
-      // this.booking = booking
-      this.cargo.push(booking)
+      this.booking = booking
       booking.assigned(this)
       this.status = 'Pickup'
       this.navigateTo(booking.pickup.position)
@@ -80,7 +79,6 @@ class Car extends EventEmitter {
           booking.pickedUp(this.position)
           this.cargo.push(booking)
         })
-      this.booking = this.cargo.shift() // pick the first package and go there
       if (this.booking && this.booking.destination) {
         this.booking.pickedUp(this.position)
         this.status = 'Delivery'
@@ -92,13 +90,15 @@ class Car extends EventEmitter {
   dropOff() {
     if (this.booking) {
       this.busy = false
-      this.booking.droppedOff(this.position)
+      this.booking.delivered(this.position)
       this.emit('dropoff', this)
       this.cargo.sort((a, b) => haversine(this.position, a.destination.position) - haversine(this.position, b.destination.position))
 
       this.booking = this.cargo.shift()
-      this.navigateTo(this.booking.destination.position)
-      return
+      if (this.booking) {
+        this.navigateTo(this.booking.destination.position)
+        return
+      }
     }
 
     const nextBooking = this.queue.shift(this.queue)
@@ -113,14 +113,13 @@ class Car extends EventEmitter {
   
   async updatePosition(position, date = Date.now()) {
     const lastPosition = this.lastPositions[this.lastPositions.length-1] || position
-    const metersMoved = distance.haversine(lastPosition, position)
-    const bearing = distance.bearing(lastPosition, position) || 0
+    const metersMoved = haversine(lastPosition, position)
     const [km, h] = [(metersMoved / 1000), (date - lastPosition.date) / 1000 / 60 / 60]
     this.speed = Math.round((km / h / (this._timeMultiplier || 1)) || 0)
     this.position = position
-    this.bearing = bearing
+    this.bearing = bearing(lastPosition, position) || 0
     this.lastPositions.push({ ...position, date })
-    this.ema = distance.haversine(this.heading, this.position)
+    this.ema = haversine(this.heading, this.position)
     this.emit('moved', this)
     if (this.ema < 50) {
     this.emit('stopped', this)

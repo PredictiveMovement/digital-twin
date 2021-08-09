@@ -12,7 +12,7 @@ class Booking extends EventEmitter {
     this.queuedDateTime = new Date()
     this.status = 'Queued'
     this.emit('pickup', this)
-    console.log(`*** booking ${this.id}: ${this.status}`)
+    //console.log(`*** booking ${this.id}: ${this.status}`)
   }
 
   assigned(car) {
@@ -20,7 +20,7 @@ class Booking extends EventEmitter {
     this.car = car
     this.status = 'Assigned'
     this.emit('assigned', this)
-    console.log(`*** booking ${this.id}: ${this.status}`)
+    //console.log(`*** booking ${this.id}: ${this.status}`)
   }
 
   moved(position){
@@ -33,15 +33,15 @@ class Booking extends EventEmitter {
     this.pickupPosition = position
     this.status = 'Picked up'
     this.emit('pickedup', this)
-    console.log(`*** booking ${this.id}: ${this.status}`)
+    //console.log(`*** booking ${this.id}: ${this.status}`)
   }
 
-  droppedOff(position) {
-    this.dropoffDateTime = new Date()
-    this.dropoffPosition = position
+  delivered(position) {
+    this.deliveredDateTime = new Date()
+    this.deliveredPosition = position
     this.status = 'Delivered'
     this.emit('delivered', this)
-    console.log(`*** booking ${this.id}: ${this.status}`)
+    //console.log(`*** booking ${this.id}: ${this.status}`)
   }
 }
 
