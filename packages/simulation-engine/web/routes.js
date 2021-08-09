@@ -38,7 +38,7 @@ function register(io) {
 
     engine.bookings
       .pipe(
-        concatMap(booking => merge(of(booking), fromEvent(booking, 'moved'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'), )),
+        mergeMap(booking => merge(of(booking), fromEvent(booking, 'moved'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'), )),
         map(({ destination: { name, position }, id, status }) => ({ id, name, position, status })),
         bufferTime(500)
       )
