@@ -1,6 +1,6 @@
 const engine = require('../index')
 // const postombud = require("../streams/postombud");
-const { fromEvent, interval, of, from, merge } = require('rxjs')
+const { fromEvent, interval, of, from, merge, combineLatest } = require('rxjs')
 const {
   window,
   map,
@@ -50,13 +50,30 @@ function register(io) {
     engine.kommuner
       .pipe(
         mergeMap(
-          ({bookings, name, geometry}) =>  {
-            return bookings.pipe(
+          ({bookings, name, geometry, cars}) =>  {
+            const totalBookings = bookings.pipe(
               scan((a) => a + 1, 0), 
-              map(totalBookings => ({
-                name, geometry, totalBookings
+            )
+
+            // TODO: This is counting inactive cars
+            const totalCars = cars.pipe(
+              scan((a) => a + 1, 0),
+            )
+
+            const totalCapacity = cars.pipe(
+              scan((acc, car) => acc + car.capacity, 0)
+            )
+
+            // TODO: Broken. Should car.cargo (or car.statistics) be a stream?
+            const totalCargo = cars.pipe(
+              scan((acc, car) => acc + car.cargo.length, 0) 
+            )
+
+            return combineLatest([totalBookings, totalCars, totalCapacity, totalCargo]).pipe(
+              map(([totalBookings, totalCars, totalCapacity, totalCargo]) => ({
+                name, geometry, totalBookings, totalCars, totalCapacity, totalCargo
               })),
-              // Max 1 per second per kommun
+              // Do not emit more than 1 event per kommun per second
               throttleTime(1000)
             )
           }),
