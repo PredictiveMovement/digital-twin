@@ -2,18 +2,21 @@ import React, { useState } from 'react'
 import {StaticMap} from 'react-map-gl'
 import DeckGL, { PolygonLayer, ScatterplotLayer } from 'deck.gl'
 
+import CommercialAreas from './data/commercial_areas.json'
 import GlobalStatisticsBox from './components/KommunStatisticsBox'
+import { GeoJsonLayer } from '@deck.gl/layers'
 
-// import iconHub from './icons/paketombud.png'
-// import iconPackage from './icons/package.png'
-// import iconTruckNotFull from './icons/truck_not_full.png'
+const commercialAreasLayer = new GeoJsonLayer({
+  id: 'commercial-areas',
+  data: CommercialAreas,
+  stroked: true,
+  filled: false,
+  extured: false,
+  wireframe: false,
+  lineJointRounded: true,
+  getLineColor: [0, 255, 128],
+})
 
-function iconSizeForViewportZoom(zoomLevel) {
-  if (zoomLevel > 15) return 'l'
-  if (zoomLevel > 13) return 'm'
-  if (zoomLevel > 9) return 's'
-  return 'xs'
-}
 
 const Map = ({ cars, bookings, hubs, kommuner }) => {
   const [mapState, setMapState] = useState({
@@ -24,22 +27,36 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
   })
 
   const [hoverInfo, setHoverInfo] = useState(null)
+  const [kommunInfo, setKommunInfo] = useState(null)
 
   const kommunLayer = new PolygonLayer({
     id: 'kommun-layer',
     data: kommuner,
     stroked: true,
     filled: true,
-    extruded: true,
-    wireframe: true,
+    extruded: false,
+    wireframe: false,
     lineWidthUtils: 'pixels',
-    lineWidthMinPixels: 20,
+    lineWidthMinPixels: 1,
+    getLineWidth: 50,
+    lineJointRounded: true,
     getElevation: 0,
-    opacity: 0.02,
+    opacity: 0.3,
+    polygonOffset: 1,
     getPolygon: k => k.geometry.coordinates,
-    getFillColor: () => [0,128,255],
-    getLineColor: () => [0, 0, 0],
-    getLineWidth: 20,
+    getLineColor: () => [0, 128, 255],
+    getFillColor: () => [0, 0, 0, 0],
+    pickable: true,
+    onHover: ({object, x, y}) => {
+      // setKommunInfo(current => {
+      //   if (!!current && !object) {
+      //     return null
+      //   } else {
+      //     // return current
+      //     return object || null
+      //   }
+      // })
+    }
   })
 
   const carLayer = new ScatterplotLayer({
@@ -124,7 +141,8 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
       controller={true}
       layers={[
         // The order of these layers matter, roughly equal to increasing z-index by 1
-        // kommunLayer, // TODO: This hides some items behind it, sort of
+        kommunLayer, // TODO: This hides some items behind it, sort of
+        commercialAreasLayer,
         hubLayer,
         bookingLayer, 
         carLayer, 
@@ -139,6 +157,11 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
         <div className="tooltip" style={{left: hoverInfo.x, top: hoverInfo.y}}> 
           {hoverInfo.title}
        </div>
+      )}
+      {kommunInfo && (
+        <div className="kommun" style={{left: 0, top: 0, position: 'absolute', height: 140, width: 140, backgroundColor: 'white'}}>
+          {JSON.stringify(kommunInfo, null, 2)}
+        </div>
       )}
     </DeckGL>
   )
