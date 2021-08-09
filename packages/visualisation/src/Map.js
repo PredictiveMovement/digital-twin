@@ -5,6 +5,7 @@ import DeckGL, { PolygonLayer, ScatterplotLayer } from 'deck.gl'
 import CommercialAreas from './data/commercial_areas.json'
 import GlobalStatisticsBox from './components/KommunStatisticsBox'
 import { GeoJsonLayer } from '@deck.gl/layers'
+import KommunStatisticsBox from './components/KommunStatisticsBox'
 
 const commercialAreasLayer = new GeoJsonLayer({
   id: 'commercial-areas',
@@ -33,6 +34,8 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     id: 'kommun-layer',
     data: kommuner,
     stroked: true,
+    // we need the fill layer for our hover function, although
+    // once the TODO down there is fixed we could probably turn this off
     filled: true,
     extruded: false,
     wireframe: false,
@@ -45,17 +48,17 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     polygonOffset: 1,
     getPolygon: k => k.geometry.coordinates,
     getLineColor: () => [0, 128, 255],
-    getFillColor: () => [0, 0, 0, 0],
+    getFillColor: () => [0, 0, 0, 0], // this isn't actually opaque, it just ends up not rendering any color
     pickable: true,
-    onHover: ({object, x, y}) => {
-      // setKommunInfo(current => {
-      //   if (!!current && !object) {
-      //     return null
-      //   } else {
-      //     // return current
-      //     return object || null
-      //   }
-      // })
+    onHover: (info, event) => {
+      const {object} = info
+      setKommunInfo(current => {
+        if (!!object) return object
+        // TODO: Detect if info.coordinates is contained in current.geometry and if so return current
+        //       This is because a hover over another element inside the polygon will invoke this callback
+        //       but object will be undefined
+        return null
+      })
     }
   })
 
@@ -131,6 +134,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     }
   })
 
+
   return (
     <DeckGL 
       // initialViewState={mapState.viewport}
@@ -159,9 +163,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
        </div>
       )}
       {kommunInfo && (
-        <div className="kommun" style={{left: 0, top: 0, position: 'absolute', height: 140, width: 140, backgroundColor: 'white'}}>
-          {JSON.stringify(kommunInfo, null, 2)}
-        </div>
+        <KommunStatisticsBox {...kommunInfo} />
       )}
     </DeckGL>
   )
