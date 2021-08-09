@@ -25,6 +25,11 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+    <style>
+      body {margin: 0; font-family: sans-serif; width: 100vw; height: 100vh; overflow: hidden;}
+      .tooltip {pointer-events: none; position: absolute; z-index: 9; font-size: 12px; padding: 8px; background: #000; color: #fff;  max-height: 240px; overflow-y: hidden;}
+      .tooltip.interactive {pointer-events: all; background: #fcfcfc; color: #444; overflow-y: auto;}
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
