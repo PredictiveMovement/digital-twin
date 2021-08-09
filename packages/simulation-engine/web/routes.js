@@ -1,6 +1,6 @@
 const engine = require('../index')
 // const postombud = require("../streams/postombud");
-const { fromEvent, interval, of, from } = require('rxjs')
+const { fromEvent, interval, of, from, merge } = require('rxjs')
 const {
   window,
   map,
@@ -18,7 +18,7 @@ function register(io) {
   io.on('connection', function (socket) {
     engine.cars
       .pipe(
-        mergeMap((car) => fromEvent(car, 'moved').pipe(map(() => car))),
+        concatMap((car) => fromEvent(car, 'moved').pipe(map(() => car))),
         map(({ position: { lon, lat }, id, heading, speed, bearing }) => ({
           id,
           // heading, // contains route to plot or interpolate on client side.
@@ -26,7 +26,7 @@ function register(io) {
           bearing,
           position: [lon, lat],
         })),
-        bufferTime(100)
+        bufferTime(200)
       )
       .subscribe((cars) => {
         socket.volatile.emit('cars', cars)
@@ -38,7 +38,8 @@ function register(io) {
 
     engine.bookings
       .pipe(
-        map(({ destination: { name, position }, id }) => ({ id, name, position })),
+        concatMap(booking => merge(of(booking), fromEvent(booking, 'moved'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'), )),
+        map(({ destination: { name, position }, id, status }) => ({ id, name, position, status })),
         bufferTime(500)
       )
       .subscribe((bookings) => {

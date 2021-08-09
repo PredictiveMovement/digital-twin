@@ -13,6 +13,7 @@
   "dependencies": {
     "csv-parse": "^4.16.0",
     "dotenv": "^10.0.0",
+    "jest": "^27.0.6",
     "nanoid": "^3.1.23",
     "node-fetch": "^1.5.3",
     "perlin-noise": "^0.0.1",
@@ -21,7 +22,6 @@
     "rxjs": "^7.2.0",
     "socket.io": "^2.3.0",
     "swe-coords": "^1.0.0",
-    "jest": "^27.0.6",
     "xlsx": "^0.17.0"
   },
   "directories": {
