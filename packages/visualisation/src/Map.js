@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import {StaticMap} from 'react-map-gl'
 import DeckGL, { PolygonLayer, ScatterplotLayer } from 'deck.gl'
+import { GeoJsonLayer } from '@deck.gl/layers'
+import inside from 'point-in-polygon'
 
 import CommercialAreas from './data/commercial_areas.json'
-import GlobalStatisticsBox from './components/KommunStatisticsBox'
-import { GeoJsonLayer } from '@deck.gl/layers'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 
 const commercialAreasLayer = new GeoJsonLayer({
@@ -17,7 +17,6 @@ const commercialAreasLayer = new GeoJsonLayer({
   lineJointRounded: true,
   getLineColor: [0, 255, 128],
 })
-
 
 const Map = ({ cars, bookings, hubs, kommuner }) => {
   const [mapState, setMapState] = useState({
@@ -34,8 +33,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     id: 'kommun-layer',
     data: kommuner,
     stroked: true,
-    // we need the fill layer for our hover function, although
-    // once the TODO down there is fixed we could probably turn this off
+    // we need the fill layer for our hover function
     filled: true,
     extruded: false,
     wireframe: false,
@@ -54,9 +52,13 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
       const {object} = info
       setKommunInfo(current => {
         if (!!object) return object
-        // TODO: Detect if info.coordinates is contained in current.geometry and if so return current
-        //       This is because a hover over another element inside the polygon will invoke this callback
-        //       but object will be undefined
+        // Seems to happen if you leave the viewport at the same time you leave a polygon
+        if (!Array.isArray(info.coordinate)) return null
+
+        // If mouse is inside our polygon we keep ourselves open
+        if (current.geometry.coordinates.some(polygon => inside(info.coordinate, polygon))) {
+          return current
+        }
         return null
       })
     }
