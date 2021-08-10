@@ -9,6 +9,7 @@ const {
   tap,
   bufferTime,
   scan,
+  filter,
   reduce,
   concatMap,
   throttleTime
@@ -18,7 +19,7 @@ function register(io) {
   io.on('connection', function (socket) {
     engine.cars
       .pipe(
-        concatMap((car) => fromEvent(car, 'moved').pipe(map(() => car))),
+        concatMap((car) => fromEvent(car, 'moved')),
         map(({ position: { lon, lat }, id, heading, speed, bearing }) => ({
           id,
           // heading, // contains route to plot or interpolate on client side.
@@ -26,7 +27,7 @@ function register(io) {
           bearing,
           position: [lon, lat],
         })),
-        bufferTime(200)
+        bufferTime(400)
       )
       .subscribe((cars) => {
         socket.volatile.emit('cars', cars)
@@ -57,6 +58,7 @@ function register(io) {
 
             // TODO: This is counting inactive cars
             const totalCars = cars.pipe(
+              filter(car => car.busy),
               scan((a) => a + 1, 0),
             )
 
