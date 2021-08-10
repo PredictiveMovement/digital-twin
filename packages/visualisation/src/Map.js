@@ -7,6 +7,12 @@ import inside from 'point-in-polygon'
 import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 
+import mapboxgl from 'mapbox-gl'
+// @ts-ignore
+mapboxgl.workerClass =
+  // eslint-disable-next-line import/no-webpack-loader-syntax
+  require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default
+
 const commercialAreasLayer = new GeoJsonLayer({
   id: 'commercial-areas',
   data: CommercialAreas,
