@@ -8,7 +8,7 @@ const dispatch = (cars, bookings) => {
     concatMap((booking) => cars.pipe(
       map((car) => ({car, distance: haversine(car.position, booking.pickup.position)})),
       filter(({car}) => car.capacity > car.queue.length), // wait until we have a car with free capacity
-      takeUntil(timer(100)), // to be able to sort we have to batch somehow. Lets start with time
+      takeUntil(timer(300)), // to be able to sort we have to batch somehow. Lets start with time
       toArray(),
       //tap(cars => console.log(`*** available cars to choose from: ${cars.length}`)),
       // naive dispatch, just pick the first car that is closest to the pickup
