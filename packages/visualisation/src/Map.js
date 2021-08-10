@@ -139,6 +139,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
 
   return (
     <DeckGL 
+      mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
       // initialViewState={mapState.viewport}
       viewState={mapState}
       onViewStateChange={({viewState}) => {
