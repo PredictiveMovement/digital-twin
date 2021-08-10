@@ -65,16 +65,16 @@ function register(io) {
             )
 
             // TODO: Broken. Should car.cargo (or car.statistics) be a stream?
-            const utilization = cars.pipe(
-              mergeMap(car => merge([fromEvent(car, 'pickup'),fromEvent(car, 'dropoff')])),
-              map((car) => ({capacity: car.capacity, cargo: car.cargo.length, utilization: car.cargo.length / car.capacity})),
-              scan((acc, car) => ({cars: acc.cars + 1, capacity: acc.capacity + car.capacity, cargo: acc.cargo + car.cargo.length}), {cars: 0, cargo: 0, capacity: 0}),
-              map(stats => ({...stats, utilization: stats.cargo / stats.capacity}))
-             )
+            // const utilization = cars.pipe(
+            //   mergeMap(car => merge([fromEvent(car, 'pickup'),fromEvent(car, 'dropoff')])),
+            //   map((car) => ({capacity: car.capacity, cargo: car.cargo.length, utilization: car.cargo.length / car.capacity})),
+            //   scan((acc, car) => ({cars: acc.cars + 1, capacity: acc.capacity + car.capacity, cargo: acc.cargo + car.cargo.length}), {cars: 0, cargo: 0, capacity: 0}),
+            //   map(stats => ({...stats, utilization: stats.cargo / stats.capacity}))
+            //  )
 
-            return combineLatest([totalBookings, totalCars, totalCapacity, utilization]).pipe(
-              map(([totalBookings, totalCars, totalCapacity, utilization]) => ({
-                name, geometry, totalBookings, totalCars, totalCapacity, utilization
+            return combineLatest([totalBookings, totalCars, totalCapacity]).pipe(
+              map(([totalBookings, totalCars, totalCapacity]) => ({
+                name, geometry, totalBookings, totalCars, totalCapacity
               })),
               // Do not emit more than 1 event per kommun per second
               throttleTime(1000)
