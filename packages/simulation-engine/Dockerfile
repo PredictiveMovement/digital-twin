@@ -1,8 +1,10 @@
-FROM node
+FROM node:16-slim
+
 WORKDIR /app
 COPY ./package.json .
-RUN npm install --production
-COPY ./lib ./lib
-COPY ./simulator ./simulator
-COPY ./index.js .
+COPY ./package-lock.json .
+RUN npm ci
+COPY . . 
+
+EXPOSE 4000
 CMD npm start

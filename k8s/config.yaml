@@ -1,0 +1,17 @@
+apiVersion: v1
+clusters:
+  - cluster:
+      certificate-authority-data: $KUBE_CLUSTER_CERTIFICATE
+      server: $KUBE_CLUSTER_SERVER
+    name: $KUBE_CLUSTER_NAME
+contexts:
+  - context:
+      cluster: $KUBE_CLUSTER_NAME
+      user: $KUBE_USER_NAME
+    name: $KUBE_CLUSTER_NAME
+kind: Config
+preferences: {}
+users:
+  - name: $KUBE_USER_NAME
+    user:
+      token: $KUBE_USER_TOKEN
