@@ -42,7 +42,7 @@ class Car extends EventEmitter {
       .then((route) => {
         route.started = new Date()
         this.heading.route = route
-        console.log('*** navigate to', position, this.id)
+        //console.log('*** navigate to', position, this.id)
 
         if(!route.legs) throw new Error(`Route not found from: ${JSON.stringify(this.position)} to: ${JSON.stringify(this.heading)}`)
         this.simulate(this.heading)
@@ -123,7 +123,6 @@ class Car extends EventEmitter {
     this.lastPositions.push({ ...position, date })
     this.ema = haversine(this.heading, this.position)
     this.emit('moved', this)
-    console.log('moved', this.id)
     if (this.ema < 50) {
     this.emit('stopped', this)
       this.simulate(false)

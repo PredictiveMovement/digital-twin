@@ -7,13 +7,13 @@ describe("A car", () => {
   const ljusdal = { lon: 14.44681991219, lat: 61.59465992477 }
 
   it('should initialize correctly', function (done) {
-    const car = new Car()
+    const car = new Car({timeMultiplier: Infinity})
     expect(car.id).toHaveLength(9)
     done()
   })
 
   it('should have initial position', function (done) {
-    const car = new Car({id: 1, position: arjeplog})
+    const car = new Car({id: 1, position: arjeplog, timeMultiplier: Infinity})
     expect(car.position).toEqual(arjeplog)
     done()
   })
