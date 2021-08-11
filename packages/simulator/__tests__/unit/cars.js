@@ -5,7 +5,7 @@ describe("cars", () => {
   const arjeplog = [{ lon: 17.886855, lat: 66.041054 }]
 
   it('should randomize at least 15 cars with initial positions', function (done) {
-    generateCars(arjeplog, 15).pipe(toArray()).subscribe(initialCars => {
+    generateCars(arjeplog, 15, Infinity).pipe(toArray()).subscribe(initialCars => {
       try {
         expect(initialCars).toHaveLength(15)
         expect(initialCars[0]).toHaveProperty('position')

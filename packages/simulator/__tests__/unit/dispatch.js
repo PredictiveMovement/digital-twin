@@ -11,7 +11,7 @@ describe("dispatch", () => {
   let bookings
 
   beforeEach(() => {
-    cars = from([new Car ({position: ljusdal}), new Car({position: arjeplog})]).pipe(shareReplay())
+    cars = from([new Car ({position: ljusdal, timeMultiplier: Infinity}), new Car({position: arjeplog, timeMultiplier: Infinity})]).pipe(shareReplay())
     bookings = from([new Booking({
       id: 0,
       pickup: {position: ljusdal},
@@ -72,8 +72,8 @@ describe("dispatch", () => {
   it('should have cars available even the second time', function (done) {
     const asyncBookings = new Subject()
     const cars = new ReplaySubject()
-    cars.next(new Car ({position: ljusdal}))
-    cars.next(new Car ({position: arjeplog}))
+    cars.next(new Car ({position: ljusdal, timeMultiplier: Infinity}))
+    cars.next(new Car ({position: arjeplog, timeMultiplier: Infinity}))
 
     dispatch(cars, asyncBookings).subscribe(({booking: {id}, car: {position}}) => {
       if (id === 1) {
@@ -100,7 +100,7 @@ describe("dispatch", () => {
   })
 
 
-  it.only('should dispatch two booking to one car', function (done) {
+  it('should dispatch two booking to one car', function (done) {
     cars = from([new Car ({id: 1, position: ljusdal, timeMultiplier: Infinity})])
     bookings = from([
       new Booking({

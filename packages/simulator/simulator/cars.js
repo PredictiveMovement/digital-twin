@@ -11,14 +11,14 @@ const shuffle = () => observable => observable.pipe(
   mergeAll(),
 )
 
-function generateCars(initialPositions, numberOfCars) {
+function generateCars(initialPositions, numberOfCars, speed = SPEED) {
   return from(initialPositions).pipe(
     // if we need more than initial positions we just expand the initial array until we have as many as we want
     expand(() => from(initialPositions)),
     take(numberOfCars),
     shuffle(),
     //concatMap(position => withLatestFrom(address.randomize(position))),
-    map((position) => new Car({id: carId++, position, timeMultiplier: SPEED + Math.random() * 10})),
+    map((position) => new Car({id: carId++, position, timeMultiplier: speed})),
     shareReplay()
   )
 }
