@@ -101,15 +101,15 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     getPosition: c => {
       return c.position
     },
-    getRadius: () => 8,
+    getRadius: () => 5,
     // #fab
-    getFillColor: [255, 170, 187],
+    getFillColor: ({status}) => status === 'New' ? [255, 170, 187] : status === 'Delivered' ? [170, 187, 255] : [170, 255, 187, 0.3],
     pickable: true,
     onHover: ({object, x, y}) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         type: 'booking',
-        title: object.address,
+        title: object.address + (object.isCommercial ? ' (företag)' : ' (Status: ' + object.status + ')'),
         x,
         y
       })
@@ -127,7 +127,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     getPosition: c => {
       return c.position
     },
-    getRadius: () => 8,
+    getRadius: () => 3,
     // #127DBD
     getFillColor: [18, 125, 189],
     pickable: true,
@@ -164,7 +164,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
       <StaticMap 
         reuseMaps 
         preventStyleDiffing={true} 
-        mapStyle="mapbox://styles/mapbox/light-v10"
+        mapStyle="mapbox://styles/mapbox/dark-v10"
       />
       {hoverInfo && mapState.zoom > 8 && (
         <div className="tooltip" style={{left: hoverInfo.x, top: hoverInfo.y}}> 

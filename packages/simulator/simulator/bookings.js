@@ -60,6 +60,7 @@ function generateBookingsInKommun(kommun) {
     toArray(), // convert to array to be able to sort the addresses
     mergeMap((a) => from(a.sort((p) => Math.random() - 0.5 - (p.isCommercial ? 2 : 0)))),
     concatMap(({ nearestOmbud, position, isCommercial }) => {
+      if (isCommercial) console.log('isCommercial', isCommercial)
       // add more than one booking if this point is within a commercial area
       const bookingsAtThisAdress = Math.ceil(Math.random() * (isCommercial ? 100 : 2)) // ? hur ska vi räkna en pall?
       return pelias
@@ -68,6 +69,7 @@ function generateBookingsInKommun(kommun) {
           map(() => new Booking({
             id: id++,
             pickup: nearestOmbud,
+            isCommercial: isCommercial || address.layer === 'venue',
             destination: address,
           }))
         ))

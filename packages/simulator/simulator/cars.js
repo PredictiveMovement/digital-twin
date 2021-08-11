@@ -18,7 +18,7 @@ function generateCars(initialPositions, numberOfCars) {
     take(numberOfCars),
     shuffle(),
     //concatMap(position => withLatestFrom(address.randomize(position))),
-    map((position) => new Car({id: carId++, position, timeMultiplier: SPEED + Math.random() * 10})),
+    map((position) => new Car({id: carId++, position, timeMultiplier: SPEED})),
     shareReplay()
   )
 }

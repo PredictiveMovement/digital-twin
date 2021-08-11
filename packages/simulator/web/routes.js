@@ -9,6 +9,7 @@ const {
   tap,
   bufferTime,
   scan,
+  distinct,
   filter,
   reduce,
   concatMap,
@@ -19,15 +20,18 @@ function register(io) {
   io.on('connection', function (socket) {
     engine.cars
       .pipe(
-        concatMap((car) => fromEvent(car, 'moved')),
-        map(({ position: { lon, lat }, id, heading, speed, bearing }) => ({
+        mergeMap((car) => fromEvent(car, 'moved')),
+        //distinct(car => car.id),
+        map(({ position: { lon, lat }, id, heading, speed, bearing, status }) => ({
           id,
-          // heading, // contains route to plot or interpolate on client side.
+          heading: [heading.lon, heading.lat], // contains route to plot or interpolate on client side.
           speed,
           bearing,
           position: [lon, lat],
+          status
         })),
-        bufferTime(400)
+        bufferTime(400),
+        // filter(cars => cars.length > 0)
       )
       .subscribe((cars) => {
         socket.volatile.emit('cars', cars)
@@ -40,11 +44,14 @@ function register(io) {
     engine.bookings
       .pipe(
         mergeMap(booking => merge(of(booking), fromEvent(booking, 'moved'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'), )),
-        map(({ destination: { name, position }, id, status }) => ({ id, name, position, status })),
-        bufferTime(500)
+        map(({ destination: { name, position }, id, status, isCommercial }) => ({ id, name, position, status, isCommercial })),
+        distinct(booking => booking.id),
+        bufferTime(500),
+        //filter(bookings => bookings.length > 0)
       )
       .subscribe((bookings) => {
-        if (bookings.length) socket.emit('bookings', bookings)
+        console.log('sending bookings', bookings.length)
+        socket.emit('bookings', bookings)
       })
 
 

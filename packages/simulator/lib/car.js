@@ -31,8 +31,8 @@ class Car extends EventEmitter {
       const diff = Date.now() - this._timeStart
       const newPosition = interpolate.route(heading.route, Date.now() + diff * this.timeMultiplier) ?? heading
       this.updatePosition(newPosition)
-      // console.log('interval', this.ema, this.speed, this.id)
-    }, Math.random() * 300)
+      //console.log('interval', this.ema, this.speed, this.id)
+    }, 500)
   }
 
   navigateTo(position) {
@@ -90,6 +90,7 @@ class Car extends EventEmitter {
   }
 
   dropOff() {
+    console.log('dropoff', this.booking)
     if (this.booking) {
       this.busy = false
       this.booking.delivered(this.position)
@@ -114,18 +115,21 @@ class Car extends EventEmitter {
 
   
   async updatePosition(position, date = Date.now()) {
-    const lastPosition = this.lastPositions[this.lastPositions.length-1] || position
+    //console.log('update position', this.id, position)
+    const lastPosition = this.position || position
     const metersMoved = haversine(lastPosition, position)
     const [km, h] = [(metersMoved / 1000), (date - lastPosition.date) / 1000 / 60 / 60]
     this.speed = Math.round((km / h / (this._timeMultiplier || 1)) || 0)
     this.position = position
-    this.bearing = bearing(lastPosition, position) || 0
-    this.lastPositions.push({ ...position, date })
-    this.ema = haversine(this.heading, this.position)
-    this.emit('moved', this)
-    console.log('moved', this.id)
+    if (metersMoved > 0) {
+      this.bearing = bearing(lastPosition, position) || 0
+      this.lastPositions.push({ ...position, date })
+      this.ema = haversine(this.heading, this.position)
+      this.emit('moved', this)
+      // console.log('moved', this.id, this.position.lon, this.position.lat, metersMoved)
+    }
     if (this.ema < 50) {
-    this.emit('stopped', this)
+      this.emit('stopped', this)
       this.simulate(false)
       if (this.booking) {
         if (this.status === 'Pickup') this.pickup()

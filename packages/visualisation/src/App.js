@@ -12,6 +12,7 @@ const App = () => {
 
   const [cars, setCars] = React.useState([])
   useSocket('cars', (newCars) => {
+
     setCars(cars => [
       ...cars.filter((car) => !newCars.some((nc) => nc.id === car.id)),
       ...newCars.map(({ id, heading, position }) => ({
@@ -26,9 +27,11 @@ const App = () => {
   useSocket('bookings', (newBookings) => {
     setBookings(bookings => [
       ...bookings,
-      ...newBookings.map(({ name, id, position }) => ({
+      ...newBookings.map(({ name, id, position, status, isCommercial }) => ({
         id,
         address: name,
+        status,
+        isCommercial,
         position: [position.lon, position.lat]
       }))
     ])
