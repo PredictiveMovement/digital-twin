@@ -7,11 +7,11 @@ const { dispatch } = require('./simulator/dispatchCentral')
 const kommuner = require('./streams/kommuner')
 const postombud = require('./streams/postombud')
 
-const WORKING_DAYS = 265
+const WORKING_DAYS = 200
 const NR_CARS = 15
 const pilots = kommuner.pipe(
   filter((kommun) =>
-    ['Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
+    ['Arjeplog', 'Storuman'].some((pilot) =>
       kommun.name.startsWith(pilot)
     ),
   ),
@@ -34,7 +34,7 @@ const engine = {
     shareReplay()
   ),
   cars: pilots.pipe(
-    concatMap(kommun => {
+    mergeMap(kommun => {
       return kommun.postombud.pipe(
         map(ombud => ombud.position),
         toArray(),
@@ -45,11 +45,11 @@ const engine = {
           })
         )),
       )
-    })
+    }, 10)
   ),
   dispatchedBookings: pilots.pipe(
     // TODO: add more than one dispatch central in each kommun = multiple fleets
-    mergeMap((kommun) => dispatch(kommun.cars, kommun.unhandledBookings))
+    mergeMap((kommun) => dispatch(kommun.cars, kommun.unhandledBookings), 10)
   ),
   postombud,
   kommuner

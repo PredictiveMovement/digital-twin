@@ -101,7 +101,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     getPosition: c => {
       return c.position
     },
-    getRadius: () => 8,
+    getRadius: () => 3,
     // #fab
     getFillColor: [255, 170, 187],
     pickable: true,
@@ -127,7 +127,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     getPosition: c => {
       return c.position
     },
-    getRadius: () => 8,
+    getRadius: () => 5,
     // #127DBD
     getFillColor: [18, 125, 189],
     pickable: true,
@@ -164,7 +164,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
       <StaticMap 
         reuseMaps 
         preventStyleDiffing={true} 
-        mapStyle="mapbox://styles/mapbox/light-v10"
+        mapStyle="mapbox://styles/mapbox/dark-v10"
       />
       {hoverInfo && mapState.zoom > 8 && (
         <div className="tooltip" style={{left: hoverInfo.x, top: hoverInfo.y}}> 
