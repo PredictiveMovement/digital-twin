@@ -101,7 +101,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     getPosition: c => {
       return c.position
     },
-    getRadius: () => 5,
+    getRadius: () => 3,
     // #fab
     getFillColor: ({status}) => status === 'New' ? [255, 170, 187] : status === 'Delivered' ? [170, 187, 255] : [170, 255, 187, 0.3],
     pickable: true,

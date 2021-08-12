@@ -126,8 +126,10 @@ class Car extends EventEmitter {
       this.lastPositions.push({ ...position, date })
       this.ema = haversine(this.heading, this.position)
       this.emit('moved', this)
-      // console.log('moved', this.id, this.position.lon, this.position.lat, metersMoved)
+      //console.log('moved', this.id, this.position.lon, this.position.lat, metersMoved)
     }
+    console.log('moved', this.id, this.position.lon, this.position.lat, metersMoved)
+
     if (this.ema < 50) {
       this.emit('stopped', this)
       this.simulate(false)

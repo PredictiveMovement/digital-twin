@@ -30,8 +30,7 @@ function register(io) {
           position: [lon, lat],
           status
         })),
-        bufferTime(400),
-        // filter(cars => cars.length > 0)
+        bufferTime(100)
       )
       .subscribe((cars) => {
         socket.volatile.emit('cars', cars)

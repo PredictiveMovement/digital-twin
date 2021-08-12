@@ -20,7 +20,7 @@ const pilots = kommuner.pipe(
 
 const engine = {
   bookings: pilots.pipe(
-    mergeMap((kommun) => 
+    concatMap((kommun) => 
       generateBookingsInKommun(kommun).pipe(
         take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
         tap((booking) => {
@@ -30,7 +30,7 @@ const engine = {
         }),
         // tap(() => kommun.emit('update', kommun) )
       )
-    , 5),
+    ),
     shareReplay()
   ),
   cars: pilots.pipe(
