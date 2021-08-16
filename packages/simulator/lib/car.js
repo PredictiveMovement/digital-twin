@@ -70,7 +70,7 @@ class Car extends EventEmitter {
   }
 
   pickup() {
-    this.emit('pickup', this)
+    this.emit('pickup', this.id)
     this.queue.sort((a, b) => haversine(this.position, a.pickup.position) - haversine(this.position, b.pickup.position))
 
     // wait one tick so the pickup event can be parsed before changing status
@@ -91,7 +91,7 @@ class Car extends EventEmitter {
   }
 
   dropOff() {
-    console.log('dropoff', this.booking)
+    console.log('dropoff', this.booking.id)
     if (this.booking) {
       this.busy = false
       this.booking.delivered(this.position)
