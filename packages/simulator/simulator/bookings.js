@@ -1,13 +1,12 @@
-const { from, range, concatAll } = require('rxjs')
+const { from, range, concatAll, expand, shareReplay } = require('rxjs')
 const {
   map,
-  first,
+  tap,
   filter,
-  retry,
   concatMap,
   mergeMap,
-  toArray,
   mergeAll,
+  toArray,
 } = require('rxjs/operators')
 const pelias = require('../lib/pelias')
 const { isInsideCoordinates } = require('../lib/polygon')
@@ -39,7 +38,8 @@ function generateBookingsInKommun(kommun) {
         map((ombud) => ombud.sort((a, b) => a.distance - b.distance).pop()),
         map((nearestOmbud) => ({ ...square, nearestOmbud }))
       )
-    )
+    ),
+    tap(s => console.log('squares', kommun.name)),
   )
 
   const randomPointsInSquares = squaresWithNearestPostombud.pipe(
@@ -53,26 +53,25 @@ function generateBookingsInKommun(kommun) {
   )
 
   const bookings = randomPointsInSquares.pipe(
-    mergeMap((point) => kommun.commercialAreas.pipe(
+    /*mergeMap((point) => kommun.commercialAreas.pipe(
       first(area => isInsideCoordinates(point.position, area.geometry.coordinates), false),
       map(commercialArea => ({...point, isCommercial: !!commercialArea } ))
-    )),
-    toArray(), // convert to array to be able to sort the addresses
-    mergeMap((a) => from(a.sort((p) => Math.random() - 0.5 - (p.isCommercial ? 2 : 0)))),
-    concatMap(({ nearestOmbud, position, isCommercial }) => {
-      // add more than one booking if this point is within a commercial area
-      const bookingsAtThisAdress = Math.ceil(Math.random() * (isCommercial ? 100 : 2)) // ? hur ska vi räkna en pall?
+    )),*/
+    //toArray(), // convert to array to be able to sort the addresses
+    //mergeMap((a) => from(a.sort((p) => Math.random() - 0.5 - (p.isCommercial ? 2 : 0)))),
+    mergeMap(({ nearestOmbud, position }) => {
       return pelias
         .nearest(position)
-        .then((address) => range(1, bookingsAtThisAdress).pipe(
-          map(() => new Booking({
-            id: id++,
-            pickup: nearestOmbud,
-            destination: address,
-          }))
-        ))
+        .then((address) => new Booking({
+          id: id++,
+          pickup: nearestOmbud,
+          isCommercial: address.layer === 'venue',
+          destination: address,
+        }))
+        .catch(() => Promise.resolve(null))
     }),
-    mergeAll(),
+    //expand(({isCommercial}) => Math.ceil(Math.random() * (isCommercial ? 100 : 2))),
+    filter(p => p !== null),
     //retry(5)
   )
   return bookings
