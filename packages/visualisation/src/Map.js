@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import {StaticMap} from 'react-map-gl'
+import { StaticMap } from 'react-map-gl'
 import DeckGL, { PolygonLayer, ScatterplotLayer } from 'deck.gl'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
 
 import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
+import BookingInfoBox from './components/BookingInfoBox'
 
 import mapboxgl from 'mapbox-gl'
 // @ts-ignore
@@ -55,7 +56,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     getFillColor: () => [0, 0, 0, 0], // this isn't actually opaque, it just ends up not rendering any color
     pickable: true,
     onHover: (info, event) => {
-      const {object} = info
+      const { object } = info
       setKommunInfo(current => {
         if (!!object) return object
         // Seems to happen if you leave the viewport at the same time you leave a polygon
@@ -84,11 +85,11 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     getRadius: () => 8,
     getFillColor: [19, 197, 123],
     pickable: true,
-    onHover: ({object, x, y}) => {
+    onHover: ({ object, x, y }) => {
       if (!object) setHoverInfo(null)
       // TODO: What do we show when hovering a car?
     }
-  }) 
+  })
 
   const bookingLayer = new ScatterplotLayer({
     id: 'booking-layer',
@@ -96,20 +97,21 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     opacity: 0.4,
     stroked: false,
     filled: true,
-    radiusScale: 1,
+    radiusScale: 2,
     radiusUnits: 'pixels',
     getPosition: c => {
       return c.position
     },
     getRadius: () => 3,
     // #fab
-    getFillColor: ({status}) => status === 'New' ? [255, 170, 187] : status === 'Delivered' ? [170, 187, 255] : [170, 255, 187, 0.3],
+    getFillColor: ({ status }) => status === 'New' ? [255, 170, 187] : status === 'Delivered' ? [170, 187, 255] : [170, 255, 187, 0.3],
     pickable: true,
-    onHover: ({object, x, y}) => {
+    onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         type: 'booking',
-        title: object.address + (object.isCommercial ? ' (företag)' : ' (Status: ' + object.status + ')'),
+        title: object.address,
+        isCommercial: (object.isCommercial ? '(företag)' : ' Status: ' + object.status),
         x,
         y
       })
@@ -131,7 +133,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     // #127DBD
     getFillColor: [18, 125, 189],
     pickable: true,
-    onHover: ({object, x, y}) => {
+    onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         type: 'hub',
@@ -144,11 +146,11 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
 
 
   return (
-    <DeckGL 
+    <DeckGL
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
       // initialViewState={mapState.viewport}
       viewState={mapState}
-      onViewStateChange={({viewState}) => {
+      onViewStateChange={({ viewState }) => {
         setMapState(viewState)
       }}
       controller={true}
@@ -157,20 +159,19 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
         kommunLayer, // TODO: This hides some items behind it, sort of
         commercialAreasLayer,
         hubLayer,
-        bookingLayer, 
-        carLayer, 
+        bookingLayer,
+        carLayer,
       ]}
     >
-      <StaticMap 
-        reuseMaps 
-        preventStyleDiffing={true} 
+      <StaticMap
+        reuseMaps
+        preventStyleDiffing={true}
         mapStyle="mapbox://styles/mapbox/dark-v10"
       />
       {hoverInfo && mapState.zoom > 8 && (
-        <div className="tooltip" style={{left: hoverInfo.x, top: hoverInfo.y}}> 
-          {hoverInfo.title}
-       </div>
+        <BookingInfoBox position={{ left: hoverInfo.x, top: hoverInfo.y }} title={hoverInfo.title} isCommercial={hoverInfo.isCommercial} />
       )}
+
       {kommunInfo && (
         <KommunStatisticsBox {...kommunInfo} />
       )}
