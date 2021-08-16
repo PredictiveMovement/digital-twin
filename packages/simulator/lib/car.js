@@ -11,6 +11,7 @@ class Car extends EventEmitter {
     super()
     this.id = id
     this.position = position
+    this.origin = position
     this.history = []
     this.queue = []
     this.cargo = []
@@ -32,7 +33,7 @@ class Car extends EventEmitter {
       const newPosition = interpolate.route(heading.route, Date.now() + diff * this.timeMultiplier) ?? heading
       this.updatePosition(newPosition)
       //console.log('interval', this.ema, this.speed, this.id)
-    }, 500)
+    }, 200)
   }
 
   navigateTo(position) {
@@ -109,7 +110,8 @@ class Car extends EventEmitter {
       this.handleBooking(nextBooking)
     } else {
       this.status = 'Ready'
-      this.simulate(false) // chilla
+      this.navigateTo(this.origin)
+      //this.simulate(false) // chilla
     }
   }
 
@@ -121,14 +123,12 @@ class Car extends EventEmitter {
     const [km, h] = [(metersMoved / 1000), (date - lastPosition.date) / 1000 / 60 / 60]
     this.speed = Math.round((km / h / (this._timeMultiplier || 1)) || 0)
     this.position = position
+    this.ema = haversine(this.heading, this.position)
     if (metersMoved > 0) {
       this.bearing = bearing(lastPosition, position) || 0
       this.lastPositions.push({ ...position, date })
-      this.ema = haversine(this.heading, this.position)
       this.emit('moved', this)
-      //console.log('moved', this.id, this.position.lon, this.position.lat, metersMoved)
     }
-    console.log('moved', this.id, this.position.lon, this.position.lat, metersMoved)
 
     if (this.ema < 50) {
       this.emit('stopped', this)

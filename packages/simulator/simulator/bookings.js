@@ -1,13 +1,12 @@
-const { from, range, concatAll, expand } = require('rxjs')
+const { from, range, concatAll, expand, shareReplay } = require('rxjs')
 const {
   map,
-  first,
+  tap,
   filter,
-  retry,
   concatMap,
   mergeMap,
-  toArray,
   mergeAll,
+  toArray,
 } = require('rxjs/operators')
 const pelias = require('../lib/pelias')
 const { isInsideCoordinates } = require('../lib/polygon')
@@ -39,7 +38,8 @@ function generateBookingsInKommun(kommun) {
         map((ombud) => ombud.sort((a, b) => a.distance - b.distance).pop()),
         map((nearestOmbud) => ({ ...square, nearestOmbud }))
       )
-    )
+    ),
+    tap(s => console.log('squares', kommun.name)),
   )
 
   const randomPointsInSquares = squaresWithNearestPostombud.pipe(
@@ -59,7 +59,7 @@ function generateBookingsInKommun(kommun) {
     )),*/
     //toArray(), // convert to array to be able to sort the addresses
     //mergeMap((a) => from(a.sort((p) => Math.random() - 0.5 - (p.isCommercial ? 2 : 0)))),
-    concatMap(({ nearestOmbud, position }) => {
+    mergeMap(({ nearestOmbud, position }) => {
       return pelias
         .nearest(position)
         .then((address) => new Booking({
@@ -70,9 +70,8 @@ function generateBookingsInKommun(kommun) {
         }))
         .catch(() => Promise.resolve(null))
     }),
+    //expand(({isCommercial}) => Math.ceil(Math.random() * (isCommercial ? 100 : 2))),
     filter(p => p !== null),
-    expand(({isCommercial}) => Math.ceil(Math.random() * (isCommercial ? 100 : 2))),
-    //mergeAll(),
     //retry(5)
   )
   return bookings

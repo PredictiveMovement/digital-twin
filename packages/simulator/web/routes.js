@@ -30,10 +30,9 @@ function register(io) {
           position: [lon, lat],
           status
         })),
-        bufferTime(100)
       )
-      .subscribe((cars) => {
-        socket.volatile.emit('cars', cars)
+      .subscribe((car) => {
+        socket.volatile.emit('cars', [car])
       })
 
     engine.postombud.pipe(toArray()).subscribe((postombud) => {
@@ -44,19 +43,16 @@ function register(io) {
       .pipe(
         mergeMap(booking => merge(of(booking), fromEvent(booking, 'moved'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'), )),
         map(({ destination: { name, position }, id, status, isCommercial }) => ({ id, name, position, status, isCommercial })),
-        distinct(booking => booking.id),
-        bufferTime(500),
-        //filter(bookings => bookings.length > 0)
+        //distinct(booking => booking.id),
       )
-      .subscribe((bookings) => {
-        console.log('sending bookings', bookings.length)
-        socket.emit('bookings', bookings)
+      .subscribe((booking) => {
+        socket.emit('bookings', [booking])
       })
 
 
     engine.kommuner
       .pipe(
-        mergeMap(
+        concatMap(
           ({bookings, name, geometry, cars}) =>  {
             const totalBookings = bookings.pipe(
               scan((a) => a + 1, 0), 

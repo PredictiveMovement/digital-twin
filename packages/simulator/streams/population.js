@@ -1,6 +1,6 @@
 const parse = require('csv-parse')
 const { from, shareReplay, filter } = require('rxjs')
-const { map } = require('rxjs/operators')
+const { map, toArray, mergeMap } = require('rxjs/operators')
 const { readCsv } = require('../adapters/csv')
 const coords = require('swe-coords')
 const { convertPosition } = require('../lib/distance')

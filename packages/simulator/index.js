@@ -1,5 +1,5 @@
 const { shareReplay, timer } = require('rxjs')
-const { map, mergeMap, concatMap, take, filter, tap, toArray, takeUntil } = require('rxjs/operators')
+const { map, mergeMap, concatAll, concatMap, take, filter, tap, toArray, takeUntil } = require('rxjs/operators')
 
 const { generateBookingsInKommun } = require('./simulator/bookings')
 const { generateCars } = require('./simulator/cars')
@@ -20,17 +20,18 @@ const pilots = kommuner.pipe(
 
 const engine = {
   bookings: pilots.pipe(
-    concatMap((kommun) => 
+    map((kommun) => 
       generateBookingsInKommun(kommun).pipe(
-        take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
         tap((booking) => {
           booking.kommun = kommun
           kommun.unhandledBookings.next(booking)
           kommun.bookings.next(booking)
         }),
+        take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
         // tap(() => kommun.emit('update', kommun) )
       )
     ),
+    concatAll(),
     shareReplay()
   ),
   cars: pilots.pipe(
@@ -63,6 +64,6 @@ const engine = {
 //   mergeMap(kommun => kommun.bookings)
 // ).subscribe(e => console.log('kb', ))
 
-engine.dispatchedBookings.subscribe(({booking}) => console.log('*** booking dispatched:', booking.id))
+engine.dispatchedBookings.subscribe(({car, booking}) => console.log('*** booking dispatched (car, booking):', car.id, booking.id))
 
 module.exports = engine
