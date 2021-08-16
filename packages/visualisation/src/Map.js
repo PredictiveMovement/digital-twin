@@ -103,13 +103,13 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     },
     getRadius: () => 3,
     // #fab
-    getFillColor: [255, 170, 187],
+    getFillColor: ({status}) => status === 'New' ? [255, 170, 187] : status === 'Delivered' ? [170, 187, 255] : [170, 255, 187, 0.3],
     pickable: true,
     onHover: ({object, x, y}) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         type: 'booking',
-        title: object.address,
+        title: object.address + (object.isCommercial ? ' (företag)' : ' (Status: ' + object.status + ')'),
         x,
         y
       })
@@ -127,7 +127,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     getPosition: c => {
       return c.position
     },
-    getRadius: () => 5,
+    getRadius: () => 3,
     // #127DBD
     getFillColor: [18, 125, 189],
     pickable: true,

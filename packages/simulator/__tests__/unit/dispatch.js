@@ -105,13 +105,13 @@ describe("dispatch", () => {
     bookings = from([
       new Booking({
         id: 1337,
-        pickup: {position: ljusdal},
-        destination: {position: arjeplog}
+        pickup: {position: ljusdal, name: 'pickup 1'},
+        destination: {position: arjeplog, name: 'dropoff 1'}
       }),
       new Booking({
         id: 1338,
-        pickup: {position: arjeplog},
-        destination: {position: ljusdal}
+        pickup: {position: arjeplog, name: 'pickup 2'},
+        destination: {position: ljusdal, name: 'dropoff 2'}
       })
     ])
     dispatch(cars, bookings).pipe(toArray()).subscribe(([assignment1, assignment2]) => {
@@ -120,6 +120,7 @@ describe("dispatch", () => {
       expect(assignment2.car.id).toEqual(1)
       expect(assignment2.booking.id).toEqual(1338)
       assignment1.booking.once('delivered', (booking) => {
+        console.log('booking 1 delivered')
         expect(booking.id).toEqual(1337)
       })
       assignment2.booking.once('delivered', (booking) => {
