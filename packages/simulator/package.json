@@ -12,18 +12,19 @@
   "author": "Iteam",
   "license": "MIT",
   "dependencies": {
+    "chalk": "^3.0.0",
     "csv-parse": "^4.16.0",
     "dotenv": "^10.0.0",
     "jest": "^27.0.6",
     "nanoid": "^3.1.23",
     "node-fetch": "^1.5.3",
+    "nodemon": "^2.0.7",
     "perlin-noise": "^0.0.1",
     "point-in-polygon": "^1.0.1",
     "polyline": "^0.2.0",
     "rxjs": "^7.2.0",
     "socket.io": "^4.0",
     "swe-coords": "^1.0.0",
-    "nodemon": "^2.0.7",
     "xlsx": "^0.17.0"
   },
   "directories": {

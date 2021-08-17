@@ -62,7 +62,7 @@ const engine = {
       return kommun.postombud.pipe(
         map(ombud => ombud.position),
         toArray(),
-        mergeMap((postombud) => generateCars(postombud, NR_CARS).pipe(
+        mergeMap((postombud) => generateCars(kommun.fleets, postombud, NR_CARS).pipe(
           tap((car) => {
             // console.log(`*** adding car to kommun ${kommun.name} #${car.id}`)
             kommun.cars.next(car)

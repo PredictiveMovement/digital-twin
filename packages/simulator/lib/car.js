@@ -1,5 +1,5 @@
 const osrm = require('../lib/osrm')
-const {haversine, bearing} = require('./distance')
+const { haversine, bearing } = require('./distance')
 const interpolate = require('./interpolate')
 const EventEmitter = require('events')
 const Booking = require('./booking')
@@ -7,7 +7,7 @@ const { safeId } = require('./id')
 const { assert } = require('console')
 
 class Car extends EventEmitter {
-  constructor({id = safeId(), position, status = 'Ready', timeMultiplier = 60} = {}) {
+  constructor({ id = safeId(), position, status = 'Ready', timeMultiplier = 60, fleet = undefined } = {}) {
     super()
     this.id = id
     this.position = position
@@ -19,6 +19,8 @@ class Car extends EventEmitter {
     this.status = status
     this.lastPositions = []
     this.timeMultiplier = timeMultiplier
+    this.fleet = fleet
+
     this.on('error', (err) => console.error('car error', err))
     this.emit('moved', this)
   }
@@ -45,7 +47,7 @@ class Car extends EventEmitter {
         this.heading.route = route
         console.log('*** navigate to', position, this.id)
 
-        if(!route.legs) throw new Error(`Route not found from: ${JSON.stringify(this.position)} to: ${JSON.stringify(this.heading)}`)
+        if (!route.legs) throw new Error(`Route not found from: ${JSON.stringify(this.position)} to: ${JSON.stringify(this.heading)}`)
         this.simulate(this.heading)
         return this.heading
       })
@@ -115,10 +117,10 @@ class Car extends EventEmitter {
     }
   }
 
-  
+
   async updatePosition(position, date = Date.now()) {
     //console.log('update position', this.id, position)
-    const lastPosition = this.position || position
+    const lastPosition = this.position || position
     const metersMoved = haversine(lastPosition, position)
     const [km, h] = [(metersMoved / 1000), (date - lastPosition.date) / 1000 / 60 / 60]
     this.speed = Math.round((km / h / (this._timeMultiplier || 1)) || 0)
@@ -140,5 +142,5 @@ class Car extends EventEmitter {
     }
   }
 }
- 
+
 module.exports = Car

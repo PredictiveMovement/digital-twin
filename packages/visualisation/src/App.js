@@ -18,10 +18,11 @@ const App = () => {
 
     setCars(cars => [
       ...cars.filter((car) => !newCars.some((nc) => nc.id === car.id)),
-      ...newCars.map(({ id, heading, position }) => ({
+      ...newCars.map(({ id, heading, position, fleet }) => ({
         id,
         heading,
         position,
+        fleet,
       })),
     ])
   })

@@ -5,20 +5,38 @@ const { expand, concatMap, take, map, toArray, mergeAll, withLatestFrom } = requ
 let carId = 0
 const SPEED = 60 // multiplier.
 
-const shuffle = () => observable => observable.pipe( 
+const { info } = require('../lib/log')
+
+const shuffle = () => observable => observable.pipe(
   toArray(),
   map(positions => positions.sort((a, b) => Math.random() - 0.5)),
   mergeAll(),
 )
 
-function generateCars(initialPositions, numberOfCars, speed = SPEED) {
+// TODO: Randomize using the fleet's respective weights
+const getRandomFleet = fleets => {
+  const random = Math.random() * fleets.length
+  info(random)
+
+  const floor = Math.floor(random)
+  info(floor)
+
+  const fleet = fleets[floor].name
+  info(fleet)
+
+  return fleet
+}
+
+function generateCars(fleets, initialPositions, numberOfCars, speed = SPEED) {
+  info(`Generate cars ${fleets[0]}`)
+
   return from(initialPositions).pipe(
     // if we need more than initial positions we just expand the initial array until we have as many as we want
     expand(() => from(initialPositions)),
     take(numberOfCars),
     shuffle(),
     //concatMap(position => withLatestFrom(address.randomize(position))),
-    map((position) => new Car({id: carId++, position, timeMultiplier: speed})),
+    map((position) => new Car({ id: carId++, position, timeMultiplier: speed, fleet: getRandomFleet(fleets) })),
     shareReplay()
   )
 }
