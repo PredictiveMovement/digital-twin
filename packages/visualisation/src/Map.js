@@ -75,15 +75,15 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     console.log('Fleet', fleet)
     switch (fleet.toLowerCase()) {
       case 'bussgods':
-        return [255, 255, 255]
+        return [254, 254, 254]
       case 'dhl':
-        return [255, 255, 0]
+        return [251, 255, 84]
       case 'postnord':
-        return [0, 0, 255]
+        return [57, 123, 184]
       case 'schenker':
-        return [255, 0, 0]
+        return [204, 52, 41]
       default:
-        return [19, 197, 123]
+        return [254, 254, 254]
     }
   }
 
