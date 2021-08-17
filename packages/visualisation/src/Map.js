@@ -167,7 +167,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
 
   useEffect(() => {
     if (!cars.length) return
-    if (!followCar) return
+    if (followCar === null) return
     const car = cars.filter(({ id }) => id === followCar)[0]
     setMapState({
       ...mapState,
@@ -184,6 +184,12 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
       viewState={mapState}
       onViewStateChange={({ viewState }) => {
         setMapState(viewState)
+        if (followCar >= 0) {
+          setFollowCar(null)
+        }
+      }}
+      onClick={(event) => {
+        if (!event.layer) setFollowCar(null)
       }}
       controller={true}
       layers={[
