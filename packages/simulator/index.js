@@ -10,6 +10,8 @@ const postombud = require('./streams/postombud')
 const fs = require('fs')
 const Booking = require('./lib/booking')
 
+const { info } = require('./lib/log')
+
 const WORKING_DAYS = 265
 const NR_CARS = 15
 const pilots = kommuner.pipe(
@@ -27,11 +29,10 @@ const engine = {
     // TODO: Dela upp och gör mer läsbart
     map((kommun) => {
       const file = `data/bookings_${kommun.id}.json`
-      console.log(file)
 
       let bookings
       if (fs.existsSync(file)) {
-        console.log('*** loading cached bookings from json')
+        info('Loading cached bookings from json')
         const content = JSON.parse(fs.readFileSync(file))
         bookings = from(content).pipe(
           map(data => new Booking(data))
@@ -44,7 +45,6 @@ const engine = {
 
       return bookings.pipe(
         tap((booking) => {
-          // console.log(`*** adding booking to ${kommun.name}`)
           booking.kommun = kommun
           kommun.unhandledBookings.next(booking)
           kommun.bookings.next(booking)
@@ -64,7 +64,6 @@ const engine = {
         toArray(),
         mergeMap((postombud) => generateCars(kommun.fleets, postombud, NR_CARS).pipe(
           tap((car) => {
-            // console.log(`*** adding car to kommun ${kommun.name} #${car.id}`)
             kommun.cars.next(car)
           })
         )),
@@ -83,7 +82,6 @@ const engine = {
   kommuner
 }
 
-
 // engine.bookings.subscribe(booking => console.log('b', booking.id)) 
 //engine.cars.subscribe(car => console.log('c', car.id))
 
@@ -91,11 +89,11 @@ const engine = {
 //   mergeMap(kommun => kommun.bookings)
 // ).subscribe(e => console.log('kb', ))
 
-engine.dispatchedBookings.subscribe(({ car, booking }) => console.log('*** booking dispatched (car, booking):', car.id, car.queue.length, booking.id))
+engine.dispatchedBookings
+  .subscribe(({ car, booking }) => info(`Booking ${booking.id} dispatched to car ${car.id}`))
 /*bookings.pipe(
   groupBy(kommun => kommun.id),
   mergeMap(group => fs.writeSync(group.key + '.json', group.pipe(toArray(), ))), // [id, [array]]
 */
-
 
 module.exports = engine
