@@ -5,6 +5,7 @@ const EventEmitter = require('events')
 const Booking = require('./booking')
 const { safeId } = require('./id')
 const { assert } = require('console')
+const { error, info } = require('../lib/log')
 
 class Car extends EventEmitter {
   constructor({ id = safeId(), position, status = 'Ready', timeMultiplier = 60, fleet = undefined } = {}) {
@@ -21,7 +22,7 @@ class Car extends EventEmitter {
     this.timeMultiplier = timeMultiplier
     this.fleet = fleet
 
-    this.on('error', (err) => console.error('car error', err))
+    this.on('error', (err) => error('Car error', err))
     this.emit('moved', this)
   }
 
@@ -34,7 +35,6 @@ class Car extends EventEmitter {
       const diff = Date.now() - this._timeStart
       const newPosition = interpolate.route(heading.route, Date.now() + diff * this.timeMultiplier) ?? heading
       this.updatePosition(newPosition)
-      //console.log('interval', this.ema, this.speed, this.id)
     }, 200)
   }
 
@@ -45,13 +45,13 @@ class Car extends EventEmitter {
       .then((route) => {
         route.started = new Date()
         this.heading.route = route
-        console.log('*** navigate to', position, this.id)
+        info(`Car ${this.id} navigates to`, position)
 
         if (!route.legs) throw new Error(`Route not found from: ${JSON.stringify(this.position)} to: ${JSON.stringify(this.heading)}`)
         this.simulate(this.heading)
         return this.heading
       })
-      .catch(console.error)
+      .catch(error)
   }
 
   handleBooking(booking) {
@@ -66,7 +66,6 @@ class Car extends EventEmitter {
     } else {
       this.queue.push(booking)
       booking.queued(this)
-      //console.log(`*** Car#${this.id}: queued ${this.queue.length} bookings`)
     }
     return booking
   }
@@ -93,7 +92,7 @@ class Car extends EventEmitter {
   }
 
   dropOff() {
-    console.log('dropoff', this.booking.id)
+    info(`Dropoff ${this.booking.id}`)
     if (this.booking) {
       this.busy = false
       this.booking.delivered(this.position)
@@ -119,7 +118,6 @@ class Car extends EventEmitter {
 
 
   async updatePosition(position, date = Date.now()) {
-    //console.log('update position', this.id, position)
     const lastPosition = this.position || position
     const metersMoved = haversine(lastPosition, position)
     const [km, h] = [(metersMoved / 1000), (date - lastPosition.date) / 1000 / 60 / 60]

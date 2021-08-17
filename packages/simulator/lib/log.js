@@ -1,10 +1,10 @@
 const chalk = require('chalk')
 
 module.exports = {
-  error: message => {
-    console.log(`${chalk.gray(' ***')} ${chalk.redBright.bold('INFO')} ${chalk.red(message)}`)
+  error: (title, error) => {
+    console.log(`${chalk.gray(' ***')} ${chalk.redBright.bold('ERROR')} ${chalk.red.bold(title)} ${chalk.redBright(error)}`)
   },
-  info: message => {
-    console.log(`${chalk.gray(' ***')} ${chalk.whiteBright.bold('INFO')} ${chalk.white(message)}`)
+  info: (message, data = '') => {
+    console.log(`${chalk.gray(' ***')} ${chalk.whiteBright.bold('INFO')} ${chalk.white(message)}`, data)
   },
 }
