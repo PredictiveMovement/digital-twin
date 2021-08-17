@@ -58,7 +58,7 @@ const App = () => {
 
   return (
     <>
-      {activeCar && <InfoBox />}
+      {activeCar && <InfoBox id={activeCar.id} />}
       <Map
         cars={cars}
         bookings={bookings}

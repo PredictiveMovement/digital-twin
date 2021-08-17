@@ -17,12 +17,13 @@ const Wrapper = styled.div`
 
 const InfoBox = ({
   title = 'Lastbil',
+  id,
   subTitle = 'Åkeri Jönsson',
   fleet = 'Kör för DHL',
 }) => {
   return (
     <Wrapper left={20} top={50}>
-      <Paragraph>{title}</Paragraph>
+      <Paragraph>{`${title}  ${id}`}</Paragraph>
       <Paragraph>{subTitle}</Paragraph>
       <Paragraph>{fleet}</Paragraph>
       <div>
