@@ -94,7 +94,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         type: 'car',
         id: object.id,
         x,
-        y
+        y,
       })
     },
     onClick: ({ object }) => {
@@ -172,12 +172,12 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     if (!cars.length) return
     if (!activeCar) return
     const car = cars.filter(({ id }) => id === activeCar.id)[0]
-    setMapState({
-      ...mapState,
+    setMapState((state) => ({
+      ...state,
       zoom: 14,
       longitude: car.position[0],
       latitude: car.position[1],
-    })
+    }))
   }, [activeCar, cars])
 
   return (
@@ -209,9 +209,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         preventStyleDiffing={true}
         mapStyle="mapbox://styles/mapbox/dark-v10"
       />
-      {hoverInfo && mapState.zoom > 8 && (
-        <HoverInfoBox  data={hoverInfo}/>
-      )}
+      {hoverInfo && mapState.zoom > 8 && <HoverInfoBox data={hoverInfo} />}
 
       {kommunInfo && <KommunStatisticsBox {...kommunInfo} />}
     </DeckGL>
