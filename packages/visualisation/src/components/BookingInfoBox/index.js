@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
-import Paragraph from '../Typography';
+import { Paragraph } from '../Typography';
 
 const Wrapper = styled.div`
 position: absolute;

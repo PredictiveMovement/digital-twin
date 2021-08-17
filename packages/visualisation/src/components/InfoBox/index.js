@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import ProgressBar from '../ProgressBar'
-import Paragraph from '../Typography'
+import { H4, Paragraph } from '../Typography'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #10c57b;
-  padding: 1.2rem;
+  padding: 1.7rem;
   border-radius: 4px;
   z-index: 1;
 `
@@ -23,7 +23,7 @@ const InfoBox = ({
 }) => {
   return (
     <Wrapper left={20} top={50}>
-      <Paragraph>{`${title}  ${id}`}</Paragraph>
+      <H4>{`${title}  ${id}`}</H4>
       <Paragraph>{subTitle}</Paragraph>
       <Paragraph>{fleet}</Paragraph>
       <div>

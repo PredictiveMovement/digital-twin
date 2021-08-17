@@ -1,4 +1,4 @@
-const { default: styled } = require('styled-components')
+import styled from 'styled-components'
 
 const Paragraph = styled.p`
   margin: 0;
@@ -8,4 +8,9 @@ const Paragraph = styled.p`
   color: white;
 `
 
-export default Paragraph
+const H4 = styled.h4`
+  color: white;
+  margin: 0;
+`
+
+export { Paragraph, H4 }
