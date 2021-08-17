@@ -22,10 +22,12 @@ let id = 0
 // generate a pattern of random positions so we can take x out of these and get a natural pattern of these positions
 const randomPositions = perlin
   .generatePerlinNoise(100, 100)
+  // .generatePerlinNoise(1, 1)
   .map((probability, i) => ({ x: xy(i).x * 10, y: xy(i).y * 10, probability }))
   .sort((a, b) => b.probability - a.probability) // sort them so we can just pick how many we want
 
 function generateBookingsInKommun(kommun) {
+  console.log(`*** generateBookingsInKommun ${kommun.name}`)
   // a square is a km2 box with a population total. We will here populate each square with nearest postombud
   const squaresWithNearestPostombud = kommun.squares.pipe(
     mergeMap((square) =>
@@ -39,7 +41,7 @@ function generateBookingsInKommun(kommun) {
         map((nearestOmbud) => ({ ...square, nearestOmbud }))
       )
     ),
-    tap(s => console.log('squares', kommun.name)),
+    // tap(s => console.log('squares', kommun.name)),
   )
 
   const randomPointsInSquares = squaresWithNearestPostombud.pipe(
@@ -50,6 +52,7 @@ function generateBookingsInKommun(kommun) {
         .map(({ x, y }) => addMeters(position, { x, y }))
         .map((position) => ({ nearestOmbud, position }))
     ),
+    tap(s => `randomInPointInSquares ${kommun.name}`)
   )
 
   const bookings = randomPointsInSquares.pipe(
@@ -59,17 +62,36 @@ function generateBookingsInKommun(kommun) {
     )),*/
     //toArray(), // convert to array to be able to sort the addresses
     //mergeMap((a) => from(a.sort((p) => Math.random() - 0.5 - (p.isCommercial ? 2 : 0)))),
+    // ratelimit(5, 1000),
     mergeMap(({ nearestOmbud, position }) => {
+      console.log('nearest')
       return pelias
         .nearest(position)
-        .then((address) => new Booking({
-          id: id++,
-          pickup: nearestOmbud,
-          isCommercial: address.layer === 'venue',
-          destination: address,
-        }))
+        .then(address => {
+          console.log('got pelias address')
+          return address
+        }, (err) => {
+          console.log('pelias error', err)
+          throw err
+        })
+        .then((address) => {
+          switch (address.layer === 'venue') {
+            // kolla på kommunobjektet efter paketvolym
+            // om det är en kommersiell fastighet, returnera fler bokningar och alltid med direktleverans
+            // annars privat då skapar vi vissa med direktleverans och vissa till ombud
+
+            // TODO(framtid): returnera en timer som skapar en bokning med ett visst intervall
+            //                introducera klass Fastighet som en ström som emittar bokningar
+          }
+          new Booking({
+            id: id++,
+            pickup: nearestOmbud,
+            isCommercial: address.layer === 'venue',
+            destination: address,
+          })
+        })
         .catch(() => Promise.resolve(null))
-    }),
+    }, undefined, 1),
     //expand(({isCommercial}) => Math.ceil(Math.random() * (isCommercial ? 100 : 2))),
     filter(p => p !== null),
     //retry(5)
