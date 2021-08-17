@@ -97,7 +97,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     opacity: 0.4,
     stroked: false,
     filled: true,
-    radiusScale: 2,
+    radiusScale: 1,
     radiusUnits: 'pixels',
     getPosition: c => {
       return c.position
