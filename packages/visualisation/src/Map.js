@@ -72,7 +72,6 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
   })
 
   const getCarColorBasedOnFleet = ({ fleet }) => {
-    console.log('Fleet', fleet)
     switch (fleet.toLowerCase()) {
       case 'bussgods':
         return [254, 254, 254]
