@@ -25,7 +25,7 @@ const commercialAreasLayer = new GeoJsonLayer({
   getLineColor: [0, 255, 128],
 })
 
-const Map = ({ cars, bookings, hubs, kommuner }) => {
+const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
   const [mapState, setMapState] = useState({
     latitude: 66.0459355,
     longitude: 17.866189,
@@ -35,7 +35,6 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
 
   const [hoverInfo, setHoverInfo] = useState(null)
   const [kommunInfo, setKommunInfo] = useState(null)
-  const [followCar, setFollowCar] = useState(null)
   const kommunLayer = new PolygonLayer({
     id: 'kommun-layer',
     data: kommuner,
@@ -100,8 +99,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
         longitude: object.position[0],
         latitude: object.position[1],
       })
-
-      setFollowCar(object.id)
+      setActiveCar(object)
     },
   })
 
@@ -167,15 +165,15 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
 
   useEffect(() => {
     if (!cars.length) return
-    if (followCar === null) return
-    const car = cars.filter(({ id }) => id === followCar)[0]
+    if (!activeCar) return
+    const car = cars.filter(({ id }) => id === activeCar.id)[0]
     setMapState({
       ...mapState,
       zoom: 14,
       longitude: car.position[0],
       latitude: car.position[1],
     })
-  }, [followCar, cars])
+  }, [activeCar, cars])
 
   return (
     <DeckGL
@@ -184,12 +182,12 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
       viewState={mapState}
       onViewStateChange={({ viewState }) => {
         setMapState(viewState)
-        if (followCar >= 0) {
-          setFollowCar(null)
+        if (activeCar) {
+          setActiveCar(null)
         }
       }}
       onClick={(event) => {
-        if (!event.layer) setFollowCar(null)
+        if (!event.layer) setActiveCar(null)
       }}
       controller={true}
       layers={[
@@ -214,7 +212,6 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
         />
       )}
 
-      {kommunInfo && <KommunStatisticsBox {...kommunInfo} />}
       {kommunInfo && <KommunStatisticsBox {...kommunInfo} />}
     </DeckGL>
   )
