@@ -111,7 +111,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
       setHoverInfo({
         type: 'booking',
         title: object.address,
-        isCommercial: (object.isCommercial ? '(företag)' : ' Status: ' + object.status),
+        isCommercial: object.isCommercial ? '(företag)' : ' Status: ' + object.status,
         x,
         y
       })
