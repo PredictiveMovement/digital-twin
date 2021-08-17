@@ -27,8 +27,8 @@ const commercialAreasLayer = new GeoJsonLayer({
 
 const Map = ({ cars, bookings, hubs, kommuner }) => {
   const [mapState, setMapState] = useState({
-    latitude: 66.0459355,
-    longitude: 17.866189,
+    latitude: 65.0964472642777,
+    longitude: 17.112050188704504,
     zoom: 8, // min ~0.6 max 24.0
     pitch: 40,
   })
