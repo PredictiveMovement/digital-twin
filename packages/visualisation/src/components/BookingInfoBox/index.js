@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
+import Paragraph from '../Typography';
 
 const Wrapper = styled.div`
 position: absolute;
@@ -26,16 +27,8 @@ z-index: 1;
     border-left: solid 10px transparent;
     border-right: solid 10px transparent;
 }
-
-
 `
 
-const Paragraph = styled.p`
-font-size: 14px;
-margin: 0;
-font-family: 'Roboto', sans-serif;
-color: white;
-`
 
 const BookingInfoBox = ({ position, title, subTitle }) => {
     return (

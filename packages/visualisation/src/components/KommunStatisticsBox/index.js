@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import ProgressBar from '../ProgressBar';
+import Paragraph from '../Typography';
 
 const Wrapper = styled.div`
 position: absolute;
@@ -15,13 +16,6 @@ border-radius: 4px;
 height: 158px;
 justify-content: space-between;
 z-index: 1;
-`
-
-const Paragraph = styled.p`
-margin: 0;
-font-family: 'Roboto', sans-serif;
-font-weight: ${(props) => props.thin ? 300 : 400};
-color: white;
 `
 
 const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, bookingsFromHub, totalCargo }) => {

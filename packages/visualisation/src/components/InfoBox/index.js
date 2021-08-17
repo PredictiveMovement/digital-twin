@@ -5,12 +5,13 @@ import Paragraph from '../Typography'
 
 const Wrapper = styled.div`
   position: absolute;
-  left: ${(props) => props.left}px;
-  top: ${(props) => props.top}px;
+  top: 36px;
+  left: 36px;
+  display: flex;
+  flex-direction: column;
   background-color: #10c57b;
-  padding: 1.1rem;
+  padding: 1.2rem;
   border-radius: 4px;
-  justify-content: space-between;
   z-index: 1;
 `
 
