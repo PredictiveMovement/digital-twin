@@ -14,7 +14,7 @@ const WORKING_DAYS = 265
 const NR_CARS = 15
 const pilots = kommuner.pipe(
   filter((kommun) =>
-    // ['Stockholm', 'Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
+    //['Stockholm', 'Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
     ['Storuman'].some(pilot =>
       kommun.name.startsWith(pilot)
     ),
@@ -22,13 +22,13 @@ const pilots = kommuner.pipe(
   shareReplay()
 )
 
-
 const engine = {
   bookings: pilots.pipe(
+    // TODO: Dela upp och gör mer läsbart
     map((kommun) => {
       const file = `data/bookings_${kommun.id}.json`
       console.log(file)
-  
+
       let bookings
       if (fs.existsSync(file)) {
         console.log('*** loading cached bookings from json')
@@ -41,7 +41,7 @@ const engine = {
           take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
         )
       }
-  
+
       return bookings.pipe(
         tap((booking) => {
           // console.log(`*** adding booking to ${kommun.name}`)
@@ -52,20 +52,9 @@ const engine = {
         // tap(() => kommun.emit('update', kommun) )
       )
     }),
-    
+
     concatAll(),
-    // map(booking => ({
-    //   id: booking.id,
-    //   pickup: booking.pickup,
-    //   isCommercial: booking.isCommercial,
-    //   destination: booking.destination,
-    //   status: booking.status,
-    // })),
-    // toArray(),
-    // tap(data => {
-    //   console.log(data)
-    //   fs.writeFileSync('data/storuman.json', JSON.stringify(data))
-    // })
+
     shareReplay(),
   ),
   cars: pilots.pipe(
@@ -102,6 +91,11 @@ const engine = {
 //   mergeMap(kommun => kommun.bookings)
 // ).subscribe(e => console.log('kb', ))
 
-engine.dispatchedBookings.subscribe(({car, booking}) => console.log('*** booking dispatched (car, booking):', car.id, car.queue.length, booking.id))
+engine.dispatchedBookings.subscribe(({ car, booking }) => console.log('*** booking dispatched (car, booking):', car.id, car.queue.length, booking.id))
+/*bookings.pipe(
+  groupBy(kommun => kommun.id),
+  mergeMap(group => fs.writeSync(group.key + '.json', group.pipe(toArray(), ))), // [id, [array]]
+*/
+
 
 module.exports = engine
