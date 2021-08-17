@@ -104,7 +104,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     },
     getRadius: () => 3,
     // #fab
-    getFillColor: ({ status }) => status === 'New' ? [255, 170, 187] : status === 'Delivered' ? [170, 187, 255] : [170, 255, 187, 0.3],
+    getFillColor: ({ status }) => status === 'Delivered' ? [170, 255, 187] : status === 'Picked up' ? [170, 187, 255, 35] : [255, 170, 187, 35],
     pickable: true,
     onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)

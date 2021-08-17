@@ -5,7 +5,7 @@ const { expand, concatMap, take, map, toArray, mergeAll, withLatestFrom } = requ
 let carId = 0
 const SPEED = 60 // multiplier.
 
-const shuffle = () => observable => observable.pipe( 
+const shuffle = () => observable => observable.pipe(
   toArray(),
   map(positions => positions.sort((a, b) => Math.random() - 0.5)),
   mergeAll(),
@@ -18,7 +18,7 @@ function generateCars(initialPositions, numberOfCars, speed = SPEED) {
     take(numberOfCars),
     shuffle(),
     //concatMap(position => withLatestFrom(address.randomize(position))),
-    map((position) => new Car({id: carId++, position, timeMultiplier: speed})),
+    map((position) => new Car({ id: carId++, position, timeMultiplier: speed })),
     shareReplay()
   )
 }
