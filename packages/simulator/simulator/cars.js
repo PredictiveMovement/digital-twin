@@ -13,16 +13,19 @@ const shuffle = () => observable => observable.pipe(
   mergeAll(),
 )
 
-// TODO: Randomize using the fleet's respective weights
+// TODO: Randomize using the fleet's respective market weights
 const getRandomFleet = fleets => {
-  const random = Math.random() * fleets.length
-  info(random)
+  const probability = Math.ceil(Math.random() * 100)
 
-  const floor = Math.floor(random)
-  info(floor)
+  const sortedByProbability = fleets.sort((a, b) => {
+    const first = Math.ceil(a.market * 100 / probability)
+    const second = Math.ceil(b.market * 100 / probability)
 
-  const fleet = fleets[floor].name
-  info(fleet)
+    return first < second ? 1 : -1
+  })
+
+  const fleet = sortedByProbability[0].name
+  info(`Generate a car belonging to ${fleet}`)
 
   return fleet
 }
