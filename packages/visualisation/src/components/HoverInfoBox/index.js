@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import ProgressBar from '../ProgressBar'
+import { Paragraph } from '../Typography';
 
 const Wrapper = styled.div`
 position: absolute;
@@ -29,12 +30,6 @@ z-index: 1;
 }
 `
 
-const Paragraph = styled.p`
-font-size: 14px;
-margin: 0;
-font-family: 'Roboto', sans-serif;
-color: white;
-`
 
 const CarInfo = ({ data }) => {
     return (
