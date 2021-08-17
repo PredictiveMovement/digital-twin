@@ -1,5 +1,6 @@
-import React from 'react';
+import React from 'react'
 import styled from 'styled-components'
+import ProgressBar from '../ProgressBar'
 
 const Wrapper = styled.div`
 position: absolute;
@@ -14,8 +15,8 @@ justify-content: space-between;
 z-index: 1;
 
 :after {
-	z-index: -1;
-	position: absolute;
+    z-index: -1;
+    position: absolute;
     top: 98.1%;
     left: 43%;
     margin-left: -25%;
@@ -26,8 +27,6 @@ z-index: 1;
     border-left: solid 10px transparent;
     border-right: solid 10px transparent;
 }
-
-
 `
 
 const Paragraph = styled.p`
@@ -37,13 +36,35 @@ font-family: 'Roboto', sans-serif;
 color: white;
 `
 
-const BookingInfoBox = ({ position, title, subTitle }) => {
+const CarInfo = ({ data }) => {
     return (
-        <Wrapper left={position.left} top={position.top}>
-            <Paragraph>{title}</Paragraph>
-            <Paragraph>{subTitle}</Paragraph>
+        <Wrapper left={data.x - 8} top={data.y - 40}>
+            <div>
+            <Paragraph>{`Lastbil ${data.id}`}</Paragraph>
+            <Paragraph>Åkeri Jönsson</Paragraph>
+            <Paragraph>Kör för DHL</Paragraph>
+            </div>
+            <div>
+            <Paragraph>Fyllnadsgrad per bil:</Paragraph>
+            <ProgressBar completed={100} />
+            </div>
         </Wrapper>
-    )
+  )
 }
 
-export default BookingInfoBox;
+const HoverInfoBox = ({ data }) => {
+  return (
+    <>
+      {data.type === 'car' ? (
+        <CarInfo data={data} />
+      ) : (
+        <Wrapper left={data.x} top={data.y}>
+            <Paragraph>{data.title}</Paragraph>
+            <Paragraph>{data.subTitle}</Paragraph>
+        </Wrapper>
+      )}
+    </>
+  )
+}
+
+export default HoverInfoBox
