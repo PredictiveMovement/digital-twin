@@ -37,11 +37,11 @@ font-family: 'Roboto', sans-serif;
 color: white;
 `
 
-const BookingInfoBox = ({ position, title, isCommercial }) => {
+const BookingInfoBox = ({ position, title, subTitle }) => {
     return (
         <Wrapper left={position.left} top={position.top}>
             <Paragraph>{title}</Paragraph>
-            <Paragraph>{isCommercial}</Paragraph>
+            <Paragraph>{subTitle}</Paragraph>
         </Wrapper>
     )
 }

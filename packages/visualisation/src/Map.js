@@ -111,7 +111,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
       setHoverInfo({
         type: 'booking',
         title: object.address,
-        isCommercial: object.isCommercial ? '(företag)' : ' Status: ' + object.status,
+        subTitle: object.isCommercial ? '(företag)' : ' Status: ' + object.status,
         x,
         y
       })
@@ -169,7 +169,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
         mapStyle="mapbox://styles/mapbox/dark-v10"
       />
       {hoverInfo && mapState.zoom > 8 && (
-        <BookingInfoBox position={{ left: hoverInfo.x, top: hoverInfo.y }} title={hoverInfo.title} isCommercial={hoverInfo.isCommercial} />
+        <BookingInfoBox position={{ left: hoverInfo.x, top: hoverInfo.y }} title={hoverInfo.title} subTitle={hoverInfo.subTitle} />
       )}
 
       {kommunInfo && (
