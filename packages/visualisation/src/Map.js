@@ -6,9 +6,9 @@ import inside from 'point-in-polygon'
 
 import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
-import BookingInfoBox from './components/BookingInfoBox'
 
 import mapboxgl from 'mapbox-gl'
+import HoverInfoBox from './components/BookingInfoBox'
 // @ts-ignore
 mapboxgl.workerClass =
   // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -86,8 +86,13 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     getFillColor: [19, 197, 123],
     pickable: true,
     onHover: ({ object, x, y }) => {
-      if (!object) setHoverInfo(null)
-      // TODO: What do we show when hovering a car?
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        type: 'car',
+        id: object.id,
+        x,
+        y
+      })
     }
   })
 
@@ -169,7 +174,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
         mapStyle="mapbox://styles/mapbox/dark-v10"
       />
       {hoverInfo && mapState.zoom > 8 && (
-        <BookingInfoBox position={{ left: hoverInfo.x, top: hoverInfo.y }} title={hoverInfo.title} subTitle={hoverInfo.subTitle} />
+        <HoverInfoBox  data={hoverInfo}/>
       )}
 
       {kommunInfo && (
