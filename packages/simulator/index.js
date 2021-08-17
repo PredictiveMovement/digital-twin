@@ -80,7 +80,8 @@ const engine = {
           })
         )),
       )
-    })
+    }),
+    shareReplay()
   ),
   dispatchedBookings: pilots.pipe(
     // TODO: add more than one dispatch central in each kommun = multiple fleets
