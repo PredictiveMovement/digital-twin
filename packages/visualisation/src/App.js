@@ -4,11 +4,14 @@ import Map from './Map.js'
 
 
 const App = () => {
-  const [statistics, setStatistics] = React.useState({
-    totalCars: 0,
-    
-  })
 
+  useSocket('reset', () => {
+    console.log('received reset')
+    setBookings([])
+    setCars([])
+    setKommuner([])
+    setPostombud([])
+  })
 
   const [cars, setCars] = React.useState([])
   useSocket('cars', (newCars) => {

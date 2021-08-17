@@ -18,6 +18,13 @@ const {
 
 function register(io) {
   io.on('connection', function (socket) {
+
+    socket.emit('reset')
+
+    socket.on('reset', () => {
+      process.exit(0) // restart with nodemon
+    })
+
     engine.cars
       .pipe(
         mergeMap((car) => fromEvent(car, 'moved')),
@@ -41,7 +48,7 @@ function register(io) {
 
     engine.bookings
       .pipe(
-        mergeMap(booking => merge(of(booking), fromEvent(booking, 'moved'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'), )),
+        mergeMap(booking => merge(of(booking), fromEvent(booking, 'moved'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'),)),
         map(({ destination: { name, position }, id, status, isCommercial }) => ({ id, name, position, status, isCommercial })),
         //distinct(booking => booking.id),
       )
@@ -53,9 +60,9 @@ function register(io) {
     engine.kommuner
       .pipe(
         concatMap(
-          ({bookings, name, geometry, cars}) =>  {
+          ({ bookings, name, geometry, cars }) => {
             const totalBookings = bookings.pipe(
-              scan((a) => a + 1, 0), 
+              scan((a) => a + 1, 0),
             )
 
             // TODO: This is counting inactive cars
