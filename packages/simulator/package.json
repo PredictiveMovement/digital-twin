@@ -7,7 +7,7 @@
     "dev": "nodemon web/index.js",
     "test": "jest __tests__",
     "watch": "jest --watch __tests__",
-    "start": "node web/index.js"
+    "start": "nodemon web/index.js"
   },
   "author": "Iteam",
   "license": "MIT",
@@ -23,13 +23,11 @@
     "rxjs": "^7.2.0",
     "socket.io": "^4.0",
     "swe-coords": "^1.0.0",
+    "nodemon": "^2.0.7",
     "xlsx": "^0.17.0"
   },
   "directories": {
     "test": "__tests__"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.7"
   },
   "repository": {
     "type": "git",
