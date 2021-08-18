@@ -23,7 +23,7 @@ function register(io) {
     socket.emit('reset')
 
     socket.on('reset', () => {
-      process.exit(0) // restart with nodemon
+      process.kill(process.pid, 'SIGUSR2')
     })
 
     engine.cars
