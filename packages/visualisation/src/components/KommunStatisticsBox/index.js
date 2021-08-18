@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import ProgressBar from '../ProgressBar';
+import { Paragraph } from '../Typography';
 
 const Wrapper = styled.div`
 position: absolute;
@@ -10,18 +11,12 @@ display: flex;
 flex-direction: column;
 justify-content: space-space-between;
 background-color: #10C57B;
-padding: 1.2rem;
+padding: 1.7rem;
 border-radius: 4px;
 height: 158px;
 justify-content: space-between;
 z-index: 1;
-`
-
-const Paragraph = styled.p`
-margin: 0;
-font-family: 'Roboto', sans-serif;
-font-weight: ${(props) => props.thin ? 300 : 400};
-color: white;
+width: 250px;
 `
 
 const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, bookingsFromHub, totalCargo }) => {
@@ -37,7 +32,7 @@ const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, bo
             </div>
             {/* <div> */}
             {/* <Paragraph thin>Medelfyllnadsgrad per bil:</Paragraph> */}
-            {/* <ProgressBar completed={60 } /* totalCapacity / totalCargo or so */ /> */}
+            {/* <ProgressBar completed={60 } /> */}
             {/* </div> */}
 
         </Wrapper>

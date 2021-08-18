@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StaticMap } from 'react-map-gl'
 import DeckGL, { PolygonLayer, ScatterplotLayer } from 'deck.gl'
 import { GeoJsonLayer } from '@deck.gl/layers'
@@ -25,7 +25,7 @@ const commercialAreasLayer = new GeoJsonLayer({
   getLineColor: [0, 255, 128],
 })
 
-const Map = ({ cars, bookings, hubs, kommuner }) => {
+const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
   const [mapState, setMapState] = useState({
     latitude: 66.0459355,
     longitude: 17.866189,
@@ -35,7 +35,6 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
 
   const [hoverInfo, setHoverInfo] = useState(null)
   const [kommunInfo, setKommunInfo] = useState(null)
-
   const kommunLayer = new PolygonLayer({
     id: 'kommun-layer',
     data: kommuner,
@@ -51,24 +50,28 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     getElevation: 0,
     opacity: 0.3,
     polygonOffset: 1,
-    getPolygon: k => k.geometry.coordinates,
+    getPolygon: (k) => k.geometry.coordinates,
     getLineColor: () => [0, 128, 255],
     getFillColor: () => [0, 0, 0, 0], // this isn't actually opaque, it just ends up not rendering any color
     pickable: true,
     onHover: (info, event) => {
       const { object } = info
-      setKommunInfo(current => {
+      setKommunInfo((current) => {
         if (!!object) return object
         // Seems to happen if you leave the viewport at the same time you leave a polygon
         if (!Array.isArray(info.coordinate)) return null
 
         // If mouse is inside our polygon we keep ourselves open
-        if (current.geometry.coordinates.some(polygon => inside(info.coordinate, polygon))) {
+        if (
+          current.geometry.coordinates.some((polygon) =>
+            inside(info.coordinate, polygon)
+          )
+        ) {
           return current
         }
         return null
       })
-    }
+    },
   })
 
   const carLayer = new ScatterplotLayer({
@@ -79,7 +82,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     filled: true,
     radiusScale: 1,
     radiusUnits: 'pixels',
-    getPosition: c => {
+    getPosition: (c) => {
       return c.position
     },
     getRadius: () => 8,
@@ -88,7 +91,16 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     onHover: ({ object, x, y }) => {
       if (!object) setHoverInfo(null)
       // TODO: What do we show when hovering a car?
-    }
+    },
+    onClick: ({ object }) => {
+      setMapState({
+        ...mapState,
+        zoom: 14,
+        longitude: object.position[0],
+        latitude: object.position[1],
+      })
+      setActiveCar(object)
+    },
   })
 
   const bookingLayer = new ScatterplotLayer({
@@ -99,7 +111,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     filled: true,
     radiusScale: 1,
     radiusUnits: 'pixels',
-    getPosition: c => {
+    getPosition: (c) => {
       return c.position
     },
     getRadius: () => 3,
@@ -111,11 +123,13 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
       setHoverInfo({
         type: 'booking',
         title: object.address,
-        subTitle: object.isCommercial ? '(företag)' : ' Status: ' + object.status,
+        subTitle: object.isCommercial
+          ? '(företag)'
+          : ' Status: ' + object.status,
         x,
-        y
+        y,
       })
-    }
+    },
   })
 
   const hubLayer = new ScatterplotLayer({
@@ -126,7 +140,7 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
     filled: true,
     radiusScale: 1,
     radiusUnits: 'pixels',
-    getPosition: c => {
+    getPosition: (c) => {
       return c.position
     },
     getRadius: () => 3,
@@ -139,11 +153,22 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
         type: 'hub',
         title: object.operator,
         x,
-        y
+        y,
       })
-    }
+    },
   })
 
+  useEffect(() => {
+    if (!cars.length) return
+    if (!activeCar) return
+    const car = cars.filter(({ id }) => id === activeCar.id)[0]
+    setMapState({
+      ...mapState,
+      zoom: 14,
+      longitude: car.position[0],
+      latitude: car.position[1],
+    })
+  }, [activeCar, cars])
 
   return (
     <DeckGL
@@ -152,6 +177,12 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
       viewState={mapState}
       onViewStateChange={({ viewState }) => {
         setMapState(viewState)
+        if (activeCar) {
+          setActiveCar(null)
+        }
+      }}
+      onClick={(event) => {
+        if (!event.layer) setActiveCar(null)
       }}
       controller={true}
       layers={[
@@ -169,12 +200,14 @@ const Map = ({ cars, bookings, hubs, kommuner }) => {
         mapStyle="mapbox://styles/mapbox/dark-v10"
       />
       {hoverInfo && mapState.zoom > 8 && (
-        <BookingInfoBox position={{ left: hoverInfo.x, top: hoverInfo.y }} title={hoverInfo.title} subTitle={hoverInfo.subTitle} />
+        <BookingInfoBox
+          position={{ left: hoverInfo.x, top: hoverInfo.y }}
+          title={hoverInfo.title}
+          subTitle={hoverInfo.subTitle}
+        />
       )}
 
-      {kommunInfo && (
-        <KommunStatisticsBox {...kommunInfo} />
-      )}
+      {kommunInfo && <KommunStatisticsBox {...kommunInfo} />}
     </DeckGL>
   )
 }
