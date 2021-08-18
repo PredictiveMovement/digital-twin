@@ -30,15 +30,16 @@ const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, bo
             <div>
                 <Paragraph>Just nu kör {totalCars} lastbilar i {name}</Paragraph>
                 <Paragraph>Total kapacitet: {totalCapacity}</Paragraph>
-                <Paragraph>Total cargo: {totalCargo}</Paragraph>
+                {/* <Paragraph>Total cargo: {totalCargo}</Paragraph> */}
                 <Paragraph>Antal bokningar: {totalBookings} st</Paragraph>
-                <Paragraph>Co2: XXX</Paragraph>
-                <Paragraph>Antal paket upphämtade från avlastningscentralen: {bookingsFromHub} st</Paragraph>
+                {/* <Paragraph>Co2: XXX</Paragraph> */}
+                {/* <Paragraph>Antal paket upphämtade från avlastningscentralen: {bookingsFromHub} st</Paragraph> */}
             </div>
-            <div>
-                <Paragraph thin>Medelfyllnadsgrad per bil:</Paragraph>
-                <ProgressBar completed={60 /* totalCapacity / totalCargo or so */} />
-            </div>
+            {/* <div> */}
+            {/* <Paragraph thin>Medelfyllnadsgrad per bil:</Paragraph> */}
+            {/* <ProgressBar completed={60 } /* totalCapacity / totalCargo or so */ /> */}
+            {/* </div> */}
+
         </Wrapper>
     )
 }

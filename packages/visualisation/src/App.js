@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSocket } from './hooks/useSocket.js'
 import Map from './Map.js'
-
+import Button from './components/Button/index.js'
 
 const App = () => {
 
@@ -58,8 +58,21 @@ const App = () => {
     setKommuner(current => current.concat(newKommuner))
   })
 
+  // const { socket } = useSocket()
+
+  // const Reset = () => {
+  //   socket.emit('reset')
+  //   setBookings([])
+  //   setCars([])
+  //   setKommuner([])
+  //   setPostombud([])
+  // }
+
   return (
-    <Map cars={cars} bookings={bookings} hubs={postombud} kommuner={kommuner} />
+    <>
+      {/* <Button text={'Reset'} onClick={() => Reset()} /> */}
+      <Map cars={cars} bookings={bookings} hubs={postombud} kommuner={kommuner} />
+    </>
   )
 }
 
