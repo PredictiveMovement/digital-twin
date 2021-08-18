@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { StaticMap } from 'react-map-gl'
-import DeckGL, { PolygonLayer, ScatterplotLayer } from 'deck.gl'
+import DeckGL, { PolygonLayer, ScatterplotLayer, ArcLayer } from 'deck.gl'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
 
 import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 import BookingInfoBox from './components/BookingInfoBox'
+import Button from './components/Button'
 
 import mapboxgl from 'mapbox-gl'
 // @ts-ignore
@@ -158,6 +159,33 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     },
   })
 
+  const arcData = cars.map((car) => {
+    return {
+      inbound: 72633,
+      outbound: 74735,
+      from: {
+        coordinates: car.position
+      },
+      to: {
+        coordinates: car.heading
+      },
+    }
+
+  })
+
+  const [showArcLayer, setShowArcLayer] = useState(false)
+
+  const arcLayer = new ArcLayer({
+    id: 'arc-layer',
+    data: arcData,
+    pickable: true,
+    getWidth: 1,
+    getSourcePosition: d => d.from.coordinates,
+    getTargetPosition: d => d.to.coordinates,
+    getSourceColor: d => [Math.sqrt(d.inbound), 140, 0],
+    getTargetColor: d => [Math.sqrt(d.outbound), 140, 0],
+  })
+
   useEffect(() => {
     if (!cars.length) return
     if (!activeCar) return
@@ -169,6 +197,10 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
       latitude: car.position[1],
     })
   }, [activeCar, cars])
+
+  const showLayer = () => {
+    setShowArcLayer(current => !current)
+  }
 
   return (
     <DeckGL
@@ -192,8 +224,17 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         hubLayer,
         bookingLayer,
         carLayer,
+        showArcLayer && arcLayer
       ]}
     >
+      <div style={{
+        bottom: '13%',
+        right: '8%',
+        position: 'absolute'
+      }}>
+        <Button text={'ArcLayer'} onClick={showLayer} />
+      </div>
+      {/* <button style={{ color: 'coral', position: 'absolute', zIndex: 3 }} onClick={() => showLayer()}>On/Off</button> */}
       <StaticMap
         reuseMaps
         preventStyleDiffing={true}
