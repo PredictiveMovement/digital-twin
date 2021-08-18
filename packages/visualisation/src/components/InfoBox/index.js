@@ -13,6 +13,7 @@ const Wrapper = styled.div`
   padding: 1.7rem;
   border-radius: 4px;
   z-index: 1;
+  width: 250px;
 `
 
 const InfoBox = ({
@@ -26,10 +27,10 @@ const InfoBox = ({
       <H4>{`${title}  ${id}`}</H4>
       <Paragraph>{subTitle}</Paragraph>
       <Paragraph>{fleet}</Paragraph>
-      <div>
+      {/* <div>
         <Paragraph thin>Fyllnadsgrad:</Paragraph>
         <ProgressBar completed={60} />
-      </div>
+      </div> */}
     </Wrapper>
   )
 }

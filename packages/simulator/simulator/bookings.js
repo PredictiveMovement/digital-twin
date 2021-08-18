@@ -12,9 +12,17 @@ const pelias = require('../lib/pelias')
 const { isInsideCoordinates } = require('../lib/polygon')
 const postombud = require('../streams/postombud')
 const kommuner = require('../streams/kommuner')
-const { haversine, addMeters } = require('../lib/distance')
+const { haversine, addMeters, convertPosition } = require('../lib/distance')
 const perlin = require('perlin-noise')
 const Booking = require('../lib/booking')
+
+// TODO: definiera en hub i varje kommun
+const umea = {
+  position: {
+    lat: 63.83008508299098,
+    long: 20.26484255874134
+  }
+}
 
 const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
 let id = 0
@@ -85,13 +93,23 @@ function generateBookingsInKommun(kommun) {
           }
           new Booking({
             id: id++,
-            pickup: nearestOmbud,
+            pickup: nearestOmbud, // { position: convertPosition(kommun.pickupPositions[Math.floor(Math.random() * kommun.pickupPositions.length)]) },
             isCommercial: address.layer === 'venue',
             destination: address,
+            //finalDestination: address,
           })
         })
         .catch(() => Promise.resolve(null))
     }, undefined, 1),
+    /*tap(booking => {
+      booking.on('delivered', booking => {
+        console.log('relaying booking to its final destination')
+        if (booking.destination !== booking.finalDestination) {
+          booking.destination = booking.finalDestination
+          kommun.unhandledBookings.next(booking)
+        }
+      })
+    }),*/
     //expand(({isCommercial}) => Math.ceil(Math.random() * (isCommercial ? 100 : 2))),
     filter(p => p !== null),
     //retry(5)

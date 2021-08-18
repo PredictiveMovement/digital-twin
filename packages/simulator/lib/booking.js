@@ -1,14 +1,15 @@
 const EventEmitter = require('events')
 
 class Booking extends EventEmitter {
-  constructor (booking) {
+  constructor(booking) {
     super()
     this.status = 'New'
     Object.assign(this, booking)
+    this.position = this.pickup?.position
     this.on('error', err => console.error('car error', err))
   }
 
-  queued(car){
+  queued(car) {
     this.queuedDateTime = new Date()
     this.status = 'Queued'
     this.emit('pickup', this)
@@ -23,12 +24,12 @@ class Booking extends EventEmitter {
     //console.log(`*** booking ${this.id}: ${this.status}`)
   }
 
-  moved(position){
+  moved(position) {
     this.position = position
     this.emit('moved', this)
   }
 
-  pickedUp(position){
+  pickedUp(position) {
     this.pickupDateTime = new Date()
     this.pickupPosition = position
     this.status = 'Picked up'
@@ -41,7 +42,7 @@ class Booking extends EventEmitter {
     this.deliveredPosition = position
     this.status = 'Delivered'
     this.emit('delivered', this)
-    //console.log(`*** booking ${this.id}: ${this.status}`)
+    console.log(`*** booking ${this.id}: ${this.status}`)
   }
 }
 
