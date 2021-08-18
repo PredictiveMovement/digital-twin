@@ -11,7 +11,7 @@ const fs = require('fs')
 const Booking = require('./lib/booking')
 
 const WORKING_DAYS = 265
-const NR_CARS = 15
+const NR_CARS = 7
 const pilots = kommuner.pipe(
   filter((kommun) =>
     //['Stockholm', 'Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
@@ -91,11 +91,14 @@ const engine = {
 //   mergeMap(kommun => kommun.bookings)
 // ).subscribe(e => console.log('kb', ))
 
-engine.dispatchedBookings.subscribe(({ car, booking }) => console.log('*** booking dispatched (car, booking):', car.id, car.queue.length, booking.id))
+engine.dispatchedBookings.subscribe()
 /*bookings.pipe(
   groupBy(kommun => kommun.id),
   mergeMap(group => fs.writeSync(group.key + '.json', group.pipe(toArray(), ))), // [id, [array]]
 */
 
+
+// I strongly advice NOT to use the code:
+process.setMaxListeners(0)
 
 module.exports = engine

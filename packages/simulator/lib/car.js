@@ -1,5 +1,5 @@
 const osrm = require('../lib/osrm')
-const {haversine, bearing} = require('./distance')
+const { haversine, bearing } = require('./distance')
 const interpolate = require('./interpolate')
 const EventEmitter = require('events')
 const Booking = require('./booking')
@@ -7,7 +7,7 @@ const { safeId } = require('./id')
 const { assert } = require('console')
 
 class Car extends EventEmitter {
-  constructor({id = safeId(), position, status = 'Ready', timeMultiplier = 60} = {}) {
+  constructor({ id = safeId(), position, status = 'Ready', timeMultiplier = 60 } = {}) {
     super()
     this.id = id
     this.position = position
@@ -43,9 +43,9 @@ class Car extends EventEmitter {
       .then((route) => {
         route.started = new Date()
         this.heading.route = route
-        console.log('*** navigate to', position, this.id)
+        // console.log('*** navigate to', position, this.id)
 
-        if(!route.legs) throw new Error(`Route not found from: ${JSON.stringify(this.position)} to: ${JSON.stringify(this.heading)}`)
+        if (!route.legs) throw new Error(`Route not found from: ${JSON.stringify(this.position)} to: ${JSON.stringify(this.heading)}`)
         this.simulate(this.heading)
         return this.heading
       })
@@ -57,6 +57,7 @@ class Car extends EventEmitter {
     this.history.push({ status: 'received_booking', date: new Date(), booking })
     if (!this.busy) {
       this.busy = true
+      this.emit('busy', this)
       this.booking = booking
       booking.assigned(this)
       this.status = 'Pickup'
@@ -81,6 +82,7 @@ class Car extends EventEmitter {
         .map(booking => {
           booking.pickedUp(this.position)
           this.cargo.push(booking)
+          this.emit('cargo', this)
         })
       if (this.booking && this.booking.destination) {
         this.booking.pickedUp(this.position)
@@ -95,10 +97,13 @@ class Car extends EventEmitter {
     if (this.booking) {
       this.busy = false
       this.booking.delivered(this.position)
+      this.emit('busy', this)
       this.emit('dropoff', this)
       this.cargo.sort((a, b) => haversine(this.position, a.destination.position) - haversine(this.position, b.destination.position))
 
       this.booking = this.cargo.shift()
+      this.emit('cargo', this)
+
       if (this.booking) {
         this.navigateTo(this.booking.destination.position)
         return
@@ -115,10 +120,10 @@ class Car extends EventEmitter {
     }
   }
 
-  
+
   async updatePosition(position, date = Date.now()) {
     //console.log('update position', this.id, position)
-    const lastPosition = this.position || position
+    const lastPosition = this.position || position
     const metersMoved = haversine(lastPosition, position)
     const [km, h] = [(metersMoved / 1000), (date - lastPosition.date) / 1000 / 60 / 60]
     this.speed = Math.round((km / h / (this._timeMultiplier || 1)) || 0)
@@ -128,6 +133,10 @@ class Car extends EventEmitter {
       this.bearing = bearing(lastPosition, position) || 0
       this.lastPositions.push({ ...position, date })
       this.emit('moved', this)
+    }
+
+    if (this.booking) {
+      this.booking.moved(this.position)
     }
 
     if (this.ema < 50) {
@@ -140,5 +149,5 @@ class Car extends EventEmitter {
     }
   }
 }
- 
+
 module.exports = Car
