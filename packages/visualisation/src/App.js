@@ -78,8 +78,8 @@ const App = () => {
   return (
     <>
       <div style={{
-        bottom: '8%',
-        right: '8%',
+        bottom: '80px',
+        right: '200px',
         position: 'absolute'
       }}>
         <Button text={'Reset'} onClick={() => Reset()} />

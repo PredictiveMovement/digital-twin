@@ -228,13 +228,12 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
       ]}
     >
       <div style={{
-        bottom: '13%',
-        right: '8%',
+        bottom: '150px',
+        right: '200px',
         position: 'absolute'
       }}>
         <Button text={'ArcLayer'} onClick={showLayer} />
       </div>
-      {/* <button style={{ color: 'coral', position: 'absolute', zIndex: 3 }} onClick={() => showLayer()}>On/Off</button> */}
       <StaticMap
         reuseMaps
         preventStyleDiffing={true}
