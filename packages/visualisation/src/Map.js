@@ -133,6 +133,10 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
           : ' Status: ' + object.status,
         x,
         y,
+        assignedDateTime: object.assignedDateTime,
+        pickupDateTime: object.pickupDateTime,
+        deliveredDateTime: object.deliveredDateTime,
+        queuedDateTime: object.queuedDateTime,
       })
     },
   })
