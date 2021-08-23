@@ -77,6 +77,21 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     },
   })
 
+  const getCarColorBasedOnFleet = ({ fleet }) => {
+    switch (fleet.toLowerCase()) {
+      case 'bring':
+        return [139, 190, 87]
+      case 'dhl':
+        return [251, 255, 84]
+      case 'postnord':
+        return [57, 123, 184]
+      case 'schenker':
+        return [204, 52, 41]
+      default:
+        return [254, 254, 254]
+    }
+  }
+
   const carLayer = new ScatterplotLayer({
     id: 'car-layer',
     data: cars,
@@ -89,11 +104,12 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
       return c.position
     },
     getRadius: () => 8,
-    getFillColor: [19, 197, 123],
+    getFillColor: getCarColorBasedOnFleet,
     pickable: true,
     onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
+        fleet: object.fleet,
         type: 'car',
         id: object.id,
         x,

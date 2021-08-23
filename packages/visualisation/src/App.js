@@ -22,10 +22,11 @@ const App = () => {
     setReset(false)
     setCars((cars) => [
       ...cars.filter((car) => !newCars.some((nc) => nc.id === car.id)),
-      ...newCars.map(({ id, heading, position }) => ({
+      ...newCars.map(({ id, heading, position, fleet }) => ({
         id,
         heading,
         position,
+        fleet,
       })),
     ])
   })
@@ -84,7 +85,7 @@ const App = () => {
       }}>
         <Button text={'Reset'} onClick={() => Reset()} />
       </div>
-      {activeCar && <InfoBox id={activeCar.id} />}
+      {activeCar && <InfoBox data={activeCar} />}
 
       {reset && <Loading />}
       <Map

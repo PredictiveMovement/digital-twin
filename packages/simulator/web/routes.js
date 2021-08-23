@@ -30,13 +30,14 @@ function register(io) {
       .pipe(
         mergeMap((car) => fromEvent(car, 'moved')),
         //distinct(car => car.id),
-        map(({ position: { lon, lat }, id, heading, speed, bearing, status }) => ({
+        map(({ position: { lon, lat }, id, heading, speed, bearing, status, fleet }) => ({
           id,
           heading: [heading.lon, heading.lat], // contains route to plot or interpolate on client side.
           speed,
           bearing,
           position: [lon, lat],
-          status
+          status,
+          fleet
         })),
       )
       .subscribe((car) => {
