@@ -19,7 +19,8 @@ z-index: 1;
 width: 250px;
 `
 
-const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, bookingsFromHub, totalCargo }) => {
+const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, totalUtilization, bookingsFromHub, totalCargo }) => {
+
     return (
         <Wrapper>
             <div>
@@ -32,7 +33,7 @@ const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, bo
             </div>
             {/* <div> */}
             {/* <Paragraph thin>Medelfyllnadsgrad per bil:</Paragraph> */}
-            {/* <ProgressBar completed={60 } /> */}
+            {/* <ProgressBar completed={utilization} /> */}
             {/* </div> */}
 
         </Wrapper>
