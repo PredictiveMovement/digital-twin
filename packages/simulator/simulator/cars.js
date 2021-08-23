@@ -1,7 +1,7 @@
 const address = require('./address')
 const Car = require('../lib/car')
 const { from, shareReplay } = require('rxjs')
-const { expand, concatMap, take, map, toArray, mergeAll, withLatestFrom } = require('rxjs/operators')
+const { expand, concatMap, take, map, mapTo, reduce, toArray, mergeAll, withLatestFrom, zipWith } = require('rxjs/operators')
 let carId = 0
 const SPEED = 60 // multiplier.
 
@@ -13,41 +13,29 @@ const shuffle = () => observable => observable.pipe(
   mergeAll(),
 )
 
-const FLEET_MAP = []
-const getFleet = (carId, fleets, numberOfCars) => {
-  if (!FLEET_MAP.length) {
-    const sortedFleets = fleets.sort((a, b) => (a.market > b.market) ? 1 : ((b.market > a.market) ? -1 : 0))
+const range = (length) => Array.from({ length })
 
-    sortedFleets.forEach(fleet => {
-      const carsInFleet = Math.floor(fleet.market * numberOfCars)
+// Return a list of n = numberOfCars fleet names based on their percentage distribution
+const getFleets = (fleets, numberOfCars) => from(fleets
+  .sort((a, b) => a.market - b.market)
+  .reduce((FLEET_MAP, fleet) => {
+    const carsInFleet = Math.ceil(fleet.market * numberOfCars)
+    return [...FLEET_MAP, ...range(carsInFleet).map(() => fleet.name)]
+  }, []))
 
-      for (let i = carsInFleet; i >= 0 && FLEET_MAP.length < numberOfCars; i--) {
-        FLEET_MAP.push(fleet.name)
-      }
-    })
-
-    if (FLEET_MAP.length < numberOfCars) {
-      for (let i = FLEET_MAP.length; i < numberOfCars; i++) {
-        FLEET_MAP.push('Övriga')
-      }
-    }
-
-    info('Car fleet distribution', FLEET_MAP)
-  }
-
-  return FLEET_MAP[carId - 1]
-}
+// Generate desired number of cars and expand the array if there are too few
+const expandArray = (initialPositions, numberOfCars) => from(initialPositions).pipe(
+  // if we need more than initial positions we just expand the initial array until we have as many as we want
+  expand(() => from(initialPositions)),
+  take(numberOfCars),
+  shuffle()
+)
 
 function generateCars(fleets, initialPositions, numberOfCars, speed = SPEED) {
-  info(`Generate cars`, fleets[0])
-
-  return from(initialPositions).pipe(
-    // if we need more than initial positions we just expand the initial array until we have as many as we want
-    expand(() => from(initialPositions)),
-    take(numberOfCars),
-    shuffle(),
+  return getFleets(fleets, numberOfCars).pipe(
+    zipWith(expandArray(initialPositions, numberOfCars)),
     //concatMap(position => withLatestFrom(address.randomize(position))),
-    map((position) => new Car({ id: carId++, position, timeMultiplier: speed, fleet: getFleet(carId, fleets, numberOfCars) })),
+    map(([fleet, position]) => new Car({ id: carId++, position, timeMultiplier: speed, fleet })),
     shareReplay()
   )
 }
