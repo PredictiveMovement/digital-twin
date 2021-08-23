@@ -13,8 +13,6 @@ font-size: 18px;
 color: white;
 font-family: Arial, Helvetica, sans-serif;
 border-radius: 2px;
-bottom: 50px;
-right: 50px;
 `
 
 

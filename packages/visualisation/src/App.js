@@ -77,7 +77,13 @@ const App = () => {
 
   return (
     <>
-      <Button text={'Reset'} onClick={() => Reset()} />
+      <div style={{
+        bottom: '80px',
+        right: '200px',
+        position: 'absolute'
+      }}>
+        <Button text={'Reset'} onClick={() => Reset()} />
+      </div>
       {activeCar && <InfoBox id={activeCar.id} />}
 
       {reset && <Loading />}
