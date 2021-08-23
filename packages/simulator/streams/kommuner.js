@@ -66,10 +66,6 @@ class Kommun extends EventEmitter {
       {
         name: 'DHL',
         market: 0.06
-      },
-      {
-        name: 'Övriga',
-        market: 0.1
       }
     ]
     // don't we want reduce here?
