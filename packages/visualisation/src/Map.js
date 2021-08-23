@@ -109,6 +109,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
+        fleet: object.fleet,
         type: 'car',
         id: object.id,
         x,

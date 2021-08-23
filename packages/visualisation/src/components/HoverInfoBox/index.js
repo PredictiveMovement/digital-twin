@@ -37,7 +37,7 @@ const CarInfo = ({ data }) => {
             <div>
             <Paragraph>{`Lastbil ${data.id}`}</Paragraph>
             <Paragraph>Åkeri Jönsson</Paragraph>
-            <Paragraph>Kör för DHL</Paragraph>
+            <Paragraph>Kör för {data.fleet}</Paragraph>
             </div>
             <div>
             <Paragraph>Fyllnadsgrad per bil:</Paragraph>

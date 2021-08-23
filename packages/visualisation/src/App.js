@@ -85,7 +85,7 @@ const App = () => {
       }}>
         <Button text={'Reset'} onClick={() => Reset()} />
       </div>
-      {activeCar && <InfoBox id={activeCar.id} />}
+      {activeCar && <InfoBox data={activeCar} />}
 
       {reset && <Loading />}
       <Map
