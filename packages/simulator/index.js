@@ -1,5 +1,5 @@
-const { shareReplay, timer, from } = require('rxjs')
-const { map, mergeMap, concatAll, concatMap, take, filter, tap, toArray, takeUntil } = require('rxjs/operators')
+const { shareReplay, from } = require('rxjs')
+const { map, mergeMap, concatAll, take, filter, tap, toArray } = require('rxjs/operators')
 
 const { generateBookingsInKommun } = require('./simulator/bookings')
 const { generateCars } = require('./simulator/cars')
@@ -16,8 +16,7 @@ const WORKING_DAYS = 265
 const NR_CARS = 7
 const pilots = kommuner.pipe(
   filter((kommun) =>
-    //['Stockholm', 'Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
-    ['Storuman'].some(pilot =>
+    ['Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
       kommun.name.startsWith(pilot)
     ),
   ),
@@ -28,20 +27,28 @@ const engine = {
   bookings: pilots.pipe(
     // TODO: Dela upp och gör mer läsbart
     map((kommun) => {
-      const file = `data/bookings_${kommun.id}.json`
-
+      const file = `/tmp/pm_bookings_${kommun.id}.json`
       let bookings
       if (fs.existsSync(file)) {
-        info('Loading cached bookings from json')
-        const content = JSON.parse(fs.readFileSync(file))
-        bookings = from(content).pipe(
-          map(data => new Booking(data))
+        console.log(`*** ${kommun.name}: bookings from cache (${file})`)
+        bookings = from(JSON.parse(fs.readFileSync(file))).pipe(
+          map(b => new Booking(b))
         )
       } else {
+        console.log(`*** ${kommun.name}: no cached bookings`)
         bookings = generateBookingsInKommun(kommun).pipe(
           take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
         )
+
+        // TODO: Could we do this without converting to an array?
+        bookings.pipe(
+          toArray(),
+        ).subscribe(arr => {
+          fs.writeFileSync(file, JSON.stringify(arr))
+          console.log(`*** ${kommun.name}: wrote bookings to cache (${file})`)
+        })
       }
+
 
       return bookings.pipe(
         tap((booking) => {
@@ -49,12 +56,10 @@ const engine = {
           kommun.unhandledBookings.next(booking)
           kommun.bookings.next(booking)
         }),
-        // tap(() => kommun.emit('update', kommun) )
       )
     }),
 
     concatAll(),
-
     shareReplay(),
   ),
   cars: pilots.pipe(
