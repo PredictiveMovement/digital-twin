@@ -72,11 +72,9 @@ function generateBookingsInKommun(kommun) {
     //mergeMap((a) => from(a.sort((p) => Math.random() - 0.5 - (p.isCommercial ? 2 : 0)))),
     // ratelimit(5, 1000),
     mergeMap(({ nearestOmbud, position }) => {
-      console.log('nearest')
       return pelias
         .nearest(position)
         .then(address => {
-          console.log('got pelias address')
           return address
         }, (err) => {
           console.log('pelias error', err)
@@ -91,7 +89,7 @@ function generateBookingsInKommun(kommun) {
             // TODO(framtid): returnera en timer som skapar en bokning med ett visst intervall
             //                introducera klass Fastighet som en ström som emittar bokningar
           }
-          new Booking({
+          return new Booking({
             id: id++,
             pickup: nearestOmbud, // { position: convertPosition(kommun.pickupPositions[Math.floor(Math.random() * kommun.pickupPositions.length)]) },
             isCommercial: address.layer === 'venue',
@@ -100,7 +98,7 @@ function generateBookingsInKommun(kommun) {
           })
         })
         .catch(() => Promise.resolve(null))
-    }, undefined, 1),
+    }, 1),
     /*tap(booking => {
       booking.on('delivered', booking => {
         console.log('relaying booking to its final destination')
