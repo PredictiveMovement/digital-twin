@@ -59,6 +59,7 @@ class Car extends EventEmitter {
     this.history.push({ status: 'received_booking', date: new Date(), booking })
     if (!this.busy) {
       this.busy = true
+      this.emit('busy', this)
       this.booking = booking
       booking.assigned(this)
       this.status = 'Pickup'
@@ -82,6 +83,7 @@ class Car extends EventEmitter {
         .map(booking => {
           booking.pickedUp(this.position)
           this.cargo.push(booking)
+          this.emit('cargo', this)
         })
       if (this.booking && this.booking.destination) {
         this.booking.pickedUp(this.position)
@@ -96,10 +98,13 @@ class Car extends EventEmitter {
     if (this.booking) {
       this.busy = false
       this.booking.delivered(this.position)
+      this.emit('busy', this)
       this.emit('dropoff', this)
       this.cargo.sort((a, b) => haversine(this.position, a.destination.position) - haversine(this.position, b.destination.position))
 
       this.booking = this.cargo.shift()
+      this.emit('cargo', this)
+
       if (this.booking) {
         this.navigateTo(this.booking.destination.position)
         return
@@ -128,6 +133,10 @@ class Car extends EventEmitter {
       this.bearing = bearing(lastPosition, position) || 0
       this.lastPositions.push({ ...position, date })
       this.emit('moved', this)
+    }
+
+    if (this.booking) {
+      this.booking.moved(this.position)
     }
 
     if (this.ema < 50) {

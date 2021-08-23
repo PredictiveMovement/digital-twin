@@ -62,7 +62,7 @@ class Kommun extends EventEmitter {
 function read() {
   return from(data).pipe(
     map(
-      ({ geometry, namn, epost, postnummer, telefon, kod }) =>
+      ({ geometry, namn, epost, postnummer, telefon, kod, pickupPositions }) =>
         new Kommun({
           geometry,
           name: namn,
@@ -70,6 +70,7 @@ function read() {
           email: epost,
           zip: postnummer,
           telephone: telefon,
+          pickupPositions: pickupPositions || []
         })
     ),
     shareReplay()
@@ -77,6 +78,7 @@ function read() {
 }
 
 const kommuner = (module.exports = read())
+
 
 // kommuner.pipe(filter((k) => k.name === 'Arjeplogs kommun')).subscribe((kommun) => console.dir(kommun, { depth: null }))
 //population.pipe(take(50)).subscribe(p => console.dir(p,  { depth: null }))
