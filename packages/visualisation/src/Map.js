@@ -9,7 +9,6 @@ import KommunStatisticsBox from './components/KommunStatisticsBox'
 
 import Button from './components/Button'
 
-
 import mapboxgl from 'mapbox-gl'
 import HoverInfoBox from './components/HoverInfoBox'
 // @ts-ignore
@@ -112,6 +111,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         fleet: object.fleet,
         type: 'car',
         id: object.id,
+        utilization: object.utilization,
         x,
         y,
       })
@@ -140,7 +140,12 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     },
     getRadius: () => 3,
     // #fab
-    getFillColor: ({ status }) => status === 'Delivered' ? [170, 255, 187] : status === 'Picked up' ? [170, 187, 255, 35] : [255, 170, 187, 35],
+    getFillColor: ({ status }) =>
+      status === 'Delivered'
+        ? [170, 255, 187]
+        : status === 'Picked up'
+        ? [170, 187, 255, 35]
+        : [255, 170, 187, 35],
     pickable: true,
     onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)
@@ -187,13 +192,12 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
       inbound: 72633,
       outbound: 74735,
       from: {
-        coordinates: car.position
+        coordinates: car.position,
       },
       to: {
-        coordinates: car.heading
+        coordinates: car.heading,
       },
     }
-
   })
 
   const [showArcLayer, setShowArcLayer] = useState(false)
@@ -203,10 +207,10 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     data: arcData,
     pickable: true,
     getWidth: 1,
-    getSourcePosition: d => d.from.coordinates,
-    getTargetPosition: d => d.to.coordinates,
-    getSourceColor: d => [Math.sqrt(d.inbound), 140, 0],
-    getTargetColor: d => [Math.sqrt(d.outbound), 140, 0],
+    getSourcePosition: (d) => d.from.coordinates,
+    getTargetPosition: (d) => d.to.coordinates,
+    getSourceColor: (d) => [Math.sqrt(d.inbound), 140, 0],
+    getTargetColor: (d) => [Math.sqrt(d.outbound), 140, 0],
   })
 
   useEffect(() => {
@@ -222,7 +226,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
   }, [activeCar, cars])
 
   const showLayer = () => {
-    setShowArcLayer(current => !current)
+    setShowArcLayer((current) => !current)
   }
 
   return (
@@ -247,14 +251,16 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         hubLayer,
         bookingLayer,
         carLayer,
-        showArcLayer && arcLayer
+        showArcLayer && arcLayer,
       ]}
     >
-      <div style={{
-        bottom: '150px',
-        right: '200px',
-        position: 'absolute'
-      }}>
+      <div
+        style={{
+          bottom: '150px',
+          right: '200px',
+          position: 'absolute',
+        }}
+      >
         <Button text={'ArcLayer'} onClick={showLayer} />
       </div>
       <StaticMap

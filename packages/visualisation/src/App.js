@@ -22,11 +22,12 @@ const App = () => {
     setReset(false)
     setCars((cars) => [
       ...cars.filter((car) => !newCars.some((nc) => nc.id === car.id)),
-      ...newCars.map(({ id, heading, position, fleet }) => ({
+      ...newCars.map(({ id, heading, position, fleet, utilization }) => ({
         id,
         heading,
         position,
         fleet,
+        utilization,
       })),
     ])
   })
@@ -74,15 +75,15 @@ const App = () => {
     setActiveCar(null)
   }
 
-
-
   return (
     <>
-      <div style={{
-        bottom: '80px',
-        right: '200px',
-        position: 'absolute'
-      }}>
+      <div
+        style={{
+          bottom: '80px',
+          right: '200px',
+          position: 'absolute',
+        }}
+      >
         <Button text={'Reset'} onClick={() => Reset()} />
       </div>
       {activeCar && <InfoBox data={activeCar} />}
