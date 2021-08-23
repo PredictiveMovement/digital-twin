@@ -127,6 +127,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     getFillColor: ({ status }) => status === 'Delivered' ? [170, 255, 187] : status === 'Picked up' ? [170, 187, 255, 35] : [255, 170, 187, 35],
     pickable: true,
     onHover: ({ object, x, y }) => {
+      // console.log('booking', object)
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         type: 'booking',
@@ -166,6 +167,24 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     },
   })
 
+
+  const queuedBookings = bookings.filter((booking) => booking.status === 'Queued')
+
+  const arcDataWithQueuedBookings = queuedBookings.map((booking) => {
+    return {
+      inbound: [253, 141, 60],
+      outbound: [253, 141, 60],
+      from: {
+        coordinates: cars.filter((car) => car.id === booking.carId).position
+      },
+      to: {
+        coordinates: booking.position
+      },
+    }
+
+  })
+
+
   const arcData = cars.map((car) => {
     return {
       inbound: 72633,
@@ -177,14 +196,12 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         coordinates: car.heading
       },
     }
-
   })
-
   const [showArcLayer, setShowArcLayer] = useState(false)
 
   const arcLayer = new ArcLayer({
     id: 'arc-layer',
-    data: arcData,
+    data: arcDataWithQueuedBookings,
     pickable: true,
     getWidth: 1,
     getSourcePosition: d => d.from.coordinates,
