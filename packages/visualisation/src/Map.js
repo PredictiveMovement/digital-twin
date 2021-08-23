@@ -6,10 +6,13 @@ import inside from 'point-in-polygon'
 
 import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
+
 import BookingInfoBox from './components/BookingInfoBox'
 import Button from './components/Button'
 
+
 import mapboxgl from 'mapbox-gl'
+import HoverInfoBox from './components/HoverInfoBox'
 // @ts-ignore
 mapboxgl.workerClass =
   // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -90,8 +93,13 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     getFillColor: [19, 197, 123],
     pickable: true,
     onHover: ({ object, x, y }) => {
-      if (!object) setHoverInfo(null)
-      // TODO: What do we show when hovering a car?
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        type: 'car',
+        id: object.id,
+        x,
+        y,
+      })
     },
     onClick: ({ object }) => {
       setMapState({
@@ -190,12 +198,12 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     if (!cars.length) return
     if (!activeCar) return
     const car = cars.filter(({ id }) => id === activeCar.id)[0]
-    setMapState({
-      ...mapState,
+    setMapState((state) => ({
+      ...state,
       zoom: 14,
       longitude: car.position[0],
       latitude: car.position[1],
-    })
+    }))
   }, [activeCar, cars])
 
   const showLayer = () => {
@@ -239,13 +247,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         preventStyleDiffing={true}
         mapStyle="mapbox://styles/mapbox/dark-v10"
       />
-      {hoverInfo && mapState.zoom > 8 && (
-        <BookingInfoBox
-          position={{ left: hoverInfo.x, top: hoverInfo.y }}
-          title={hoverInfo.title}
-          subTitle={hoverInfo.subTitle}
-        />
-      )}
+      {hoverInfo && mapState.zoom > 8 && <HoverInfoBox data={hoverInfo} />}
 
       {kommunInfo && <KommunStatisticsBox {...kommunInfo} />}
     </DeckGL>
