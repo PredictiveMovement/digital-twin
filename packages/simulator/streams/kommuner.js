@@ -50,7 +50,24 @@ class Kommun extends EventEmitter {
     this.cars = new ReplaySubject()
     this.bookings = new ReplaySubject()
     this.squares = getPopulationSquares(this)
-    this.fleets = [{ name: 'Postnord', market: 0.5 }, { name: 'Schenker', market: 0.2 }, { name: 'Bussgods', market: 0.2 }, { name: 'DHL', market: 0.1 }, { name: 'Lokal åkare 1', market: 0.1 }]
+    this.fleets = [
+      {
+        name: 'Postnord',
+        market: 0.6
+      },
+      {
+        name: 'Schenker',
+        market: 0.18
+      },
+      {
+        name: 'Bring',
+        market: 0.06
+      },
+      {
+        name: 'DHL',
+        market: 0.06
+      }
+    ]
     // don't we want reduce here?
     this.population = this.squares.pipe(reduce((a, b) => a + b.population, 0))
     this.packageVolumes = packageVolumes.find(e => this.name.startsWith(e.name))
