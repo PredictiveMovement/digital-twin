@@ -79,8 +79,8 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
 
   const getCarColorBasedOnFleet = ({ fleet }) => {
     switch (fleet.toLowerCase()) {
-      case 'bussgods':
-        return [254, 254, 254]
+      case 'bring':
+        return [139, 190, 87]
       case 'dhl':
         return [251, 255, 84]
       case 'postnord':
