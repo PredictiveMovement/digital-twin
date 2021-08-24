@@ -3,7 +3,7 @@ const Car = require('../lib/car')
 const { from, shareReplay } = require('rxjs')
 const { expand, concatMap, take, map, mapTo, reduce, toArray, mergeAll, withLatestFrom, zipWith } = require('rxjs/operators')
 let carId = 0
-const SPEED = 360 // multiplier.
+const { virtualTime } = require('../lib/virtualTime')
 
 const { info } = require('../lib/log')
 
@@ -31,11 +31,11 @@ const expandArray = (initialPositions, numberOfCars) => from(initialPositions).p
   shuffle()
 )
 
-function generateCars(fleets, initialPositions, numberOfCars, speed = SPEED) {
+function generateCars(fleets, initialPositions, numberOfCars) {
   return getFleets(fleets, numberOfCars).pipe(
     zipWith(expandArray(initialPositions, numberOfCars)),
     //concatMap(position => withLatestFrom(address.randomize(position))),
-    map(([fleet, position]) => new Car({ id: carId++, position, timeMultiplier: speed, fleet })),
+    map(([fleet, position]) => new Car({ id: carId++, position, fleet })),
     shareReplay()
   )
 }
