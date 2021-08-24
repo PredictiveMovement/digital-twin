@@ -31,16 +31,16 @@ class Booking extends EventEmitter {
     this.emit('moved', this)
   }
 
-  pickedUp(position) {
-    this.pickupDateTime = new Date()
+  pickedUp(position, date) {
+    this.pickupDateTime = date
     this.pickupPosition = position
     this.status = 'Picked up'
     this.emit('pickedup', this)
     //console.log(`*** booking ${this.id}: ${this.status}`)
   }
 
-  delivered(position) {
-    this.deliveredDateTime = new Date()
+  delivered(position, date) {
+    this.deliveredDateTime = date
     this.deliveredPosition = position
     this.status = 'Delivered'
     this.emit('delivered', this)

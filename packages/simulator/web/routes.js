@@ -17,6 +17,8 @@ const {
   windowTime
 } = require('rxjs/operators')
 
+const { virtualTime } = require('../lib/virtualTime')
+
 function register(io) {
   io.on('connection', function (socket) {
 
@@ -26,16 +28,18 @@ function register(io) {
       process.kill(process.pid, 'SIGUSR2')
     })
 
-    socket.on('pause', () => {
+    socket.on('play', () => {
+      virtualTime.play()
     })
 
-    socket.on('play', () => {
+    socket.on('pause', () => {
+      virtualTime.pause()
     })
 
     socket.on('speed', () => {
       
     })
-
+    
     engine.cars
       .pipe(
         mergeMap((car) => fromEvent(car, 'moved')),
