@@ -142,6 +142,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     getFillColor: ({ status }) => status === 'Delivered' ? [170, 255, 187] : status === 'Picked up' ? [170, 187, 255, 55] : [255, 170, 187, 55],
     pickable: true,
     onHover: ({ object, x, y }) => {
+      // console.log('booking', object)
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         ...object,
@@ -182,10 +183,33 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     },
   })
 
+
+  const queuedBookings = bookings.filter((booking) => booking.status === 'Queued')
+  const [showQueuedBookings, setShowQueuedBookings] = useState(false)
+
+
+  const arcDataWithQueuedBookings = showQueuedBookings && queuedBookings.map((booking) => {
+    if (!cars) return null
+    const car = cars.find((car) => car.id === booking.carId)
+
+    if (car === undefined) return null
+
+    return {
+      inbound: [178, 169, 237],
+      outbound: [178, 169, 237],
+      from: {
+        coordinates: car.position
+      },
+      to: {
+        coordinates: booking.position
+      },
+    }
+  })
+
   const arcData = cars.map((car) => {
     return {
-      inbound: 72633,
-      outbound: 74735,
+      inbound: [167, 55, 255],
+      outbound: [167, 55, 255],
       from: {
         coordinates: car.position
       },
@@ -193,21 +217,32 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         coordinates: car.heading
       },
     }
-
   })
-
   const [showArcLayer, setShowArcLayer] = useState(false)
 
   const arcLayer = new ArcLayer({
     id: 'arc-layer',
-    data: arcData,
+    data: showArcLayer && arcData,
     pickable: true,
     getWidth: 1,
     getSourcePosition: d => d.from.coordinates,
     getTargetPosition: d => d.to.coordinates,
-    getSourceColor: d => [Math.sqrt(d.inbound), 140, 0],
-    getTargetColor: d => [Math.sqrt(d.outbound), 140, 0],
+    getSourceColor: d => d.inbound,
+    getTargetColor: d => d.outbound,
   })
+
+
+  const arcLayerQueuedBookings = new ArcLayer({
+    id: 'arc-layer-queued-bookings',
+    data: arcDataWithQueuedBookings,
+    pickable: true,
+    getWidth: 1,
+    getSourcePosition: d => d.from.coordinates,
+    getTargetPosition: d => d.to.coordinates,
+    getSourceColor: d => d.inbound,
+    getTargetColor: d => d.outbound,
+  })
+
 
   useEffect(() => {
     if (!cars.length) return
@@ -221,9 +256,6 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     }))
   }, [activeCar, cars])
 
-  const showLayer = () => {
-    setShowArcLayer(current => !current)
-  }
 
   return (
     <DeckGL
@@ -247,15 +279,30 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         hubLayer,
         bookingLayer,
         carLayer,
-        showArcLayer && arcLayer
+        showArcLayer && arcLayer,
+        showQueuedBookings && arcLayerQueuedBookings
       ]}
     >
+      <div style={{
+        bottom: '220px',
+        right: '200px',
+        position: 'absolute'
+      }}>
+        <Button text={'Kö'} onClick={() => {
+
+          setShowArcLayer(false)
+          setShowQueuedBookings(current => !current)
+        }} />
+      </div>
       <div style={{
         bottom: '150px',
         right: '200px',
         position: 'absolute'
       }}>
-        <Button text={'ArcLayer'} onClick={showLayer} />
+        <Button text={'Kommande bokningar'} onClick={() => {
+          setShowQueuedBookings(false)
+          setShowArcLayer(current => !current)
+        }} />
       </div>
       <StaticMap
         reuseMaps
