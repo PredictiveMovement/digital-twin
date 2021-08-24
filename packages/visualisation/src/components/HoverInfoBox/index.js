@@ -36,12 +36,14 @@ const CarInfo = ({ data }) => {
         <Wrapper left={data.x - 8} top={data.y - 40}>
             <div>
             <Paragraph>{`Lastbil ${data.id}`}</Paragraph>
-            <Paragraph>Åkeri Jönsson</Paragraph>
             <Paragraph>Kör för {data.fleet}</Paragraph>
+            <Paragraph>Köat: {data.queue || 0} paket</Paragraph>
+            <Paragraph>Lastat: {data.cargo} paket</Paragraph>
+            <Paragraph>Kapacitet: {data.capacity} paket</Paragraph>
             </div>
             <div>
-            <Paragraph>Fyllnadsgrad per bil:</Paragraph>
-            <ProgressBar completed={100} />
+            <Paragraph>Fyllnadsgrad:</Paragraph>
+            <ProgressBar completed={100 * data.cargo / data.capacity} />
             </div>
         </Wrapper>
   )
@@ -56,6 +58,7 @@ const HoverInfoBox = ({ data }) => {
         <Wrapper left={data.x} top={data.y}>
             <Paragraph>{data.title}</Paragraph>
             <Paragraph>{data.subTitle}</Paragraph>
+            {data.deliveryTime ? <Paragraph>Leveranstid: {Math.ceil(10 * data.deliveryTime / 60 / 60) / 10} h</Paragraph> : null}
         </Wrapper>
       )}
     </>

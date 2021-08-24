@@ -3,7 +3,7 @@ const Car = require('../lib/car')
 const { from, shareReplay } = require('rxjs')
 const { expand, concatMap, take, map, mapTo, reduce, toArray, mergeAll, withLatestFrom, zipWith } = require('rxjs/operators')
 let carId = 0
-const SPEED = 60 // multiplier.
+const SPEED = 360 // multiplier.
 
 const { info } = require('../lib/log')
 

@@ -22,11 +22,13 @@ const App = () => {
     setReset(false)
     setCars((cars) => [
       ...cars.filter((car) => !newCars.some((nc) => nc.id === car.id)),
-      ...newCars.map(({ id, heading, position, fleet }) => ({
+      ...newCars.map(({ id, heading, position, fleet, cargo, capacity }) => ({
         id,
         heading,
         position,
         fleet,
+        cargo,
+        capacity
       })),
     ])
   })
@@ -35,12 +37,15 @@ const App = () => {
   useSocket('bookings', (newBookings) => {
     setBookings((bookings) => [
       ...bookings,
-      ...newBookings.map(({ name, id, position, status, isCommercial }) => ({
+      ...newBookings.map(({ name, id, position, status, isCommercial, pickupDateTime, deliveredDateTime }) => ({
         id,
         address: name,
         status,
         isCommercial,
         position: [position.lon, position.lat],
+        deliveredDateTime,
+        pickupDateTime,
+        deliveryTime: new Date(deliveredDateTime) - new Date(pickupDateTime)
       })),
     ])
   })
