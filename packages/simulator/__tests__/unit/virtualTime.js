@@ -5,7 +5,7 @@ expect.extend({
   toBeNear(x, y, z) {
     return {
       pass: Math.round(x / 100) === Math.round(y / 100),
-      message: () => `Not close enough: expected: ${x}, received: ${y}. Diff: ${x - y}`,
+      message: () => `Not close enough: expected: ${x}, received: ${y} Diff: ${x - y}`,
     }
   },
 })
@@ -36,8 +36,20 @@ describe('VirtualTime', () => {
     }, 1000)
   })
 
+  it('can pause and receive same time after play', (done) => {
+    let start = virtualTime.time()
+    virtualTime.pause()
+
+    setTimeout(() => {
+      virtualTime.play()
+      expect(virtualTime.time()).toBeNear(start)
+      done()
+    }, 1000)
+  })
+
   it('can pause and resume and receive same time plus extra time', (done) => {
     let start = virtualTime.time()
+    console.log('start', start)
     virtualTime.pause()
 
     setTimeout(() => {
@@ -45,6 +57,7 @@ describe('VirtualTime', () => {
       virtualTime.play()
 
       setTimeout(() => {
+        console.log('after 1 s', virtualTime.time())
         expect(virtualTime.time()).toBeNear(start + 1000)
         done()
       }, 1000)
