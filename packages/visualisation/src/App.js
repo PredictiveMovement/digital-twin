@@ -3,6 +3,7 @@ import InfoBox from './components/InfoBox/index.js'
 import { useSocket } from './hooks/useSocket.js'
 import Map from './Map.js'
 import Button from './components/Button/index.js'
+import { PlayButton } from './components/PlaybackOptions/index.js'
 import Loading from './components/Loading/index.js'
 
 const App = () => {
@@ -70,6 +71,16 @@ const App = () => {
 
   const { socket } = useSocket()
 
+  const onPause = () => {
+    socket.emit('pause')
+    console.log('pause stream')
+  }
+
+  const onPlay = () => {
+    socket.emit('play')
+    console.log('play stream')
+  }
+
   const Reset = () => {
     setReset(true)
     socket.emit('reset')
@@ -93,6 +104,7 @@ const App = () => {
       </div>
       {activeCar && <InfoBox data={activeCar} />}
 
+      <PlayButton onPause={onPause} onPlay={onPlay}/>
       {reset && <Loading />}
       <Map
         cars={cars}

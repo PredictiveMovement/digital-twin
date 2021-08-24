@@ -3,6 +3,7 @@ const { take, scan, toArray, takeUntil, bufferTime, map, concatAll, windowTime, 
 const { dispatch } = require('../../simulator/dispatchCentral')
 const Car = require('../../lib/car')
 const Booking = require('../../lib/booking')
+const { virtualTime } = require('../../lib/virtualTime')
 
 describe("dispatch", () => {
   const arjeplog = { lon: 17.886855, lat: 66.041054 }
@@ -12,7 +13,8 @@ describe("dispatch", () => {
   let bookings
 
   beforeEach(() => {
-    cars = from([new Car ({position: ljusdal, timeMultiplier: Infinity}), new Car({position: arjeplog, timeMultiplier: Infinity})]).pipe(shareReplay())
+    virtualTime.setTimeMultiplier(Infinity)
+    cars = from([new Car ({id: 1, position: ljusdal}), new Car({id: 2, position: arjeplog})]).pipe(shareReplay())
     bookings = from([new Booking({
       id: 0,
       pickup: {position: ljusdal},
@@ -31,18 +33,20 @@ describe("dispatch", () => {
     bookings = from([
       new Booking({
         id: 1337,
-        pickup: {position: ljusdal},
-        destination: {position: arjeplog}
+        pickup: {position: arjeplog},
+        destination: {position: ljusdal}
       }),
       new Booking({
         id: 1338,
-        pickup: {position: arjeplog},
-        destination: {position: ljusdal}
+        pickup: {position: ljusdal},
+        destination: {position: arjeplog}
       })
     ])
     dispatch(cars, bookings).pipe(toArray()).subscribe(([assignment1, assignment2]) => {
-      expect(assignment1.car.position).toEqual(ljusdal)
-      expect(assignment2.car.position).toEqual(arjeplog)
+      expect(assignment1.car.position).toEqual(arjeplog)
+      expect(assignment1.car.id).toEqual(2)
+      expect(assignment2.car.position).toEqual(ljusdal)
+      expect(assignment2.car.id).toEqual(1)
       done()
     })
   })
@@ -73,8 +77,8 @@ describe("dispatch", () => {
   it('should have cars available even the second time', function (done) {
     const asyncBookings = new Subject()
     const cars = new ReplaySubject()
-    cars.next(new Car ({position: ljusdal, timeMultiplier: Infinity}))
-    cars.next(new Car ({position: arjeplog, timeMultiplier: Infinity}))
+    cars.next(new Car ({position: ljusdal}))
+    cars.next(new Car ({position: arjeplog}))
 
     dispatch(cars, asyncBookings).subscribe(({booking: {id}, car: {position}}) => {
       if (id === 1) {
@@ -102,7 +106,7 @@ describe("dispatch", () => {
 
 
   it('should dispatch two bookings to one car', function (done) {
-    cars = from([new Car ({id: 1, position: ljusdal, timeMultiplier: Infinity})])
+    cars = from([new Car ({id: 1, position: ljusdal})])
     bookings = from([
       new Booking({
         id: 1337,
@@ -132,7 +136,7 @@ describe("dispatch", () => {
   })
 
   it('should dispatch three bookings to one car with only capacity for one and still deliver them all', function (done) {
-    cars = from([new Car ({id: 1, position: ljusdal, capacity: 1, timeMultiplier: Infinity})])
+    cars = from([new Car ({id: 1, position: ljusdal, capacity: 1})])
     bookings = from([
       new Booking({
         id: 1337,
