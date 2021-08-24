@@ -7,11 +7,15 @@ import inside from 'point-in-polygon'
 import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 
+
 import Button from './components/Button'
+import MenuButton from './components/MenuButton'
+import Popup from './components/Popup'
 
 
 import mapboxgl from 'mapbox-gl'
 import HoverInfoBox from './components/HoverInfoBox'
+
 // @ts-ignore
 mapboxgl.workerClass =
   // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -38,6 +42,8 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
 
   const [hoverInfo, setHoverInfo] = useState(null)
   const [kommunInfo, setKommunInfo] = useState(null)
+  const [showPopup, setShowPopup] = useState(false);
+
   const kommunLayer = new PolygonLayer({
     id: 'kommun-layer',
     data: kommuner,
@@ -256,6 +262,11 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     }))
   }, [activeCar, cars])
 
+  const handleClick = (e) => {
+    e.preventDefault()
+    setShowPopup(current => !current)
+  }
+
 
   return (
     <DeckGL
@@ -283,26 +294,15 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         showQueuedBookings && arcLayerQueuedBookings
       ]}
     >
-      <div style={{
-        bottom: '220px',
-        right: '200px',
-        position: 'absolute'
-      }}>
-        <Button text={'Kö'} onClick={() => {
+      {showPopup && <Popup setShowArcLayer={setShowArcLayer} showArcLayer={showArcLayer} showQueuedBookings={showQueuedBookings} setShowQueuedBookings={setShowQueuedBookings} setShowPopup={setShowPopup} />}
 
-          setShowArcLayer(false)
-          setShowQueuedBookings(current => !current)
-        }} />
-      </div>
       <div style={{
-        bottom: '150px',
-        right: '200px',
-        position: 'absolute'
-      }}>
-        <Button text={'Kommande bokningar'} onClick={() => {
-          setShowQueuedBookings(false)
-          setShowArcLayer(current => !current)
-        }} />
+        bottom: '100px',
+        right: '50px',
+        position: 'absolute',
+      }}
+      >
+        <MenuButton onClick={(e) => handleClick(e)} />
       </div>
       <StaticMap
         reuseMaps
