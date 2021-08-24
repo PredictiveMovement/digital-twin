@@ -33,6 +33,10 @@ function register(io) {
     socket.on('play', () => {
     })
 
+    socket.on('speed', () => {
+      
+    })
+
     engine.cars
       .pipe(
         mergeMap((car) => fromEvent(car, 'moved')),
