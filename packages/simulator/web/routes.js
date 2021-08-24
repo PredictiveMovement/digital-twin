@@ -101,8 +101,6 @@ function register(io) {
             averageUtilization.subscribe(a => console.log('a', a))
 
             const totalCars = cars.pipe(
-              mergeMap(car => fromEvent(car, 'busy')),
-              filter(car => car.busy),
               scan((a) => a + 1, 0),
               startWith(0)
             )
