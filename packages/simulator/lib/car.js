@@ -81,13 +81,15 @@ class Car extends EventEmitter {
 
     // wait one tick so the pickup event can be parsed before changing status
     setImmediate(() => {
-      this.queue
-        // see if we have more packages to deliver from this position
-        .filter(booking => haversine(this.position, booking.pickup.position) < 400)
+      // see if we have more packages to deliver from this position
+      const nrBookingsToPickup = this.queue
+        .findIndex(booking => haversine(this.position, booking.pickup.position) > 400)
+
+        console.log('*** picking up', nrBookingsToPickup, 'bookings')
+      this.queue.splice(0, nrBookingsToPickup) // this removes the bookings if there are any from the queue
         .map(booking => {
           booking.pickedUp(this.position, this.time())
           this.cargo.push(booking)
-          //delete this.queue[this.queue.findIndex(b => b.id === booking.id)] // todo: is this safe way to remove them from the queue?
           this.emit('cargo', this)
         })
       if (this.booking && this.booking.destination) {
@@ -113,7 +115,7 @@ class Car extends EventEmitter {
       this.navigateTo(this.booking.destination.position)
     } else {
       // If we have no more packages to deliver in cargo, go to the nearest booking in the queue or back to origin
-      this.queue.sort((a, b) => haversine(this.position, a.pickup.position) - haversine(this.position, b.pickup.position))
+      this.queue.sort((a, b) => haversine(this.position, a.destination.position) - haversine(this.position, b.destination.position))
 
       const nextBooking = this.queue.shift()
       if (nextBooking) {

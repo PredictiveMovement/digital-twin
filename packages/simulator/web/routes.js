@@ -2,20 +2,19 @@ const engine = require('../index')
 // const postombud = require("../streams/postombud");
 const { fromEvent, interval, of, from, merge, combineLatest } = require('rxjs')
 const {
-  window,
   map,
   toArray,
   mergeMap,
+  mergeAll,
   tap,
   bufferTime,
   bufferCount,
   scan,
-  distinct,
-  filter,
   reduce,
-  concatMap,
+  filter,
   startWith,
-  throttleTime
+  throttleTime,
+  windowTime
 } = require('rxjs/operators')
 
 function register(io) {
@@ -87,14 +86,19 @@ function register(io) {
 
             const averageUtilization = cars.pipe(
               mergeMap(car => fromEvent(car, 'cargo')),
-              scan(({ totalCargo, totalCapacity }, { cargo, capacity }) => ({
+              bufferTime(5000),
+              mergeAll(),
+              reduce(({ totalCargo, totalCapacity, count, totalUtilization }, { cargo, capacity }) => ({
+                count: count + 1,
                 totalCargo: totalCargo + cargo.length,
-                totalCapacity: totalCapacity + capacity
-              }),
-                { totalCargo: 0, totalCapacity: 0 }),
-              startWith({ totalCargo: 0, totalCapacity: 0 }),
-              map(({ totalCargo, totalCapacity }) => ({ totalCargo, totalCapacity, averageUtilization: totalCargo / totalCapacity }))
+                totalCapacity: totalCapacity + capacity,
+                totalUtilization: totalUtilization + cargo.length / capacity
+              }), { totalCargo: 0, totalCapacity: 0, count: 0, totalUtilization: 0 }),
+              startWith({ totalCargo: 0, totalCapacity: 0, totalUtilization: 0, count: 0 }),
+              map(({ totalCargo, totalCapacity, totalUtilization, count }) => ({ totalCargo, totalCapacity, averageUtilization: totalUtilization / count }))
             )
+
+            averageUtilization.subscribe(a => console.log('a', a))
 
             const totalCars = cars.pipe(
               mergeMap(car => fromEvent(car, 'busy')),
@@ -103,8 +107,14 @@ function register(io) {
               startWith(0)
             )
 
-            return combineLatest([totalBookings, totalCars, averageUtilization, averageDeliveryTime]).pipe(
-              map(([totalBookings, totalCars, { totalCargo, totalCapacity, averageUtilization }, { totalDelivered, averageDeliveryTime }]) => ({
+            const totalCapacity = cars.pipe(
+              filter(car => car.capacity),
+              scan((a, car) => a + car.capacity, 0),
+              startWith(0)
+            )
+
+            return combineLatest([totalBookings, totalCars, averageUtilization, averageDeliveryTime, totalCapacity]).pipe(
+              map(([totalBookings, totalCars, { totalCargo, averageUtilization }, { totalDelivered, averageDeliveryTime }, totalCapacity]) => ({
                 name, geometry, totalBookings, totalCars, totalCargo, totalCapacity, averageUtilization, averageDeliveryTime, totalDelivered
               })),
               // Do not emit more than 1 event per kommun per second
