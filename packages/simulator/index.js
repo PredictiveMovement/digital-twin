@@ -78,7 +78,7 @@ const engine = {
     map((kommun) => {
       const file = `/tmp/pm_bookings_${kommun.id}.json`
       let bookings
-      if (false && fs.existsSync(file)) {
+      if (fs.existsSync(file)) {
         console.log(`*** ${kommun.name}: bookings from cache (${file})`)
         bookings = from(JSON.parse(fs.readFileSync(file))).pipe(
           map(b => new Booking(b))
