@@ -76,6 +76,19 @@ const engine = {
   bookings: pilots.pipe(
     // TODO: Dela upp och gör mer läsbart
     map((kommun) => {
+      // assuming each call of the function is the next day/getting bookings for the next day
+      currentDayIndex += 1
+      if (currentDayIndex > WORKING_DAYS) {
+        currentDayIndex = 0
+      }
+
+      const orderDistribution = temporaryDistributionOfOrders(kommun)
+      const orderDistributionForDay = orderDistribution[currentDayIndex]
+
+      info('Kommun B2C', kommun.packageVolumes)
+      info(`Generate bookings for day ${currentDayIndex}, packages ${orderDistributionForDay}`)
+      info('Yearly distribution', orderDistribution)
+
       const file = `/tmp/pm_bookings_${kommun.id}.json`
       let bookings
       if (fs.existsSync(file)) {
@@ -86,15 +99,9 @@ const engine = {
       } else {
         console.log(`*** ${kommun.name}: no cached bookings`)
 
-        // assuming each call of the function is the next day/getting bookings for the next day
-        currentDayIndex += 1
-        if (currentDayIndex > WORKING_DAYS) {
-          currentDayIndex = 0
-        }
-
         bookings = generateBookingsInKommun(kommun).pipe(
           // take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
-          take(temporaryDistributionOfOrders(kommun)[currentDayIndex]) // TODO: Use this as a stream?
+          take(orderDistributionForDay) // TODO: Use this as a stream?
         )
 
         // TODO: Could we do this without converting to an array?
