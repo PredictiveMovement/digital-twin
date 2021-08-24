@@ -89,7 +89,7 @@ const App = () => {
         right: '200px',
         position: 'absolute'
       }}>
-        <Button text={'Reset'} onClick={() => Reset()} />
+        <Button text={'Starta om'} onClick={() => Reset()} />
       </div>
       {activeCar && <InfoBox data={activeCar} />}
 

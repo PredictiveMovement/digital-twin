@@ -187,12 +187,18 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
   const queuedBookings = bookings.filter((booking) => booking.status === 'Queued')
   const [showQueuedBookings, setShowQueuedBookings] = useState(false)
 
-  const arcDataWithQueuedBookings = cars.length > 1 && queuedBookings.map((booking) => {
+
+  const arcDataWithQueuedBookings = showQueuedBookings && queuedBookings.map((booking) => {
+    if (!cars) return null
+    const car = cars.find((car) => car.id === booking.carId)
+
+    if (car === undefined) return null
+
     return {
-      inbound: [253, 141, 60],
-      outbound: [253, 141, 60],
+      inbound: [178, 169, 237],
+      outbound: [178, 169, 237],
       from: {
-        coordinates: cars?.find((car) => car.id === booking.carId).position
+        coordinates: car.position
       },
       to: {
         coordinates: booking.position
@@ -202,8 +208,8 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
 
   const arcData = cars.map((car) => {
     return {
-      inbound: 72633,
-      outbound: 74735,
+      inbound: [167, 55, 255],
+      outbound: [167, 55, 255],
       from: {
         coordinates: car.position
       },
@@ -221,20 +227,20 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     getWidth: 1,
     getSourcePosition: d => d.from.coordinates,
     getTargetPosition: d => d.to.coordinates,
-    getSourceColor: d => [Math.sqrt(d.inbound), 140, 0],
-    getTargetColor: d => [Math.sqrt(d.outbound), 140, 0],
+    getSourceColor: d => d.inbound,
+    getTargetColor: d => d.outbound,
   })
 
 
   const arcLayerQueuedBookings = new ArcLayer({
-    id: 'arc-layer',
-    data: showQueuedBookings && arcDataWithQueuedBookings,
+    id: 'arc-layer-queued-bookings',
+    data: arcDataWithQueuedBookings,
     pickable: true,
     getWidth: 1,
     getSourcePosition: d => d.from.coordinates,
     getTargetPosition: d => d.to.coordinates,
-    getSourceColor: d => [Math.sqrt(d.inbound), 140, 0],
-    getTargetColor: d => [Math.sqrt(d.outbound), 140, 0],
+    getSourceColor: d => d.inbound,
+    getTargetColor: d => d.outbound,
   })
 
 
@@ -282,7 +288,8 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         right: '200px',
         position: 'absolute'
       }}>
-        <Button text={'Queued bookings'} onClick={() => {
+        <Button text={'Kö'} onClick={() => {
+
           setShowArcLayer(false)
           setShowQueuedBookings(current => !current)
         }} />
@@ -292,7 +299,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         right: '200px',
         position: 'absolute'
       }}>
-        <Button text={'ArcLayer'} onClick={() => {
+        <Button text={'Kommande bokningar'} onClick={() => {
           setShowQueuedBookings(false)
           setShowArcLayer(current => !current)
         }} />
