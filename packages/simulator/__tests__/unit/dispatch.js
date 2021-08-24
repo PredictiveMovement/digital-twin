@@ -3,6 +3,7 @@ const { take, scan, toArray, takeUntil, bufferTime, map, concatAll, windowTime, 
 const { dispatch } = require('../../simulator/dispatchCentral')
 const Car = require('../../lib/car')
 const Booking = require('../../lib/booking')
+const { virtualTime } = require('../../lib/virtualTime')
 
 describe("dispatch", () => {
   const arjeplog = { lon: 17.886855, lat: 66.041054 }
@@ -13,7 +14,7 @@ describe("dispatch", () => {
 
   beforeEach(() => {
     virtualTime.setTimeMultiplier(Infinity)
-    cars = from([new Car ({position: ljusdal}), new Car({position: arjeplog})]).pipe(shareReplay())
+    cars = from([new Car ({id: 1, position: ljusdal}), new Car({id: 2, position: arjeplog})]).pipe(shareReplay())
     bookings = from([new Booking({
       id: 0,
       pickup: {position: ljusdal},
@@ -32,18 +33,20 @@ describe("dispatch", () => {
     bookings = from([
       new Booking({
         id: 1337,
-        pickup: {position: ljusdal},
-        destination: {position: arjeplog}
+        pickup: {position: arjeplog},
+        destination: {position: ljusdal}
       }),
       new Booking({
         id: 1338,
-        pickup: {position: arjeplog},
-        destination: {position: ljusdal}
+        pickup: {position: ljusdal},
+        destination: {position: arjeplog}
       })
     ])
     dispatch(cars, bookings).pipe(toArray()).subscribe(([assignment1, assignment2]) => {
-      expect(assignment1.car.position).toEqual(ljusdal)
-      expect(assignment2.car.position).toEqual(arjeplog)
+      expect(assignment1.car.position).toEqual(arjeplog)
+      expect(assignment1.car.id).toEqual(2)
+      expect(assignment2.car.position).toEqual(ljusdal)
+      expect(assignment2.car.id).toEqual(1)
       done()
     })
   })

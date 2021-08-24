@@ -1,5 +1,6 @@
 const { generateCars } = require('../../simulator/cars')
 const { take, toArray } = require('rxjs/operators')
+const { virtualTime } = require('../../lib/virtualTime')
 
 describe("cars", () => {
   const arjeplog = [{ lon: 17.886855, lat: 66.041054 }]

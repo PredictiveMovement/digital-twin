@@ -27,7 +27,7 @@ class VirtualTime extends EventEmitter {
     console.log('Pause', new Date(this.time()))
     this.oldVirtualTime = this.timeMultiplier
     this.startDate = Date.now()
-    this.setTimeMultiplier(-1) // we let time pass but compensate for each second with one minus second
+    this.setTimeMultiplier(0) // we let time pass but compensate for each second with one minus second
     this.emit('pause')
   }
   
