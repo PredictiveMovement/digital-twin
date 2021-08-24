@@ -4,6 +4,8 @@ const { map, mergeMap, concatAll, take, filter, tap, toArray } = require('rxjs/o
 const { generateBookingsInKommun } = require('./simulator/bookings')
 const { generateCars } = require('./simulator/cars')
 const { dispatch } = require('./simulator/dispatchCentral')
+const { virtualTime } = require('./lib/virtualTime')
+
 const kommuner = require('./streams/kommuner')
 const postombud = require('./streams/postombud')
 
@@ -24,6 +26,7 @@ const pilots = kommuner.pipe(
 )
 
 const engine = {
+  virtualTime,
   bookings: pilots.pipe(
     // TODO: Dela upp och gör mer läsbart
     map((kommun) => {

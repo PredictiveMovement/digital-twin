@@ -6,9 +6,10 @@ const Booking = require('./booking')
 const { safeId } = require('./id')
 const { assert } = require('console')
 const { error, info } = require('../lib/log')
+const { virtualTime } = require('../lib/virtualTime')
 
 class Car extends EventEmitter {
-  constructor({ id = safeId(), position, status = 'Ready', capacity = 250, timeMultiplier = 60, fleet } = {}) {
+  constructor({ id = safeId(), position, status = 'Ready', capacity = 250, fleet } = {}) {
     super()
     this.id = id
     this.position = position
@@ -20,22 +21,24 @@ class Car extends EventEmitter {
     this.capacity = capacity // bookings
     this.status = status
     this.lastPositions = []
-    this.timeMultiplier = timeMultiplier
     this.fleet = fleet
     this.created = Date.now()
     this.on('error', (err) => error('Car error', err))
     this.emit('moved', this)
+
+    virtualTime.on('pause', () => this.simulate(false))
+    virtualTime.on('play', () => this.simulate(this.heading))
   }
 
   time() {
-    const diff = Date.now() - this.created
-    return Date.now() + diff * this.timeMultiplier
+    const time = virtualTime.time()
+    return time
   }
 
   simulate(heading) {
     clearInterval(this._interval)
     if (!heading) return
-    if (this.timeMultiplier === Infinity) return this.updatePosition(heading) // teleport mode
+    if (virtualTime.timeMultiplier === Infinity) return this.updatePosition(heading) // teleport mode
     this._interval = setInterval(() => {
       const newPosition = interpolate.route(heading.route, this.time()) ?? heading
       this.updatePosition(newPosition)
@@ -140,7 +143,7 @@ class Car extends EventEmitter {
     const lastPosition = this.position || position
     const metersMoved = haversine(lastPosition, position)
     const [km, h] = [(metersMoved / 1000), (date - lastPosition.date) / 1000 / 60 / 60]
-    this.speed = Math.round((km / h / (this._timeMultiplier || 1)) || 0)
+    this.speed = Math.round((km / h / (virtualTime.timeMultiplier || 1)) || 0)
     this.position = position
     this.ema = haversine(this.heading, this.position)
     if (metersMoved > 0) {
