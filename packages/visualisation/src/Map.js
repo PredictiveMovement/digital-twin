@@ -108,10 +108,8 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
-        fleet: object.fleet,
+        ...object,
         type: 'car',
-        id: object.id,
-        utilization: object.utilization,
         x,
         y,
       })
@@ -144,12 +142,13 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
       status === 'Delivered'
         ? [170, 255, 187]
         : status === 'Picked up'
-        ? [170, 187, 255, 35]
-        : [255, 170, 187, 35],
+        ? [170, 187, 255, 55]
+        : [255, 170, 187, 55],
     pickable: true,
     onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
+        ...object,
         type: 'booking',
         title: object.address,
         subTitle: object.isCommercial
