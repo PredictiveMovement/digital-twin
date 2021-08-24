@@ -70,12 +70,12 @@ const App = () => {
 
   const { socket } = useSocket()
 
-  const Pause = () => {
+  const onPause = () => {
     socket.emit('pause')
     console.log('pause stream')
   }
 
-  const Play = () => {
+  const onPlay = () => {
     socket.emit('play')
     console.log('play stream')
   }
@@ -103,7 +103,7 @@ const App = () => {
       </div>
       {activeCar && <InfoBox data={activeCar} />}
 
-      <PlayButton onPause={Pause} onPlay={Play}/>
+      <PlayButton onPause={onPause} onPlay={onPlay}/>
       {reset && <Loading />}
       <Map
         cars={cars}
