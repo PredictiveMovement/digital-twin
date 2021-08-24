@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import InfoBox from './components/InfoBox/index.js'
 import { useSocket } from './hooks/useSocket.js'
 import Map from './Map.js'
-import { Button, PlayButton } from './components/Button/index.js'
+import Button from './components/Button/index.js'
+import { PlayButton } from './components/PlaybackOptions/index.js'
 import Loading from './components/Loading/index.js'
 
 const App = () => {
