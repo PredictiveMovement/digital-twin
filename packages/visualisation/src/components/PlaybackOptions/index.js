@@ -4,7 +4,7 @@ import Play from '../../icons/play.svg'
 import Pause from '../../icons/pause.svg'
 import Speed from '../../icons/speedIcon.svg'
 import { Rabbit, Snail } from '../../icons/icons'
-import Slider, { Range } from 'rc-slider'
+import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
 
 const StyledPlayButton = styled.button`
