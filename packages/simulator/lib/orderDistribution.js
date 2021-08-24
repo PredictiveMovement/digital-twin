@@ -5,6 +5,7 @@ const _mean = require('lodash/mean')
 const _sum = require('lodash/sum')
 const _round = require('lodash/round')
 
+const { from, shareReplay } = require('rxjs')
 
 /**
  * Distributes a total number of orders over a number of given days.
@@ -29,8 +30,8 @@ function distributeNumberOfBookingsOverDays(numberOfDays, totalOrders, perlinNoi
         perlinNoiseOpt.height,
         perlinNoiseOpt.options)
     // TODO perlinNoise.length must be >= numberOfDays
-    console.log(`Perlin-Noise values:`)
-    console.log(perlinNoise)
+    //console.log(`Perlin-Noise values:`)
+    //console.log(perlinNoise)
 
     // perlinNoise.lenght needs to be = numberOfDays
     // instead of splicing, taking average of chunks and then splice the rest
@@ -38,13 +39,13 @@ function distributeNumberOfBookingsOverDays(numberOfDays, totalOrders, perlinNoi
     perlinNoise = _chunk(perlinNoise, chunkSize)
     perlinNoise = perlinNoise.splice(0, numberOfDays)
     perlinNoise = Array.from(perlinNoise, (value, index) => _mean(value))
-    console.log(`Perlin-Noise values flatten to number of days:`)
-    console.log(perlinNoise)
+    //console.log(`Perlin-Noise values flatten to number of days:`)
+    //console.log(perlinNoise)
 
     // it feels like min-max-scale reduces the rounding issue and get's closer to totalOrders
     perlinNoise = scaler.fit_transform(perlinNoise);
-    console.log(`Perlin-Noise values min-max scaled:`)
-    console.log(perlinNoise)
+    //console.log(`Perlin-Noise values min-max scaled:`)
+    //console.log(perlinNoise)
 
     // get number of orders for each day based on 'perlin percentages'
     const one_order = _sum(perlinNoise) / totalOrders
@@ -52,13 +53,14 @@ function distributeNumberOfBookingsOverDays(numberOfDays, totalOrders, perlinNoi
     // Then the result will be far away from the total number. In practice, it seems okay and 
     // gives some kind of randomness in the total number.
     var orderDistribution = perlinNoise.map(x => _round(x / one_order))
-    console.log(`Orders based on the 'perlin percentages':`)
-    console.log(orderDistribution)
-    console.log(`Orders total: ${totalOrders} vs. distributed ${_sum(orderDistribution)} = ${_sum(orderDistribution) - totalOrders} `)
+    //console.log(`Orders based on the 'perlin percentages':`)
+    //console.log(orderDistribution)
+    //console.log(`Orders total: ${totalOrders} vs. distributed ${_sum(orderDistribution)} = ${_sum(orderDistribution) - totalOrders} `)
 
     return orderDistribution
 }
 
+/*
 // play around with these options to influence the distribution
 const numberOfDays = 265
 const totalOrders = 1302332
@@ -76,3 +78,8 @@ const orderDistribution = distributeNumberOfBookingsOverDays(numberOfDays, total
 const current_working_day = 3
 console.log(orderDistribution[current_working_day])
 // TODO The output should be plotted and analyzed to see if the distribution does make any sense.
+*/
+
+module.exports = {
+    distributeNumberOfBookingsOverDays
+}

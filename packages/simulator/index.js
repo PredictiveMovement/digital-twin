@@ -1,5 +1,5 @@
 const { shareReplay, from } = require('rxjs')
-const { map, mergeMap, concatAll, take, filter, tap, toArray } = require('rxjs/operators')
+const { map, mergeMap, concatAll, take, filter, tap, toArray, zipWith } = require('rxjs/operators')
 
 const { generateBookingsInKommun } = require('./simulator/bookings')
 const { generateCars } = require('./simulator/cars')
@@ -7,21 +7,60 @@ const { dispatch } = require('./simulator/dispatchCentral')
 const kommuner = require('./streams/kommuner')
 const postombud = require('./streams/postombud')
 
+const { distributeNumberOfBookingsOverDays } = require('./lib/orderDistribution')
+
 const fs = require('fs')
 const Booking = require('./lib/booking')
 
 const { info } = require('./lib/log')
 
+const PERLIN_NOISE_OPTIONS = {
+  width: 53,
+  height: 10,
+  options: {
+    amplitude: 0.9,
+    octaveCount: 1,
+    persistence: 0.1,
+  }
+}
+
 const WORKING_DAYS = 265
 const NR_CARS = 7
 const pilots = kommuner.pipe(
   filter((kommun) =>
-    ['Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
+    ['Arjeplog'].some((pilot) =>
       kommun.name.startsWith(pilot)
     ),
   ),
   shareReplay()
 )
+
+const distributionOfOrders = kommuner.pipe(
+  filter((kommun) =>
+    ['Arjeplog'].some((pilot) =>
+      kommun.name.startsWith(pilot)
+    ),
+  ),
+  map(kommun => {
+    console.log('HELLO?')
+    let r = []
+    r[kommun.name] = distributeNumberOfBookingsOverDays(WORKING_DAYS, kommun.packageVolumes.B2C, PERLIN_NOISE_OPTIONS)
+    return r
+  }),
+  tap(data => {
+    console.log('DISTRIBUTION', data)
+  }),
+  toArray(),
+  // orderDistribution[kommun][currentDayIndex]
+  // orderDistribution[currentDayIndex]
+  shareReplay()
+)
+// TODO 
+distributionOfOrders.subscribe()
+
+
+
+let currentDayIndex = 0
 
 const engine = {
   bookings: pilots.pipe(
@@ -36,8 +75,39 @@ const engine = {
         )
       } else {
         console.log(`*** ${kommun.name}: no cached bookings`)
+
+        // assuming each call of the function is the next day/getting bookings for the next day
+        currentDayIndex += 1
+        if (currentDayIndex > WORKING_DAYS) {
+          currentDayIndex = 0
+        }
+
+        // console.log('hello...')
+        // console.log(distributionOfOrders)
+        // distributionOfOrders.pipe(
+        //   tap(d => {
+        //     console.log('data', d)
+        //   })
+        // )
+
+        distributionOfOrders.map(
+          map(d => {
+            console.log('meow', d)
+          })
+        )
+
         bookings = generateBookingsInKommun(kommun).pipe(
-          take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
+          /*
+          zipWith(distributionOfOrders),
+          map(([bookings, distribution]) => {
+            tap((data) => {
+              console.log(data)
+            })
+          }),
+          */
+          // take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
+          tap((kommun) => console.log(distributionOfOrders[kommun.name][currentDayIndex]))
+          // take(distributeNumberOfBookingsOverDays(WORKING_DAYS, kommun.packageVolumes.B2C, PERLIN_NOISE_OPTIONS)[currentDayIndex])
         )
 
         // TODO: Could we do this without converting to an array?
@@ -48,7 +118,6 @@ const engine = {
           console.log(`*** ${kommun.name}: wrote bookings to cache (${file})`)
         })
       }
-
 
       return bookings.pipe(
         tap((booking) => {
