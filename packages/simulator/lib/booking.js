@@ -12,8 +12,10 @@ class Booking extends EventEmitter {
   queued(car) {
     this.queuedDateTime = new Date()
     this.status = 'Queued'
-    this.emit('pickup', this)
-    //console.log(`*** booking ${this.id}: ${this.status}`)
+    // this.carId = car.id
+    this.car = car
+    this.emit('queued', this)
+    console.log(`*** booking queued ${this.id}: ${this.status} with ${this.car.id}`)
   }
 
   assigned(car) {

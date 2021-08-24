@@ -37,12 +37,13 @@ const App = () => {
   useSocket('bookings', (newBookings) => {
     setBookings((bookings) => [
       ...bookings,
-      ...newBookings.map(({ name, id, position, status, isCommercial, pickupDateTime, deliveredDateTime }) => ({
+      ...newBookings.map(({ name, id, position, status, isCommercial, pickupDateTime, deliveredDateTime, carId }) => ({
         id,
         address: name,
         status,
         isCommercial,
         position: [position.lon, position.lat],
+        carId,
         deliveredDateTime,
         pickupDateTime,
         deliveryTime: new Date(deliveredDateTime) - new Date(pickupDateTime)
@@ -88,7 +89,7 @@ const App = () => {
         right: '200px',
         position: 'absolute'
       }}>
-        <Button text={'Reset'} onClick={() => Reset()} />
+        <Button text={'Starta om'} onClick={() => Reset()} />
       </div>
       {activeCar && <InfoBox data={activeCar} />}
 
