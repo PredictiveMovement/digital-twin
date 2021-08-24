@@ -171,11 +171,12 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
   const queuedBookings = bookings.filter((booking) => booking.status === 'Queued')
 
   const arcDataWithQueuedBookings = queuedBookings.map((booking) => {
+
     return {
       inbound: [253, 141, 60],
-      outbound: [253, 141, 60],
+      outbound: 72633,
       from: {
-        coordinates: cars.filter((car) => car.id === booking.carId).position
+        coordinates: cars.find((car) => car.id === booking.carId).position
       },
       to: {
         coordinates: booking.position
@@ -201,7 +202,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
 
   const arcLayer = new ArcLayer({
     id: 'arc-layer',
-    data: arcDataWithQueuedBookings,
+    data: arcData,
     pickable: true,
     getWidth: 1,
     getSourcePosition: d => d.from.coordinates,
