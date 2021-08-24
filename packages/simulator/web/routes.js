@@ -27,6 +27,12 @@ function register(io) {
       process.kill(process.pid, 'SIGUSR2')
     })
 
+    socket.on('pause', () => {
+    })
+
+    socket.on('play', () => {
+    })
+
     engine.cars
       .pipe(
         mergeMap((car) => fromEvent(car, 'moved')),

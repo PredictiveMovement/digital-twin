@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import InfoBox from './components/InfoBox/index.js'
 import { useSocket } from './hooks/useSocket.js'
 import Map from './Map.js'
-import Button from './components/Button/index.js'
+import { Button, PlayButton } from './components/Button/index.js'
 import Loading from './components/Loading/index.js'
 
 const App = () => {
@@ -69,6 +69,16 @@ const App = () => {
 
   const { socket } = useSocket()
 
+  const Pause = () => {
+    socket.emit('pause')
+    console.log('pause stream')
+  }
+
+  const Play = () => {
+    socket.emit('play')
+    console.log('play stream')
+  }
+
   const Reset = () => {
     setReset(true)
     socket.emit('reset')
@@ -92,6 +102,7 @@ const App = () => {
       </div>
       {activeCar && <InfoBox data={activeCar} />}
 
+      <PlayButton onPause={Pause} onPlay={Play}/>
       {reset && <Loading />}
       <Map
         cars={cars}

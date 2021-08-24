@@ -7,7 +7,7 @@ import inside from 'point-in-polygon'
 import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 
-import Button from './components/Button'
+import { Button } from './components/Button'
 
 
 import mapboxgl from 'mapbox-gl'
