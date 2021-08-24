@@ -33,7 +33,7 @@ z-index: 1;
 
 const CarInfo = ({ data }) => {
     return (
-        <Wrapper left={data.x - 8} top={data.y - 40}>
+        <Wrapper left={data.x - 8} top={data.y - 80}>
             <div>
             <Paragraph>{`Lastbil ${data.id}`}</Paragraph>
             <Paragraph>Kör för {data.fleet}</Paragraph>
