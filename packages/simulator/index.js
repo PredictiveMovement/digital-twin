@@ -35,6 +35,16 @@ const pilots = kommuner.pipe(
   shareReplay()
 )
 
+// TODO: Rewrite as stream
+const TEMP_DISTRIBUTION = {}
+const temporaryDistributionOfOrders = (kommun) => {
+  if (!TEMP_DISTRIBUTION[kommun.name]) {
+    TEMP_DISTRIBUTION[kommun.name] = distributeNumberOfBookingsOverDays(WORKING_DAYS, kommun.packageVolumes.B2C, PERLIN_NOISE_OPTIONS)
+  }
+
+  return TEMP_DISTRIBUTION[kommun.name]
+}
+/*
 const distributionOfOrders = kommuner.pipe(
   filter((kommun) =>
     ['Arjeplog'].some((pilot) =>
@@ -50,14 +60,14 @@ const distributionOfOrders = kommuner.pipe(
   tap(data => {
     console.log('DISTRIBUTION', data)
   }),
-  toArray(),
+  // toArray(),
   // orderDistribution[kommun][currentDayIndex]
   // orderDistribution[currentDayIndex]
   shareReplay()
 )
 // TODO 
 distributionOfOrders.subscribe()
-
+*/
 
 
 let currentDayIndex = 0
@@ -68,7 +78,7 @@ const engine = {
     map((kommun) => {
       const file = `/tmp/pm_bookings_${kommun.id}.json`
       let bookings
-      if (fs.existsSync(file)) {
+      if (false && fs.existsSync(file)) {
         console.log(`*** ${kommun.name}: bookings from cache (${file})`)
         bookings = from(JSON.parse(fs.readFileSync(file))).pipe(
           map(b => new Booking(b))
@@ -82,32 +92,9 @@ const engine = {
           currentDayIndex = 0
         }
 
-        // console.log('hello...')
-        // console.log(distributionOfOrders)
-        // distributionOfOrders.pipe(
-        //   tap(d => {
-        //     console.log('data', d)
-        //   })
-        // )
-
-        distributionOfOrders.map(
-          map(d => {
-            console.log('meow', d)
-          })
-        )
-
         bookings = generateBookingsInKommun(kommun).pipe(
-          /*
-          zipWith(distributionOfOrders),
-          map(([bookings, distribution]) => {
-            tap((data) => {
-              console.log(data)
-            })
-          }),
-          */
           // take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
-          tap((kommun) => console.log(distributionOfOrders[kommun.name][currentDayIndex]))
-          // take(distributeNumberOfBookingsOverDays(WORKING_DAYS, kommun.packageVolumes.B2C, PERLIN_NOISE_OPTIONS)[currentDayIndex])
+          take(temporaryDistributionOfOrders(kommun)[currentDayIndex]) // TODO: Use this as a stream?
         )
 
         // TODO: Could we do this without converting to an array?
