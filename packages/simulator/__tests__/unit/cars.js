@@ -5,8 +5,12 @@ describe("cars", () => {
   const arjeplog = [{ lon: 17.886855, lat: 66.041054 }]
   const fleets = [{name: 'Postnord', market: 1}]
 
+  beforeEach(() => {
+    virtualTime.setTimeMultiplier(Infinity)
+  })
+  
   it('should randomize at least 15 cars with initial positions', function (done) {
-    generateCars(fleets, arjeplog, 15, Infinity).pipe(toArray()).subscribe(initialCars => {
+    generateCars(fleets, arjeplog, 15).pipe(toArray()).subscribe(initialCars => {
       try {
         expect(initialCars).toHaveLength(15)
         expect(initialCars[0]).toHaveProperty('position')
