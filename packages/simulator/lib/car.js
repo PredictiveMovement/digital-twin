@@ -8,7 +8,7 @@ const { assert } = require('console')
 const { error, info } = require('../lib/log')
 
 class Car extends EventEmitter {
-  constructor({ id = safeId(), position, status = 'Ready', timeMultiplier = 60, fleet = undefined } = {}) {
+  constructor({ id = safeId(), position, status = 'Ready', capacity = 250, timeMultiplier = 60, fleet } = {}) {
     super()
     this.id = id
     this.position = position
@@ -16,24 +16,28 @@ class Car extends EventEmitter {
     this.history = []
     this.queue = []
     this.cargo = []
-    this.capacity = 50 // bookings
+    this.delivered = []
+    this.capacity = capacity // bookings
     this.status = status
     this.lastPositions = []
     this.timeMultiplier = timeMultiplier
     this.fleet = fleet
-
+    this.created = Date.now()
     this.on('error', (err) => error('Car error', err))
     this.emit('moved', this)
   }
 
+  time() {
+    const diff = Date.now() - this.created
+    return Date.now() + diff * this.timeMultiplier
+  }
+
   simulate(heading) {
     clearInterval(this._interval)
-    this._timeStart = Date.now()
     if (!heading) return
     if (this.timeMultiplier === Infinity) return this.updatePosition(heading) // teleport mode
     this._interval = setInterval(() => {
-      const diff = Date.now() - this._timeStart
-      const newPosition = interpolate.route(heading.route, Date.now() + diff * this.timeMultiplier) ?? heading
+      const newPosition = interpolate.route(heading.route, this.time()) ?? heading
       this.updatePosition(newPosition)
     }, 200)
   }
@@ -43,9 +47,9 @@ class Car extends EventEmitter {
     return osrm
       .route(this.position, this.heading)
       .then((route) => {
-        route.started = new Date()
+        route.started = this.time()
         this.heading.route = route
-        info(`Car ${this.id} navigates to`, position)
+        //info(`Car ${this.id} navigates to`, position)
 
         if (!route.legs) throw new Error(`Route not found from: ${JSON.stringify(this.position)} to: ${JSON.stringify(this.heading)}`)
         this.simulate(this.heading)
@@ -79,14 +83,15 @@ class Car extends EventEmitter {
     setImmediate(() => {
       this.queue
         // see if we have more packages to deliver from this position
-        .filter(booking => haversine(this.position, booking.pickup.position) < 50)
+        .filter(booking => haversine(this.position, booking.pickup.position) < 400)
         .map(booking => {
-          booking.pickedUp(this.position)
+          booking.pickedUp(this.position, this.time())
           this.cargo.push(booking)
+          //delete this.queue[this.queue.findIndex(b => b.id === booking.id)] // todo: is this safe way to remove them from the queue?
           this.emit('cargo', this)
         })
       if (this.booking && this.booking.destination) {
-        this.booking.pickedUp(this.position)
+        this.booking.pickedUp(this.position, this.time())
         this.status = 'Delivery'
         this.navigateTo(this.booking.destination.position)
       }
@@ -97,28 +102,35 @@ class Car extends EventEmitter {
     info(`Dropoff ${this.booking.id}`)
     if (this.booking) {
       this.busy = false
-      this.booking.delivered(this.position)
+      this.booking.delivered(this.position, this.time())
+      this.delivered.push(this.booking)
       this.emit('busy', this)
       this.emit('dropoff', this)
-      this.cargo.sort((a, b) => haversine(this.position, a.destination.position) - haversine(this.position, b.destination.position))
+    }
 
-      this.booking = this.cargo.shift()
-      this.emit('cargo', this)
+    this.booking = this.pickNextFromCargo()
+    if (this.booking) {
+      this.navigateTo(this.booking.destination.position)
+    } else {
+      // If we have no more packages to deliver in cargo, go to the nearest booking in the queue or back to origin
+      this.queue.sort((a, b) => haversine(this.position, a.pickup.position) - haversine(this.position, b.pickup.position))
 
-      if (this.booking) {
-        this.navigateTo(this.booking.destination.position)
-        return
+      const nextBooking = this.queue.shift()
+      if (nextBooking) {
+        this.handleBooking(nextBooking)
+      } else {
+        this.status = 'Ready'
+        this.navigateTo(this.origin)
       }
     }
+  }
 
-    const nextBooking = this.queue.shift(this.queue)
-    if (nextBooking) {
-      this.handleBooking(nextBooking)
-    } else {
-      this.status = 'Ready'
-      this.navigateTo(this.origin)
-      //this.simulate(false) // chilla
-    }
+  pickNextFromCargo() {
+    // pick next from cargo
+    this.cargo.sort((a, b) => haversine(this.position, a.destination.position) - haversine(this.position, b.destination.position))
+    const booking = this.cargo.shift()
+    this.emit('cargo', this)
+    return booking
   }
 
 
@@ -139,7 +151,7 @@ class Car extends EventEmitter {
       this.booking.moved(this.position)
     }
 
-    if (this.ema < 50) {
+    if (this.ema < 400 && this.speed < 40) {
       this.emit('stopped', this)
       this.simulate(false)
       if (this.booking) {
