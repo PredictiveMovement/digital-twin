@@ -16,17 +16,18 @@ const Wrapper = styled.div`
   width: 250px;
 `
 
-const InfoBox = ({
-  title = 'Lastbil',
-  id,
-  subTitle = 'Åkeri Jönsson',
-  fleet = 'Kör för DHL',
-}) => {
+const InfoBox = ({ data }) => {
+  const {
+    title = 'Lastbil',
+    id,
+    subTitle = 'Åkeri Jönsson',
+    fleet = 'Lokal åkare',
+  } = data
   return (
     <Wrapper left={20} top={50}>
       <H4>{`${title}  ${id}`}</H4>
       <Paragraph>{subTitle}</Paragraph>
-      <Paragraph>{fleet}</Paragraph>
+      <Paragraph>Kör för {fleet}</Paragraph>
       {/* <div>
         <Paragraph thin>Fyllnadsgrad:</Paragraph>
         <ProgressBar completed={60} />

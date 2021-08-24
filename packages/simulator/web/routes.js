@@ -8,6 +8,7 @@ const {
   mergeMap,
   tap,
   bufferTime,
+  bufferCount,
   scan,
   distinct,
   filter,
@@ -30,17 +31,22 @@ function register(io) {
       .pipe(
         mergeMap((car) => fromEvent(car, 'moved')),
         //distinct(car => car.id),
-        map(({ position: { lon, lat }, id, heading, speed, bearing, status }) => ({
+        map(({ booking, position: { lon, lat }, id, heading, speed, bearing, status, fleet, cargo, capacity, queue }) => ({
           id,
           heading: [heading.lon, heading.lat], // contains route to plot or interpolate on client side.
           speed,
           bearing,
           position: [lon, lat],
-          status
+          status,
+          fleet,
+          cargo: cargo.length + (booking ? 1 : 0),
+          queue: queue.length + (booking ? 1 : 0),
+          capacity
         })),
+        bufferTime(100)
       )
-      .subscribe((car) => {
-        socket.volatile.emit('cars', [car])
+      .subscribe((cars) => {
+        if (cars.length) socket.volatile.emit('cars', cars)
       })
 
     engine.postombud.pipe(toArray()).subscribe((postombud) => {
@@ -49,20 +55,13 @@ function register(io) {
 
     engine.bookings
       .pipe(
-        mergeMap(booking =>
-          merge(
-            of(booking),
-            fromEvent(booking, 'queued'),
-            fromEvent(booking, 'pickedup'),
-            fromEvent(booking, 'assigned'),
-            fromEvent(booking, 'delivered'),
-          )
-        ),
-        map(({ destination: { position, name }, id, status, isCommercial, car }) => ({ id, name, position, status, isCommercial, carId: car?.id })),
+        mergeMap(booking => merge(of(booking), fromEvent(booking, 'queued'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'),)),
+        map(({ destination: { position, name }, id, status, isCommercial, pickupDateTime, deliveredDateTime, car }) => ({ id, name, position, status, isCommercial, pickupDateTime, deliveredDateTime, carId: car?.id })),
         //distinct(booking => booking.id),
+        bufferCount(300)
       )
-      .subscribe((booking) => {
-        socket.emit('bookings', [booking])
+      .subscribe((bookings) => {
+        if (bookings.length) socket.emit('bookings', bookings)
       })
 
 
@@ -75,7 +74,28 @@ function register(io) {
               startWith(0)
             )
 
-            // TODO: This is counting inactive cars
+            const averageDeliveryTime = bookings.pipe(
+              mergeMap(booking => fromEvent(booking, 'delivered')),
+              scan(({ total, deliveryTimeTotal }, { pickupDateTime, deliveredDateTime }) => ({
+                total: total + 1,
+                deliveryTimeTotal: deliveryTimeTotal + (new Date(deliveredDateTime) - new Date(pickupDateTime))
+              }),
+                { total: 0, deliveryTimeTotal: 0 }),
+              startWith({ total: 0, deliveryTimeTotal: 0 }),
+              map(({ total, deliveryTimeTotal }) => ({ totalDelivered: total, averageDeliveryTime: deliveryTimeTotal / total }))
+            )
+
+            const averageUtilization = cars.pipe(
+              mergeMap(car => fromEvent(car, 'cargo')),
+              scan(({ totalCargo, totalCapacity }, { cargo, capacity }) => ({
+                totalCargo: totalCargo + cargo.length,
+                totalCapacity: totalCapacity + capacity
+              }),
+                { totalCargo: 0, totalCapacity: 0 }),
+              startWith({ totalCargo: 0, totalCapacity: 0 }),
+              map(({ totalCargo, totalCapacity }) => ({ totalCargo, totalCapacity, averageUtilization: totalCargo / totalCapacity }))
+            )
+
             const totalCars = cars.pipe(
               mergeMap(car => fromEvent(car, 'busy')),
               filter(car => car.busy),
@@ -83,30 +103,9 @@ function register(io) {
               startWith(0)
             )
 
-            const totalCapacity = cars.pipe(
-              mergeMap(car => fromEvent(car, 'busy')),
-              scan((acc, car) => acc + car.capacity, 0),
-              startWith(0)
-            )
-
-            const totalCargo = cars.pipe(
-              mergeMap(car => fromEvent(car, 'cargo')),
-              filter(car => car.busy),
-              scan((acc, car) => acc + car.cargo.length, 0),
-              startWith(0)
-            )
-
-            // TODO: Broken. Should car.cargo (or car.statistics) be a stream?
-            // const utilization = cars.pipe(
-            //   mergeMap(car => merge([fromEvent(car, 'pickup'),fromEvent(car, 'dropoff')])),
-            //   map((car) => ({capacity: car.capacity, cargo: car.cargo.length, utilization: car.cargo.length / car.capacity})),
-            //   scan((acc, car) => ({cars: acc.cars + 1, capacity: acc.capacity + car.capacity, cargo: acc.cargo + car.cargo.length}), {cars: 0, cargo: 0, capacity: 0}),
-            //   map(stats => ({...stats, utilization: stats.cargo / stats.capacity}))
-            //  )
-
-            return combineLatest([totalBookings, totalCars, totalCapacity, totalCargo]).pipe(
-              map(([totalBookings, totalCars, totalCapacity, totalCargo]) => ({
-                name, geometry, totalBookings, totalCars, totalCapacity, totalUtilization: totalCargo / totalCapacity
+            return combineLatest([totalBookings, totalCars, averageUtilization, averageDeliveryTime]).pipe(
+              map(([totalBookings, totalCars, { totalCargo, totalCapacity, averageUtilization }, { totalDelivered, averageDeliveryTime }]) => ({
+                name, geometry, totalBookings, totalCars, totalCargo, totalCapacity, averageUtilization, averageDeliveryTime, totalDelivered
               })),
               // Do not emit more than 1 event per kommun per second
               throttleTime(1000)

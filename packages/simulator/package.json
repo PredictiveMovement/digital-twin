@@ -7,11 +7,12 @@
     "dev": "nodemon web/index.js",
     "test": "jest __tests__",
     "watch": "jest --watch __tests__",
-    "start": "nodemon web/index.js"
+    "start": "node web/index.js"
   },
   "author": "Iteam",
   "license": "MIT",
   "dependencies": {
+    "chalk": "^3.0.0",
     "csv-parse": "^4.16.0",
     "dotenv": "^10.0.0",
     "jest": "^27.0.6",

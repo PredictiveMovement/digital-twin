@@ -1,5 +1,5 @@
-const { shareReplay, timer, from } = require('rxjs')
-const { map, mergeMap, concatAll, concatMap, take, filter, tap, toArray, takeUntil } = require('rxjs/operators')
+const { shareReplay, from } = require('rxjs')
+const { map, mergeMap, concatAll, take, filter, tap, toArray } = require('rxjs/operators')
 
 const { generateBookingsInKommun } = require('./simulator/bookings')
 const { generateCars } = require('./simulator/cars')
@@ -10,12 +10,13 @@ const postombud = require('./streams/postombud')
 const fs = require('fs')
 const Booking = require('./lib/booking')
 
+const { info } = require('./lib/log')
+
 const WORKING_DAYS = 265
 const NR_CARS = 7
 const pilots = kommuner.pipe(
   filter((kommun) =>
-    //['Stockholm', 'Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
-    ['Storuman'].some(pilot =>
+    ['Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
       kommun.name.startsWith(pilot)
     ),
   ),
@@ -26,35 +27,39 @@ const engine = {
   bookings: pilots.pipe(
     // TODO: Dela upp och gör mer läsbart
     map((kommun) => {
-      const file = `data/bookings_${kommun.id}.json`
-      console.log(file)
-
+      const file = `/tmp/pm_bookings_${kommun.id}.json`
       let bookings
       if (fs.existsSync(file)) {
-        console.log('*** loading cached bookings from json')
-        const content = JSON.parse(fs.readFileSync(file))
-        bookings = from(content).pipe(
-          map(data => new Booking(data))
+        console.log(`*** ${kommun.name}: bookings from cache (${file})`)
+        bookings = from(JSON.parse(fs.readFileSync(file))).pipe(
+          map(b => new Booking(b))
         )
       } else {
+        console.log(`*** ${kommun.name}: no cached bookings`)
         bookings = generateBookingsInKommun(kommun).pipe(
           take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
         )
+
+        // TODO: Could we do this without converting to an array?
+        bookings.pipe(
+          toArray(),
+        ).subscribe(arr => {
+          fs.writeFileSync(file, JSON.stringify(arr))
+          console.log(`*** ${kommun.name}: wrote bookings to cache (${file})`)
+        })
       }
+
 
       return bookings.pipe(
         tap((booking) => {
-          // console.log(`*** adding booking to ${kommun.name}`)
           booking.kommun = kommun
           kommun.unhandledBookings.next(booking)
           kommun.bookings.next(booking)
         }),
-        // tap(() => kommun.emit('update', kommun) )
       )
     }),
 
     concatAll(),
-
     shareReplay(),
   ),
   cars: pilots.pipe(
@@ -62,9 +67,8 @@ const engine = {
       return kommun.postombud.pipe(
         map(ombud => ombud.position),
         toArray(),
-        mergeMap((postombud) => generateCars(postombud, NR_CARS).pipe(
+        mergeMap((postombud) => generateCars(kommun.fleets, postombud, NR_CARS).pipe(
           tap((car) => {
-            // console.log(`*** adding car to kommun ${kommun.name} #${car.id}`)
             kommun.cars.next(car)
           })
         )),
@@ -83,7 +87,6 @@ const engine = {
   kommuner
 }
 
-
 // engine.bookings.subscribe(booking => console.log('b', booking.id)) 
 //engine.cars.subscribe(car => console.log('c', car.id))
 
@@ -91,7 +94,8 @@ const engine = {
 //   mergeMap(kommun => kommun.bookings)
 // ).subscribe(e => console.log('kb', ))
 
-engine.dispatchedBookings.subscribe()
+engine.dispatchedBookings
+  .subscribe(({ car, booking }) => info(`Booking ${booking.id} dispatched to car ${car.id}`))
 /*bookings.pipe(
   groupBy(kommun => kommun.id),
   mergeMap(group => fs.writeSync(group.key + '.json', group.pipe(toArray(), ))), // [id, [array]]
