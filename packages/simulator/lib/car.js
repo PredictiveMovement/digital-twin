@@ -6,9 +6,10 @@ const Booking = require('./booking')
 const { safeId } = require('./id')
 const { assert } = require('console')
 const { error, info } = require('../lib/log')
+const { virtualTime } = require('../lib/virtualTime')
 
 class Car extends EventEmitter {
-  constructor({ id = safeId(), position, status = 'Ready', capacity = 250, timeMultiplier = 60, fleet } = {}) {
+  constructor({ id = safeId(), position, status = 'Ready', capacity = 250, fleet } = {}) {
     super()
     this.id = id
     this.position = position
@@ -20,22 +21,24 @@ class Car extends EventEmitter {
     this.capacity = capacity // bookings
     this.status = status
     this.lastPositions = []
-    this.timeMultiplier = timeMultiplier
     this.fleet = fleet
     this.created = Date.now()
     this.on('error', (err) => error('Car error', err))
     this.emit('moved', this)
+
+    virtualTime.on('pause', () => this.simulate(false))
+    virtualTime.on('play', () => this.simulate(this.heading))
   }
 
   time() {
-    const diff = Date.now() - this.created
-    return Date.now() + diff * this.timeMultiplier
+    const time = virtualTime.time()
+    return time
   }
 
   simulate(heading) {
     clearInterval(this._interval)
     if (!heading) return
-    if (this.timeMultiplier === Infinity) return this.updatePosition(heading) // teleport mode
+    if (virtualTime.timeMultiplier === Infinity) return this.updatePosition(heading) // teleport mode
     this._interval = setInterval(() => {
       const newPosition = interpolate.route(heading.route, this.time()) ?? heading
       this.updatePosition(newPosition)
@@ -81,13 +84,15 @@ class Car extends EventEmitter {
 
     // wait one tick so the pickup event can be parsed before changing status
     setImmediate(() => {
-      this.queue
-        // see if we have more packages to deliver from this position
-        .filter(booking => haversine(this.position, booking.pickup.position) < 400)
+      // see if we have more packages to deliver from this position
+      const nrBookingsToPickup = this.queue
+        .findIndex(booking => haversine(this.position, booking.pickup.position) > 400)
+
+        console.log('*** picking up', nrBookingsToPickup, 'bookings')
+      this.queue.splice(0, nrBookingsToPickup) // this removes the bookings if there are any from the queue
         .map(booking => {
           booking.pickedUp(this.position, this.time())
           this.cargo.push(booking)
-          //delete this.queue[this.queue.findIndex(b => b.id === booking.id)] // todo: is this safe way to remove them from the queue?
           this.emit('cargo', this)
         })
       if (this.booking && this.booking.destination) {
@@ -113,7 +118,7 @@ class Car extends EventEmitter {
       this.navigateTo(this.booking.destination.position)
     } else {
       // If we have no more packages to deliver in cargo, go to the nearest booking in the queue or back to origin
-      this.queue.sort((a, b) => haversine(this.position, a.pickup.position) - haversine(this.position, b.pickup.position))
+      this.queue.sort((a, b) => haversine(this.position, a.destination.position) - haversine(this.position, b.destination.position))
 
       const nextBooking = this.queue.shift()
       if (nextBooking) {
@@ -138,7 +143,7 @@ class Car extends EventEmitter {
     const lastPosition = this.position || position
     const metersMoved = haversine(lastPosition, position)
     const [km, h] = [(metersMoved / 1000), (date - lastPosition.date) / 1000 / 60 / 60]
-    this.speed = Math.round((km / h / (this._timeMultiplier || 1)) || 0)
+    this.speed = Math.round((km / h / (virtualTime.timeMultiplier || 1)) || 0)
     this.position = position
     this.ema = haversine(this.heading, this.position)
     if (metersMoved > 0) {
@@ -151,7 +156,7 @@ class Car extends EventEmitter {
       this.booking.moved(this.position)
     }
 
-    if (this.ema < 400 && this.speed < 40) {
+    if (this.ema < 1000 && this.speed < 10) {
       this.emit('stopped', this)
       this.simulate(false)
       if (this.booking) {

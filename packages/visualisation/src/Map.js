@@ -7,11 +7,8 @@ import inside from 'point-in-polygon'
 import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 
-
-import Button from './components/Button'
 import MenuButton from './components/MenuButton'
 import Popup from './components/Popup'
-
 
 import mapboxgl from 'mapbox-gl'
 import HoverInfoBox from './components/HoverInfoBox'
@@ -262,8 +259,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     }))
   }, [activeCar, cars])
 
-  const handleClick = (e) => {
-    e.preventDefault()
+  const handleClick = () => {
     setShowPopup(current => !current)
   }
 
