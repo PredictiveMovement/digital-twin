@@ -25,9 +25,6 @@ class Car extends EventEmitter {
     this.created = this.time()
     this.on('error', (err) => error('Car error', err))
     this.emit('moved', this)
-
-    virtualTime.on('pause', () => this.simulate(false))
-    virtualTime.on('play', () => this.simulate(this.heading))
   }
 
   time() {
@@ -88,13 +85,15 @@ class Car extends EventEmitter {
       const nrBookingsToPickup = this.queue
         .findIndex(booking => haversine(this.position, booking.pickup.position) > 400)
 
-      console.log('*** picking up', nrBookingsToPickup, 'bookings')
-      this.queue.splice(0, nrBookingsToPickup) // this removes the bookings if there are any from the queue
-        .map(booking => {
-          booking.pickedUp(this.position, this.time())
-          this.cargo.push(booking)
-          this.emit('cargo', this)
-        })
+      if (nrBookingsToPickup > 0) {
+        console.log('*** picking up', nrBookingsToPickup, 'additional bookings')
+        this.queue.splice(0, nrBookingsToPickup) // this removes the bookings if there are any from the queue
+          .map(booking => {
+            booking.pickedUp(this.position, this.time())
+            this.cargo.push(booking)
+            this.emit('cargo', this)
+          })
+      }
       if (this.booking && this.booking.destination) {
         this.booking.pickedUp(this.position, this.time())
         this.status = 'Delivery'
