@@ -19,19 +19,20 @@ z-index: 1;
 width: 250px;
 `
 
-const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, averageDeliveryTime, totalDelivered, averageUtilization, totalCargo }) => {
+const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, averageDeliveryTime, totalDelivered, averageUtilization, totalCargo, totalQueued, averageQueued }) => {
 
     return (
         <Wrapper>
             <div>
                 <Paragraph>Just nu kör {totalCars} lastbilar i {name}</Paragraph>
-                <Paragraph>Total kapacitet: {totalCapacity}</Paragraph>
-                <Paragraph>Levererade: {totalDelivered} st</Paragraph>
+                <Paragraph>Total kapacitet: {totalCapacity} paket</Paragraph>
+                <Paragraph>Levererade: {totalDelivered} paket</Paragraph>
                 <Paragraph>Medel leveranstid: {Math.ceil(2 * averageDeliveryTime / 60 / 60) / 2}h</Paragraph>
 
                 {/* <Paragraph>Total cargo: {totalCargo}</Paragraph> */}
-                <Paragraph>Antal bokningar: {totalBookings} st</Paragraph>
-                <Paragraph>Lastat: {totalCargo} st</Paragraph>
+                <Paragraph>Antal bokningar: {totalBookings} paket</Paragraph>
+                <Paragraph>Lastat: {totalCargo} paket</Paragraph>
+                <Paragraph>Köat: {totalQueued} paket ({Math.ceil(averageQueued * 10) / 10 * 100}%)</Paragraph>
                 {/* <Paragraph>Co2: XXX</Paragraph> */}
                 {/* <Paragraph>Antal paket upphämtade från avlastningscentralen: {bookingsFromHub} st</Paragraph> */}
             </div>
