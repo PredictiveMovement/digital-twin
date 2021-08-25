@@ -7,29 +7,28 @@ class VirtualTime extends EventEmitter {
     super()
     this.startDate = Date.now()
     this.setTimeMultiplier(timeMultiplier)
+    this.offset = 0
   }
 
   time() {
     const diff = Date.now() - this.startDate
-    return Date.now() + diff * this.timeMultiplier
+    return Date.now() + this.offset + diff * this.timeMultiplier
   }
 
   play() {
-    console.log('play old time mp', this.oldTimeMultiplier)
     this.setTimeMultiplier(this.oldTimeMultiplier + 1)
     this.emit('play')
   }
 
   pause() {
-    console.log('pause()', this.timeMultiplier)
     this.oldTimeMultiplier = this.timeMultiplier
-    this.setTimeMultiplier(0) // we let time pass but compensate for each second with one minus second
+    this.setTimeMultiplier(0)
     this.emit('pause')
   }
 
+  // Set the speed in which time should advance
   setTimeMultiplier(timeMultiplier) {
-    console.log('set tmp', timeMultiplier)
-    const diff = Date.now() - this.startDate
+    this.offset = this.time() - Date.now() // save the current offset before reseting the time multiplier
     this.startDate = Date.now()
     this.timeMultiplier = timeMultiplier - 1 // it makes more sense to have 1 mean realtime and 0 means stop the time.
   }
