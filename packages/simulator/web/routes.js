@@ -69,7 +69,17 @@ function register(io) {
     engine.bookings
       .pipe(
         mergeMap(booking => merge(of(booking), fromEvent(booking, 'queued'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'),)),
-        map(({ destination: { position, name }, id, status, isCommercial, pickupDateTime, deliveredDateTime, car }) => ({ id, name, position, status, isCommercial, pickupDateTime, deliveredDateTime, carId: car?.id })),
+        map(({ 
+          pickup: { position: pickup }, 
+          destination: { position: destination, name }, 
+          id, status, isCommercial, 
+          pickupDateTime, deliveredDateTime, car 
+        }) => ({ 
+          id, pickup, destination,
+          name, status, isCommercial, 
+          pickupDateTime, deliveredDateTime, 
+          carId: car?.id 
+        })),
         //distinct(booking => booking.id),
         bufferCount(30)
       )

@@ -38,12 +38,13 @@ const App = () => {
   useSocket('bookings', (newBookings) => {
     setBookings((bookings) => [
       ...bookings,
-      ...newBookings.map(({ name, id, position, status, isCommercial, pickupDateTime, deliveredDateTime, carId }) => ({
+      ...newBookings.map(({ name, id, pickup, destination, status, isCommercial, pickupDateTime, deliveredDateTime, carId }) => ({
         id,
         address: name,
         status,
         isCommercial,
-        position: [position.lon, position.lat],
+        pickup: [pickup.lon, pickup.lat],
+        destination: [destination.lon, destination.lat],
         carId,
         deliveredDateTime,
         pickupDateTime,

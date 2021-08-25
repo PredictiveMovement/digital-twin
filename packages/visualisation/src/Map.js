@@ -135,7 +135,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     radiusScale: 1,
     radiusUnits: 'pixels',
     getPosition: (c) => {
-      return c.position
+      return c.destination
     },
     getRadius: () => 3,
     // #fab
@@ -184,40 +184,48 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
   })
 
 
-  const queuedBookings = bookings.filter((booking) => booking.status === 'Queued')
   const [showQueuedBookings, setShowQueuedBookings] = useState(false)
 
+  const arcDataWithQueuedBookings = showQueuedBookings && bookings
+    //.filter((booking) => booking.status === 'Queued')
+    .map((booking) => {
+      if (!cars) return null
+      const car = cars.find((car) => car.id === booking.carId)
+      if (car === undefined) return null
 
-  const arcDataWithQueuedBookings = showQueuedBookings && queuedBookings
-  .filter(booking => booking.status === 'Picked up')
-  .map((booking) => {
-    if (!cars) return null
-    const car = cars.find((car) => car.id === booking.carId)
 
-    if (car === undefined) return null
+      console.log('booking', booking.status)
+      switch(booking.status) {
+        case 'Picked up': return {
+          inbound: [169, 178, 237],
+          outbound: [169, 178, 237],
+          from: car.position,
+          to: booking.destination
+        }
+        case 'Queued': return {
+          inbound: [178, 169, 2, 20],
+          outbound: [178, 169, 2, 100],
+          from: car.position,
+          to: booking.pickup,
+        }
+        case 'Delivered': return null
 
-    return {
-      inbound: [178, 169, 237],
-      outbound: [178, 169, 237],
-      from: {
-        coordinates: car.position
-      },
-      to: {
-        coordinates: booking.position
-      },
-    }
-  })
+        default: return {
+          inbound: [237, 178, 169, 20],
+          outbound: [237, 178, 169, 100],
+          from: booking.pickup,
+          to: booking.destination
+        }
+      }
+    })
+    .filter(b => b) // remove null values
 
   const arcData = cars.map((car) => {
     return {
       inbound: [167, 55, 255],
       outbound: [167, 55, 255],
-      from: {
-        coordinates: car.position
-      },
-      to: {
-        coordinates: car.heading
-      },
+      from: car.position,
+      to: car.heading
     }
   })
   const [showArcLayer, setShowArcLayer] = useState(false)
@@ -227,8 +235,8 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     data: showArcLayer && arcData,
     pickable: true,
     getWidth: 1,
-    getSourcePosition: d => d.from.coordinates,
-    getTargetPosition: d => d.to.coordinates,
+    getSourcePosition: d => d.from,
+    getTargetPosition: d => d.to,
     getSourceColor: d => d.inbound,
     getTargetColor: d => d.outbound,
   })
@@ -239,8 +247,8 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     data: arcDataWithQueuedBookings,
     pickable: true,
     getWidth: 1,
-    getSourcePosition: d => d.from.coordinates,
-    getTargetPosition: d => d.to.coordinates,
+    getSourcePosition: d => d.from,
+    getTargetPosition: d => d.to,
     getSourceColor: d => d.inbound,
     getTargetColor: d => d.outbound,
   })
