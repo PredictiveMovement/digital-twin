@@ -125,7 +125,6 @@ describe("dispatch", () => {
       expect(assignment2.car.id).toEqual(1)
       expect(assignment2.booking.id).toEqual(1338)
       assignment1.booking.once('delivered', (booking) => {
-        console.log('booking 1 delivered')
         expect(booking.id).toEqual(1337)
       })
       assignment2.booking.once('delivered', (booking) => {
@@ -162,12 +161,10 @@ describe("dispatch", () => {
       expect(assignment3.car.id).toEqual(1)
       expect(assignment3.booking.id).toEqual(1339)
       assignment1.booking.once('delivered', (booking) => {
-        console.log('booking 1 delivered')
         expect(booking.id).toEqual(1337)
         expect(assignment1.car.queue).toHaveLength(2)
       })
       assignment2.booking.once('delivered', (booking) => {
-        console.log('booking 2 delivered')
         expect(booking.id).toEqual(1338)
         expect(assignment2.car.queue).toHaveLength(1)
       })

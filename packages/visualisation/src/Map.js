@@ -188,7 +188,9 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
   const [showQueuedBookings, setShowQueuedBookings] = useState(false)
 
 
-  const arcDataWithQueuedBookings = showQueuedBookings && queuedBookings.map((booking) => {
+  const arcDataWithQueuedBookings = showQueuedBookings && queuedBookings
+  .filter(booking => booking.status === 'Picked up')
+  .map((booking) => {
     if (!cars) return null
     const car = cars.find((car) => car.id === booking.carId)
 

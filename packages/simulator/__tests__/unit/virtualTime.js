@@ -57,7 +57,6 @@ describe('VirtualTime', () => {
       virtualTime.play()
 
       setTimeout(() => {
-        console.log('after 1 s', virtualTime.time())
         expect(virtualTime.time()).toBeNear(start + 1000)
         done()
       }, 1000)

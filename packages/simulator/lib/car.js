@@ -27,6 +27,10 @@ class Car extends EventEmitter {
     this.emit('moved', this)
   }
 
+  dispose() {
+    this.simulate(false)
+  }
+
   time() {
     const time = virtualTime.time()
     return time
@@ -81,29 +85,29 @@ class Car extends EventEmitter {
 
     // wait one tick so the pickup event can be parsed before changing status
     setImmediate(() => {
-      // see if we have more packages to deliver from this position
-      const nrBookingsToPickup = this.queue
-        .findIndex(booking => haversine(this.position, booking.pickup.position) > 400)
-
-      if (nrBookingsToPickup > 0) {
-        console.log('*** picking up', nrBookingsToPickup, 'additional bookings')
-        this.queue.splice(0, nrBookingsToPickup) // this removes the bookings if there are any from the queue
-          .map(booking => {
-            booking.pickedUp(this.position, this.time())
-            this.cargo.push(booking)
-            this.emit('cargo', this)
-          })
+      // see if we have more packages to pickup from this position
+      while (this.queue.length && haversine(this.position, this.queue[0].pickup.position) < 100) {
+        const booking = this.queue.shift()
+        booking.pickedUp(this.position, this.time())
+        this.cargo.push(booking)
+        this.emit('cargo', this)
       }
       if (this.booking && this.booking.destination) {
         this.booking.pickedUp(this.position, this.time())
         this.status = 'Delivery'
-        this.navigateTo(this.booking.destination.position)
+
+        // should we first pickup more bookings before going to the destination?
+        if (this.queue.length && haversine(this.queue[0].pickup.position, this.position) < haversine(this.booking.destination.position, this.position)) {
+          this.navigateTo(this.queue[0].pickup.position)
+        } else {
+          this.navigateTo(this.booking.destination.position)
+        }
       }
     })
   }
 
   dropOff() {
-    info(`Dropoff ${this.booking.id}`)
+    //finfo(`Dropoff ${this.booking.id}`)
     if (this.booking) {
       this.busy = false
       this.booking.delivered(this.position, this.time())
