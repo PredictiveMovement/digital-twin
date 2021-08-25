@@ -3,11 +3,11 @@ import styled from 'styled-components'
 import menuIcon from '../../icons/menu.svg'
 
 const StyledButton = styled.button`
+position: absolute;
 cursor: pointer;
-border-radius: 50%;
 border: none;
-height: 70px;
-width: 70px;
+bottom: 6rem;
+right: 4rem;
 background-color: inherit;
 `
 

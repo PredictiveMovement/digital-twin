@@ -291,12 +291,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
       ]}
     >
 
-      <div style={{
-        bottom: '100px',
-        right: '50px',
-        position: 'absolute',
-      }}
-      >
+      <div>
         <MenuButton onClick={(e) => handleClick(e)} />
       </div>
       <StaticMap
