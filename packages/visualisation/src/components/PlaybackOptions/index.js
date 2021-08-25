@@ -83,7 +83,7 @@ const SpeedButton = ({ setActive }) => {
 
 const SpeedSlider = ({ onSpeedChange }) => {
   const marks = {
-    0: {
+    100: {
       style: {
         bottom: '-16px',
         marginLeft: '0.5rem',
@@ -92,8 +92,7 @@ const SpeedSlider = ({ onSpeedChange }) => {
       },
       label: <Snail />,
     },
-    50: '',
-    100: {
+    900: {
       style: {
         marginLeft: '0.5rem',
         bottom: '85%',
@@ -119,12 +118,12 @@ const SpeedSlider = ({ onSpeedChange }) => {
           marginTop: -9,
           backgroundColor: 'white',
         }}
-        defaultValue={100}
+        defaultValue={60}
         included={false}
-        step={50}
+        step={100}
         marks={marks}
         min={0}
-        max={100}
+        max={900}
         trackStyle={{ backgroundColor: 'white', height: 10 }}
         onChange={handleOnChange}
       />

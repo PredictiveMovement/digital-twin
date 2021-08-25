@@ -36,8 +36,8 @@ function register(io) {
       virtualTime.pause()
     })
 
-    socket.on('speed', () => {
-      
+    socket.on('speed', (speed) => {
+      virtualTime.setTimeMultiplier(speed)
     })
     
     engine.cars
