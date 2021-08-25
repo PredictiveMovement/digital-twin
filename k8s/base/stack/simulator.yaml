@@ -46,8 +46,15 @@ spec:
   tls:
     - hosts:
         - digital-twin-engine.iteamdev.io
+        - digital-twin-engine.predictivemovement.se
       secretName: simulator-prod-tls
   rules:
+    - host: digital-twin-engine.predictivemovement.se
+      http:
+        paths:
+          - backend:
+              serviceName: simulator
+              servicePort: 4000
     - host: digital-twin-engine.iteamdev.io
       http:
         paths:
