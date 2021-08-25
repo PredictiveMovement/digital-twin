@@ -15,7 +15,7 @@ border-radius: 2px;
 `
 
 const StyledButton = styled.button`
-margin-top: 10px;
+margin-top: 1rem;
 width: 160px;
 height: 32px;
 background-color:  white;
