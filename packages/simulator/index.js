@@ -18,7 +18,8 @@ const WORKING_DAYS = 265
 const NR_CARS = 7
 const pilots = kommuner.pipe(
   filter((kommun) =>
-    ['Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
+    // ['Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
+    ['Storuman'].some((pilot) =>
       kommun.name.startsWith(pilot)
     ),
   ),
