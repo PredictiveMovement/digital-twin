@@ -51,9 +51,16 @@ spec:
   tls:
     - hosts:
         - digital-twin.iteamdev.io
+        - digital-twin.predictivemovement.se
       secretName: visualisation-prod-tls
   rules:
     - host: digital-twin.iteamdev.io
+      http:
+        paths:
+          - backend:
+              serviceName: visualisation
+              servicePort: 80
+    - host: digital-twin.predictivemovement.se
       http:
         paths:
           - backend:
