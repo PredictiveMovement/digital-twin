@@ -7,7 +7,7 @@ const dispatch = (cars, bookings) => {
   return bookings.pipe(
     //tap(booking => console.log(`*** new booking ${booking.id}. Looking for a car nearby...`)),
     mergeMap((booking) => cars.pipe(
-      map((car) => ({car, distance: haversine(car.position, booking.pickup.position)})),
+      map((car) => ({car, distance: haversine(car.heading || car.position, booking.pickup.position)})),
       filter(({car}) => car.capacity > car.cargo.length), // wait until we have a car with free capacity
       takeUntil(timer(300)), // to be able to sort we have to batch somehow. Lets start with time
       toArray(),

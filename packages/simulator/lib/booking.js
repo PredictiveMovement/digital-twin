@@ -15,7 +15,7 @@ class Booking extends EventEmitter {
     // this.carId = car.id
     this.car = car
     this.emit('queued', this)
-    console.log(`*** booking queued ${this.id}: ${this.status} with ${this.car.id}`)
+    // console.log(`*** booking queued ${this.id}: ${this.status} with ${this.car.id}`)
   }
 
   assigned(car) {
@@ -44,7 +44,7 @@ class Booking extends EventEmitter {
     this.deliveredPosition = position
     this.status = 'Delivered'
     this.emit('delivered', this)
-    console.log(`*** booking ${this.id}: ${this.status}`)
+    // console.log(`*** booking ${this.id}: ${this.status}`)
   }
 }
 

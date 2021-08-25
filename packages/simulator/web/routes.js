@@ -71,10 +71,10 @@ function register(io) {
         mergeMap(booking => merge(of(booking), fromEvent(booking, 'queued'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'),)),
         map(({ destination: { position, name }, id, status, isCommercial, pickupDateTime, deliveredDateTime, car }) => ({ id, name, position, status, isCommercial, pickupDateTime, deliveredDateTime, carId: car?.id })),
         //distinct(booking => booking.id),
-        bufferCount(300)
+        bufferCount(30)
       )
       .subscribe((bookings) => {
-        if (bookings.length) socket.emit('bookings', bookings)
+        if (bookings.length) socket.volatile.emit('bookings', bookings)
       })
 
 
