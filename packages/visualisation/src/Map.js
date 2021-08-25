@@ -290,7 +290,6 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         showQueuedBookings && arcLayerQueuedBookings
       ]}
     >
-      {showPopup && <Popup setShowArcLayer={setShowArcLayer} showArcLayer={showArcLayer} showQueuedBookings={showQueuedBookings} setShowQueuedBookings={setShowQueuedBookings} setShowPopup={setShowPopup} />}
 
       <div style={{
         bottom: '100px',
@@ -307,6 +306,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
       />
       {hoverInfo && mapState.zoom > 8 && <HoverInfoBox data={hoverInfo} />}
 
+      {showPopup && <Popup setShowArcLayer={setShowArcLayer} showArcLayer={showArcLayer} showQueuedBookings={showQueuedBookings} setShowQueuedBookings={setShowQueuedBookings} setShowPopup={setShowPopup} />}
       {kommunInfo && <KommunStatisticsBox {...kommunInfo} />}
     </DeckGL>
   )
