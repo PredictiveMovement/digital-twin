@@ -8,7 +8,7 @@ position: absolute;
 top: 45%;
 right: 45%;
 background-color: #10c57b;
-padding: 25px 14px;
+padding: 2.3rem 2rem;
 height: 100px;
 width: 241px;
 border-radius: 2px;
@@ -55,27 +55,23 @@ const CheckMarkImg = <img style={{ marginLeft: '-6px' }} src={checkMark} alt='Ch
 
 
 const Popup = ({ setShowArcLayer, setShowQueuedBookings, setShowPopup, showArcLayer, showQueuedBookings }) => {
-    const [showBookings, setShowBookings] = useState(showArcLayer)
-    const [showQueue, setShowQueue] = useState(showQueuedBookings)
 
     return (
         <Wrapper>
             <Flex>
                 <Paragraph>Kommande bokningar</Paragraph>
-                <SquareButton inverted={showBookings} onClick={() => setShowBookings(current => !current)}> {showBookings && CheckMarkImg}</SquareButton>
+                <SquareButton inverted={showArcLayer} onClick={() => setShowArcLayer(current => !current)}> {showArcLayer && CheckMarkImg}</SquareButton>
             </Flex>
             <Line />
             <Flex>
                 <Paragraph>Köande bokningar</Paragraph>
-                <SquareButton inverted={showQueue} onClick={() => setShowQueue(current => !current)}>{showQueue && CheckMarkImg}</SquareButton>
+                <SquareButton inverted={showQueuedBookings} onClick={() => setShowQueuedBookings(current => !current)}>{showQueuedBookings && CheckMarkImg}</SquareButton>
             </Flex>
             <Line />
             <Box>
                 <StyledButton onClick={() => {
-                    setShowArcLayer(showBookings)
-                    setShowQueuedBookings(showQueue)
                     setShowPopup(false)
-                }}>Spara</StyledButton>
+                }}>Stäng</StyledButton>
             </Box>
         </Wrapper>
     )
