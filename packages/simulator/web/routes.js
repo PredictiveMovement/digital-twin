@@ -103,12 +103,16 @@ function register(io) {
               windowTime(5000),
               map(window => window.pipe(
                 distinct(car => car.id),
-                scan(({ totalCargo, totalCapacity, count, totalQueued }, { cargo, queue, capacity }) => ({
+                scan(({ totalCargo, totalCapacity, totalQueued }, { cargo, queue, capacity }) => ({
                   totalCargo: totalCargo + cargo.length,
                   totalCapacity: totalCapacity + capacity,
                   totalQueued: totalQueued + queue.length
                 }), { totalCargo: 0, totalCapacity: 0, count: 0, totalQueued: 0 }),
-                map(({ totalCargo, totalCapacity, totalQueued }) => ({ totalCargo, totalCapacity, totalQueued, averageUtilization: totalCargo / totalCapacity, averageQueued: totalQueued / totalCapacity }))
+                map(({ totalCargo, totalCapacity, totalQueued }) => ({ 
+                  totalCargo, totalCapacity, totalQueued, 
+                  averageUtilization: totalCargo / totalCapacity, 
+                  averageQueued: totalQueued / totalCapacity 
+                }))
               )),
               mergeAll(),
               startWith({ totalCargo: 0, totalCapacity: 0, averageUtilization: 0, averageQueued: 0}),
