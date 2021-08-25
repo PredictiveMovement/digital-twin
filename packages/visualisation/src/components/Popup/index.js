@@ -20,8 +20,6 @@ width: 160px;
 height: 32px;
 background-color:  white;
 border: none;
-position: absolute;
-z-index: 2;
 cursor: pointer;
 font-size: 14px;
 color: #10C57B;
