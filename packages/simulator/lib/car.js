@@ -22,12 +22,9 @@ class Car extends EventEmitter {
     this.status = status
     this.lastPositions = []
     this.fleet = fleet
-    this.created = Date.now()
+    this.created = this.time()
     this.on('error', (err) => error('Car error', err))
     this.emit('moved', this)
-
-    virtualTime.on('pause', () => this.simulate(false))
-    virtualTime.on('play', () => this.simulate(this.heading))
   }
 
   time() {
@@ -63,7 +60,7 @@ class Car extends EventEmitter {
 
   handleBooking(booking) {
     assert(booking instanceof Booking, 'Booking needs to be of type Booking')
-    this.history.push({ status: 'received_booking', date: new Date(), booking })
+    this.history.push({ status: 'received_booking', date: this.time(), booking })
     if (!this.busy) {
       this.busy = true
       this.emit('busy', this)
@@ -88,13 +85,15 @@ class Car extends EventEmitter {
       const nrBookingsToPickup = this.queue
         .findIndex(booking => haversine(this.position, booking.pickup.position) > 400)
 
-        console.log('*** picking up', nrBookingsToPickup, 'bookings')
-      this.queue.splice(0, nrBookingsToPickup) // this removes the bookings if there are any from the queue
-        .map(booking => {
-          booking.pickedUp(this.position, this.time())
-          this.cargo.push(booking)
-          this.emit('cargo', this)
-        })
+      if (nrBookingsToPickup > 0) {
+        console.log('*** picking up', nrBookingsToPickup, 'additional bookings')
+        this.queue.splice(0, nrBookingsToPickup) // this removes the bookings if there are any from the queue
+          .map(booking => {
+            booking.pickedUp(this.position, this.time())
+            this.cargo.push(booking)
+            this.emit('cargo', this)
+          })
+      }
       if (this.booking && this.booking.destination) {
         this.booking.pickedUp(this.position, this.time())
         this.status = 'Delivery'
@@ -139,7 +138,7 @@ class Car extends EventEmitter {
   }
 
 
-  async updatePosition(position, date = Date.now()) {
+  async updatePosition(position, date = this.time()) {
     const lastPosition = this.position || position
     const metersMoved = haversine(lastPosition, position)
     const [km, h] = [(metersMoved / 1000), (date - lastPosition.date) / 1000 / 60 / 60]

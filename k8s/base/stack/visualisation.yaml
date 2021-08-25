@@ -27,17 +27,15 @@ spec:
           image: iteam1337/pm-digital-twin-visualisation
           ports:
             - containerPort: 80
-          # env:
+          env:
+            - name: REACT_APP_SIMULATOR_URL
+              value: https://digital-twin-engine.predictivemovement.se
           #   - name: REACT_APP_MAPBOX_ACCESS_TOKEN
           #     valueFrom:
           #       secretKeyRef:
           #         key: REACT_APP_MAPBOX_ACCESS_TOKEN
           #         name: mapbox-access-tokens
-          #   - name: REACT_APP_SIMULATOR_URL
-          #     valueFrom:
-          #       secretKeyRef:
-          #         key: REACT_APP_SIMULATOR_URL
-          #         name: simulator-url
+           
               
 ---
 apiVersion: networking.k8s.io/v1beta1
@@ -51,9 +49,16 @@ spec:
   tls:
     - hosts:
         - digital-twin.iteamdev.io
+        - digital-twin.predictivemovement.se
       secretName: visualisation-prod-tls
   rules:
     - host: digital-twin.iteamdev.io
+      http:
+        paths:
+          - backend:
+              serviceName: visualisation
+              servicePort: 80
+    - host: digital-twin.predictivemovement.se
       http:
         paths:
           - backend:

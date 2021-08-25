@@ -10,7 +10,7 @@ const {
   bufferTime,
   bufferCount,
   scan,
-  reduce,
+  distinct,
   filter,
   startWith,
   throttleTime,
@@ -34,6 +34,10 @@ function register(io) {
 
     socket.on('pause', () => {
       virtualTime.pause()
+    })
+
+    socket.on('speed', (speed) => {
+      virtualTime.setTimeMultiplier(speed)
     })
 
     engine.cars
@@ -96,19 +100,23 @@ function register(io) {
 
             const averageUtilization = cars.pipe(
               mergeMap(car => fromEvent(car, 'cargo')),
-              bufferTime(5000),
+              windowTime(5000),
+              map(window => window.pipe(
+                distinct(car => car.id),
+                scan(({ totalCargo, totalCapacity, totalQueued }, { cargo, queue, capacity }) => ({
+                  totalCargo: totalCargo + cargo.length,
+                  totalCapacity: totalCapacity + capacity,
+                  totalQueued: totalQueued + queue.length
+                }), { totalCargo: 0, totalCapacity: 0, count: 0, totalQueued: 0 }),
+                map(({ totalCargo, totalCapacity, totalQueued }) => ({
+                  totalCargo, totalCapacity, totalQueued,
+                  averageUtilization: totalCargo / totalCapacity,
+                  averageQueued: totalQueued / totalCapacity
+                }))
+              )),
               mergeAll(),
-              reduce(({ totalCargo, totalCapacity, count, totalUtilization }, { cargo, capacity }) => ({
-                count: count + 1,
-                totalCargo: totalCargo + cargo.length,
-                totalCapacity: totalCapacity + capacity,
-                totalUtilization: totalUtilization + cargo.length / capacity
-              }), { totalCargo: 0, totalCapacity: 0, count: 0, totalUtilization: 0 }),
-              startWith({ totalCargo: 0, totalCapacity: 0, totalUtilization: 0, count: 0 }),
-              map(({ totalCargo, totalCapacity, totalUtilization, count }) => ({ totalCargo, totalCapacity, averageUtilization: totalUtilization / count }))
+              startWith({ totalCargo: 0, totalCapacity: 0, averageUtilization: 0, averageQueued: 0 }),
             )
-
-            averageUtilization.subscribe(a => console.log('a', a))
 
             const totalCars = cars.pipe(
               scan((a) => a + 1, 0),
@@ -122,8 +130,8 @@ function register(io) {
             )
 
             return combineLatest([totalBookings, totalCars, averageUtilization, averageDeliveryTime, totalCapacity]).pipe(
-              map(([totalBookings, totalCars, { totalCargo, averageUtilization }, { totalDelivered, averageDeliveryTime }, totalCapacity]) => ({
-                name, geometry, totalBookings, totalCars, totalCargo, totalCapacity, averageUtilization, averageDeliveryTime, totalDelivered
+              map(([totalBookings, totalCars, { totalCargo, averageUtilization, totalQueued, averageQueued }, { totalDelivered, averageDeliveryTime }, totalCapacity]) => ({
+                name, geometry, totalBookings, totalCars, totalCargo, totalCapacity, averageUtilization, averageDeliveryTime, totalDelivered, totalQueued, averageQueued
               })),
               // Do not emit more than 1 event per kommun per second
               throttleTime(1000)

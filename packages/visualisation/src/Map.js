@@ -57,7 +57,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     opacity: 0.3,
     polygonOffset: 1,
     getPolygon: (k) => k.geometry.coordinates,
-    getLineColor: () => [0, 128, 255],
+    getLineColor: () => [0, 255, 128, 100],
     getFillColor: () => [0, 0, 0, 0], // this isn't actually opaque, it just ends up not rendering any color
     pickable: true,
     onHover: (info, event) => {
