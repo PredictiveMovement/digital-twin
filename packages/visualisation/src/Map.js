@@ -194,7 +194,6 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
       if (car === undefined) return null
 
 
-      console.log('booking', booking.status)
       switch(booking.status) {
         case 'Picked up': return {
           inbound: [169, 178, 237],
