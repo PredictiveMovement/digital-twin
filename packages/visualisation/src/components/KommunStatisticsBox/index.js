@@ -27,7 +27,7 @@ const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, av
                 <Paragraph>Just nu kör {totalCars} lastbilar i {name}</Paragraph>
                 <Paragraph>Total kapacitet: {totalCapacity} paket</Paragraph>
                 <Paragraph>Levererade: {totalDelivered} paket</Paragraph>
-                <Paragraph>Medel leveranstid: {Math.ceil(2 * averageDeliveryTime / 60 / 60) / 2}h</Paragraph>
+                <Paragraph>Medel leveranstid: {Math.ceil(2 * averageDeliveryTime) / 2}h</Paragraph>
 
                 {/* <Paragraph>Total cargo: {totalCargo}</Paragraph> */}
                 <Paragraph>Antal bokningar: {totalBookings} paket</Paragraph>
