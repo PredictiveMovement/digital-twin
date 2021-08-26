@@ -73,11 +73,11 @@ function register(io) {
           pickup: { position: pickup }, 
           destination: { position: destination, name }, 
           id, status, isCommercial, 
-          pickupDateTime, deliveredDateTime, car 
+          deliveryTime, car 
         }) => ({ 
           id, pickup, destination,
           name, status, isCommercial, 
-          pickupDateTime, deliveredDateTime, 
+          deliveryTime, 
           carId: car?.id 
         })),
         //distinct(booking => booking.id),
@@ -99,13 +99,13 @@ function register(io) {
 
             const averageDeliveryTime = bookings.pipe(
               mergeMap(booking => fromEvent(booking, 'delivered')),
-              scan(({ total, deliveryTimeTotal }, { pickupDateTime, deliveredDateTime }) => ({
+              scan(({ total, deliveryTimeTotal }, { deliveryTime }) => ({
                 total: total + 1,
-                deliveryTimeTotal: deliveryTimeTotal + (new Date(deliveredDateTime) - new Date(pickupDateTime))
+                deliveryTimeTotal: deliveryTimeTotal + deliveryTime
               }),
                 { total: 0, deliveryTimeTotal: 0 }),
               startWith({ total: 0, deliveryTimeTotal: 0 }),
-              map(({ total, deliveryTimeTotal }) => ({ totalDelivered: total, averageDeliveryTime: deliveryTimeTotal / total }))
+              map(({ total, deliveryTimeTotal }) => ({ totalDelivered: total, averageDeliveryTime: (deliveryTimeTotal / total) / 60 / 60 }))
             )
 
             const averageUtilization = cars.pipe(

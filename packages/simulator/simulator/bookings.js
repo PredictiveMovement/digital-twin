@@ -68,8 +68,8 @@ function generateBookingsInKommun(kommun) {
       first(area => isInsideCoordinates(point.position, area.geometry.coordinates), false),
       map(commercialArea => ({...point, isCommercial: !!commercialArea } ))
     )),*/
-    //toArray(), // convert to array to be able to sort the addresses
-    //mergeMap((a) => from(a.sort((p) => Math.random() - 0.5 - (p.isCommercial ? 2 : 0)))),
+    toArray(), // convert to array to be able to sort the addresses
+    mergeMap((a) => from(a.sort((p) => Math.random() - 0.5))),
     // ratelimit(5, 1000),
     mergeMap(({ nearestOmbud, position }) => {
       return pelias
@@ -90,7 +90,6 @@ function generateBookingsInKommun(kommun) {
             //                introducera klass Fastighet som en ström som emittar bokningar
           }
           return new Booking({
-            id: id++,
             pickup: nearestOmbud, // { position: convertPosition(kommun.pickupPositions[Math.floor(Math.random() * kommun.pickupPositions.length)]) },
             isCommercial: address.layer === 'venue',
             destination: address,

@@ -58,7 +58,7 @@ const HoverInfoBox = ({ data }) => {
         <Wrapper left={data.x} top={data.y}>
             <Paragraph>{data.title}</Paragraph>
             <Paragraph>{data.subTitle}</Paragraph>
-            {data.deliveryTime ? <Paragraph>Leveranstid: {Math.ceil(10 * data.deliveryTime / 60 / 60) / 10} h</Paragraph> : null}
+            {data.deliveryTime ? <Paragraph>Leveranstid: {Math.ceil(10 * data.deliveryTime) / 10} h</Paragraph> : null}
         </Wrapper>
       )}
     </>

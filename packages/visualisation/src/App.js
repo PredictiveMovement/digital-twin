@@ -9,6 +9,7 @@ import Loading from './components/Loading/index.js'
 const App = () => {
   const [activeCar, setActiveCar] = useState(null)
   const [reset, setReset] = useState(false)
+  const [speed, setSpeed] = React.useState(60)
 
   useSocket('reset', () => {
     console.log('received reset')
@@ -16,6 +17,7 @@ const App = () => {
     setCars([])
     setKommuner([])
     setPostombud([])
+    socket.emit('speed', speed) // reset speed on server
   })
 
   const [cars, setCars] = React.useState([])
@@ -37,8 +39,8 @@ const App = () => {
   const [bookings, setBookings] = React.useState([])
   useSocket('bookings', (newBookings) => {
     setBookings((bookings) => [
-      ...bookings,
-      ...newBookings.map(({ name, id, pickup, destination, status, isCommercial, pickupDateTime, deliveredDateTime, carId }) => ({
+      ...bookings.filter(booking => !newBookings.some(b => b.id === booking.id)),
+      ...newBookings.map(({ name, id, pickup, destination, status, isCommercial, deliveryTime, carId }) => ({
         id,
         address: name,
         status,
@@ -46,9 +48,7 @@ const App = () => {
         pickup: [pickup.lon, pickup.lat],
         destination: [destination.lon, destination.lat],
         carId,
-        deliveredDateTime,
-        pickupDateTime,
-        deliveryTime: new Date(deliveredDateTime) - new Date(pickupDateTime)
+        deliveryTime
       })),
     ])
   })
@@ -84,7 +84,7 @@ const App = () => {
 
   const onSpeedChange = (value) => {
     socket.emit('speed', value)
-    console.log('speed change, ', value)
+    setSpeed(value)
   }
 
   const Reset = () => {

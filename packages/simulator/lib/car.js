@@ -88,12 +88,12 @@ class Car extends EventEmitter {
       // see if we have more packages to pickup from this position
       while (this.queue.length && haversine(this.position, this.queue[0].pickup.position) < 100) {
         const booking = this.queue.shift()
-        booking.pickedUp(this.position, this.time())
+        booking.pickedUp(this.position)
         this.cargo.push(booking)
         this.emit('cargo', this)
       }
       if (this.booking && this.booking.destination) {
-        this.booking.pickedUp(this.position, this.time())
+        this.booking.pickedUp(this.position)
         this.status = 'Delivery'
 
         // should we first pickup more bookings before going to the destination?
@@ -110,7 +110,7 @@ class Car extends EventEmitter {
     //finfo(`Dropoff ${this.booking.id}`)
     if (this.booking) {
       this.busy = false
-      this.booking.delivered(this.position, this.time())
+      this.booking.delivered(this.position)
       this.delivered.push(this.booking)
       this.emit('busy', this)
       this.emit('dropoff', this)
@@ -159,7 +159,7 @@ class Car extends EventEmitter {
       this.booking.moved(this.position)
     }
 
-    if (this.ema < 1000 && this.speed < 10) {
+    if (!position.next || this.ema < 1000 && this.speed < 10) {
       this.emit('stopped', this)
       this.simulate(false)
       if (this.booking) {
