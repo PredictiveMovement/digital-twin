@@ -31,7 +31,8 @@ const engine = {
   bookings: pilots.pipe(
     // TODO: Dela upp och gör mer läsbart
     map((kommun) => {
-      const file = `/tmp/pm_bookings_${kommun.id}.json`
+      const file = __dirname + `/cache/pm_bookings_${kommun.id}.json`
+      console.log(file)
       let bookings
       if (fs.existsSync(file)) {
         console.log(`*** ${kommun.name}: bookings from cache (${file})`)
