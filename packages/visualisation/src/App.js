@@ -20,6 +20,16 @@ const App = () => {
     socket.emit('speed', speed) // reset speed on server
   })
 
+  function upsert(array, object, idProperty = 'id') {
+    const index = array.findIndex(k => k[idProperty] === object[idProperty])
+    if (index >= 0) {
+      array[index] = { ...array[index], object }
+    } else {
+      array.push(object)
+    }
+    return array
+  }
+  
   const [cars, setCars] = React.useState([])
   useSocket('cars', (newCars) => {
     setReset(false)
@@ -66,8 +76,8 @@ const App = () => {
   })
 
   const [kommuner, setKommuner] = React.useState([])
-  useSocket('kommun', (newKommuner) => {
-    setKommuner((current) => current.concat(newKommuner))
+  useSocket('kommun', (kommun) => {
+    setKommuner((current) => upsert(current, kommun, 'id'))
   })
 
   const { socket } = useSocket()
