@@ -9,13 +9,15 @@ import KommunStatisticsBox from './components/KommunStatisticsBox'
 
 import Button from './components/Button'
 
-
 import mapboxgl from 'mapbox-gl'
 import HoverInfoBox from './components/HoverInfoBox'
 // @ts-ignore
 mapboxgl.workerClass =
   // eslint-disable-next-line import/no-webpack-loader-syntax
   require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default
+
+
+
 
 const commercialAreasLayer = new GeoJsonLayer({
   id: 'commercial-areas',
@@ -194,7 +196,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
       if (car === undefined) return null
 
 
-      switch(booking.status) {
+      switch (booking.status) {
         case 'Picked up': return {
           inbound: [169, 178, 237],
           outbound: [169, 178, 237],
@@ -293,7 +295,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
       ]}
     >
       <div style={{
-        bottom: '220px',
+        bottom: '150px',
         right: '200px',
         position: 'absolute'
       }}>
@@ -304,7 +306,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         }} />
       </div>
       <div style={{
-        bottom: '150px',
+        bottom: '80px',
         right: '200px',
         position: 'absolute'
       }}>

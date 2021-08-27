@@ -13,7 +13,7 @@ justify-content: space-space-between;
 background-color: #10C57B;
 padding: 1.7rem;
 border-radius: 4px;
-height: 158px;
+height: 180px;
 justify-content: space-between;
 z-index: 1;
 width: 250px;
