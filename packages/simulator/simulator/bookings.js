@@ -45,7 +45,7 @@ function generateBookingsInKommun(kommun) {
           distance: haversine(ombud.position, square.position),
         })),
         toArray(),
-        map((ombud) => ombud.sort((a, b) => a.distance - b.distance).pop()),
+        map((ombud) => ombud.sort((a, b) => a.distance - b.distance).shift()),
         map((nearestOmbud) => ({ ...square, nearestOmbud }))
       )
     ),

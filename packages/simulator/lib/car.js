@@ -159,7 +159,7 @@ class Car extends EventEmitter {
       this.booking.moved(this.position)
     }
 
-    if (!position.next || this.ema < 1000 && this.speed < 10) {
+    if (!position.next) {
       this.emit('stopped', this)
       this.simulate(false)
       if (this.booking) {
