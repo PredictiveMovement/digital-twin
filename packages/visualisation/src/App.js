@@ -2,9 +2,18 @@ import React, { useState } from 'react'
 import InfoBox from './components/InfoBox/index.js'
 import { useSocket } from './hooks/useSocket.js'
 import Map from './Map.js'
-import Button from './components/Button/index.js'
 import PlaybackOptions from './components/PlaybackOptions/index.js'
 import Loading from './components/Loading/index.js'
+import styled from 'styled-components'
+import ResetIcon from './icons/reset.svg'
+import TransparentButton from './components/TransparentButton/index.js'
+
+const Wrapper = styled.div`
+position: absolute;
+z-index: 2;
+bottom: 2.7rem;
+left: 7rem;
+`
 
 const App = () => {
   const [activeCar, setActiveCar] = useState(null)
@@ -87,7 +96,7 @@ const App = () => {
     setSpeed(value)
   }
 
-  const Reset = () => {
+  const resetSimulation = () => {
     setReset(true)
     socket.emit('reset')
     setBookings([])
@@ -101,16 +110,15 @@ const App = () => {
 
   return (
     <>
-      <div style={{
-        bottom: '80px',
-        right: '200px',
-        position: 'absolute'
-      }}>
-        <Button text={'Starta om'} onClick={() => Reset()} />
-      </div>
+      <Wrapper>
+        <TransparentButton onClick={() => resetSimulation()}>
+          <img src={ResetIcon} alt='Reset' />
+        </TransparentButton>
+      </Wrapper>
+
       {activeCar && <InfoBox data={activeCar} />}
 
-      <PlaybackOptions onPause={onPause} onPlay={onPlay} onSpeedChange={onSpeedChange}/>
+      <PlaybackOptions onPause={onPause} onPlay={onPlay} onSpeedChange={onSpeedChange} />
       {reset && <Loading />}
       <Map
         cars={cars}
