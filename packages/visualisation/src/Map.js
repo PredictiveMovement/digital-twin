@@ -297,7 +297,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         right: '200px',
         position: 'absolute'
       }}>
-        <Button text={'Kö'} onClick={() => {
+        <Button text="Upphämtning / Avlämning" onClick={() => {
 
           setShowArcLayer(false)
           setShowQueuedBookings(current => !current)
@@ -308,7 +308,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         right: '200px',
         position: 'absolute'
       }}>
-        <Button text={'Kommande bokningar'} onClick={() => {
+        <Button text={'Nästa stopp'} onClick={() => {
           setShowQueuedBookings(false)
           setShowArcLayer(current => !current)
         }} />

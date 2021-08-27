@@ -1,4 +1,4 @@
-const { shareReplay, from } = require('rxjs')
+const { shareReplay, share, merge, from, fromEvent, of } = require('rxjs')
 const { map, mergeMap, concatAll, take, filter, tap, toArray } = require('rxjs/operators')
 
 const { generateBookingsInKommun } = require('./simulator/bookings')
@@ -91,6 +91,18 @@ const engine = {
   postombud,
   kommuner
 }
+
+// Add these separate streams here so we don't have to register more than one event listener per booking and car
+engine.bookingUpdates = engine.bookings.pipe(
+  mergeMap(booking => merge(of(booking), fromEvent(booking, 'queued'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'),)),
+  share(),
+)
+
+engine.carUpdates = engine.cars.pipe(
+  mergeMap((car) => fromEvent(car, 'moved')),
+  share()
+)
+
 
 // engine.bookings.subscribe(booking => console.log('b', booking.id)) 
 //engine.cars.subscribe(car => console.log('c', car.id))
