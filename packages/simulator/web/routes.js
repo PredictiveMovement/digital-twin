@@ -44,8 +44,10 @@ function register(io) {
       socket.emit('postombud', postombud)
     })
 
-    engine.kommuner.subscribe(({name, geometry}) => 
-      socket.emit('kommun', {name, geometry, totalCargo: 0, totalCapacity: 0, averageUtilization: 0, averageQueued: 0})
+    engine.kommuner.pipe(
+      map(({id, name, geometry}) => ({id, name, geometry}))
+    ).subscribe((kommun) => 
+      socket.emit('kommun', kommun)
     )
 
   })
@@ -95,7 +97,7 @@ function register(io) {
   engine.kommuner
     .pipe(
       mergeMap(
-        ({ bookings, name, geometry, cars }) => {
+        ({ id, bookings, name, cars }) => {
           const totalBookings = bookings.pipe(
             scan((a) => a + 1, 0),
             startWith(0)
@@ -145,15 +147,15 @@ function register(io) {
 
           return combineLatest([totalBookings, totalCars, averageUtilization, averageDeliveryTime, totalCapacity]).pipe(
             map(([totalBookings, totalCars, { totalCargo, averageUtilization, totalQueued, averageQueued }, { totalDelivered, averageDeliveryTime }, totalCapacity]) => ({
-              name, totalBookings, totalCars, totalCargo, totalCapacity, averageUtilization, averageDeliveryTime, totalDelivered, totalQueued, averageQueued
+              id, name, totalBookings, totalCars, totalCargo, totalCapacity, averageUtilization, averageDeliveryTime, totalDelivered, totalQueued, averageQueued
             })),
             // Do not emit more than 1 event per kommun per second
             throttleTime(5000)
           )
         }),
     )
-    .subscribe(data => {
-      io.emit('kommun', [data])
+    .subscribe(kommun => {
+      io.emit('kommun', kommun)
     })
 }
 
