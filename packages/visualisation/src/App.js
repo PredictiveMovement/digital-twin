@@ -32,7 +32,7 @@ const App = () => {
   function upsert(array, object, idProperty = 'id') {
     const index = array.findIndex(k => k[idProperty] === object[idProperty])
     if (index >= 0) {
-      array[index] = { ...array[index], object }
+      array[index] = { ...array[index], ...object }
     } else {
       array.push(object)
     }
@@ -57,9 +57,8 @@ const App = () => {
 
   const [bookings, setBookings] = React.useState([])
   useSocket('bookings', (newBookings) => {
-    setBookings((bookings) => [
-      ...bookings.filter(booking => !newBookings.some(b => b.id === booking.id)),
-      ...newBookings.map(({ name, id, pickup, destination, status, isCommercial, deliveryTime, carId }) => ({
+    setBookings((bookings) => newBookings
+      .map(({ name, id, pickup, destination, status, isCommercial, deliveryTime, carId }) => ({
         id,
         address: name,
         status,
@@ -68,8 +67,8 @@ const App = () => {
         destination: [destination.lon, destination.lat],
         carId,
         deliveryTime
-      })),
-    ])
+      }))
+      .reduce((result, booking) => upsert(result, booking), bookings))
   })
 
   const [postombud, setPostombud] = React.useState([])

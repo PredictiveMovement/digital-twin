@@ -95,7 +95,7 @@ const engine = {
 // Add these separate streams here so we don't have to register more than one event listener per booking and car
 engine.bookingUpdates = engine.bookings.pipe(
   mergeMap(booking => merge(of(booking), fromEvent(booking, 'queued'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'),)),
-  share(),
+  shareReplay(1000),
 )
 
 engine.carUpdates = engine.cars.pipe(
