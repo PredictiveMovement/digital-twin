@@ -40,9 +40,8 @@ function register(io) {
       virtualTime.setTimeMultiplier(speed)
     })
     
-    engine.cars
+    engine.carUpdates
       .pipe(
-        mergeMap((car) => fromEvent(car, 'moved')),
         //distinct(car => car.id),
         map(({ booking, position: { lon, lat }, id, heading, speed, bearing, status, fleet, cargo, capacity, queue }) => ({
           id,
@@ -66,9 +65,8 @@ function register(io) {
       socket.emit('postombud', postombud)
     })
 
-    engine.bookings
+    engine.bookingUpdates
       .pipe(
-        mergeMap(booking => merge(of(booking), fromEvent(booking, 'queued'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'),)),
         map(({ 
           pickup: { position: pickup }, 
           destination: { position: destination, name }, 
