@@ -131,7 +131,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
   const bookingLayer = new ScatterplotLayer({
     id: 'booking-layer',
     data: bookings,
-    opacity: 0.4,
+    opacity: 1,
     stroked: false,
     filled: true,
     radiusScale: 1,
@@ -139,7 +139,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     getPosition: (c) => {
       return c.destination
     },
-    getRadius: () => 3,
+    getRadius: () => 4,
     // #fab
     getFillColor: ({ status }) => status === 'Delivered' ? [170, 255, 187] : status === 'Picked up' ? [170, 187, 255, 55] : [255, 170, 187, 55],
     pickable: true,
