@@ -31,12 +31,6 @@ spec:
             - name: ombudsnat
               mountPath: /app/data
 
-          livenessProbe:
-            httpGet:
-              path: /status
-              port: 4000
-            initialDelaySeconds: 30
-            periodSeconds: 3
       volumes:
         - name: ombudsnat
           hostPath:
