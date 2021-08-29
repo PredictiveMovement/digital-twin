@@ -1,16 +1,15 @@
 /**
  * TODO: Describe the stream that this file exports and what its data means
  */
-const EventEmitter = require('events')
-const { from, shareReplay, Subject, ReplaySubject, withLatestFrom } = require('rxjs')
-const { map, first, filter, scan, reduce } = require('rxjs/operators')
+const { from, shareReplay, withLatestFrom } = require('rxjs')
+const { map, filter, reduce } = require('rxjs/operators')
+const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
 const population = require('./population')
 const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
 const inside = require('point-in-polygon')
 const commercialAreas = from(require('../data/scb_companyAreas.json').features)
-
 
 function getPopulationSquares({ geometry: { coordinates } }) {
   return population.pipe(
@@ -22,58 +21,19 @@ function getPopulationSquares({ geometry: { coordinates } }) {
   )
 }
 
-function getCommercialAreas(kommun) {
+function getCommercialAreas(kommunkod) {
   return commercialAreas.pipe(
-    filter(area => area.properties.KOMMUNKOD === kommun.id),
+    filter(area => area.properties.KOMMUNKOD === kommunkod),
     shareReplay()
   )
 }
 
 
-function getPostombud(kommun) {
+function getPostombud(kommunName) {
   return postombud.pipe(
-    filter((ombud) => kommun.name.startsWith(ombud.kommun)),
+    filter((ombud) => kommunName.startsWith(ombud.kommun)),
     shareReplay()
   )
-}
-
-class Kommun extends EventEmitter {
-  constructor({ geometry, name, id, email, zip, telephone }) {
-    super()
-    this.geometry = geometry
-    this.name = name
-    this.id = id
-    this.email = email
-    this.zip = zip
-    this.telephone = telephone
-    this.unhandledBookings = new Subject()
-    this.cars = new ReplaySubject()
-    this.bookings = new ReplaySubject()
-    this.squares = getPopulationSquares(this)
-    this.fleets = [
-      {
-        name: 'Postnord',
-        market: 0.6
-      },
-      {
-        name: 'Schenker',
-        market: 0.18
-      },
-      {
-        name: 'Bring',
-        market: 0.06
-      },
-      {
-        name: 'DHL',
-        market: 0.06
-      }
-    ]
-    // don't we want reduce here?
-    this.population = this.squares.pipe(reduce((a, b) => a + b.population, 0))
-    this.packageVolumes = packageVolumes.find(e => this.name.startsWith(e.name))
-    this.postombud = getPostombud(this)
-    this.commercialAreas = getCommercialAreas(this)
-  }
 }
 
 function read() {
@@ -87,12 +47,17 @@ function read() {
           email: epost,
           zip: postnummer,
           telephone: telefon,
-          pickupPositions: pickupPositions || []
+          pickupPositions: pickupPositions || [],
+          squares: getPopulationSquares({geometry}),
+          postombud: getPostombud(namn),
+          packageVolumes: packageVolumes.find(e => namn.startsWith(e.name)),
+          commercialAreas: getCommercialAreas(kod)
         })
     ),
     shareReplay()
   )
 }
+
 
 const kommuner = (module.exports = read())
 
