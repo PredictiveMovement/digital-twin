@@ -1,6 +1,6 @@
 const { from, Subject, ReplaySubject, forkJoin, timer } = require('rxjs')
 const { take, scan, toArray, takeUntil, bufferTime, map, concatAll, windowTime, shareReplay } = require('rxjs/operators')
-const { dispatch } = require('../../simulator/dispatchCentral')
+const { dispatch } = require('../../lib/dispatchCentral')
 const Car = require('../../lib/car')
 const Booking = require('../../lib/booking')
 const { virtualTime } = require('../../lib/virtualTime')

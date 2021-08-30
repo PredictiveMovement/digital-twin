@@ -460,6 +460,24 @@
     "telefon": "0961-14000",
     "epost": "arjeplogs.kommun@arjeplog.se",
     "namn": "Arjeplogs kommun",
+    "fleets": [
+      {
+        "name": "Postnord",
+        "marketshare": 0.6
+      },
+      {
+        "name": "Schenker",
+        "marketshare": 0.18
+      },
+      {
+        "name": "Bring",
+        "marketshare": 0.06
+      },
+      {
+        "name": "DHL",
+        "marketshare": 0.06
+      }
+    ],
     "geometry": {
       "coordinates": [
         [
@@ -12689,7 +12707,25 @@
       "type": "Polygon"
     },
     "url": "http://www.ljusdal.se/",
-    "postort": "LJUSDAL"
+    "postort": "LJUSDAL",
+    "fleets": [
+      {
+        "name": "Postnord",
+        "marketshare": 0.6
+      },
+      {
+        "name": "Schenker",
+        "marketshare": 0.18
+      },
+      {
+        "name": "Bring",
+        "marketshare": 0.06
+      },
+      {
+        "name": "DHL",
+        "marketshare": 0.06
+      }
+    ]
   },
   {
     "kod": "1864",
@@ -16746,6 +16782,24 @@
     "telefon": "0978-12000",
     "epost": "kommun@pajala.se",
     "namn": "Pajala kommun",
+    "fleets": [
+      {
+        "name": "Postnord",
+        "marketshare": 0.6
+      },
+      {
+        "name": "Schenker",
+        "marketshare": 0.18
+      },
+      {
+        "name": "Bring",
+        "marketshare": 0.06
+      },
+      {
+        "name": "DHL",
+        "marketshare": 0.06
+      }
+    ],
     "geometry": {
       "coordinates": [
         [
@@ -19984,6 +20038,24 @@
     "telefon": "0951-14000",
     "epost": "ks@storuman.se",
     "namn": "Storumans kommun",
+    "fleets": [
+      {
+        "name": "Postnord",
+        "marketshare": 0.6
+      },
+      {
+        "name": "Schenker",
+        "marketshare": 0.18
+      },
+      {
+        "name": "Bring",
+        "marketshare": 0.06
+      },
+      {
+        "name": "DHL",
+        "marketshare": 0.06
+      }
+    ],
     "geometry": {
       "coordinates": [
         [
@@ -26265,6 +26337,24 @@
     "telefon": "0490-254000",
     "epost": "vasterviks.kommun@vastervik.se",
     "namn": "Västerviks kommun",
+    "fleets": [
+      {
+        "name": "Postnord",
+        "marketshare": 0.6
+      },
+      {
+        "name": "Schenker",
+        "marketshare": 0.18
+      },
+      {
+        "name": "Bring",
+        "marketshare": 0.06
+      },
+      {
+        "name": "DHL",
+        "marketshare": 0.06
+      }
+    ],
     "geometry": {
       "coordinates": [
         [

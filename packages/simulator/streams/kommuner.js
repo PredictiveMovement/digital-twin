@@ -39,7 +39,7 @@ function getPostombud(kommunName) {
 function read() {
   return from(data).pipe(
     map(
-      ({ geometry, namn, epost, postnummer, telefon, kod, pickupPositions }) =>
+      ({ geometry, namn, epost, postnummer, telefon, kod, pickupPositions, fleets }) =>
         new Kommun({
           geometry,
           name: namn,
@@ -47,6 +47,7 @@ function read() {
           email: epost,
           zip: postnummer,
           telephone: telefon,
+          fleets: fleets || [],
           pickupPositions: pickupPositions || [],
           squares: getPopulationSquares({geometry}),
           postombud: getPostombud(namn),
