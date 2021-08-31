@@ -3,7 +3,7 @@ const { map, mergeMap, concatAll, take, filter, tap, toArray } = require('rxjs/o
 
 const { generateBookingsInKommun } = require('./simulator/bookings')
 const { generateCars } = require('./simulator/cars')
-const { dispatch } = require('./simulator/dispatchCentral')
+const { dispatch } = require('./lib/dispatchCentral')
 const { virtualTime } = require('./lib/virtualTime')
 
 const kommuner = require('./streams/kommuner')

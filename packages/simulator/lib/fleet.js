@@ -1,4 +1,4 @@
-const { ReplaySubject } = require('rxjs')
+const { Subject } = require('rxjs')
 const { dispatch } = require('./dispatchCentral')
 
 class Fleet {
@@ -11,6 +11,7 @@ class Fleet {
   }
 
   handleBooking(booking) {
+    booking.fleet = this
     this.unhandledBookings.next(booking)
     return booking
   }

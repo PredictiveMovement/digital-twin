@@ -23,7 +23,7 @@ class Kommun extends EventEmitter {
     this.fleets = fleets.map(({name, marketshare}) => new Fleet({name, marketshare, cars: this.cars}))
     this.bookings = this.unhandledBookings.pipe(
       map(booking => ({booking, seed: Math.random()})),
-      tap(({seed, booking}) => ({booking, fleet: shuffle(this.fleets).first(f => f.marketshare < seed)})),
+      map(({seed, booking}) => ({booking, fleet: shuffle(this.fleets).first(f => f.marketshare < seed)})),
       map(({fleet, booking}) => fleet.handleBooking(booking)),
       shareReplay()
     )
