@@ -41,6 +41,7 @@ class Car extends EventEmitter {
     if (!heading) return
     if (virtualTime.timeMultiplier === Infinity) return this.updatePosition(heading) // teleport mode
     this._interval = setInterval(() => {
+      if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
       const newPosition = interpolate.route(heading.route, this.time()) ?? heading
       this.updatePosition(newPosition)
     }, 200)
