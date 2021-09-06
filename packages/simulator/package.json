@@ -37,5 +37,8 @@
   "bugs": {
     "url": "https://github.com/Iteam1337/engine/issues"
   },
-  "homepage": "https://github.com/Iteam1337/engine#readme"
+  "homepage": "https://github.com/Iteam1337/engine#readme",
+  "nodemonConfig": {
+    "ignore": ["data/pm_bookings*.json"]
+  }
 }
