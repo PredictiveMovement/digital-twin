@@ -1,5 +1,5 @@
 const { shareReplay, share, merge, from, fromEvent, of } = require('rxjs')
-const { map, mergeMap, concatAll, take, filter, tap, toArray } = require('rxjs/operators')
+const { map, mergeMap, concatAll, take, filter, tap, toArray, concatMap } = require('rxjs/operators')
 
 const { generateBookingsInKommun } = require('./simulator/bookings')
 const { generateCars } = require('./simulator/cars')
@@ -14,12 +14,17 @@ const Booking = require('./lib/booking')
 
 const { info } = require('./lib/log')
 
+const { createBooking } = require('./adapters/predictiveMovement')
+
 const WORKING_DAYS = 265
-const NR_CARS = 7
+const NR_CARS = 1
+
+const PREDICTIVE_MOVEMENT = true
+
 const pilots = kommuner.pipe(
   filter((kommun) =>
-    ['Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
-    //['Storuman'].some((pilot) =>
+    ['Stockholm'].some((pilot) =>
+      //['Storuman'].some((pilot) =>
       kommun.name.startsWith(pilot)
     ),
   ),
@@ -33,7 +38,7 @@ const engine = {
     map((kommun) => {
       const file = __dirname + `/data/pm_bookings_${kommun.id}.json`
       let bookings
-      if (fs.existsSync(file)) {
+      if (false && fs.existsSync(file)) {
         console.log(`*** ${kommun.name}: bookings from cache (${file})`)
         bookings = from(JSON.parse(fs.readFileSync(file))).pipe(
           map(b => new Booking(b))
@@ -41,12 +46,13 @@ const engine = {
       } else {
         console.log(`*** ${kommun.name}: no cached bookings`)
         bookings = generateBookingsInKommun(kommun).pipe(
-          take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
+          // take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
+          take(1), // how many bookings do we want?
         )
 
         // TODO: Could we do this without converting to an array? Yes. By using fs stream and write json per line
         bookings.pipe(
-          map(({id, pickup, destination}) => ({id, pickup, destination})), // remove all unneccessary data such as car and eventemitter etc
+          map(({ id, pickup, destination }) => ({ id, pickup, destination })), // remove all unneccessary data such as car and eventemitter etc
           toArray(),
         ).subscribe(arr => {
           fs.writeFileSync(file, JSON.stringify(arr))
@@ -54,9 +60,15 @@ const engine = {
         })
       }
 
-
       return bookings.pipe(
+        concatMap(booking => {
+          booking.predictiveMovementId = from(createBooking(booking))
+
+          return booking
+        }),
         tap((booking) => {
+          console.log('tap', booking)
+
           booking.kommun = kommun
           kommun.unhandledBookings.next(booking)
           kommun.bookings.next(booking)
