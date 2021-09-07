@@ -1,9 +1,11 @@
 const address = require('./address')
 const Car = require('../lib/car')
 const { from, shareReplay } = require('rxjs')
-const { expand, concatMap, take, map, mapTo, reduce, toArray, mergeAll, withLatestFrom, zipWith } = require('rxjs/operators')
+const { expand, concatMap, take, map, mapTo, reduce, toArray, mergeAll, withLatestFrom, zipWith, tap } = require('rxjs/operators')
 let carId = 0
 const { virtualTime } = require('../lib/virtualTime')
+
+const { createTransport } = require('../adapters/predictiveMovement')
 
 const { info } = require('../lib/log')
 
@@ -36,6 +38,9 @@ function generateCars(fleets, initialPositions, numberOfCars) {
     zipWith(expandArray(initialPositions, numberOfCars)),
     //concatMap(position => withLatestFrom(address.randomize(position))),
     map(([fleet, position]) => new Car({ id: carId++, position, fleet })),
+    tap(car => {
+      createTransport(car)
+    }),
     shareReplay()
   )
 }

@@ -16,6 +16,8 @@ const { haversine, addMeters, convertPosition } = require('../lib/distance')
 const perlin = require('perlin-noise')
 const Booking = require('../lib/booking')
 
+const { createBooking } = require('../adapters/predictiveMovement')
+
 // TODO: definiera en hub i varje kommun
 const umea = {
   position: {
@@ -98,6 +100,9 @@ function generateBookingsInKommun(kommun) {
         })
         .catch(() => Promise.resolve(null))
     }, 1),
+    tap(booking => {
+      createBooking(booking)
+    }),
     /*tap(booking => {
       booking.on('delivered', booking => {
         console.log('relaying booking to its final destination')
