@@ -60,6 +60,13 @@ const engine = {
         })
       }
 
+      // TODO: Test this thing that Emil suggested:
+      // booking => {
+      //   return from(createBooking(booking))
+      //     .map(bookingId => {
+      //       booking.predictiveMovementId = bookingId
+      //       return booking
+
       return bookings.pipe(
         concatMap(booking => {
           booking.predictiveMovementId = from(createBooking(booking))
