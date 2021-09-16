@@ -1,9 +1,10 @@
 const EventEmitter = require('events')
 const { from, shareReplay, Subject, ReplaySubject, mergeAll } = require('rxjs')
-const { map, filter, reduce, partition} = require('rxjs/operators')
+const { map, tap, filter, reduce, partition} = require('rxjs/operators')
 const Fleet = require('./fleet')
 
-const shuffle = (arr) => arr.sort(arr => arr.sort((a, b) => Math.random() - 0.5))
+const shuffle = (arr) => arr.sort((a, b) => Math.random() - 0.5)
+const randomFleet = (fleets) => shuffle(fleets).find(f => f.marketshare > Math.random()) || fleets[0]
 
 class Kommun extends EventEmitter {
   constructor({ geometry, name, id, email, zip, telephone, postombud, squares, fleets }) {
@@ -22,9 +23,10 @@ class Kommun extends EventEmitter {
 
     this.fleets = fleets.map(({name, marketshare}) => new Fleet({name, marketshare, cars: this.cars}))
     this.bookings = this.unhandledBookings.pipe(
-      map(booking => ({booking, seed: Math.random()})),
-      map(({seed, booking}) => ({booking, fleet: shuffle(this.fleets).first(f => f.marketshare < seed)})),
-      map(({fleet, booking}) => fleet.handleBooking(booking)),
+      map((booking) => ({booking, fleet: randomFleet(this.fleets)})),
+      map(({fleet,  booking}) => fleet.handleBooking(booking)),
+      //tap(b => console.log('b', b)),
+      map(({booking}) => booking),
       shareReplay()
     )
 

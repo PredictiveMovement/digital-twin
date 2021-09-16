@@ -3,7 +3,6 @@ const { map, mergeMap, concatAll, take, filter, tap, toArray } = require('rxjs/o
 
 const { generateBookingsInKommun } = require('./simulator/bookings')
 const { generateCars } = require('./simulator/cars')
-const { dispatch } = require('./lib/dispatchCentral')
 const { virtualTime } = require('./lib/virtualTime')
 
 const kommuner = require('./streams/kommuner')
@@ -82,11 +81,7 @@ const engine = {
     shareReplay()
   ),
   dispatchedBookings: pilots.pipe(
-    // TODO: add more than one dispatch central in each kommun = multiple fleets
-    mergeMap((kommun) => {
-      console.log('dispatching')
-      return dispatch(kommun.cars, kommun.unhandledBookings)
-    })
+    mergeMap((kommun) => kommun.bookings)
   ),
   postombud,
   kommuner
@@ -103,21 +98,8 @@ engine.carUpdates = engine.cars.pipe(
   share()
 )
 
-
-// engine.bookings.subscribe(booking => console.log('b', booking.id)) 
-//engine.cars.subscribe(car => console.log('c', car.id))
-
-// engine.kommuner.pipe(
-//   mergeMap(kommun => kommun.bookings)
-// ).subscribe(e => console.log('kb', ))
-
 engine.dispatchedBookings
-  .subscribe(({ car, booking }) => info(`Booking ${booking.id} dispatched to car ${car.id}`))
-/*bookings.pipe(
-  groupBy(kommun => kommun.id),
-  mergeMap(group => fs.writeSync(group.key + '.json', group.pipe(toArray(), ))), // [id, [array]]
-*/
-
+  .subscribe((booking) => info(`Booking ${booking?.id} dispatched to fleet ${booking?.fleet?.name}`))
 
 // I strongly advice NOT to use the code:
 process.setMaxListeners(0)
