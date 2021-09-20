@@ -40,4 +40,4 @@ Add .env with the mapbox token `REACT_APP_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>` - we
 
 ## License
 
-Predictive Movement is licensed under the MIT license. Please see [LICENSE.md](LICENSE.md) for details.
+Predictive Movement is licensed under the MIT license. Please see [LICENSE](LICENSE) for details.
