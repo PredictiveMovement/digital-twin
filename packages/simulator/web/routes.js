@@ -139,11 +139,13 @@ function register(io) {
 
           const totalCars = cars.pipe(
             scan((a) => a + 1, 0),
+            startWith(0)
           )
 
           const totalCapacity = cars.pipe(
             filter(car => car.capacity),
             scan((a, car) => a + car.capacity, 0),
+            startWith(0)
           )
 
           return combineLatest([totalBookings, totalCars, averageUtilization, averageDeliveryTime, totalCapacity]).pipe(
@@ -156,7 +158,7 @@ function register(io) {
         }),
     )
     .subscribe(kommun => {
-      io.sockets.emit('kommun', kommun)
+      io.emit('kommun', kommun)
     })
 }
 
