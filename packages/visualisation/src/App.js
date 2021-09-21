@@ -38,7 +38,7 @@ const App = () => {
     }
     return array
   }
-  
+
   const [cars, setCars] = React.useState([])
   useSocket('cars', (newCars) => {
     console.log('CARS.', newCars)
@@ -87,7 +87,7 @@ const App = () => {
 
   const [kommuner, setKommuner] = React.useState([])
   useSocket('kommun', (kommun) => {
-    console.log(kommun)
+    console.log('hej kommun', kommun.name)
     setKommuner((current) => upsert(current, kommun, 'id'))
   })
 

@@ -49,7 +49,7 @@ function generateBookingsInKommun(kommun) {
         map((nearestOmbud) => ({ ...square, nearestOmbud }))
       )
     ),
-    // tap(s => console.log('squares', kommun.name)),
+    tap(s => console.log('B2C', kommun.B2C)),
   )
 
   const randomPointsInSquares = squaresWithNearestPostombud.pipe(

@@ -19,9 +19,11 @@ const {
 
 const { virtualTime } = require('../lib/virtualTime')
 
+let SOCKEKE
+
 function register(io) {
   io.on('connection', function (socket) {
-
+    SOCKEKE = socket
     socket.emit('reset')
 
     socket.on('reset', () => {
@@ -45,14 +47,15 @@ function register(io) {
     })
 
     engine.kommuner.pipe(
-      map(({id, name, geometry}) => ({id, name, geometry}))
-    ).subscribe((kommun) => 
-//      socket.emit('kommun', kommun)
-        1
+      map(({ id, name, geometry }) => ({ id, name, geometry }))
+    ).subscribe((kommun) =>
+      socket.emit('kommun', kommun)
     )
 
+    // TODO: send all bookings on connect
+
   })
-    
+
   engine.carUpdates
     .pipe(
       //distinct(car => car.id),
@@ -71,29 +74,28 @@ function register(io) {
       bufferTime(100)
     )
     .subscribe((cars) => {
-      console.log('här borde vi emitta bilar', cars)
+      // console.log('här borde vi emitta bilar', cars)
       if (cars.length) io.emit('cars', cars)
     })
 
   engine.bookingUpdates
     .pipe(
-      map(({ 
-        pickup: { position: pickup }, 
-        destination: { position: destination, name }, 
-        id, status, isCommercial, 
-        deliveryTime, car 
-      }) => ({ 
+      map(({
+        pickup: { position: pickup },
+        destination: { position: destination, name },
+        id, status, isCommercial,
+        deliveryTime, car
+      }) => ({
         id, pickup, destination,
-        name, status, isCommercial, 
-        deliveryTime, 
-        carId: car?.id 
+        name, status, isCommercial,
+        deliveryTime,
+        carId: car?.id
       })),
       //distinct(booking => booking.id),
       bufferCount(30)
     )
     .subscribe((bookings) => {
       if (bookings.length) {
-        console.log('sending', bookings.length, 'bookings yo')
         io.emit('bookings', bookings)
       }
     })
@@ -130,14 +132,14 @@ function register(io) {
                 totalCapacity: totalCapacity + capacity,
                 totalQueued: totalQueued + queue.length
               }), { totalCargo: 0, totalCapacity: 0, count: 0, totalQueued: 0 }),
-              map(({ totalCargo, totalCapacity, totalQueued }) => ({ 
-                totalCargo, totalCapacity, totalQueued, 
-                averageUtilization: totalCargo / totalCapacity, 
-                averageQueued: totalQueued / totalCapacity 
+              map(({ totalCargo, totalCapacity, totalQueued }) => ({
+                totalCargo, totalCapacity, totalQueued,
+                averageUtilization: totalCargo / totalCapacity,
+                averageQueued: totalQueued / totalCapacity
               }))
             )),
             mergeAll(),
-            startWith({ totalCargo: 0, totalCapacity: 0, averageUtilization: 0, averageQueued: 0}),
+            startWith({ totalCargo: 0, totalCapacity: 0, averageUtilization: 0, averageQueued: 0 }),
           )
 
           const totalCars = cars.pipe(
@@ -169,7 +171,6 @@ function register(io) {
         }),
     )
     .subscribe(kommun => {
-      console.log('sending', kommun, 'kommun')
       io.emit('kommun', kommun)
     })
 }

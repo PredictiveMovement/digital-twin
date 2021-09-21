@@ -5,18 +5,19 @@ const Car = require('./car')
 const { convertPosition } = require('../lib/distance')
 
 class Fleet {
-  constructor({name, marketshare, numberOfCars, hub}) {
+  constructor({ name, marketshare, numberOfCars, hub }) {
     this.name = name
     this.marketshare = marketshare
     this.cars = range(0, numberOfCars).pipe(
-      map(i => new Car({fleet: this, position: convertPosition(hub)})),
+      map(i => new Car({ fleet: this, position: convertPosition(hub) })),
       shareReplay()
     )
     this.unhandledBookings = new Subject()
-    this.bookings = dispatch(this.cars, this.unhandledBookings)
+    this.dispatchedBookings = dispatch(this.cars, this.unhandledBookings)
   }
 
   handleBooking(booking) {
+    console.log('va?')
     booking.fleet = this
     this.unhandledBookings.next(booking)
     return booking

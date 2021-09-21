@@ -39,12 +39,13 @@ const engine = {
       } else {
         console.log(`*** ${kommun.name}: no cached bookings`)
         bookings = generateBookingsInKommun(kommun).pipe(
-          take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
+          // take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
+          take(10)
         )
 
         // TODO: Could we do this without converting to an array? Yes. By using fs stream and write json per line
         bookings.pipe(
-          map(({id, pickup, destination}) => ({id, pickup, destination})), // remove all unneccessary data such as car and eventemitter etc
+          map(({ id, pickup, destination }) => ({ id, pickup, destination })), // remove all unneccessary data such as car and eventemitter etc
           toArray(),
         ).subscribe(arr => {
           fs.writeFileSync(file, JSON.stringify(arr))
@@ -81,7 +82,7 @@ engine.bookingUpdates = engine.bookings.pipe(
 
 engine.carUpdates = engine.cars.pipe(
   tap(car => {
-    console.log('EN BIL!', car)
+    // console.log('EN BIL!', car)
   }),
   mergeAll(),
   mergeMap((car) => fromEvent(car, 'moved')),
