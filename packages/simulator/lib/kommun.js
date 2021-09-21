@@ -1,10 +1,30 @@
 const EventEmitter = require('events')
-const { from, shareReplay, Subject, ReplaySubject, mergeAll } = require('rxjs')
+const { from, shareReplay, Subject, ReplaySubject, mergeAll, merge, of } = require('rxjs')
 const { map, tap, filter, reduce, partition} = require('rxjs/operators')
 const Fleet = require('./fleet')
 
 const shuffle = (arr) => arr.sort((a, b) => Math.random() - 0.5)
 const randomFleet = (fleets) => shuffle(fleets).find(f => f.marketshare > Math.random()) || fleets[0]
+
+/*
+kommun.fleets.reduce((acc, curr) => { 
+    prevEnd = acc[acc.length - 1]?.end || 0.0
+    return [...acc, { 
+    name: curr.name, 
+    start: prevEnd,
+    end: prevEnd + curr.market
+    }]
+})
+
+pick = (sel, n) => { let i = 0; 
+    while (i < n) { 
+        ++i; 
+        let r = Math.random(0.0, sel[sel.length-1].end);  // pick last end as max instead of assuming it sums to 1.0
+        sel.filter(({ start, end }) => (start <= r && r < end))
+            .forEach(a => console.log(a.name)) 
+    }
+}
+*/
 
 class Kommun extends EventEmitter {
   constructor({ geometry, name, id, email, zip, telephone, postombud, squares, fleets }) {
@@ -18,18 +38,22 @@ class Kommun extends EventEmitter {
     this.telephone = telephone
     this.postombud = postombud
     this.unhandledBookings = new Subject()
-    this.cars = new ReplaySubject()
     this.population = this.squares.pipe(reduce((a, b) => a + b.population, 0))
 
-    this.fleets = fleets.map(({name, marketshare}) => new Fleet({name, marketshare, cars: this.cars}))
-    this.bookings = this.unhandledBookings.pipe(
-      map((booking) => ({booking, fleet: randomFleet(this.fleets)})),
-      map(({fleet,  booking}) => fleet.handleBooking(booking)),
-      //tap(b => console.log('b', b)),
-      map(({booking}) => booking),
+    this.fleets = fleets.map(({hub, name, marketshare, numberOfCars}) => new Fleet({hub, name, marketshare, numberOfCars}))
+    this.cars = merge(this.fleets.map(fleet => fleet.cars))
+
+    this.dispatchedBookings = this.unhandledBookings.pipe(
+      map((booking) => ({booking, fleet: this.fleets[0]})), // randomfleet(...)
+      map(({fleet, booking}) => fleet.handleBooking(booking)),
       shareReplay()
     )
+  }
 
+  handleBooking(booking) {
+    booking.kommun = this
+    this.unhandledBookings.next(booking)
+    return booking
   }
 }
 

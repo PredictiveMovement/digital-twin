@@ -463,19 +463,27 @@
     "fleets": [
       {
         "name": "Postnord",
-        "marketshare": 0.6
+        "numberOfCars": 6,
+        "marketshare": 0.6,
+        "hub": [21.034263, 64.746704]
       },
       {
         "name": "Schenker",
-        "marketshare": 0.18
+        "numberOfCars": 2,
+        "marketshare": 0.18,
+        "hub": [21.034263, 64.746704]
       },
       {
         "name": "Bring",
-        "marketshare": 0.06
+        "numberOfCars": 1,
+        "marketshare": 0.06,
+        "hub": [21.034263, 64.746704]
       },
       {
         "name": "DHL",
-        "marketshare": 0.06
+        "numberOfCars": 2,
+        "marketshare": 0.06,
+        "hub": [21.034263, 64.746704]
       }
     ],
     "geometry": {
@@ -545,6 +553,32 @@
     "telefon": "0960-15500",
     "epost": "kommun@arvidsjaur.se",
     "namn": "Arvidsjaurs kommun",
+    "fleets": [
+      {
+        "name": "Postnord",
+        "numberOfCars": 6,
+        "marketshare": 60,
+        "hub": [21.034263, 64.746704]
+      },
+      {
+        "name": "Schenker",
+        "numberOfCars": 3,
+        "marketshare": 18,
+        "hub": [21.034263, 64.746704]
+      },
+      {
+        "name": "Bring",
+        "numberOfCars": 1,
+        "marketshare": 6,
+        "hub": [21.034263, 64.746704]
+      },
+      {
+        "name": "DHL",
+        "numberOfCars": 3,
+        "marketshare": 6,
+        "hub": [21.034263, 64.746704]
+      }
+    ],
     "geometry": {
       "coordinates": [
         [
@@ -12711,19 +12745,33 @@
     "fleets": [
       {
         "name": "Postnord",
-        "marketshare": 0.6
+        "numberOfCars": 4,
+        "marketshare": 60,
+        "hub": [21.034263, 64.746704]
       },
       {
         "name": "Schenker",
-        "marketshare": 0.18
+        "numberOfCars": 2,
+        "marketshare": 12,
+        "hub": [21.034263, 64.746704]
       },
       {
         "name": "Bring",
-        "marketshare": 0.06
+        "numberOfCars": 2,
+        "marketshare": 6,
+        "hub": [21.034263, 64.746704]
       },
       {
         "name": "DHL",
-        "marketshare": 0.06
+        "numberOfCars": 1,
+        "marketshare": 6,
+        "hub": [17.085194, 61.741017]
+      },
+      {
+        "name": "SNX",
+        "numberOfCars": 3,
+        "marketshare": 6,
+        "hub": [16.058036, 61.820841]
       }
     ]
   },
@@ -16785,19 +16833,27 @@
     "fleets": [
       {
         "name": "Postnord",
-        "marketshare": 0.6
+        "numberOfCars": 4,
+        "marketshare": 60,
+        "hub": [22.050702, 65.610326]
       },
       {
         "name": "Schenker",
-        "marketshare": 0.18
+        "numberOfCars": 2,
+        "marketshare": 18,
+        "hub": [22.050702, 65.610326]
       },
       {
         "name": "Bring",
-        "marketshare": 0.06
+        "numberOfCars": 1,
+        "marketshare": 6,
+        "hub": [22.050702, 65.610326]
       },
       {
         "name": "DHL",
-        "marketshare": 0.06
+        "numberOfCars": 2,
+        "marketshare": 6,
+        "hub": [22.050702, 65.610326]
       }
     ],
     "geometry": {
@@ -20041,19 +20097,27 @@
     "fleets": [
       {
         "name": "Postnord",
-        "marketshare": 0.6
+        "numberOfCars": 4,
+        "marketshare": 60,
+        "hub": [14.640025, 63.222212]
       },
       {
         "name": "Schenker",
-        "marketshare": 0.18
+        "numberOfCars": 3,
+        "marketshare": 18,
+        "hub": [20.136678, 63.850360]
       },
       {
         "name": "Bring",
-        "marketshare": 0.06
+        "numberOfCars": 2,
+        "marketshare": 6,
+        "hub": [20.136678, 63.850360]
       },
       {
         "name": "DHL",
-        "marketshare": 0.06
+        "numberOfCars": 1,
+        "marketshare": 6,
+        "hub": [20.136678, 63.850360]
       }
     ],
     "geometry": {
@@ -26340,19 +26404,27 @@
     "fleets": [
       {
         "name": "Postnord",
-        "marketshare": 0.6
+        "numberOfCars": 10,
+        "marketshare": 60,
+        "hub": [16.167073, 58.621307]
       },
       {
         "name": "Schenker",
-        "marketshare": 0.18
+        "numberOfCars": 5,
+        "marketshare": 18,
+        "hub": [16.167073, 58.621307]
       },
       {
         "name": "Bring",
-        "marketshare": 0.06
+        "numberOfCars": 3,
+        "marketshare": 6,
+        "hub": [16.167073, 58.621307]
       },
       {
         "name": "DHL",
-        "marketshare": 0.06
+        "numberOfCars": 3,
+        "marketshare": 6,
+        "hub": [16.167073, 58.621307]
       }
     ],
     "geometry": {

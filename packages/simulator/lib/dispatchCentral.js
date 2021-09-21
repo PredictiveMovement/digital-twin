@@ -2,7 +2,6 @@ const { mergeAll, timer } = require('rxjs')
 const { toArray, map, tap, filter, takeUntil, delay, mergeMap } = require('rxjs/operators')
 const { haversine } = require('./distance')
 
-
 const dispatch = (cars, bookings) => {
   return bookings.pipe(
     //tap(booking => console.log(`*** new booking ${booking.id}. Looking for a car nearby...`)),

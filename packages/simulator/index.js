@@ -1,9 +1,9 @@
 const { shareReplay, share, merge, from, fromEvent, of } = require('rxjs')
-const { map, mergeMap, concatAll, take, filter, tap, toArray } = require('rxjs/operators')
+const { map, mergeMap, concatAll, take, filter, tap, toArray, mergeAll } = require('rxjs/operators')
 
 const { generateBookingsInKommun } = require('./simulator/bookings')
-const { generateCars } = require('./simulator/cars')
 const { virtualTime } = require('./lib/virtualTime')
+// TODO: replace this with a better statistical distribution
 
 const kommuner = require('./streams/kommuner')
 const postombud = require('./streams/postombud')
@@ -14,11 +14,10 @@ const Booking = require('./lib/booking')
 const { info } = require('./lib/log')
 
 const WORKING_DAYS = 265
-const NR_CARS = 7
 const pilots = kommuner.pipe(
   filter((kommun) =>
+    //['Arjeplog', 'Arvidsjaur', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
     ['Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
-    //['Storuman'].some((pilot) =>
       kommun.name.startsWith(pilot)
     ),
   ),
@@ -53,13 +52,8 @@ const engine = {
         })
       }
 
-
       return bookings.pipe(
-        tap((booking) => {
-          booking.kommun = kommun
-          kommun.unhandledBookings.next(booking)
-          kommun.bookings.next(booking)
-        }),
+        tap((booking) => kommun.handleBooking(booking)),
       )
     }),
 
@@ -67,21 +61,13 @@ const engine = {
     shareReplay(),
   ),
   cars: pilots.pipe(
-    mergeMap(kommun => {
-      return kommun.postombud.pipe(
-        map(ombud => ombud.position),
-        toArray(),
-        mergeMap((postombud) => generateCars(kommun.fleets, postombud, NR_CARS).pipe(
-          tap((car) => {
-            kommun.cars.next(car)
-          })
-        )),
-      )
-    }),
-    shareReplay()
+    map(kommun => kommun.cars),
+    //concatAll(),
+    mergeAll(),
+    shareReplay(),
   ),
   dispatchedBookings: pilots.pipe(
-    mergeMap((kommun) => kommun.bookings)
+    mergeMap((kommun) => kommun.dispatchedBookings)
   ),
   postombud,
   kommuner
@@ -94,6 +80,10 @@ engine.bookingUpdates = engine.bookings.pipe(
 )
 
 engine.carUpdates = engine.cars.pipe(
+  tap(car => {
+    console.log('EN BIL!', car)
+  }),
+  mergeAll(),
   mergeMap((car) => fromEvent(car, 'moved')),
   share()
 )
@@ -101,7 +91,7 @@ engine.carUpdates = engine.cars.pipe(
 engine.dispatchedBookings
   .subscribe((booking) => info(`Booking ${booking?.id} dispatched to fleet ${booking?.fleet?.name}`))
 
-// I strongly advice NOT to use the code:
+// TODO: see if we can remove this
 process.setMaxListeners(0)
 
 module.exports = engine

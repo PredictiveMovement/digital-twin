@@ -41,6 +41,7 @@ const App = () => {
   
   const [cars, setCars] = React.useState([])
   useSocket('cars', (newCars) => {
+    console.log('CARS.', newCars)
     setReset(false)
     setCars((cars) => [
       ...cars.filter((car) => !newCars.some((nc) => nc.id === car.id)),
@@ -57,6 +58,7 @@ const App = () => {
 
   const [bookings, setBookings] = React.useState([])
   useSocket('bookings', (newBookings) => {
+    console.log('bookings', newBookings)
     setBookings((bookings) => newBookings
       .map(({ name, id, pickup, destination, status, isCommercial, deliveryTime, carId }) => ({
         id,
@@ -85,6 +87,7 @@ const App = () => {
 
   const [kommuner, setKommuner] = React.useState([])
   useSocket('kommun', (kommun) => {
+    console.log(kommun)
     setKommuner((current) => upsert(current, kommun, 'id'))
   })
 

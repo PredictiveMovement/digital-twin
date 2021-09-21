@@ -2,7 +2,7 @@
  * TODO: Describe the stream that this file exports and what its data means
  */
 const { from, shareReplay, withLatestFrom } = require('rxjs')
-const { map, filter, reduce } = require('rxjs/operators')
+const { map, tap, filter, reduce } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
 const population = require('./population')

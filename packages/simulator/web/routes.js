@@ -47,7 +47,8 @@ function register(io) {
     engine.kommuner.pipe(
       map(({id, name, geometry}) => ({id, name, geometry}))
     ).subscribe((kommun) => 
-      socket.emit('kommun', kommun)
+//      socket.emit('kommun', kommun)
+        1
     )
 
   })
@@ -70,6 +71,7 @@ function register(io) {
       bufferTime(100)
     )
     .subscribe((cars) => {
+      console.log('här borde vi emitta bilar', cars)
       if (cars.length) io.emit('cars', cars)
     })
 
@@ -90,20 +92,23 @@ function register(io) {
       bufferCount(30)
     )
     .subscribe((bookings) => {
-      if (bookings.length) io.emit('bookings', bookings)
+      if (bookings.length) {
+        console.log('sending', bookings.length, 'bookings yo')
+        io.emit('bookings', bookings)
+      }
     })
 
 
   engine.kommuner
     .pipe(
       mergeMap(
-        ({ id, bookings, name, cars }) => {
-          const totalBookings = bookings.pipe(
+        ({ id, dispatchedBookings, name, cars }) => {
+          const totalBookings = dispatchedBookings.pipe(
             scan((a) => a + 1, 0),
             startWith(0)
           )
 
-          const averageDeliveryTime = bookings.pipe(
+          const averageDeliveryTime = dispatchedBookings.pipe(
             mergeMap(booking => fromEvent(booking, 'delivered')),
             scan(({ total, deliveryTimeTotal }, { deliveryTime }) => ({
               total: total + 1,
@@ -115,6 +120,7 @@ function register(io) {
           )
 
           const averageUtilization = cars.pipe(
+            mergeAll(),
             mergeMap(car => fromEvent(car, 'cargo')),
             windowTime(15000),
             map(window => window.pipe(
@@ -145,16 +151,25 @@ function register(io) {
             startWith(0)
           )
 
-          return combineLatest([totalBookings, totalCars, averageUtilization, averageDeliveryTime, totalCapacity]).pipe(
-            map(([totalBookings, totalCars, { totalCargo, averageUtilization, totalQueued, averageQueued }, { totalDelivered, averageDeliveryTime }, totalCapacity]) => ({
-              id, name, totalBookings, totalCars, totalCargo, totalCapacity, averageUtilization, averageDeliveryTime, totalDelivered, totalQueued, averageQueued
+          return combineLatest([totalBookings, totalCars, averageDeliveryTime, averageUtilization, totalCapacity]).pipe(
+            map(([totalBookings, totalCars, { totalCargo, totalQueued, averageQueued }, { totalDelivered, averageDeliveryTime }, totalCapacity]) => ({
+              id, name, totalBookings, totalCars, totalCargo, totalCapacity, averageDeliveryTime, totalDelivered, totalQueued, averageQueued
             })),
             // Do not emit more than 1 event per kommun per second
             throttleTime(5000)
           )
+
+          // return combineLatest([totalBookings, totalCars, averageUtilization, averageDeliveryTime, totalCapacity]).pipe(
+          //   map(([totalBookings, totalCars, { totalCargo, averageUtilization, totalQueued, averageQueued }, { totalDelivered, averageDeliveryTime }, totalCapacity]) => ({
+          //     id, name, totalBookings, totalCars, totalCargo, totalCapacity, averageUtilization, averageDeliveryTime, totalDelivered, totalQueued, averageQueued
+          //   })),
+          //   // Do not emit more than 1 event per kommun per second
+          //   throttleTime(5000)
+          // )
         }),
     )
     .subscribe(kommun => {
+      console.log('sending', kommun, 'kommun')
       io.emit('kommun', kommun)
     })
 }
