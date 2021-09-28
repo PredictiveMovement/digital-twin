@@ -47,7 +47,7 @@ describe("A kommun", () => {
     expect(dispatch.dispatch.mock.calls.length).toBe(1)
   })
 
-  it.only('handled bookings are dispatched', function () {
+  it.only('handled bookings are dispatched', function (done) {
     dispatch.dispatch.mockImplementation((cars, bookings) => bookings.pipe(map(booking => ({
       booking,
       car: { id: 1 },
@@ -59,8 +59,9 @@ describe("A kommun", () => {
     kommun.dispatchedBookings.pipe(
       first()
     ).subscribe(({ booking }) => {
-      expect(booking.fleet.name).toBe('postnord')
+      expect(booking.fleet.name).toBe('bring')
       expect(booking.id).toBe(testBooking.id)
+      done()
     })
   })
 })

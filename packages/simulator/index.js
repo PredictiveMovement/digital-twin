@@ -21,46 +21,38 @@ const pilots = kommuner.pipe(
       kommun.name.startsWith(pilot)
     ),
   ),
-  shareReplay()
+  // TODO: Dela upp och gör mer läsbart
+  map((kommun) => {
+    const file = __dirname + `/data/pm_bookings_${kommun.id}.json`
+    let bookings
+    if (fs.existsSync(file)) {
+      console.log(`*** ${kommun.name}: bookings from cache (${file})`)
+      bookings = from(JSON.parse(fs.readFileSync(file))).pipe(
+        map(b => new Booking(b))
+      )
+    } else {
+      console.log(`*** ${kommun.name}: no cached bookings`)
+      bookings = generateBookingsInKommun(kommun).pipe(
+        // take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
+        take(10)
+      )
+
+      // TODO: Could we do this without converting to an array? Yes. By using fs stream and write json per line
+      bookings.pipe(
+        map(({ id, pickup, destination }) => ({ id, pickup, destination })), // remove all unneccessary data such as car and eventemitter etc
+        toArray(),
+      ).subscribe(arr => {
+        fs.writeFileSync(file, JSON.stringify(arr))
+        console.log(`*** ${kommun.name}: wrote bookings to cache (${file})`)
+      })
+    }
+    bookings.subscribe(booking => kommun.handleBooking(booking))
+    return kommun
+  })
 )
 
 const engine = {
   virtualTime,
-  bookings: pilots.pipe(
-    // TODO: Dela upp och gör mer läsbart
-    map((kommun) => {
-      const file = __dirname + `/data/pm_bookings_${kommun.id}.json`
-      let bookings
-      if (fs.existsSync(file)) {
-        console.log(`*** ${kommun.name}: bookings from cache (${file})`)
-        bookings = from(JSON.parse(fs.readFileSync(file))).pipe(
-          map(b => new Booking(b))
-        )
-      } else {
-        console.log(`*** ${kommun.name}: no cached bookings`)
-        bookings = generateBookingsInKommun(kommun).pipe(
-          // take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
-          take(10)
-        )
-
-        // TODO: Could we do this without converting to an array? Yes. By using fs stream and write json per line
-        bookings.pipe(
-          map(({ id, pickup, destination }) => ({ id, pickup, destination })), // remove all unneccessary data such as car and eventemitter etc
-          toArray(),
-        ).subscribe(arr => {
-          fs.writeFileSync(file, JSON.stringify(arr))
-          console.log(`*** ${kommun.name}: wrote bookings to cache (${file})`)
-        })
-      }
-
-      return bookings.pipe(
-        tap((booking) => kommun.handleBooking(booking)),
-      )
-    }),
-
-    concatAll(),
-    shareReplay(),
-  ),
   cars: pilots.pipe(
     map(kommun => kommun.cars),
     //concatAll(),
@@ -68,14 +60,15 @@ const engine = {
     shareReplay(),
   ),
   dispatchedBookings: pilots.pipe(
-    mergeMap((kommun) => kommun.dispatchedBookings)
+    map((kommun) => kommun.dispatchedBookings),
+    mergeAll(),
   ),
   postombud,
   kommuner
 }
 
 // Add these separate streams here so we don't have to register more than one event listener per booking and car
-engine.bookingUpdates = engine.bookings.pipe(
+engine.bookingUpdates = engine.dispatchedBookings.pipe(
   mergeMap(booking => merge(of(booking), fromEvent(booking, 'queued'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'),)),
   shareReplay(),
 )

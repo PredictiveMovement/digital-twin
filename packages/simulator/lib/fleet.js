@@ -1,5 +1,5 @@
 const { Subject, ReplaySubject, range } = require('rxjs')
-const { map, shareReplay } = require('rxjs/operators')
+const { map, shareReplay, toArray } = require('rxjs/operators')
 const { dispatch } = require('./dispatchCentral')
 const Car = require('./car')
 const { convertPosition } = require('../lib/distance')
