@@ -17,7 +17,6 @@ class Fleet {
   }
 
   handleBooking(booking) {
-    console.log('va?')
     booking.fleet = this
     this.unhandledBookings.next(booking)
     return booking

@@ -29,6 +29,7 @@ class Car extends EventEmitter {
 
   dispose() {
     this.simulate(false)
+    this._disposed = true
   }
 
   time() {
@@ -38,7 +39,6 @@ class Car extends EventEmitter {
 
   simulate(heading) {
     clearInterval(this._interval)
-    console.log('sim', heading)
     if (!heading) return
     if (virtualTime.timeMultiplier === Infinity) return this.updatePosition(heading) // teleport mode
     this._interval = setInterval(() => {
@@ -49,7 +49,6 @@ class Car extends EventEmitter {
   }
 
   navigateTo(position) {
-    console.log('nav to')
     this.heading = position
     return osrm
       .route(this.position, this.heading)
@@ -66,7 +65,6 @@ class Car extends EventEmitter {
   }
 
   handleBooking(booking) {
-    console.log('handle booking')
     assert(booking instanceof Booking, 'Booking needs to be of type Booking')
     this.history.push({ status: 'received_booking', date: this.time(), booking })
     if (!this.busy) {
@@ -84,8 +82,10 @@ class Car extends EventEmitter {
   }
 
   pickup() {
-    console.log('pickup')
+    if (this._disposed) return
+
     this.emit('pickup', this.id)
+    //console.log('PICKUP', this.queue)
     this.queue.sort((a, b) => haversine(this.position, a.pickup.position) - haversine(this.position, b.pickup.position))
 
     // wait one tick so the pickup event can be parsed before changing status
@@ -148,7 +148,6 @@ class Car extends EventEmitter {
 
 
   async updatePosition(position, date = this.time()) {
-    console.log('a car wants to move')
     const lastPosition = this.position || position
     const metersMoved = haversine(lastPosition, position)
     const [km, h] = [(metersMoved / 1000), (date - lastPosition.date) / 1000 / 60 / 60]
