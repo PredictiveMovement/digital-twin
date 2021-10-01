@@ -61,7 +61,7 @@ class Car extends EventEmitter {
         this.simulate(this.heading)
         return this.heading
       })
-      .catch(error)
+      .catch(err => error('Route error', err))
   }
 
   handleBooking(booking) {

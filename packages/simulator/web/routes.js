@@ -55,7 +55,6 @@ function register(io) {
     // TODO: send all bookings on connect
 
   })
-
   engine.carUpdates
     .pipe(
       //distinct(car => car.id),
@@ -66,7 +65,7 @@ function register(io) {
         bearing,
         position: [lon, lat],
         status,
-        fleet,
+        fleet: fleet.name,
         cargo: cargo.length + (booking ? 1 : 0),
         queue: queue.length + (booking ? 1 : 0),
         capacity
@@ -100,7 +99,6 @@ function register(io) {
       }
     })
 
-
   engine.kommuner
     .pipe(
       mergeMap(
@@ -122,7 +120,6 @@ function register(io) {
           )
 
           const averageUtilization = cars.pipe(
-            mergeAll(),
             mergeMap(car => fromEvent(car, 'cargo')),
             windowTime(15000),
             map(window => window.pipe(
@@ -169,6 +166,7 @@ function register(io) {
           //   throttleTime(5000)
           // )
         }),
+        filter(({totalCars}) => totalCars > 0)
     )
     .subscribe(kommun => {
       io.emit('kommun', kommun)

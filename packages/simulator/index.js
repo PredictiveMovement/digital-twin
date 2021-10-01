@@ -1,5 +1,5 @@
 const { shareReplay, share, merge, from, fromEvent, of } = require('rxjs')
-const { map, mergeMap, concatAll, take, filter, tap, toArray, mergeAll } = require('rxjs/operators')
+const { map, mergeMap, concatAll, take, filter, tap, toArray, mergeAll, catchError } = require('rxjs/operators')
 
 const { generateBookingsInKommun } = require('./simulator/bookings')
 const { virtualTime } = require('./lib/virtualTime')
@@ -33,8 +33,8 @@ const pilots = kommuner.pipe(
     } else {
       console.log(`*** ${kommun.name}: no cached bookings`)
       bookings = generateBookingsInKommun(kommun).pipe(
-        // take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
-        take(10)
+        take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
+        //take(10)
       )
 
       // TODO: Could we do this without converting to an array? Yes. By using fs stream and write json per line
@@ -54,14 +54,19 @@ const pilots = kommuner.pipe(
 const engine = {
   virtualTime,
   cars: pilots.pipe(
-    map(kommun => kommun.cars),
-    //concatAll(),
-    mergeAll(),
+    mergeMap(kommun => kommun.cars),
+    catchError(error => {
+      console.log('error', error)
+      return of(null)
+    }),
     shareReplay(),
   ),
   dispatchedBookings: pilots.pipe(
-    map((kommun) => kommun.dispatchedBookings),
-    mergeAll(),
+    mergeMap((kommun) => kommun.dispatchedBookings),
+    catchError(error => {
+      console.log('error', error)
+      return of(null)
+    }),
   ),
   postombud,
   kommuner
@@ -71,14 +76,18 @@ const engine = {
 engine.bookingUpdates = engine.dispatchedBookings.pipe(
   mergeMap(booking => merge(of(booking), fromEvent(booking, 'queued'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'),)),
   shareReplay(),
+  catchError(error => {
+    console.log('error', error)
+    return of(null)
+  }),
 )
 
 engine.carUpdates = engine.cars.pipe(
-  tap(car => {
-    // console.log('EN BIL!', car)
-  }),
-  mergeAll(),
   mergeMap((car) => fromEvent(car, 'moved')),
+  catchError(error => {
+    console.log('error', error)
+    return of(null)
+  }),
   share()
 )
 
