@@ -22,7 +22,6 @@ class Fleet {
 
   handleBooking(booking) {
     booking.fleet = this
-    booking.pickup = this.hub // TODO: move to when the booking is generated instead
     this.unhandledBookings.next(booking)
     return booking
   }

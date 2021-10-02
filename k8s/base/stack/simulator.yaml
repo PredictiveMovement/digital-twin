@@ -34,7 +34,7 @@ spec:
       volumes:
         - name: ombudsnat
           hostPath:
-            path: /storage/predictivemovement/ombudsnat
+            path: /storage/predictivemovement/supplychain
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
@@ -46,17 +46,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - supplychain-engine.iteamdev.io
         - supplychain-engine.predictivemovement.se
       secretName: simulator-prod-tls
   rules:
     - host: supplychain-engine.predictivemovement.se
-      http:
-        paths:
-          - backend:
-              serviceName: simulator
-              servicePort: 4000
-    - host: supplychain-engine.iteamdev.io
       http:
         paths:
           - backend:
