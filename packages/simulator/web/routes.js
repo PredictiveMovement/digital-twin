@@ -51,12 +51,6 @@ function register(io) {
     ).subscribe((kommun) =>
       socket.emit('kommun', kommun)
     )
-<<<<<<< HEAD
-
-    // TODO: send all bookings on connect
-
-=======
->>>>>>> main
   })
   engine.carUpdates
     .pipe(
