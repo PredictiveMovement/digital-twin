@@ -9,8 +9,11 @@ class Fleet {
   constructor({ name, marketshare, numberOfCars, hub }) {
     this.name = name
     this.marketshare = marketshare
+    this.hub = {position: convertPosition(hub)}
+    this.percentageHomeDelivery = 0.5
+    this.percentageReturnDelivery = 0.1
     this.cars = range(0, numberOfCars).pipe(
-      mergeMap(i => randomize(convertPosition(hub)).then(position => new Car({ fleet: this, position }))),
+      mergeMap(i => randomize(this.hub.position).then(position => new Car({ fleet: this, position }))),
       shareReplay()
     )
     this.unhandledBookings = new Subject()
@@ -19,6 +22,7 @@ class Fleet {
 
   handleBooking(booking) {
     booking.fleet = this
+    booking.pickup = this.hub // TODO: move to when the booking is generated instead
     this.unhandledBookings.next(booking)
     return booking
   }

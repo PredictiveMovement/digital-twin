@@ -468,7 +468,7 @@
         "hub": [21.034263, 64.746704]
       },
       {
-        "name": "Schenker",
+        "name": "DB_Schenker",
         "numberOfCars": 2,
         "marketshare": 0.18,
         "hub": [21.034263, 64.746704]
@@ -480,8 +480,8 @@
         "hub": [21.034263, 64.746704]
       },
       {
-        "name": "DHL",
-        "numberOfCars": 2,
+        "name": "DHL_Express",
+        "numberOfCars": 1,
         "marketshare": 0.06,
         "hub": [21.034263, 64.746704]
       }
@@ -561,7 +561,7 @@
         "hub": [21.034263, 64.746704]
       },
       {
-        "name": "Schenker",
+        "name": "DB_Schenker",
         "numberOfCars": 3,
         "marketshare": 18,
         "hub": [21.034263, 64.746704]
@@ -573,8 +573,8 @@
         "hub": [21.034263, 64.746704]
       },
       {
-        "name": "DHL",
-        "numberOfCars": 3,
+        "name": "DHL_Express",
+        "numberOfCars": 1,
         "marketshare": 6,
         "hub": [21.034263, 64.746704]
       }
@@ -12750,7 +12750,7 @@
         "hub": [21.034263, 64.746704]
       },
       {
-        "name": "Schenker",
+        "name": "DB_Schenker",
         "numberOfCars": 2,
         "marketshare": 12,
         "hub": [21.034263, 64.746704]
@@ -12762,7 +12762,7 @@
         "hub": [21.034263, 64.746704]
       },
       {
-        "name": "DHL",
+        "name": "DHL_Express",
         "numberOfCars": 1,
         "marketshare": 6,
         "hub": [17.085194, 61.741017]
@@ -16838,7 +16838,7 @@
         "hub": [22.050702, 65.610326]
       },
       {
-        "name": "Schenker",
+        "name": "DB_Schenker",
         "numberOfCars": 2,
         "marketshare": 18,
         "hub": [22.050702, 65.610326]
@@ -16850,8 +16850,8 @@
         "hub": [22.050702, 65.610326]
       },
       {
-        "name": "DHL",
-        "numberOfCars": 2,
+        "name": "DHL_Express",
+        "numberOfCars": 1,
         "marketshare": 6,
         "hub": [22.050702, 65.610326]
       }
@@ -20102,7 +20102,7 @@
         "hub": [14.640025, 63.222212]
       },
       {
-        "name": "Schenker",
+        "name": "DB_Schenker",
         "numberOfCars": 3,
         "marketshare": 18,
         "hub": [20.136678, 63.850360]
@@ -20114,7 +20114,7 @@
         "hub": [20.136678, 63.850360]
       },
       {
-        "name": "DHL",
+        "name": "DHL_Express",
         "numberOfCars": 1,
         "marketshare": 6,
         "hub": [20.136678, 63.850360]
@@ -26409,7 +26409,7 @@
         "hub": [16.167073, 58.621307]
       },
       {
-        "name": "Schenker",
+        "name": "DB_Schenker",
         "numberOfCars": 5,
         "marketshare": 18,
         "hub": [16.167073, 58.621307]
@@ -26421,8 +26421,8 @@
         "hub": [16.167073, 58.621307]
       },
       {
-        "name": "DHL",
-        "numberOfCars": 3,
+        "name": "DHL_Express",
+        "numberOfCars": 1,
         "marketshare": 6,
         "hub": [16.167073, 58.621307]
       }
