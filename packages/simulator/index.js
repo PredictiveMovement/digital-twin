@@ -33,7 +33,7 @@ const pilots = kommuner.pipe(
     } else {
       console.log(`*** ${kommun.name}: no cached bookings`)
       bookings = generateBookingsInKommun(kommun).pipe(
-        take(Math.ceil(kommun.packageVolumes.B2C / WORKING_DAYS)), // how many bookings do we want?
+        take(Math.ceil(kommun.packageVolumes?.B2C / WORKING_DAYS)), // how many bookings do we want?
         //take(10)
       )
 
@@ -55,18 +55,11 @@ const engine = {
   virtualTime,
   cars: pilots.pipe(
     mergeMap(kommun => kommun.cars),
-    catchError(error => {
-      console.log('error', error)
-      return of(null)
-    }),
     shareReplay(),
   ),
   dispatchedBookings: pilots.pipe(
     mergeMap((kommun) => kommun.dispatchedBookings),
-    catchError(error => {
-      console.log('error', error)
-      return of(null)
-    }),
+    
   ),
   postombud,
   kommuner
@@ -75,19 +68,11 @@ const engine = {
 // Add these separate streams here so we don't have to register more than one event listener per booking and car
 engine.bookingUpdates = engine.dispatchedBookings.pipe(
   mergeMap(booking => merge(of(booking), fromEvent(booking, 'queued'), fromEvent(booking, 'pickedup'), fromEvent(booking, 'assigned'), fromEvent(booking, 'delivered'),)),
-  shareReplay(),
-  catchError(error => {
-    console.log('error', error)
-    return of(null)
-  }),
+  share(),
 )
 
 engine.carUpdates = engine.cars.pipe(
   mergeMap((car) => fromEvent(car, 'moved')),
-  catchError(error => {
-    console.log('error', error)
-    return of(null)
-  }),
   share()
 )
 
