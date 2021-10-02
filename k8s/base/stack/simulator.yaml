@@ -46,17 +46,17 @@ metadata:
 spec:
   tls:
     - hosts:
-        - digital-twin-engine.iteamdev.io
-        - digital-twin-engine.predictivemovement.se
+        - supplychain-engine.iteamdev.io
+        - supplychain-engine.predictivemovement.se
       secretName: simulator-prod-tls
   rules:
-    - host: digital-twin-engine.predictivemovement.se
+    - host: supplychain-engine.predictivemovement.se
       http:
         paths:
           - backend:
               serviceName: simulator
               servicePort: 4000
-    - host: digital-twin-engine.iteamdev.io
+    - host: supplychain-engine.iteamdev.io
       http:
         paths:
           - backend:
