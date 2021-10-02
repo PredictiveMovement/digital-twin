@@ -51,9 +51,12 @@ function register(io) {
     ).subscribe((kommun) =>
       socket.emit('kommun', kommun)
     )
+<<<<<<< HEAD
 
     // TODO: send all bookings on connect
 
+=======
+>>>>>>> main
   })
   engine.carUpdates
     .pipe(
@@ -121,22 +124,26 @@ function register(io) {
 
           const averageUtilization = cars.pipe(
             mergeMap(car => fromEvent(car, 'cargo')),
-            windowTime(15000),
-            map(window => window.pipe(
-              distinct(car => car.id),
-              scan(({ totalCargo, totalCapacity, totalQueued }, { cargo, queue, capacity }) => ({
-                totalCargo: totalCargo + cargo.length,
-                totalCapacity: totalCapacity + capacity,
-                totalQueued: totalQueued + queue.length
-              }), { totalCargo: 0, totalCapacity: 0, count: 0, totalQueued: 0 }),
-              map(({ totalCargo, totalCapacity, totalQueued }) => ({
-                totalCargo, totalCapacity, totalQueued,
-                averageUtilization: totalCargo / totalCapacity,
-                averageQueued: totalQueued / totalCapacity
-              }))
-            )),
-            mergeAll(),
-            startWith({ totalCargo: 0, totalCapacity: 0, averageUtilization: 0, averageQueued: 0 }),
+            scan((acc, car) => {acc[car.id] = car; return acc}, {}),
+            map((cars) => {
+              const result = {
+                totalCapacity: 0,
+                totalCargo: 0,
+                totalQueued: 0,
+              }
+              Object.values(cars).forEach(car => {
+                result.totalCargo += car.cargo.length
+                result.totalCapacity += car.capacity
+                result.totalQueued += car.queue.length
+              })
+              return result
+            }),
+            map(({ totalCargo, totalCapacity, totalQueued }) => ({ 
+              totalCargo, totalCapacity, totalQueued, 
+              averageUtilization: totalCargo / totalCapacity, 
+              averageQueued: totalQueued / totalCapacity 
+            })),
+            startWith({ totalCargo: 0, totalCapacity: 0, totalQueued: 0, averageUtilization: 0, averageQueued: 0}),
           )
 
           const totalCars = cars.pipe(
