@@ -67,13 +67,13 @@ function generateBookingsInKommun(kommun) {
           const homeDelivery = Math.random() < fleet.percentageHomeDelivery
           const returnDelivery = Math.random() < fleet.percentageReturnDelivery
 
-          if (isCommercial || homeDelivery) return new Booking({pickup: fleet.hub, destination: address, origin})
-          if (returnDelivery) return new Booking({pickup: nearestOmbud, destination: hub})
+          if (isCommercial || homeDelivery) return new Booking({pickup: fleet.hub, destination: address, origin: fleet.name})
+          if (returnDelivery) return new Booking({pickup: nearestOmbud, destination: hub, origin: fleet.name})
 
           return new Booking({
             pickup: fleet.hub,
             destination: nearestOmbud,
-            origin: fleet
+            origin: fleet.name
           })
         })
         .catch(() => Promise.resolve(null))
