@@ -30,7 +30,7 @@ const commercialAreasLayer = new GeoJsonLayer({
   getLineColor: [0, 255, 128],
 })
 
-const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
+const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) => {
   const [mapState, setMapState] = useState({
     latitude: 65.0964472642777,
     longitude: 17.112050188704504,
@@ -79,7 +79,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     },
   })
 
-  const getCarColorBasedOnFleet = ({ fleet }) => {
+  const getColorBasedOnFleet = ({ fleet }) => {
     switch (fleet.toLowerCase()) {
       case 'bring':
         return [139, 190, 87]
@@ -87,7 +87,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         return [251, 255, 84]
       case 'postnord':
         return [57, 123, 184]
-      case 'schenker':
+      case 'db_schenker':
         return [204, 52, 41]
       default:
         return [254, 254, 254]
@@ -106,7 +106,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
       return c.position
     },
     getRadius: () => 8,
-    getFillColor: getCarColorBasedOnFleet,
+    getFillColor: getColorBasedOnFleet,
     pickable: true,
     onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)
@@ -198,14 +198,14 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
 
       switch (booking.status) {
         case 'Picked up': return {
-          inbound: [169, 178, 237],
-          outbound: [169, 178, 237],
+          inbound: getColorBasedOnFleet(car),
+          outbound: getColorBasedOnFleet(car),
           from: car.position,
           to: booking.destination
         }
         case 'Queued': return {
           inbound: [178, 169, 2, 20],
-          outbound: [178, 169, 2, 100],
+          outbound: [178, 169, 2, 20],
           from: car.position,
           to: booking.pickup,
         }
@@ -294,6 +294,12 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         showQueuedBookings && arcLayerQueuedBookings
       ]}
     >
+      <div style={{
+        right: '40px',
+        top: '20px',
+        position: 'absolute',
+        color: 'rgba(255,255,255,0.5)'
+      }}>{new Date(time).toLocaleTimeString()}</div>
       <div style={{
         bottom: '150px',
         right: '200px',

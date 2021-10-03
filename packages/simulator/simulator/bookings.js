@@ -64,15 +64,16 @@ function generateBookingsInKommun(kommun) {
       return pelias.nearest(position)
         .then((address) => {
           const isCommercial = address.layer === 'venue'
-          const homeDelivery = Math.random() > fleet.percentageHomeDelivery
-          const returnDelivery = Math.random() > fleet.percentageReturnDelivery
+          const homeDelivery = Math.random() < fleet.percentageHomeDelivery
+          const returnDelivery = Math.random() < fleet.percentageReturnDelivery
 
-          if (isCommercial || homeDelivery) return new Booking({pickup: fleet.hub, destination: address})
+          if (isCommercial || homeDelivery) return new Booking({pickup: fleet.hub, destination: address, origin})
           if (returnDelivery) return new Booking({pickup: nearestOmbud, destination: hub})
 
           return new Booking({
-            pickup:  fleet.hub,
+            pickup: fleet.hub,
             destination: nearestOmbud,
+            origin: fleet
           })
         })
         .catch(() => Promise.resolve(null))

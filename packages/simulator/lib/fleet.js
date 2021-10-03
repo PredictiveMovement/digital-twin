@@ -10,7 +10,7 @@ class Fleet {
     this.name = name
     this.marketshare = marketshare
     this.hub = {position: convertPosition(hub)}
-    this.percentageHomeDelivery = 0.5
+    this.percentageHomeDelivery = 0.2
     this.percentageReturnDelivery = 0.1
     this.cars = range(0, numberOfCars).pipe(
       mergeMap(i => randomize(this.hub.position).then(position => new Car({ fleet: this, position }))),

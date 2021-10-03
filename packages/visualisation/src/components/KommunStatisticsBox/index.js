@@ -22,22 +22,23 @@ width: 250px;
 const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, averageDeliveryTime, totalDelivered, averageUtilization, totalCargo, totalQueued, averageQueued }) => {
 
     return (
+        !totalCars ? null :
         <Wrapper>
             <div>
-                <Paragraph>Just nu kör {totalCars} lastbilar i {name}</Paragraph>
-                <Paragraph>Total kapacitet: {totalCapacity} paket</Paragraph>
-                <Paragraph>Levererade: {totalDelivered} paket</Paragraph>
-                <Paragraph>Medel leveranstid: {Math.ceil(2 * averageDeliveryTime) / 2}h</Paragraph>
+                <Paragraph>{totalCars} fordon i {name}</Paragraph>
+                <Paragraph>Total kapacitet: {totalCapacity} kollin</Paragraph>
+                <Paragraph>Antal bokningar: {totalBookings} kollin</Paragraph>
+                <Paragraph>Levererade: {totalDelivered} kollin ({Math.round((totalDelivered / totalBookings) * 100)}%)</Paragraph>
+                <Paragraph>Medel leveranstid: {Math.ceil(10 * averageDeliveryTime) / 10}h</Paragraph>
 
                 {/* <Paragraph>Total cargo: {totalCargo}</Paragraph> */}
-                <Paragraph>Antal bokningar: {totalBookings} paket</Paragraph>
-                <Paragraph>Lastat: {totalCargo} paket</Paragraph>
-                <Paragraph>Köat: {totalQueued} paket ({Math.ceil(averageQueued * 10) / 10 * 100}%)</Paragraph>
+                <Paragraph>Lastat: {totalCargo} kollin</Paragraph>
+                <Paragraph>Köat: {totalQueued} kollin</Paragraph>
                 {/* <Paragraph>Co2: XXX</Paragraph> */}
-                {/* <Paragraph>Antal paket upphämtade från avlastningscentralen: {bookingsFromHub} st</Paragraph> */}
+                {/* <Paragraph>Antal kollin upphämtade från avlastningscentralen: {bookingsFromHub} st</Paragraph> */}
             </div>
             {/* <div> */}
-            {/* <Paragraph thin>Medelfyllnadsgrad per bil:</Paragraph> */}
+            <Paragraph thin>Medelfyllnadsgrad per bil:</Paragraph>
             {<ProgressBar completed={Math.round(averageUtilization * 100)} />}
             {/* </div> */}
 

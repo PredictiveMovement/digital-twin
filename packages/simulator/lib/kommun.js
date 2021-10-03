@@ -1,10 +1,14 @@
 const EventEmitter = require('events')
-const { from, shareReplay, Subject, ReplaySubject, mergeAll, mergeMap, of } = require('rxjs')
-const { map, tap, filter, catchError, toArray, reduce, partition, first } = require('rxjs/operators')
+const { from, shareReplay, Subject, ReplaySubject, mergeAll, mergeMap, of, range } = require('rxjs')
+const { map, tap, filter, catchError, toArray, reduce, partition, first, mapTo } = require('rxjs/operators')
 const Fleet = require('./fleet')
 
-const shuffle = () => stream => stream.pipe(toArray(), map((arr) => arr.sort((a, b) => Math.random() - 0.5)), mergeAll())
-const pickAboveMarketShare = (randomValue) => fleets.pipe(shuffle(), toArray(), map(fleets.find(f => f.marketshare > Math.random()) || fleets[0]))
+
+// expand fleets so that a fleet with marketshare 12% has 12 cars to choose from
+const expandFleets = () => (fleets) => fleets.pipe(mergeMap(fleet => range(0, fleet.marketshare).pipe(mapTo(fleet))))
+
+// pick a random item in an array-like stream
+const pickRandom = () => stream => stream.pipe(toArray(), map((arr) => arr[Math.floor(arr.length * Math.random())]))
 
 class Kommun extends EventEmitter {
   constructor({ geometry, name, id, packageVolumes, email, zip, telephone, postombud, squares, fleets }) {
@@ -41,8 +45,11 @@ class Kommun extends EventEmitter {
   handleBooking(booking) {
     booking.kommun = this
     this.fleets.pipe(
-      shuffle(),
-      first()
+      first(f => f.name === booking.origin, null), // first try to use origin if it exists
+      mergeMap(fleet => fleet ? of(fleet) : this.fleets.pipe(
+        expandFleets(), // otherwise pick one at random
+        pickRandom(),
+      ))
     ).subscribe(fleet => fleet.handleBooking(booking))
     return booking
   }

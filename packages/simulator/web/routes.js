@@ -51,6 +51,29 @@ function register(io) {
     ).subscribe((kommun) =>
       socket.emit('kommun', kommun)
     )
+
+    engine.bookingUpdates
+    .pipe(
+      //tap(booking => console.log('update', booking)),
+      map(({
+        pickup: { position: pickup },
+        destination: { position: destination, name },
+        id, status, isCommercial,
+        deliveryTime, car
+      }) => ({
+        id, pickup, destination,
+        name, status, isCommercial,
+        deliveryTime,
+        carId: car?.id
+      })),
+      //distinct(booking => booking.id),
+      bufferTime(100)
+    )
+    .subscribe((bookings) => {
+      if (bookings.length) {
+        socket.emit('bookings', bookings)
+      }
+    })
   })
   engine.carUpdates
     .pipe(
@@ -74,27 +97,7 @@ function register(io) {
       if (cars.length) io.emit('cars', cars)
     })
 
-  engine.bookingUpdates
-    .pipe(
-      map(({
-        pickup: { position: pickup },
-        destination: { position: destination, name },
-        id, status, isCommercial,
-        deliveryTime, car
-      }) => ({
-        id, pickup, destination,
-        name, status, isCommercial,
-        deliveryTime,
-        carId: car?.id
-      })),
-      //distinct(booking => booking.id),
-      bufferCount(30)
-    )
-    .subscribe((bookings) => {
-      if (bookings.length) {
-        io.emit('bookings', bookings)
-      }
-    })
+  setInterval(() => io.emit('time', virtualTime.time()), 1000)
 
   engine.kommuner
     .pipe(
@@ -151,9 +154,9 @@ function register(io) {
             startWith(0)
           )
 
-          return combineLatest([totalBookings, totalCars, averageDeliveryTime, averageUtilization, totalCapacity]).pipe(
-            map(([totalBookings, totalCars, { totalCargo, totalQueued, averageQueued }, { totalDelivered, averageDeliveryTime }, totalCapacity]) => ({
-              id, name, totalBookings, totalCars, totalCargo, totalCapacity, averageDeliveryTime, totalDelivered, totalQueued, averageQueued
+          return combineLatest([totalBookings, totalCars, averageUtilization, averageDeliveryTime, totalCapacity]).pipe(
+            map(([totalBookings, totalCars, { totalCargo, totalQueued, averageQueued, averageUtilization }, { totalDelivered, averageDeliveryTime }, totalCapacity]) => ({
+              id, name, totalBookings, totalCars, totalCargo, totalCapacity, averageDeliveryTime, totalDelivered, totalQueued, averageQueued, averageUtilization
             })),
             // Do not emit more than 1 event per kommun per second
             throttleTime(5000)

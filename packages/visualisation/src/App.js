@@ -19,6 +19,7 @@ const App = () => {
   const [activeCar, setActiveCar] = useState(null)
   const [reset, setReset] = useState(false)
   const [speed, setSpeed] = React.useState(60)
+  const [time, setTime] = React.useState(Date.now())
 
   useSocket('reset', () => {
     console.log('received reset')
@@ -41,7 +42,6 @@ const App = () => {
 
   const [cars, setCars] = React.useState([])
   useSocket('cars', (newCars) => {
-    console.log('CARS.', newCars)
     setReset(false)
     setCars((cars) => [
       ...cars.filter((car) => !newCars.some((nc) => nc.id === car.id)),
@@ -58,7 +58,6 @@ const App = () => {
 
   const [bookings, setBookings] = React.useState([])
   useSocket('bookings', (newBookings) => {
-    console.log('bookings', newBookings)
     setBookings((bookings) => newBookings
       .map(({ name, id, pickup, destination, status, isCommercial, deliveryTime, carId }) => ({
         id,
@@ -87,7 +86,6 @@ const App = () => {
 
   const [kommuner, setKommuner] = React.useState([])
   useSocket('kommun', (kommun) => {
-    console.log('hej kommun', kommun.name)
     setKommuner((current) => upsert(current, kommun, 'id'))
   })
 
@@ -138,6 +136,7 @@ const App = () => {
         hubs={postombud}
         kommuner={kommuner}
         activeCar={activeCar}
+        time={time}
         setActiveCar={setActiveCar}
       />
     </>

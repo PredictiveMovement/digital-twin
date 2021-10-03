@@ -12747,19 +12747,19 @@
         "name": "Postnord",
         "numberOfCars": 4,
         "marketshare": 60,
-        "hub": [21.034263, 64.746704]
+        "hub": [17.084090, 61.741754]
       },
       {
         "name": "DB_Schenker",
         "numberOfCars": 2,
         "marketshare": 12,
-        "hub": [21.034263, 64.746704]
+        "hub": [17.084090, 61.741754]
       },
       {
         "name": "Bring",
         "numberOfCars": 2,
         "marketshare": 6,
-        "hub": [21.034263, 64.746704]
+        "hub": [17.084090, 61.741754]
       },
       {
         "name": "DHL_Express",
