@@ -160,7 +160,7 @@ class Car extends EventEmitter {
     const [km, h] = [(metersMoved / 1000), (date - lastPosition.date) / 1000 / 60 / 60]
     // https://www.naturvardsverket.se/data-och-statistik/klimat/vaxthusgaser-utslapp-fran-inrikes-transporter/
     // https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
-    const co2 = ((this.weight + this.cargoWeight()) * km) * 0.013
+    const co2 = ((this.weight /* + this.cargoWeight()*/) * km) * 0.013
     this.speed = Math.round((km / h / (virtualTime.timeMultiplier || 1)) || 0)
     this.position = position
     this.ema = haversine(this.heading, this.position)
