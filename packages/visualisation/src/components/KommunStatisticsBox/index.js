@@ -19,7 +19,7 @@ z-index: 1;
 width: 250px;
 `
 
-const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, averageDeliveryTime, totalDelivered, averageUtilization, totalCargo, totalQueued, averageQueued }) => {
+const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, co2, averageDeliveryTime, totalDelivered, averageUtilization, totalCargo, totalQueued, averageQueued }) => {
 
     return (
         !totalCars ? null :
@@ -28,12 +28,13 @@ const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, av
                 <Paragraph>{totalCars} fordon i {name}</Paragraph>
                 <Paragraph>Total kapacitet: {totalCapacity} kollin</Paragraph>
                 <Paragraph>Antal bokningar: {totalBookings} kollin</Paragraph>
+                <Paragraph>Köat: {totalQueued} kollin</Paragraph>
+                <Paragraph>Lastat: {totalCargo} kollin</Paragraph>
+                {/*<Paragraph>CO2: {co2} kg</Paragraph>*/}
                 <Paragraph>Levererade: {totalDelivered} kollin ({Math.round((totalDelivered / totalBookings) * 100)}%)</Paragraph>
                 <Paragraph>Medel leveranstid: {Math.ceil(10 * averageDeliveryTime) / 10}h</Paragraph>
 
                 {/* <Paragraph>Total cargo: {totalCargo}</Paragraph> */}
-                <Paragraph>Lastat: {totalCargo} kollin</Paragraph>
-                <Paragraph>Köat: {totalQueued} kollin</Paragraph>
                 {/* <Paragraph>Co2: XXX</Paragraph> */}
                 {/* <Paragraph>Antal kollin upphämtade från avlastningscentralen: {bookingsFromHub} st</Paragraph> */}
             </div>

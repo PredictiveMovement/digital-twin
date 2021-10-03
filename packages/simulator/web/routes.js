@@ -97,7 +97,9 @@ function register(io) {
       if (cars.length) io.emit('cars', cars)
     })
 
-  setInterval(() => io.emit('time', virtualTime.time()), 1000)
+  setInterval(() => {
+    io.emit('time', virtualTime.time())
+  }, 1000)
 
   engine.kommuner
     .pipe(
@@ -110,13 +112,14 @@ function register(io) {
 
           const averageDeliveryTime = dispatchedBookings.pipe(
             mergeMap(booking => fromEvent(booking, 'delivered')),
-            scan(({ total, deliveryTimeTotal }, { deliveryTime }) => ({
+            scan(({ total, deliveryTimeTotal, co2Total }, { deliveryTime, co2 }) => ({
               total: total + 1,
+              co2Total: total + co2,
               deliveryTimeTotal: deliveryTimeTotal + deliveryTime
             }),
-              { total: 0, deliveryTimeTotal: 0 }),
-            startWith({ total: 0, deliveryTimeTotal: 0 }),
-            map(({ total, deliveryTimeTotal }) => ({ totalDelivered: total, averageDeliveryTime: (deliveryTimeTotal / total) / 60 / 60 }))
+              { total: 0, deliveryTimeTotal: 0, co2: 0 }),
+            startWith({ total: 0, deliveryTimeTotal: 0, co2Total: 0 }),
+            map(({ total, deliveryTimeTotal, co2Total }) => ({ totalDelivered: total, co2: co2Total, co2Average: co2Total / total, averageDeliveryTime: (deliveryTimeTotal / total) / 60 / 60 }))
           )
 
           const averageUtilization = cars.pipe(
@@ -155,8 +158,8 @@ function register(io) {
           )
 
           return combineLatest([totalBookings, totalCars, averageUtilization, averageDeliveryTime, totalCapacity]).pipe(
-            map(([totalBookings, totalCars, { totalCargo, totalQueued, averageQueued, averageUtilization }, { totalDelivered, averageDeliveryTime }, totalCapacity]) => ({
-              id, name, totalBookings, totalCars, totalCargo, totalCapacity, averageDeliveryTime, totalDelivered, totalQueued, averageQueued, averageUtilization
+            map(([totalBookings, totalCars, { totalCargo, totalQueued, averageQueued, averageUtilization }, { totalDelivered, averageDeliveryTime, co2 }, totalCapacity]) => ({
+              id, name, totalBookings, totalCars, totalCargo, totalCapacity, averageDeliveryTime, totalDelivered, co2, totalQueued, averageQueued, averageUtilization
             })),
             // Do not emit more than 1 event per kommun per second
             throttleTime(5000)

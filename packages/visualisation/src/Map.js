@@ -34,7 +34,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
   const [mapState, setMapState] = useState({
     latitude: 65.0964472642777,
     longitude: 17.112050188704504,
-    zoom: 8, // min ~0.6 max 24.0
+    zoom: 5, // min ~0.6 max 24.0
     pitch: 40,
   })
 

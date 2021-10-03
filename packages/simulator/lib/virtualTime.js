@@ -5,7 +5,7 @@ class VirtualTime extends EventEmitter {
 
   constructor(timeMultiplier = 60) {
     super()
-    this.startDate = Date.now()
+    this.startDate = Date.parse(new Date().toDateString() +' 06:00').valueOf()
     this.setTimeMultiplier(timeMultiplier)
     this.offset = 0
   }

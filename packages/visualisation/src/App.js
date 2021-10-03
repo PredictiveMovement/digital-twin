@@ -56,6 +56,10 @@ const App = () => {
     ])
   })
 
+  useSocket('time', (time) => {
+    setTime(time)
+  })
+
   const [bookings, setBookings] = React.useState([])
   useSocket('bookings', (newBookings) => {
     setBookings((bookings) => newBookings
