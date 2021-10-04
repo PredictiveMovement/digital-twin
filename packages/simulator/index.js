@@ -59,7 +59,7 @@ const engine = {
   ),
   dispatchedBookings: pilots.pipe(
     mergeMap((kommun) => kommun.dispatchedBookings),
-    
+    shareReplay(),
   ),
   postombud,
   kommuner

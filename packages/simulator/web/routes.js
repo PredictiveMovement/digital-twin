@@ -19,11 +19,8 @@ const {
 
 const { virtualTime } = require('../lib/virtualTime')
 
-let SOCKEKE
-
 function register(io) {
   io.on('connection', function (socket) {
-    SOCKEKE = socket
     socket.emit('reset')
 
     socket.on('reset', () => {
@@ -52,7 +49,7 @@ function register(io) {
       socket.emit('kommun', kommun)
     )
 
-    engine.bookingUpdates
+    merge(engine.dispatchedBookings, engine.bookingUpdates)
     .pipe(
       //tap(booking => console.log('update', booking)),
       map(({
@@ -90,10 +87,10 @@ function register(io) {
         queue: queue.length + (booking ? 1 : 0),
         capacity
       })),
-      bufferTime(100)
+      bufferTime(200)
     )
     .subscribe((cars) => {
-      // console.log('här borde vi emitta bilar', cars)
+      // console.log('här borde vi emitta bilar', cars.length)
       if (cars.length) io.emit('cars', cars)
     })
 
