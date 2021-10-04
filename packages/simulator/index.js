@@ -17,7 +17,7 @@ const WORKING_DAYS = 265
 const pilots = kommuner.pipe(
   filter((kommun) =>
     //['Arjeplog', 'Arvidsjaur', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
-    ['Arjeplog', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
+    ['Arjeplog', 'Arvidsjaur', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
       kommun.name.startsWith(pilot)
     ),
   ),

@@ -101,7 +101,7 @@ function register(io) {
         queue: queue.length + (booking ? 1 : 0),
         capacity
       })),
-      bufferTime(200)
+      bufferTime(100),
     )
     .subscribe((cars) => {
       if (cars.length) io.emit('cars', cars)
