@@ -19,6 +19,19 @@ const {
 
 const { virtualTime } = require('../lib/virtualTime')
 
+const cleanBookings = () => bookings => bookings.pipe(map(({
+    pickup: { position: pickup },
+    destination: { position: destination, name },
+    id, status, isCommercial,
+    deliveryTime, car
+  }) => ({
+    id, pickup, destination,
+    name, status, isCommercial,
+    deliveryTime,
+    carId: car?.id
+  }))
+)
+
 function register(io) {
   io.on('connection', function (socket) {
     socket.emit('reset')
@@ -49,28 +62,27 @@ function register(io) {
       socket.emit('kommun', kommun)
     )
 
-    merge(engine.dispatchedBookings, engine.bookingUpdates)
+    engine.dispatchedBookings
     .pipe(
-      //tap(booking => console.log('update', booking)),
-      map(({
-        pickup: { position: pickup },
-        destination: { position: destination, name },
-        id, status, isCommercial,
-        deliveryTime, car
-      }) => ({
-        id, pickup, destination,
-        name, status, isCommercial,
-        deliveryTime,
-        carId: car?.id
-      })),
-      //distinct(booking => booking.id),
-      bufferTime(100)
+      cleanBookings(),
+      bufferCount(100)
     )
     .subscribe((bookings) => {
       if (bookings.length) {
         socket.emit('bookings', bookings)
+        console.log('sending initial bookings', bookings.length)
       }
     })
+  })
+
+  engine.bookingUpdates.pipe(
+    cleanBookings(),
+    bufferTime(100)
+  )
+  .subscribe((bookings) => {
+    if (bookings.length) {
+      io.emit('bookings', bookings)
+    }
   })
   engine.carUpdates
     .pipe(
@@ -90,7 +102,6 @@ function register(io) {
       bufferTime(200)
     )
     .subscribe((cars) => {
-      // console.log('här borde vi emitta bilar', cars.length)
       if (cars.length) io.emit('cars', cars)
     })
 
@@ -159,7 +170,7 @@ function register(io) {
               id, name, totalBookings, totalCars, totalCargo, totalCapacity, averageDeliveryTime, totalDelivered, co2, totalQueued, averageQueued, averageUtilization
             })),
             // Do not emit more than 1 event per kommun per second
-            throttleTime(5000)
+            throttleTime(1000)
           )
 
           // return combineLatest([totalBookings, totalCars, averageUtilization, averageDeliveryTime, totalCapacity]).pipe(
@@ -173,6 +184,7 @@ function register(io) {
         filter(({totalCars}) => totalCars > 0)
     )
     .subscribe(kommun => {
+      console.log('stats', kommun)
       io.emit('kommun', kommun)
     })
 }

@@ -33,7 +33,7 @@ const pilots = kommuner.pipe(
     } else {
       console.log(`*** ${kommun.name}: no cached bookings`)
       bookings = generateBookingsInKommun(kommun).pipe(
-        take(Math.ceil(kommun.packageVolumes?.B2C / WORKING_DAYS)), // how many bookings do we want?
+        take(Math.ceil(kommun.packageVolumes?.total / WORKING_DAYS)), // how many bookings do we want?
         //take(10)
       )
 
