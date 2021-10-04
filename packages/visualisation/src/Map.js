@@ -81,14 +81,16 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
 
   const getColorBasedOnFleet = ({ fleet }) => {
     switch (fleet.toLowerCase()) {
+      case 'brun':
+        return [252, 3, 215]
       case 'bring':
         return [139, 190, 87]
-      case 'dhl':
+      case 'gul':
         return [251, 255, 84]
       case 'postnord':
         return [57, 123, 184]
-      case 'db_schenker':
-        return [204, 52, 41]
+      case 'röd':
+        return [252, 3, 3]
       default:
         return [254, 254, 254]
     }
@@ -170,9 +172,9 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
     getPosition: (c) => {
       return c.position
     },
-    getRadius: () => 3,
+    getRadius: () => 2,
     // #127DBD
-    getFillColor: [18, 125, 189],
+    getFillColor: [0, 255, 128, 120],
     pickable: true,
     onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)

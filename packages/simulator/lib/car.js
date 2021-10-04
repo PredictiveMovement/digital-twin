@@ -20,6 +20,7 @@ class Car extends EventEmitter {
     this.delivered = []
     this.capacity = capacity // bookings
     this.weight = 10 // http://www.lastbilsteori.se/lastvikt.html
+    this.co2 = 0
     this.status = status
     this.lastPositions = []
     this.fleet = fleet
@@ -161,6 +162,7 @@ class Car extends EventEmitter {
     // https://www.naturvardsverket.se/data-och-statistik/klimat/vaxthusgaser-utslapp-fran-inrikes-transporter/
     // https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
     const co2 = ((this.weight /* + this.cargoWeight()*/) * km) * 0.013
+    this.co2 += co2
     this.speed = Math.round((km / h / (virtualTime.timeMultiplier || 1)) || 0)
     this.position = position
     this.ema = haversine(this.heading, this.position)

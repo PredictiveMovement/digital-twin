@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import InfoBox from './components/InfoBox/index.js'
 import { useSocket } from './hooks/useSocket.js'
 import Map from './Map.js'
 import PlaybackOptions from './components/PlaybackOptions/index.js'
@@ -129,8 +128,6 @@ const App = () => {
           <img src={ResetIcon} alt='Reset' />
         </TransparentButton>
       </Wrapper>
-
-      {activeCar && <InfoBox data={activeCar} />}
 
       <PlaybackOptions onPause={onPause} onPlay={onPlay} onSpeedChange={onSpeedChange} />
       {reset && <Loading />}

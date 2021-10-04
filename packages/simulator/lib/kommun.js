@@ -5,7 +5,7 @@ const Fleet = require('./fleet')
 
 
 // expand fleets so that a fleet with marketshare 12% has 12 cars to choose from
-const expandFleets = () => (fleets) => fleets.pipe(mergeMap(fleet => range(0, fleet.marketshare).pipe(mapTo(fleet))))
+const expandFleets = () => (fleets) => fleets.pipe(mergeMap(fleet => range(0, fleet.marketshare * 10).pipe(mapTo(fleet))))
 
 // pick a random item in an array-like stream
 const pickRandom = () => stream => stream.pipe(toArray(), map((arr) => arr[Math.floor(arr.length * Math.random())]))

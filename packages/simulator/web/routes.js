@@ -22,12 +22,13 @@ const { virtualTime } = require('../lib/virtualTime')
 const cleanBookings = () => bookings => bookings.pipe(map(({
     pickup: { position: pickup },
     destination: { position: destination, name },
-    id, status, isCommercial,
+    id, status, isCommercial, co2,
     deliveryTime, car
   }) => ({
     id, pickup, destination,
     name, status, isCommercial,
     deliveryTime,
+    co2,
     carId: car?.id
   }))
 )
@@ -87,7 +88,7 @@ function register(io) {
   engine.carUpdates
     .pipe(
       //distinct(car => car.id),
-      map(({ booking, position: { lon, lat }, id, heading, speed, bearing, status, fleet, cargo, capacity, queue }) => ({
+      map(({ booking, position: { lon, lat }, id, heading, speed, bearing, status, fleet, cargo, capacity, queue, co2 }) => ({
         id,
         heading: [heading.lon, heading.lat], // contains route to plot or interpolate on client side.
         speed,
@@ -95,6 +96,7 @@ function register(io) {
         position: [lon, lat],
         status,
         fleet: fleet.name,
+        co2,
         cargo: cargo.length + (booking ? 1 : 0),
         queue: queue.length + (booking ? 1 : 0),
         capacity
@@ -120,14 +122,13 @@ function register(io) {
 
           const averageDeliveryTime = dispatchedBookings.pipe(
             mergeMap(booking => fromEvent(booking, 'delivered')),
-            scan(({ total, deliveryTimeTotal, co2Total }, { deliveryTime, co2 }) => ({
+            scan(({ total, deliveryTimeTotal }, { deliveryTime }) => ({
               total: total + 1,
-              co2Total: total + co2,
               deliveryTimeTotal: deliveryTimeTotal + deliveryTime
             }),
-              { total: 0, deliveryTimeTotal: 0, co2: 0 }),
-            startWith({ total: 0, deliveryTimeTotal: 0, co2Total: 0 }),
-            map(({ total, deliveryTimeTotal, co2Total }) => ({ totalDelivered: total, co2: co2Total, co2Average: co2Total / total, averageDeliveryTime: (deliveryTimeTotal / total) / 60 / 60 }))
+              { total: 0, deliveryTimeTotal: 0 }),
+            startWith({ total: 0, deliveryTimeTotal: 0 }),
+            map(({ total, deliveryTimeTotal }) => ({ totalDelivered: total, averageDeliveryTime: (deliveryTimeTotal / total) / 60 / 60 }))
           )
 
           const averageUtilization = cars.pipe(
@@ -137,21 +138,24 @@ function register(io) {
               const result = {
                 totalCapacity: 0,
                 totalCargo: 0,
+                totalCo2: 0,
                 totalQueued: 0,
               }
               Object.values(cars).forEach(car => {
                 result.totalCargo += car.cargo.length
                 result.totalCapacity += car.capacity
                 result.totalQueued += car.queue.length
+                result.totalCo2 += car.co2
               })
               return result
             }),
-            map(({ totalCargo, totalCapacity, totalQueued }) => ({ 
+            map(({ totalCargo, totalCapacity, totalQueued, totalCo2 }) => ({ 
               totalCargo, totalCapacity, totalQueued, 
               averageUtilization: totalCargo / totalCapacity, 
-              averageQueued: totalQueued / totalCapacity 
+              averageQueued: totalQueued / totalCapacity,
+              totalCo2
             })),
-            startWith({ totalCargo: 0, totalCapacity: 0, totalQueued: 0, averageUtilization: 0, averageQueued: 0}),
+            startWith({ totalCargo: 0, totalCapacity: 0, totalQueued: 0, averageUtilization: 0, averageQueued: 0, totalCo2: 0}),
           )
 
           const totalCars = cars.pipe(
@@ -166,8 +170,8 @@ function register(io) {
           )
 
           return combineLatest([totalBookings, totalCars, averageUtilization, averageDeliveryTime, totalCapacity]).pipe(
-            map(([totalBookings, totalCars, { totalCargo, totalQueued, averageQueued, averageUtilization }, { totalDelivered, averageDeliveryTime, co2 }, totalCapacity]) => ({
-              id, name, totalBookings, totalCars, totalCargo, totalCapacity, averageDeliveryTime, totalDelivered, co2, totalQueued, averageQueued, averageUtilization
+            map(([totalBookings, totalCars, { totalCargo, totalQueued, totalCo2, averageQueued, averageUtilization }, { totalDelivered, averageDeliveryTime }, totalCapacity]) => ({
+              id, name, totalBookings, totalCars, totalCargo, totalCo2, totalCapacity, averageDeliveryTime, totalDelivered, totalQueued, averageQueued, averageUtilization
             })),
             // Do not emit more than 1 event per kommun per second
             throttleTime(1000)
