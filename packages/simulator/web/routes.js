@@ -66,7 +66,7 @@ function register(io) {
     engine.dispatchedBookings
     .pipe(
       cleanBookings(),
-      bufferCount(100)
+      bufferTime(100, null, 1000)
     )
     .subscribe((bookings) => {
       if (bookings.length) {
@@ -78,7 +78,7 @@ function register(io) {
 
   engine.bookingUpdates.pipe(
     cleanBookings(),
-    bufferTime(100)
+    bufferTime(100, null, 1000)
   )
   .subscribe((bookings) => {
     if (bookings.length) {
@@ -188,7 +188,6 @@ function register(io) {
         filter(({totalCars}) => totalCars > 0)
     )
     .subscribe(kommun => {
-      console.log('stats', kommun)
       io.emit('kommun', kommun)
     })
 }
