@@ -45,7 +45,7 @@ class Car extends EventEmitter {
     if (virtualTime.timeMultiplier === Infinity) return this.updatePosition(route) // teleport mode
     this._interval = setInterval(() => {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
-      const newPosition = interpolate.route(route, this.time()) ?? route
+      const newPosition = interpolate.route(route, this.time()) ?? this.heading
       this.updatePosition(newPosition)
     }, 100)
   }
@@ -157,14 +157,15 @@ class Car extends EventEmitter {
 
   async updatePosition(position, date = this.time()) {
     const lastPosition = this.position || position
-    const metersMoved = haversine(lastPosition, position) // update from route
+    const metersMoved = this.route && this.lastPositionUpdate && interpolate.getDiff(this.route, this.lastPositionUpdate, date).distance || 0
     const [km, h] = [(metersMoved / 1000), (date - lastPosition.date) / 1000 / 60 / 60]
     // https://www.naturvardsverket.se/data-och-statistik/klimat/vaxthusgaser-utslapp-fran-inrikes-transporter/
     // https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
-    const co2 = ((this.weight /* + this.cargoWeight()*/) * km) * 0.013
+    const co2 = ((this.weight + this.cargoWeight()) * km) * 0.013
     this.co2 += co2
     this.speed = Math.round((km / h / (virtualTime.timeMultiplier || 1)) || 0)
     this.position = position
+    this.lastPositionUpdate = date
     this.ema = haversine(this.heading, this.position)
     if (metersMoved > 0) {
       this.bearing = bearing(lastPosition, position) || 0

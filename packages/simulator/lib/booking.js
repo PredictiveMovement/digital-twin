@@ -10,7 +10,7 @@ class Booking extends EventEmitter {
     this.status = 'New'
     this.co2 = 0 //TODO: initialvärde?
     this.distance = 0 //TODO: räkna med sträcka innan?
-    this.weight = Math.random() * 5 // kg TODO: find reference kg
+    this.weight = Math.random() * 10 // kg TODO: find reference kg
     Object.assign(this, booking)
     this.position = this.pickup?.position
     this.on('error', err => console.error('booking error', err))

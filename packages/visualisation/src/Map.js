@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StaticMap } from 'react-map-gl'
-import DeckGL, { PolygonLayer, ScatterplotLayer, ArcLayer } from 'deck.gl'
+import DeckGL, { PolygonLayer, ScatterplotLayer, ArcLayer, IconLayer } from 'deck.gl'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
 
@@ -56,8 +56,8 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
     opacity: 0.3,
     polygonOffset: 1,
     getPolygon: (k) => k.geometry.coordinates,
-    getLineColor: () => [0, 255, 128, 100],
-    getFillColor: () => [0, 0, 0, 0], // this isn't actually opaque, it just ends up not rendering any color
+    getLineColor: [0, 255, 128, 100],
+    getFillColor: [0, 0, 0, 0], // this isn't actually opaque, it just ends up not rendering any color
     pickable: true,
     onHover: (info, event) => {
       const { object } = info
@@ -100,6 +100,39 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
     id: 'car-layer',
     data: cars,
     opacity: 0.4,
+    stroked: false,
+    filled: true,
+    radiusScale: 1,
+    radiusUnits: 'pixels',
+    getPosition: (c) => {
+      return c.position
+    },
+    getRadius: () => 8,
+    getFillColor: getColorBasedOnFleet,
+    pickable: true,
+    onHover: ({ object, x, y }) => {
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        ...object,
+        type: 'car',
+        x,
+        y,
+      })
+    },
+    onClick: ({ object }) => {
+      setMapState({
+        ...mapState,
+        zoom: 14,
+        longitude: object.position[0],
+        latitude: object.position[1],
+      })
+      setActiveCar(object)
+    },
+  })
+
+  const carIconLayer = new IconLayer({
+    id: 'car-icon-layer',
+    data: cars.filter(c => p.x < ),
     stroked: false,
     filled: true,
     radiusScale: 1,
