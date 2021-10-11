@@ -13,7 +13,8 @@ const Booking = require('./lib/booking')
 
 const { info } = require('./lib/log')
 
-const WORKING_DAYS = 265
+// https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
+const WORKING_DAYS = 220
 const pilots = kommuner.pipe(
   filter((kommun) =>
     //['Arjeplog', 'Arvidsjaur', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
@@ -39,7 +40,7 @@ const pilots = kommuner.pipe(
 
       // TODO: Could we do this without converting to an array? Yes. By using fs stream and write json per line
       bookings.pipe(
-        map(({ id, origin, pickup: {position: pickup}, destination: {position: destination}}) => ({ id, origin, pickup: {position: pickup}, destination: {position: destination} })), // remove all unneccessary data such as car and eventemitter etc
+        map(({ id, origin, pickup: {position: pickup}, destination: {position: destination, name}}) => ({ id, origin, pickup: {position: pickup}, destination: {position: destination, name} })), // remove all unneccessary data such as car and eventemitter etc
         toArray(),
       ).subscribe(arr => {
         fs.writeFileSync(file, JSON.stringify(arr))

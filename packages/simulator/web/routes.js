@@ -22,13 +22,14 @@ const { virtualTime } = require('../lib/virtualTime')
 const cleanBookings = () => bookings => bookings.pipe(map(({
     pickup: { position: pickup },
     destination: { position: destination, name },
-    id, status, isCommercial, co2,
+    id, status, isCommercial, co2, cost,
     deliveryTime, car
   }) => ({
     id, pickup, destination,
     name, status, isCommercial,
     deliveryTime,
     co2,
+    cost,
     carId: car?.id
   }))
 )

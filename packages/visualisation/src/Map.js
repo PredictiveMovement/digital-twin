@@ -97,6 +97,21 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
     }
   }
 
+  const getStatusLabel = status => {
+    switch (status.toLowerCase()) {
+      case 'assigned':
+        return 'Tilldelad'
+      case 'delivered':
+        return 'Levererad'
+      case 'picked up':
+        return 'Leverans pågår'
+      case 'queued':
+        return 'Väntar på upphämtning'
+      default:
+        return status
+    }
+  }
+
   const carLayer = new ScatterplotLayer({
     id: 'car-layer',
     data: cars,
@@ -155,7 +170,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
         title: object.address,
         subTitle: object.isCommercial
           ? '(företag)'
-          : ' Status: ' + object.status,
+          : ' Status: ' + getStatusLabel(object.status),
         x,
         y,
       })
@@ -181,7 +196,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         type: 'hub',
-        title: object.operator,
+        title: 'Paketombud för ' + object.operator,
         x,
         y,
       })

@@ -9,6 +9,7 @@ class Booking extends EventEmitter {
     this.id = safeId()
     this.status = 'New'
     this.co2 = 0 //TODO: initialvärde?
+    this.cost = 0 // startkostnad?
     this.distance = 0 //TODO: räkna med sträcka innan?
     this.weight = Math.random() * 10 // kg TODO: find reference kg
     Object.assign(this, booking)
@@ -32,9 +33,10 @@ class Booking extends EventEmitter {
     //console.log(`*** booking ${this.id}: ${this.status}`)
   }
 
-  moved(position, metersMoved, co2) {
+  moved(position, metersMoved, co2, cost) {
     this.position = position
     this.distance += metersMoved
+    this.cost += cost
     this.co2 += co2
     this.emit('moved', this)
   }

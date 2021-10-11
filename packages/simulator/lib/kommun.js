@@ -25,7 +25,7 @@ class Kommun extends EventEmitter {
     this.unhandledBookings = new Subject()
     this.population = this.squares.pipe(reduce((a, b) => a + b.population, 0))
 
-    this.fleets = from(fleets.map(({ hub, name, marketshare, numberOfCars }) => new Fleet({ hub, name, marketshare, numberOfCars })))
+    this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
     this.cars = this.fleets.pipe(
       mergeMap(fleet => fleet.cars),
       shareReplay()

@@ -7,9 +7,10 @@ const { safeId } = require('./id')
 const { assert } = require('console')
 const { error, info } = require('../lib/log')
 const { virtualTime } = require('../lib/virtualTime')
+const { throws } = require('assert')
 
 class Car extends EventEmitter {
-  constructor({ id = safeId(), position, status = 'Ready', capacity = 250, fleet } = {}) {
+  constructor({ id = safeId(), position, status = 'Ready', capacity = 250, weight = 10, fleet } = {}) {
     super()
     this.id = id
     this.position = position
@@ -19,7 +20,8 @@ class Car extends EventEmitter {
     this.cargo = []
     this.delivered = []
     this.capacity = capacity // bookings
-    this.weight = 10 // http://www.lastbilsteori.se/lastvikt.html
+    this.weight = weight // http://www.lastbilsteori.se/lastvikt.html
+    this.costPerHour = 3000 / 12 // ?
     this.co2 = 0
     this.status = status
     this.lastPositions = []
@@ -158,12 +160,12 @@ class Car extends EventEmitter {
   async updatePosition(position, date = this.time()) {
     const lastPosition = this.position || position
     const metersMoved = this.route && this.lastPositionUpdate && interpolate.getDiff(this.route, this.lastPositionUpdate, date).distance || 0
-    const [km, h] = [(metersMoved / 1000), (date - lastPosition.date) / 1000 / 60 / 60]
+    const [km, h] = [(metersMoved / 1000), ((date - this.lastPositionUpdate) / 1000 / 60 / 60)]
     // https://www.naturvardsverket.se/data-och-statistik/klimat/vaxthusgaser-utslapp-fran-inrikes-transporter/
     // https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
     const co2 = ((this.weight + this.cargoWeight()) * km) * 0.013
     this.co2 += co2
-    this.speed = Math.round((km / h / (virtualTime.timeMultiplier || 1)) || 0)
+    this.speed = Math.round((km / h) || 0)
     this.position = position
     this.lastPositionUpdate = date
     this.ema = haversine(this.heading, this.position)
@@ -174,7 +176,7 @@ class Car extends EventEmitter {
     }
 
     this.cargo.map(booking => {
-      booking.moved(this.position, metersMoved, co2 / (this.cargo.length + 1))
+      booking.moved(this.position, metersMoved, co2 / (this.cargo.length + 1), h * this.costPerHour / (this.cargo.length + 1))
     })
 
     if (!position.next) {
