@@ -133,7 +133,7 @@ function register(io) {
 
           const averageUtilization = cars.pipe(
             mergeMap(car => fromEvent(car, 'cargo')),
-            scan((acc, car) => {acc[car.id] = car; return acc}, {}),
+            scan((acc, car) => ({...acc, [car.id]: car}), {}),
             map((cars) => {
               const result = {
                 totalCapacity: 0,
