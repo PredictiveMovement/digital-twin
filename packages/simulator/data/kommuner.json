@@ -26406,7 +26406,7 @@
         "name": "Postnord",
         "numberOfCars": 10,
         "marketshare": 60,
-        "hub": [16.167073, 58.621307]
+        "hub": [14.689090, 57.678295]
       },
       {
         "name": "Röd",
@@ -26418,13 +26418,13 @@
         "name": "Gul",
         "numberOfCars": 3,
         "marketshare": 6,
-        "hub": [16.167073, 58.621307]
+        "hub": [15.817459, 57.502101]
       },
       {
         "name": "Brun",
         "numberOfCars": 1,
         "marketshare": 6,
-        "hub": [16.167073, 58.621307]
+        "hub": [16.437579, 57.264758]
       }
     ],
     "geometry": {
