@@ -17,7 +17,7 @@ const vehicleTypes = {
   }, 
   "lättLastbil": {
     weight: 3.5,
-    capacity: 250
+    capacity: 8 * packagesPerPallet // TODO: is this number of pallets reasonable?
   }, 
   "bil": {
     weight: 1.5,

@@ -463,13 +463,13 @@
     "fleets": [
       {
         "name": "Postnord",
-        "vehicles" : {"tungLastbil": 2, "medeltungLastbil": 2, "lättLastbil": 1, "bil": 0},
+        "vehicles" : {"tungLastbil": 0, "medeltungLastbil": 4, "lättLastbil": 1, "bil": 0},
         "marketshare": 0.6,
         "hub": [21.034263, 64.746704]
       },
       {
         "name": "Röd",
-        "vehicles" : {"tungLastbil": 1, "medeltungLastbil": 1},
+        "vehicles" : {"tungLastbil": 0, "medeltungLastbil": 2},
         "marketshare": 0.18,
         "hub": [21.034263, 64.746704]
       },
@@ -556,13 +556,13 @@
     "fleets": [
       {
         "name": "Postnord",
-        "vehicles" : {"tungLastbil": 3, "medeltungLastbil": 2, "lättLastbil": 1, "bil": 0},
+        "vehicles" : {"tungLastbil": 0, "medeltungLastbil": 5, "lättLastbil": 1, "bil": 0},
         "marketshare": 60,
         "hub": [21.034263, 64.746704]
       },
       {
         "name": "Röd",
-        "vehicles" : {"tungLastbil": 1, "medeltungLastbil": 2},
+        "vehicles" : {"tungLastbil": 0, "medeltungLastbil": 3},
         "marketshare": 18,
         "hub": [21.034263, 64.746704]
       },
@@ -12745,7 +12745,7 @@
     "fleets": [
       {
         "name": "Postnord",
-        "vehicles" : {"tungLastbil": 1, "medeltungLastbil": 2, "lättLastbil": 1, "bil": 0},
+        "vehicles" : {"tungLastbil": 0, "medeltungLastbil": 3, "lättLastbil": 1, "bil": 0},
         "marketshare": 60,
         "hub": [17.084090, 61.741754]
       },
@@ -26404,7 +26404,7 @@
     "fleets": [
       {
         "name": "Postnord",
-        "vehicles" : {"tungLastbil": 2, "medeltungLastbil": 2, "lättLastbil": 1, "bil": 0},
+        "vehicles" : {"tungLastbil": 0, "medeltungLastbil": 4, "lättLastbil": 1, "bil": 0},
         "marketshare": 60,
         "hub": [14.689090, 57.678295]
       },
