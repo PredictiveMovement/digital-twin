@@ -63,10 +63,11 @@ const App = () => {
   useSocket('bookings', (newBookings) => {
     setBookings((bookings) => [
       ...bookings.filter((booking) => !newBookings.some((nb) => nb.id === booking.id)),
-      ...newBookings.map(({ name, id, pickup, destination, status, isCommercial, deliveryTime, carId }) => ({
+      ...newBookings.map(({ name, id, pickup, destination, status, isCommercial, deliveryTime, carId, co2 }) => ({
         id,
         address: name,
         status,
+        co2,
         isCommercial,
         pickup: [pickup.lon, pickup.lat],
         destination: [destination.lon, destination.lat],

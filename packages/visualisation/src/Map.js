@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { StaticMap } from 'react-map-gl'
 import DeckGL, { PolygonLayer, ScatterplotLayer, ArcLayer, IconLayer } from 'deck.gl'
-import { GeoJsonLayer } from '@deck.gl/layers'
+//import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
 
-import CommercialAreas from './data/commercial_areas.json'
+//import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 
 import Button from './components/Button'
@@ -17,7 +17,7 @@ mapboxgl.workerClass =
   require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default
 
 
-
+/*
 
 const commercialAreasLayer = new GeoJsonLayer({
   id: 'commercial-areas',
@@ -29,6 +29,7 @@ const commercialAreasLayer = new GeoJsonLayer({
   lineJointRounded: true,
   getLineColor: [0, 255, 128],
 })
+*/
 
 const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) => {
   const [mapState, setMapState] = useState({
@@ -100,39 +101,6 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
     id: 'car-layer',
     data: cars,
     opacity: 0.4,
-    stroked: false,
-    filled: true,
-    radiusScale: 1,
-    radiusUnits: 'pixels',
-    getPosition: (c) => {
-      return c.position
-    },
-    getRadius: () => 8,
-    getFillColor: getColorBasedOnFleet,
-    pickable: true,
-    onHover: ({ object, x, y }) => {
-      if (!object) return setHoverInfo(null)
-      setHoverInfo({
-        ...object,
-        type: 'car',
-        x,
-        y,
-      })
-    },
-    onClick: ({ object }) => {
-      setMapState({
-        ...mapState,
-        zoom: 14,
-        longitude: object.position[0],
-        latitude: object.position[1],
-      })
-      setActiveCar(object)
-    },
-  })
-
-  const carIconLayer = new IconLayer({
-    id: 'car-icon-layer',
-    data: cars.filter(c => p.x < ),
     stroked: false,
     filled: true,
     radiusScale: 1,
@@ -321,7 +289,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
       layers={[
         // The order of these layers matter, roughly equal to increasing z-index by 1
         kommunLayer, // TODO: This hides some items behind it, sort of
-        commercialAreasLayer,
+        //commercialAreasLayer,
         hubLayer,
         bookingLayer,
         carLayer,

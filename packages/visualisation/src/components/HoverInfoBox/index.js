@@ -60,6 +60,7 @@ const HoverInfoBox = ({ data }) => {
             <Paragraph>{data.title}</Paragraph>
             <Paragraph>{data.subTitle}</Paragraph>
             {data.deliveryTime ? <Paragraph>Leveranstid: {Math.ceil(10 * data.deliveryTime / 60 / 60) / 10} h</Paragraph> : null}
+            {data.co2 ? <Paragraph>CO2: {Math.ceil(10 * data.co2) / 10} kg</Paragraph> : null}
         </Wrapper>
       )}
     </>
