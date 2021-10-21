@@ -1,4 +1,5 @@
 const EventEmitter = require('events')
+const { random } = require('nanoid')
 const { virtualTime } = require('../lib/virtualTime')
 const { safeId } = require('./id')
 
@@ -7,6 +8,10 @@ class Booking extends EventEmitter {
     super()
     this.id = safeId()
     this.status = 'New'
+    this.co2 = 0 //TODO: initialvärde?
+    this.cost = 0 // startkostnad?
+    this.distance = 0 //TODO: räkna med sträcka innan?
+    this.weight = Math.random() * 10 // kg TODO: find reference kg
     Object.assign(this, booking)
     this.position = this.pickup?.position
     this.on('error', err => console.error('booking error', err))
@@ -28,8 +33,11 @@ class Booking extends EventEmitter {
     //console.log(`*** booking ${this.id}: ${this.status}`)
   }
 
-  moved(position) {
+  moved(position, metersMoved, co2, cost) {
     this.position = position
+    this.distance += metersMoved
+    this.cost += cost
+    this.co2 += co2
     this.emit('moved', this)
   }
 

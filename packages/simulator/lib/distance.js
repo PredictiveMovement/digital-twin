@@ -1,7 +1,7 @@
 function convertPosition (pos) {
   return {
-    lon: pos.longitude || pos.lon || pos.lng,
-    lat: pos.latitude || pos.lat
+    lon: pos.longitude || pos.lon || pos.lng || pos[0],
+    lat: pos.latitude || pos.lat || pos[1]
   }
 }
 

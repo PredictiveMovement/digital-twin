@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import InfoBox from './components/InfoBox/index.js'
 import { useSocket } from './hooks/useSocket.js'
 import Map from './Map.js'
 import PlaybackOptions from './components/PlaybackOptions/index.js'
@@ -19,6 +18,7 @@ const App = () => {
   const [activeCar, setActiveCar] = useState(null)
   const [reset, setReset] = useState(false)
   const [speed, setSpeed] = React.useState(60)
+  const [time, setTime] = React.useState(Date.now())
 
   useSocket('reset', () => {
     console.log('received reset')
@@ -30,15 +30,15 @@ const App = () => {
   })
 
   function upsert(array, object, idProperty = 'id') {
-    const index = array.findIndex(k => k[idProperty] === object[idProperty])
-    if (index >= 0) {
-      array[index] = { ...array[index], ...object }
+    const current = array.find(k => k[idProperty] === object[idProperty])
+    if (current) {
+      Object.assign(current, object)
     } else {
       array.push(object)
     }
     return array
   }
-  
+
   const [cars, setCars] = React.useState([])
   useSocket('cars', (newCars) => {
     setReset(false)
@@ -55,20 +55,27 @@ const App = () => {
     ])
   })
 
+  useSocket('time', (time) => {
+    setTime(time)
+  })
+
   const [bookings, setBookings] = React.useState([])
   useSocket('bookings', (newBookings) => {
-    setBookings((bookings) => newBookings
-      .map(({ name, id, pickup, destination, status, isCommercial, deliveryTime, carId }) => ({
+    setBookings((bookings) => [
+      ...bookings.filter((booking) => !newBookings.some((nb) => nb.id === booking.id)),
+      ...newBookings.map(({ name, id, pickup, destination, status, isCommercial, deliveryTime, carId, co2, cost }) => ({
         id,
         address: name,
         status,
+        co2,
+        cost,
         isCommercial,
         pickup: [pickup.lon, pickup.lat],
         destination: [destination.lon, destination.lat],
         carId,
         deliveryTime
       }))
-      .reduce((result, booking) => upsert(result, booking), bookings))
+    ])
   })
 
   const [postombud, setPostombud] = React.useState([])
@@ -125,8 +132,6 @@ const App = () => {
         </TransparentButton>
       </Wrapper>
 
-      {activeCar && <InfoBox data={activeCar} />}
-
       <PlaybackOptions onPause={onPause} onPlay={onPlay} onSpeedChange={onSpeedChange} />
       {reset && <Loading />}
       <Map
@@ -135,6 +140,7 @@ const App = () => {
         hubs={postombud}
         kommuner={kommuner}
         activeCar={activeCar}
+        time={time}
         setActiveCar={setActiveCar}
       />
     </>

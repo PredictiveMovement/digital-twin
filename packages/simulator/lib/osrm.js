@@ -2,6 +2,21 @@ const fetch = require('node-fetch')
 const polyline = require('polyline')
 const osrmUrl = process.env.OSRM_URL || 'https://osrm.iteamdev.io' || 'http://localhost:5000'
 
+
+const decodePolyline = function (geometry) {
+  return polyline
+    .decode(geometry)
+    .map(point => ({
+      lat: point[0],
+      lon: point[1]
+    }))
+}
+
+const encodePolyline = function (geometry) {
+  return polyline.encode(geometry.map(({lat, lon}) => ([lat, lon])))
+}
+
+
 module.exports = {
   route (from, to) {
 
@@ -39,15 +54,7 @@ module.exports = {
       .then(route => {
         return route
       })
-  }
+  },
+  decodePolyline,
+  encodePolyline,
 }
-
-const decodePolyline = function (geometry) {
-  return polyline
-    .decode(geometry)
-    .map(point => ({
-      lat: point[0],
-      lon: point[1]
-    }))
-}
-
