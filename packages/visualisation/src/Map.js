@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { StaticMap } from 'react-map-gl'
-import DeckGL, { PolygonLayer, ScatterplotLayer, ArcLayer } from 'deck.gl'
-import { GeoJsonLayer } from '@deck.gl/layers'
+import DeckGL, { PolygonLayer, ScatterplotLayer, ArcLayer, IconLayer } from 'deck.gl'
+//import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
 
-import CommercialAreas from './data/commercial_areas.json'
+//import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 
 import Button from './components/Button'
@@ -17,7 +17,7 @@ mapboxgl.workerClass =
   require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default
 
 
-
+/*
 
 const commercialAreasLayer = new GeoJsonLayer({
   id: 'commercial-areas',
@@ -29,12 +29,13 @@ const commercialAreasLayer = new GeoJsonLayer({
   lineJointRounded: true,
   getLineColor: [0, 255, 128],
 })
+*/
 
-const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
+const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) => {
   const [mapState, setMapState] = useState({
     latitude: 65.0964472642777,
     longitude: 17.112050188704504,
-    zoom: 8, // min ~0.6 max 24.0
+    zoom: 5, // min ~0.6 max 24.0
     pitch: 40,
   })
 
@@ -56,8 +57,8 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     opacity: 0.3,
     polygonOffset: 1,
     getPolygon: (k) => k.geometry.coordinates,
-    getLineColor: () => [0, 255, 128, 100],
-    getFillColor: () => [0, 0, 0, 0], // this isn't actually opaque, it just ends up not rendering any color
+    getLineColor: [0, 255, 128, 100],
+    getFillColor: [0, 0, 0, 0], // this isn't actually opaque, it just ends up not rendering any color
     pickable: true,
     onHover: (info, event) => {
       const { object } = info
@@ -79,18 +80,35 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     },
   })
 
-  const getCarColorBasedOnFleet = ({ fleet }) => {
+  const getColorBasedOnFleet = ({ fleet }) => {
     switch (fleet.toLowerCase()) {
+      case 'brun':
+        return [252, 3, 215]
       case 'bring':
         return [139, 190, 87]
-      case 'dhl':
+      case 'gul':
         return [251, 255, 84]
       case 'postnord':
         return [57, 123, 184]
-      case 'schenker':
-        return [204, 52, 41]
+      case 'röd':
+        return [252, 3, 3]
       default:
         return [254, 254, 254]
+    }
+  }
+
+  const getStatusLabel = status => {
+    switch (status.toLowerCase()) {
+      case 'assigned':
+        return 'Tilldelad'
+      case 'delivered':
+        return 'Levererad'
+      case 'picked up':
+        return 'Leverans pågår'
+      case 'queued':
+        return 'Väntar på upphämtning'
+      default:
+        return status
     }
   }
 
@@ -106,7 +124,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
       return c.position
     },
     getRadius: () => 8,
-    getFillColor: getCarColorBasedOnFleet,
+    getFillColor: getColorBasedOnFleet,
     pickable: true,
     onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)
@@ -152,7 +170,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         title: object.address,
         subTitle: object.isCommercial
           ? '(företag)'
-          : ' Status: ' + object.status,
+          : ' Status: ' + getStatusLabel(object.status),
         x,
         y,
       })
@@ -170,15 +188,15 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
     getPosition: (c) => {
       return c.position
     },
-    getRadius: () => 3,
+    getRadius: () => 2,
     // #127DBD
-    getFillColor: [18, 125, 189],
+    getFillColor: [0, 255, 128, 120],
     pickable: true,
     onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         type: 'hub',
-        title: object.operator,
+        title: 'Paketombud för ' + object.operator,
         x,
         y,
       })
@@ -198,14 +216,14 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
 
       switch (booking.status) {
         case 'Picked up': return {
-          inbound: [169, 178, 237],
-          outbound: [169, 178, 237],
+          inbound: getColorBasedOnFleet(car),
+          outbound: getColorBasedOnFleet(car),
           from: car.position,
           to: booking.destination
         }
         case 'Queued': return {
           inbound: [178, 169, 2, 20],
-          outbound: [178, 169, 2, 100],
+          outbound: [178, 169, 2, 20],
           from: car.position,
           to: booking.pickup,
         }
@@ -286,7 +304,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
       layers={[
         // The order of these layers matter, roughly equal to increasing z-index by 1
         kommunLayer, // TODO: This hides some items behind it, sort of
-        commercialAreasLayer,
+        //commercialAreasLayer,
         hubLayer,
         bookingLayer,
         carLayer,
@@ -294,6 +312,12 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar }) => {
         showQueuedBookings && arcLayerQueuedBookings
       ]}
     >
+      <div style={{
+        right: '40px',
+        top: '20px',
+        position: 'absolute',
+        color: 'rgba(255,255,255,0.5)'
+      }}>{new Date(time).toLocaleTimeString()}</div>
       <div style={{
         bottom: '150px',
         right: '200px',

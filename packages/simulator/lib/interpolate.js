@@ -54,10 +54,27 @@ function extractPoints (route) {
     return point.passed + (point.duration || 0)
   }, 0)
 
+  points.reduce((distance, point) => {
+    point.distance = distance
+    return point.distance + (point.meters || 0)
+  }, 0)
+
   return points
+}
+
+function getDiff (route, timeA, timeB) {
+  const a = interpolatePositionFromRoute(route, timeA)
+  const b = interpolatePositionFromRoute(route, timeB)
+
+  return {
+    distance: b.instruction.distance - a.instruction.distance,
+    duration: b.instruction.passed - a.instruction.passed,
+  }
+
 }
 
 module.exports = {
   route: interpolatePositionFromRoute,
+  getDiff: getDiff,
   points: extractPoints
 }

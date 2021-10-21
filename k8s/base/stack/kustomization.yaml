@@ -7,5 +7,5 @@ resources:
   - simulator.yaml
   - visualisation.yaml
 
-# namespace to deploy all Resources to main namespace
-namespace: digital-twin
+# namespace to deploy all Resources to
+namespace: supplychain

@@ -7,9 +7,10 @@ const { safeId } = require('./id')
 const { assert } = require('console')
 const { error, info } = require('../lib/log')
 const { virtualTime } = require('../lib/virtualTime')
+const { throws } = require('assert')
 
 class Car extends EventEmitter {
-  constructor({ id = safeId(), position, status = 'Ready', capacity = 250, fleet } = {}) {
+  constructor({ id = safeId(), position, status = 'Ready', capacity = 250, weight = 10, fleet } = {}) {
     super()
     this.id = id
     this.position = position
@@ -19,6 +20,9 @@ class Car extends EventEmitter {
     this.cargo = []
     this.delivered = []
     this.capacity = capacity // bookings
+    this.weight = weight // http://www.lastbilsteori.se/lastvikt.html
+    this.costPerHour = 3000 / 12 // ?
+    this.co2 = 0
     this.status = status
     this.lastPositions = []
     this.fleet = fleet
@@ -29,6 +33,7 @@ class Car extends EventEmitter {
 
   dispose() {
     this.simulate(false)
+    this._disposed = true
   }
 
   time() {
@@ -36,15 +41,15 @@ class Car extends EventEmitter {
     return time
   }
 
-  simulate(heading) {
+  simulate(route) {
     clearInterval(this._interval)
-    if (!heading) return
-    if (virtualTime.timeMultiplier === Infinity) return this.updatePosition(heading) // teleport mode
+    if (!route) return
+    if (virtualTime.timeMultiplier === Infinity) return this.updatePosition(route) // teleport mode
     this._interval = setInterval(() => {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
-      const newPosition = interpolate.route(heading.route, this.time()) ?? heading
+      const newPosition = interpolate.route(route, this.time()) ?? this.heading
       this.updatePosition(newPosition)
-    }, 200)
+    }, 100)
   }
 
   navigateTo(position) {
@@ -53,14 +58,14 @@ class Car extends EventEmitter {
       .route(this.position, this.heading)
       .then((route) => {
         route.started = this.time()
-        this.heading.route = route
+        this.route = route
         //info(`Car ${this.id} navigates to`, position)
 
         if (!route.legs) throw new Error(`Route not found from: ${JSON.stringify(this.position)} to: ${JSON.stringify(this.heading)}`)
-        this.simulate(this.heading)
+        this.simulate(this.route)
         return this.heading
       })
-      .catch(error)
+      .catch(err => error('Route error', err))
   }
 
   handleBooking(booking) {
@@ -74,6 +79,7 @@ class Car extends EventEmitter {
       this.status = 'Pickup'
       this.navigateTo(booking.pickup.position)
     } else {
+      // TODO: swith places with current booking if it makes more sense to pick this package up before picking up current
       this.queue.push(booking)
       booking.queued(this)
     }
@@ -81,7 +87,10 @@ class Car extends EventEmitter {
   }
 
   pickup() {
+    if (this._disposed) return
+
     this.emit('pickup', this.id)
+    //console.log('PICKUP', this.queue)
     this.queue.sort((a, b) => haversine(this.position, a.pickup.position) - haversine(this.position, b.pickup.position))
 
     // wait one tick so the pickup event can be parsed before changing status
@@ -111,6 +120,7 @@ class Car extends EventEmitter {
     //finfo(`Dropoff ${this.booking.id}`)
     if (this.booking) {
       this.busy = false
+      // delete this.cargo[this.cargo.findIndex(b => b.id === this.booking.id)]
       this.booking.delivered(this.position)
       this.delivered.push(this.booking)
       this.emit('busy', this)
@@ -142,13 +152,22 @@ class Car extends EventEmitter {
     return booking
   }
 
+  cargoWeight(){
+    return this.cargo.reduce((total, booking) => total + booking.weight, 0) / 1000 // ton
+  }
+
 
   async updatePosition(position, date = this.time()) {
     const lastPosition = this.position || position
-    const metersMoved = haversine(lastPosition, position)
-    const [km, h] = [(metersMoved / 1000), (date - lastPosition.date) / 1000 / 60 / 60]
-    this.speed = Math.round((km / h / (virtualTime.timeMultiplier || 1)) || 0)
+    const metersMoved = this.route && this.lastPositionUpdate && interpolate.getDiff(this.route, this.lastPositionUpdate, date).distance || 0
+    const [km, h] = [(metersMoved / 1000), ((date - this.lastPositionUpdate) / 1000 / 60 / 60)]
+    // https://www.naturvardsverket.se/data-och-statistik/klimat/vaxthusgaser-utslapp-fran-inrikes-transporter/
+    // https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
+    const co2 = ((this.weight + this.cargoWeight()) * km) * 0.013
+    this.co2 += co2
+    this.speed = Math.round((km / h) || 0)
     this.position = position
+    this.lastPositionUpdate = date
     this.ema = haversine(this.heading, this.position)
     if (metersMoved > 0) {
       this.bearing = bearing(lastPosition, position) || 0
@@ -156,9 +175,9 @@ class Car extends EventEmitter {
       this.emit('moved', this)
     }
 
-    if (this.booking) {
-      this.booking.moved(this.position)
-    }
+    this.cargo.map(booking => {
+      booking.moved(this.position, metersMoved, co2 / (this.cargo.length + 1), h * this.costPerHour / (this.cargo.length + 1))
+    })
 
     if (!position.next) {
       this.emit('stopped', this)

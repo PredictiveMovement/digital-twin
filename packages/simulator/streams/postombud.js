@@ -1,5 +1,5 @@
 const { from, shareReplay } = require('rxjs')
-const { map } = require('rxjs/operators')
+const { map, filter } = require('rxjs/operators')
 const { readXlsx } = require('../adapters/xlsx')
 
 function execute() {
@@ -7,13 +7,15 @@ function execute() {
     `${process.cwd()}/data/${process.env.postombud_file || 'ombud.xlsx'}`,
     `${process.env.postombud_sheet || 'Sammanställning korr'}`
   )).pipe(
-    map(({ X_WGS84, Y_WGS84, LevFrekv, OPERATÖR, DB_ID, KOMMUNNAMN }) => ({
+    map(({ X_WGS84, Y_WGS84, Omb_TYP, LevFrekv, OPERATÖR, DB_ID, KOMMUNNAMN }) => ({
       position: { lon: parseFloat(X_WGS84, 10), lat: parseFloat(Y_WGS84, 10) },
       operator: OPERATÖR,
       frequency: LevFrekv,
       id: DB_ID,
+      type: Omb_TYP,
       kommun: KOMMUNNAMN,
     })),
+    filter(ombud => ombud.type === 'Postombud'),
     shareReplay()
   )
 }

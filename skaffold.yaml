@@ -11,7 +11,7 @@ build:
       docker:
         buildArgs:
           REACT_APP_MAPBOX_ACCESS_TOKEN: "{{.REACT_APP_MAPBOX_ACCESS_TOKEN}}"
-          REACT_APP_SIMULATOR_URL: "{{.REACT_APP_SIMULATOR_URL}}"
+          REACT_APP_SIMULATOR_URL: https://supplychain-engine.predictivemovement.se
 deploy:
   kustomize:
     paths:

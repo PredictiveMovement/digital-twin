@@ -1,8 +1,9 @@
-const { from, range, concatAll, expand, shareReplay } = require('rxjs')
+const { from, range, concatAll, expand, shareReplay, of } = require('rxjs')
 const {
   map,
   tap,
   filter,
+  first,
   concatMap,
   mergeMap,
   mergeAll,
@@ -10,22 +11,11 @@ const {
 } = require('rxjs/operators')
 const pelias = require('../lib/pelias')
 const { isInsideCoordinates } = require('../lib/polygon')
-const postombud = require('../streams/postombud')
-const kommuner = require('../streams/kommuner')
 const { haversine, addMeters, convertPosition } = require('../lib/distance')
 const perlin = require('perlin-noise')
 const Booking = require('../lib/booking')
 
-// TODO: definiera en hub i varje kommun
-const umea = {
-  position: {
-    lat: 63.83008508299098,
-    long: 20.26484255874134
-  }
-}
-
 const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
-let id = 0
 
 // generate a pattern of random positions so we can take x out of these and get a natural pattern of these positions
 const randomPositions = perlin
@@ -49,7 +39,6 @@ function generateBookingsInKommun(kommun) {
         map((nearestOmbud) => ({ ...square, nearestOmbud }))
       )
     ),
-    // tap(s => console.log('squares', kommun.name)),
   )
 
   const randomPointsInSquares = squaresWithNearestPostombud.pipe(
@@ -64,36 +53,27 @@ function generateBookingsInKommun(kommun) {
   )
 
   const bookings = randomPointsInSquares.pipe(
-    /*mergeMap((point) => kommun.commercialAreas.pipe(
-      first(area => isInsideCoordinates(point.position, area.geometry.coordinates), false),
-      map(commercialArea => ({...point, isCommercial: !!commercialArea } ))
-    )),*/
     toArray(), // convert to array to be able to sort the addresses
     mergeMap((a) => from(a.sort((p) => Math.random() - 0.5))),
-    // ratelimit(5, 1000),
-    mergeMap(({ nearestOmbud, position }) => {
-      return pelias
-        .nearest(position)
-        .then(address => {
-          return address
-        }, (err) => {
-          console.log('pelias error', err)
-          throw err
-        })
+    mergeMap(({ nearestOmbud, position}) => kommun.fleets.pipe(
+      first(fleet => nearestOmbud.operator.startsWith(fleet.name), null), // Find DHL_Express or DHL_Freight from DHL
+      mergeMap(fleet => fleet ? of(fleet) : kommun.fleets.pipe(first())), // TODO: defaultIfEmpty
+      map(fleet => ({ nearestOmbud, position, fleet})))
+    ),
+    mergeMap(({ nearestOmbud, position, fleet }) => {
+      return pelias.nearest(position)
         .then((address) => {
-          switch (address.layer === 'venue') {
-            // kolla på kommunobjektet efter paketvolym
-            // om det är en kommersiell fastighet, returnera fler bokningar och alltid med direktleverans
-            // annars privat då skapar vi vissa med direktleverans och vissa till ombud
+          const isCommercial = address.layer === 'venue'
+          const homeDelivery = Math.random() < fleet.percentageHomeDelivery
+          const returnDelivery = Math.random() < fleet.percentageReturnDelivery
 
-            // TODO(framtid): returnera en timer som skapar en bokning med ett visst intervall
-            //                introducera klass Fastighet som en ström som emittar bokningar
-          }
+          if (isCommercial || homeDelivery) return new Booking({pickup: fleet.hub, destination: address, origin: fleet.name})
+          if (returnDelivery) return new Booking({pickup: nearestOmbud, destination: hub, origin: fleet.name})
+
           return new Booking({
-            pickup: nearestOmbud, // { position: convertPosition(kommun.pickupPositions[Math.floor(Math.random() * kommun.pickupPositions.length)]) },
-            isCommercial: address.layer === 'venue',
-            destination: address,
-            //finalDestination: address,
+            pickup: fleet.hub,
+            destination: nearestOmbud,
+            origin: fleet.name
           })
         })
         .catch(() => Promise.resolve(null))

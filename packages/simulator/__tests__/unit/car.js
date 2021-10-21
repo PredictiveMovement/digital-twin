@@ -25,13 +25,13 @@ describe("A car", () => {
   })
 
   it('should have initial position', function (done) {
-    car = new Car({id: 1, position: arjeplog})
+    car = new Car({ id: 1, position: arjeplog })
     expect(car.position).toEqual(arjeplog)
     done()
   })
 
   it('should be able to teleport', function (done) {
-    car = new Car({id: 1, position: arjeplog})
+    car = new Car({ id: 1, position: arjeplog })
     car.navigateTo(ljusdal)
     car.on('stopped', () => {
       expect(car.position?.lon).toEqual(ljusdal.lon)
@@ -41,7 +41,7 @@ describe("A car", () => {
   })
 
   it('should be able to handle one booking and navigate to pickup', function (done) {
-    car = new Car({id: 1, position: arjeplog})
+    car = new Car({ id: 1, position: arjeplog })
     car.handleBooking(new Booking({
       id: 1,
       pickup: {
@@ -56,7 +56,7 @@ describe("A car", () => {
   })
 
   it('should be able to handle one booking and emit correct events', function (done) {
-    car = new Car({id: 1, position: arjeplog}) 
+    car = new Car({ id: 1, position: arjeplog })
     car.handleBooking(new Booking({
       id: 1,
       pickup: {
@@ -75,7 +75,7 @@ describe("A car", () => {
   })
 
   it('should be able to pickup a booking and deliver it to its destination', function (done) {
-    car = new Car({id: 1, position: arjeplog})
+    car = new Car({ id: 1, position: arjeplog })
     car.handleBooking(new Booking({
       id: 1,
       pickup: {
@@ -98,7 +98,7 @@ describe("A car", () => {
   })
 
   it('should be able to pickup multiple bookings and queue the all except the first', function () {
-    car = new Car({id: 1, position: arjeplog})
+    car = new Car({ id: 1, position: arjeplog })
     car.handleBooking(new Booking({
       id: 1,
       pickup: {
@@ -109,14 +109,15 @@ describe("A car", () => {
       }
     }))
 
-    const bookings = range(10).map(id => car.handleBooking(new Booking({id})))
+    const bookings = range(10).map(id => car.handleBooking(new Booking({ id })))
 
     expect(car.queue).toHaveLength(10)
 
   })
 
-  it('should be handle the bookings from the same place in the queue', function (done) {
-    car = new Car({id: 1, position: arjeplog})
+  it('should be able to handle the bookings from the same place in the queue', function (done) {
+    car = new Car({ id: 1, position: arjeplog })
+    expect(car.queue).toHaveLength(0)
     const ljusdalToArjeplog = {
       pickup: {
         position: ljusdal
@@ -146,7 +147,7 @@ describe("A car", () => {
     })
     car.handleBooking(last)
 
-    const bookings = range(10).map(id => car.handleBooking(new Booking({id, ...ljusdalToArjeplog})))
+    const bookings = range(10).map(id => car.handleBooking(new Booking({ id, ...ljusdalToArjeplog })))
 
     const [firstBooking, secondBooking, thirdBooking, ...rest] = bookings
 
