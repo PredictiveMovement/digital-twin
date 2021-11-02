@@ -26425,6 +26425,12 @@
         "vehicles" : {"tungLastbil": 0, "medeltungLastbil": 1, "lättLastbil": 0, "bil": 0},
         "marketshare": 6,
         "hub": [16.437579, 57.264758]
+      },
+      {
+        "name": "Drönarleverans AB",
+        "vehicles" : {"drönare": 20},
+        "marketshare": 40,
+        "hub": [16.528936, 57.776915]
       }
     ],
     "geometry": {

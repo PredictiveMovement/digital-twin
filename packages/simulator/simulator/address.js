@@ -1,14 +1,14 @@
 const osrm = require('../lib/osrm')
 const assert = require('assert')
 
-function randomize(center, retry = 20) {
+function randomize(center, retry = 20, radius = 500) {
   assert(center, 'Center is required')
   if (retry < 0)
     throw new Error('Randomize in loop try nr' + retry + JSON.stringify(center))
 
   const randomPoint = {
-    lon: center.lon + (Math.random() - 0.5) / 2,
-    lat: center.lat + (Math.random() - 0.5) / 5,
+    lon: center.lon + (Math.random() - 0.5) * radius / 20000,
+    lat: center.lat + (Math.random() - 0.5) * radius / 50000,
   }
   return nearest(randomPoint).then((pos) =>
     pos === null ? randomize(center, retry--) : pos

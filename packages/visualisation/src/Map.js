@@ -92,6 +92,8 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
         return [57, 123, 184]
       case 'röd':
         return [252, 3, 3]
+      case 'drönarleverans ab':
+          return [0, 255, 255]
       default:
         return [254, 254, 254]
     }

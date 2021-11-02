@@ -45,11 +45,8 @@ class Kommun extends EventEmitter {
   handleBooking(booking) {
     booking.kommun = this
     this.fleets.pipe(
-      first(f => f.name === booking.origin, null), // first try to use origin if it exists
-      mergeMap(fleet => fleet ? of(fleet) : this.fleets.pipe(
-        expandFleets(), // otherwise pick one at random
-        pickRandom(),
-      ))
+      expandFleets(), // otherwise pick one at random
+      pickRandom(),
     ).subscribe(fleet => fleet.handleBooking(booking))
     return booking
   }

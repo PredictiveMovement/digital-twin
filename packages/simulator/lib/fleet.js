@@ -1,27 +1,37 @@
 const { Subject, ReplaySubject, range, from } = require('rxjs')
 const { map, shareReplay, toArray, mergeMap } = require('rxjs/operators')
 const { dispatch } = require('./dispatchCentral')
-const Car = require('./car')
+const Car = require('./vehicles/car')
+const Drone = require('./vehicles/drone')
 const { convertPosition } = require('../lib/distance')
 const { randomize } = require('../simulator/address')
 
 const packagesPerPallet = 30 // this is a guesstimate
 const vehicleTypes = {
   "tungLastbil": {
-    weight: 26, // in 1000 kgs
-    capacity: 48 * packagesPerPallet
+    weight: 26 * 1000,
+    capacity: 48 * packagesPerPallet,
+    class: Car
   }, 
   "medeltungLastbil": {
-    weight: 16.5,
-    capacity: 18 * packagesPerPallet
+    weight: 16.5 * 1000,
+    capacity: 18 * packagesPerPallet,
+    class: Car
   }, 
   "lättLastbil": {
-    weight: 3.5,
-    capacity: 8 * packagesPerPallet // TODO: is this number of pallets reasonable?
+    weight: 3.5 * 1000,
+    capacity: 8 * packagesPerPallet, // TODO: is this number of pallets reasonable?
+    class: Car
   }, 
   "bil": {
-    weight: 1.5,
-    capacity: 25
+    weight: 1.5 * 1000,
+    capacity: 25,
+    class: Car
+  },
+  "drönare": {
+    weight: 5,
+    capacity: 1,
+    class: Drone
   }
 }
 
@@ -34,7 +44,10 @@ class Fleet {
     this.percentageReturnDelivery = 0.1
     this.cars = from(Object.entries(vehicles)).pipe(
       mergeMap(([type, count]) => range(0, count).pipe(
-        mergeMap(i => randomize(this.hub.position).then(position => new Car({...vehicleTypes[type], fleet: this, position }))),
+        mergeMap(i => randomize(this.hub.position).then(position => {
+          const Vehicle = vehicleTypes[type].class
+          return new Vehicle({...vehicleTypes[type], fleet: this, position })
+        })),
       )),
       shareReplay()
     )

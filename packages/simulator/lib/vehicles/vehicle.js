@@ -1,16 +1,16 @@
-const osrm = require('../lib/osrm')
-const { haversine, bearing } = require('./distance')
-const interpolate = require('./interpolate')
+const osrm = require('../osrm')
+const { haversine, bearing } = require('../distance')
+const interpolate = require('../interpolate')
 const EventEmitter = require('events')
-const Booking = require('./booking')
-const { safeId } = require('./id')
+const Booking = require('../booking')
+const { safeId } = require('../id')
 const { assert } = require('console')
-const { error, info } = require('../lib/log')
-const { virtualTime } = require('../lib/virtualTime')
+const { error, info } = require('../log')
+const { virtualTime } = require('../virtualTime')
 const { throws } = require('assert')
 
-class Car extends EventEmitter {
-  constructor({ id = safeId(), position, status = 'Ready', capacity = 250, weight = 10, fleet } = {}) {
+class Vehicle extends EventEmitter {
+  constructor({ id = safeId(), position, status = 'Ready', capacity = 250, weight = 10000, fleet } = {}) {
     super()
     this.id = id
     this.position = position
@@ -27,6 +27,7 @@ class Car extends EventEmitter {
     this.lastPositions = []
     this.fleet = fleet
     this.created = this.time()
+    this.co2PerKmKg = 0.013 / 1000
     this.on('error', (err) => error('Car error', err))
     this.emit('moved', this)
   }
@@ -60,7 +61,6 @@ class Car extends EventEmitter {
         route.started = this.time()
         this.route = route
         //info(`Car ${this.id} navigates to`, position)
-
         if (!route.legs) throw new Error(`Route not found from: ${JSON.stringify(this.position)} to: ${JSON.stringify(this.heading)}`)
         this.simulate(this.route)
         return this.heading
@@ -96,7 +96,7 @@ class Car extends EventEmitter {
     // wait one tick so the pickup event can be parsed before changing status
     setImmediate(() => {
       // see if we have more packages to pickup from this position
-      while (this.queue.length && haversine(this.position, this.queue[0].pickup.position) < 100) {
+      while ((this.queue.length < this.capacity) && this.queue.length && haversine(this.position, this.queue[0].pickup.position) < 100) {
         const booking = this.queue.shift()
         booking.pickedUp(this.position)
         this.cargo.push(booking)
@@ -107,7 +107,7 @@ class Car extends EventEmitter {
         this.status = 'Delivery'
 
         // should we first pickup more bookings before going to the destination?
-        if (this.queue.length && haversine(this.queue[0].pickup.position, this.position) < haversine(this.booking.destination.position, this.position)) {
+        if ((this.queue.length < this.capacity) && this.queue.length && haversine(this.queue[0].pickup.position, this.position) < haversine(this.booking.destination.position, this.position)) {
           this.navigateTo(this.queue[0].pickup.position)
         } else {
           this.navigateTo(this.booking.destination.position)
@@ -153,17 +153,21 @@ class Car extends EventEmitter {
   }
 
   cargoWeight(){
-    return this.cargo.reduce((total, booking) => total + booking.weight, 0) / 1000 // ton
+    return this.cargo.reduce((total, booking) => total + booking.weight, 0)
+  }
+
+  canPickupBooking(booking) {
+    return this.capacity > (this.queue.length + this.cargo.length)
   }
 
 
   async updatePosition(position, date = this.time()) {
     const lastPosition = this.position || position
-    const metersMoved = this.route && this.lastPositionUpdate && interpolate.getDiff(this.route, this.lastPositionUpdate, date).distance || 0
+    const metersMoved = this.route && this.lastPositionUpdate && interpolate.getDiff(this.route, this.lastPositionUpdate, date).distance || haversine(lastPosition, position)
     const [km, h] = [(metersMoved / 1000), ((date - this.lastPositionUpdate) / 1000 / 60 / 60)]
     // https://www.naturvardsverket.se/data-och-statistik/klimat/vaxthusgaser-utslapp-fran-inrikes-transporter/
     // https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
-    const co2 = ((this.weight + this.cargoWeight()) * km) * 0.013
+    const co2 = ((this.weight + this.cargoWeight()) * km) * this.co2PerKmKg
     this.co2 += co2
     this.speed = Math.round((km / h) || 0)
     this.position = position
@@ -190,4 +194,4 @@ class Car extends EventEmitter {
   }
 }
 
-module.exports = Car
+module.exports = Vehicle
