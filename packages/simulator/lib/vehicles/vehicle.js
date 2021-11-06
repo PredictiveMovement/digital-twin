@@ -10,7 +10,7 @@ const { virtualTime } = require('../virtualTime')
 const { throws } = require('assert')
 
 class Vehicle extends EventEmitter {
-  constructor({ id = safeId(), position, status = 'Ready', capacity = 250, weight = 10000, fleet } = {}) {
+  constructor({ id = safeId(), position, status = 'Ready', capacity = 250, weight = 10000, fleet, co2PerKmKg = 0.013 / 1000} = {}) {
     super()
     this.id = id
     this.position = position
@@ -27,7 +27,7 @@ class Vehicle extends EventEmitter {
     this.lastPositions = []
     this.fleet = fleet
     this.created = this.time()
-    this.co2PerKmKg = 0.013 / 1000
+    this.co2PerKmKg = co2PerKmKg
     this.on('error', (err) => error('Car error', err))
     this.emit('moved', this)
   }

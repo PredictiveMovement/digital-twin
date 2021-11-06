@@ -35,7 +35,7 @@ const CarInfo = ({ data }) => {
     return (
         <Wrapper left={data.x - 8} top={data.y - 80}>
             <div>
-            <Paragraph>{`Lastbil ${data.id}`}</Paragraph>
+            <Paragraph>{`Fordon ${data.id}`}</Paragraph>
             <Paragraph>Kör för {data.fleet}</Paragraph>
             <Paragraph>Köat: {data.queue || 0} paket</Paragraph>
             <Paragraph>Co2: {data.co2 || 0} kg</Paragraph>

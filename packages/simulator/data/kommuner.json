@@ -26429,7 +26429,7 @@
       {
         "name": "Drönarleverans AB",
         "vehicles" : {"drönare": 20},
-        "marketshare": 40,
+        "marketshare": 20,
         "hub": [16.528936, 57.776915]
       }
     ],

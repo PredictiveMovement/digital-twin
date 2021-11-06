@@ -10,7 +10,10 @@ class Drone extends Vehicle {
     this.position = this.origin = position
     this.co2PerKmKg = 0.001
     this.maximumWeight = 10 // kg
-    this.radius = 100_000
+    this.range = 100_000 // meters
+    this.altitude = 0
+    this.maximumAltitude = 800
+    this.dropoffTime = 600 // seconds
   }
 
   simulate(route) {
@@ -21,17 +24,20 @@ class Drone extends Vehicle {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
       const newPosition = interpolate.route(route, this.time()) ?? this.heading
       this.updatePosition(newPosition)
+      const metersFromStart = haversine(this.position, this.startingFrom)
+      this.altitude = Math.min(this.maximumAltitude, this.ema, metersFromStart)
     }, 100)
   }
 
   canPickupBooking(booking) {
     if (this.weight + booking.weight > this.maximumWeight) return false
-    if (haversine(this.position, booking.pickup.position) > this.radius) return false
+    if (haversine(this.position, booking.pickup.position) + haversine(booking.pickup.position, booking.destination.position) > this.range) return false
     return this.capacity > (this.queue.length + this.cargo.length)
   }
 
 
   navigateTo(position) {
+    this.startingFrom = this.position
     this.heading = position
     if (!position) debugger
     const distance = haversine(this.position, position) // meters
@@ -48,7 +54,7 @@ class Drone extends Vehicle {
       legs: [{
         annotation: {
           distance: [distance, 0],
-          duration: [duration, 0],
+          duration: [duration, this.dropoffTime],
         }
       }]
     }

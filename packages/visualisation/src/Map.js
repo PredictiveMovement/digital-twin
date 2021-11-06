@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { StaticMap } from 'react-map-gl'
-import DeckGL, { PolygonLayer, ScatterplotLayer, ArcLayer, IconLayer } from 'deck.gl'
+import DeckGL, { PolygonLayer, ScatterplotLayer, ArcLayer, IconLayer, LinearInterpolator } from 'deck.gl'
 //import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
 
@@ -31,13 +31,28 @@ const commercialAreasLayer = new GeoJsonLayer({
 })
 */
 
+const transitionInterpolator = new LinearInterpolator(['bearing']);
+
+
 const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) => {
   const [mapState, setMapState] = useState({
     latitude: 65.0964472642777,
     longitude: 17.112050188704504,
+    bearing: 0,
     zoom: 5, // min ~0.6 max 24.0
     pitch: 40,
   })
+
+  const rotateCamera = useCallback(() => {
+    setMapState(mapState => ({
+      ...mapState,
+      bearing: mapState.bearing + 1,
+      transitionDuration: 1000,
+      transitionInterpolator,
+      onTransitionEnd: rotateCamera
+    }))
+  }, []);
+
 
   const [hoverInfo, setHoverInfo] = useState(null)
   const [kommunInfo, setKommunInfo] = useState(null)
@@ -94,6 +109,8 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
         return [252, 3, 3]
       case 'drönarleverans ab':
           return [0, 255, 255]
+      case 'privat':
+        return [170, 255, 187]
       default:
         return [254, 254, 254]
     }
@@ -113,6 +130,38 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
         return status
     }
   }
+  /*
+  const droneLayer = new ScenegraphLayer({
+    id: 'drone-layer',
+    data: cars,
+    sizeMinPixels: 1,
+    sizeMaxPixels: 15,
+    scenegraph: '/airplane.glb',
+    opacity: 0.9,
+    getOrientation: c => [c.bearing, -c.bearing, 90],
+    getPosition: (c) => {
+      return c.position
+    },
+    pickable: true,
+    onHover: ({ object, x, y }) => {
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        ...object,
+        type: 'car',
+        x,
+        y,
+      })
+    },
+    onClick: ({ object }) => {
+      setMapState({
+        ...mapState,
+        zoom: 14,
+        longitude: object.position[0],
+        latitude: object.position[1],
+      })
+      setActiveCar(object)
+    },
+  })*/
 
   const carLayer = new ScatterplotLayer({
     id: 'car-layer',
@@ -125,7 +174,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
     getPosition: (c) => {
       return c.position
     },
-    getRadius: () => 8,
+    getRadius: (c) => c.fleet === 'Privat' ? 4 : 8,
     getFillColor: getColorBasedOnFleet,
     pickable: true,
     onHover: ({ object, x, y }) => {
@@ -293,6 +342,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
       // initialViewState={mapState.viewport}
       viewState={mapState}
+      onLoad={rotateCamera}
       onViewStateChange={({ viewState }) => {
         setMapState(viewState)
         if (activeCar) {
