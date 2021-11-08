@@ -36,11 +36,11 @@ const vehicleTypes = {
 }
 
 class Fleet {
-  constructor({ name, marketshare, vehicles, hub }) {
+  constructor({ name, marketshare, percentageHomeDelivery, vehicles, hub }) {
     this.name = name
     this.marketshare = marketshare
     this.hub = {position: convertPosition(hub)}
-    this.percentageHomeDelivery = 0.15 // based on guestimates from workshop with transport actors in oct 2021
+    this.percentageHomeDelivery = ((percentageHomeDelivery || 0) / 100) || 0.15 // based on guestimates from workshop with transport actors in oct 2021
     this.percentageReturnDelivery = 0.1
     this.cars = from(Object.entries(vehicles)).pipe(
       mergeMap(([type, count]) => range(0, count).pipe(

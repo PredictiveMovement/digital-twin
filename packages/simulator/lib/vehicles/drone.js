@@ -30,8 +30,10 @@ class Drone extends Vehicle {
   }
 
   canPickupBooking(booking) {
+    const pickupDistance = haversine(this.position, booking.pickup.position)
+    const deliveryDistance = haversine(booking.pickup.position, booking.destination.position)
     if (this.weight + booking.weight > this.maximumWeight) return false
-    if (haversine(this.position, booking.pickup.position) + haversine(booking.pickup.position, booking.destination.position) > this.range) return false
+    if (pickupDistance + deliveryDistance > this.range) return false
     return this.capacity > (this.queue.length + this.cargo.length)
   }
 
@@ -49,7 +51,7 @@ class Drone extends Vehicle {
       distance,
       duration,
       geometry: {
-        coordinates: [this.position, position, position]
+        coordinates: [this.position, position, position] // add one more so the interpolation routine works
       },
       legs: [{
         annotation: {

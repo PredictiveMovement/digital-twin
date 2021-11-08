@@ -26403,32 +26403,9 @@
     "namn": "Västerviks kommun",
     "fleets": [
       {
-        "name": "Postnord",
-        "vehicles" : {"tungLastbil": 0, "medeltungLastbil": 4, "lättLastbil": 1, "bil": 0},
-        "marketshare": 60,
-        "hub": [14.689090, 57.678295]
-      },
-      {
-        "name": "Röd",
-        "vehicles" : {"tungLastbil": 0, "medeltungLastbil": 1, "lättLastbil": 2, "bil": 0},
-        "marketshare": 18,
-        "hub": [16.167073, 58.621307]
-      },
-      {
-        "name": "Gul",
-        "vehicles" : {"tungLastbil": 0, "medeltungLastbil": 1, "lättLastbil": 2, "bil": 0},
-        "marketshare": 6,
-        "hub": [15.817459, 57.502101]
-      },
-      {
-        "name": "Brun",
-        "vehicles" : {"tungLastbil": 0, "medeltungLastbil": 1, "lättLastbil": 0, "bil": 0},
-        "marketshare": 6,
-        "hub": [16.437579, 57.264758]
-      },
-      {
         "name": "Drönarleverans AB",
-        "vehicles" : {"drönare": 20},
+        "vehicles" : {"drönare": 200},
+        "percentageHomeDelivery": 100,
         "marketshare": 20,
         "hub": [16.528936, 57.776915]
       }

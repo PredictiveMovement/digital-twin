@@ -59,7 +59,9 @@ class Kommun extends EventEmitter {
 
         // Create a private car to pickup the package from the nearestOmbud
         // https://transportstyrelsen.se/sv/vagtrafik/statistik/Statistik-over-koldioxidutslapp/statistik-over-koldioxidutslapp-2020/
-        const privateCar = new Car({position: booking.destination.position, weight: 1500, capacity: 2, co2PerKmKg: 0.008 / 1000})
+        const weight = 1500
+        const co2perkm = 125 // gram
+        const privateCar = new Car({position: booking.destination.position, weight, capacity: 2, co2PerKmKg: (co2perkm / 1000) / weight}) 
         privateCar.handleBooking(booking)
         this.privateCars.next(privateCar)
       })
