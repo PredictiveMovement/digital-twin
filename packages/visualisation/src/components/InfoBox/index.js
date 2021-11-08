@@ -18,7 +18,7 @@ const Wrapper = styled.div`
 
 const InfoBox = ({ data }) => {
   const {
-    title = 'Lastbil',
+    title = 'Fordon',
     id,
     subTitle = 'Åkeri Jönsson',
     fleet = 'Lokal åkare',

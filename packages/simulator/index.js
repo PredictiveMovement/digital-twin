@@ -40,7 +40,7 @@ const pilots = kommuner.pipe(
 
       // TODO: Could we do this without converting to an array? Yes. By using fs stream and write json per line
       bookings.pipe(
-        map(({ id, origin, pickup: {position: pickup}, destination: {position: destination, name}}) => ({ id, origin, pickup: {position: pickup}, destination: {position: destination, name} })), // remove all unneccessary data such as car and eventemitter etc
+        map(({ id, origin, pickup: {position: pickup}, finalDestination: {position: finalDestination} = {}, destination: {position: destination, name}}) => ({ id, origin, pickup: {position: pickup}, finalDestination: finalDestination && {position: finalDestination} || undefined, destination: {position: destination, name} })), // remove all unneccessary data such as car and eventemitter etc
         toArray(),
       ).subscribe(arr => {
         fs.writeFileSync(file, JSON.stringify(arr))

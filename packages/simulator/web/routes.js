@@ -72,7 +72,6 @@ function register(io) {
     .subscribe((bookings) => {
       if (bookings.length) {
         socket.emit('bookings', bookings)
-        console.log('sending initial bookings', bookings.length)
       }
     })
   })
@@ -89,14 +88,14 @@ function register(io) {
   engine.carUpdates
     .pipe(
       //distinct(car => car.id),
-      map(({ booking, position: { lon, lat }, id, heading, speed, bearing, status, fleet, cargo, capacity, queue, co2 }) => ({
+      map(({ booking, position: { lon, lat }, id, altitude, heading, speed, bearing, status, fleet, cargo, capacity, queue, co2 }) => ({
         id,
         heading: [heading.lon, heading.lat], // contains route to plot or interpolate on client side.
         speed,
         bearing,
-        position: [lon, lat],
+        position: [lon, lat, altitude || 0],
         status,
-        fleet: fleet.name,
+        fleet: fleet?.name || 'Privat',
         co2,
         cargo: cargo.length + (booking ? 1 : 0),
         queue: queue.length + (booking ? 1 : 0),
