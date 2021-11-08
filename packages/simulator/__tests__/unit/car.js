@@ -1,4 +1,4 @@
-const Car = require('../../lib/car')
+const Car = require('../../lib/vehicles/car')
 const { take, toArray } = require('rxjs/operators')
 const Booking = require('../../lib/booking')
 const { virtualTime } = require('../../lib/virtualTime')

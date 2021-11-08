@@ -94,7 +94,7 @@ const SpeedSlider = ({ onSpeedChange, onMouseEnter, onMouseLeave, setSpeed, spee
         included={false}
         step={100}
         marks={marks}
-        min={0}
+        min={2}
         max={900}
         trackStyle={{ backgroundColor: 'white', height: 10 }}
         onChange={(value) => {

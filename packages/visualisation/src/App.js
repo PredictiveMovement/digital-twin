@@ -44,9 +44,10 @@ const App = () => {
     setReset(false)
     setCars((cars) => [
       ...cars.filter((car) => !newCars.some((nc) => nc.id === car.id)),
-      ...newCars.map(({ id, heading, position, fleet, cargo, capacity }) => ({
+      ...newCars.map(({ id, heading, bearing, position, fleet, cargo, capacity }) => ({
         id,
         heading,
+        bearing,
         position,
         fleet,
         cargo,

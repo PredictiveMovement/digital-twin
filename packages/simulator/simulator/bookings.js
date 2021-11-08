@@ -14,6 +14,7 @@ const { isInsideCoordinates } = require('../lib/polygon')
 const { haversine, addMeters, convertPosition } = require('../lib/distance')
 const perlin = require('perlin-noise')
 const Booking = require('../lib/booking')
+const Car = require('../lib/vehicles/car')
 
 const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
 
@@ -73,6 +74,7 @@ function generateBookingsInKommun(kommun) {
           return new Booking({
             pickup: fleet.hub,
             destination: nearestOmbud,
+            finalDestination: address,
             origin: fleet.name
           })
         })

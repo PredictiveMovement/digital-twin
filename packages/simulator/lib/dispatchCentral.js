@@ -9,9 +9,10 @@ const dispatch = (cars, bookings) => {
     }),
     mergeMap((booking) => cars.pipe(
       map((car) => ({ car, distance: haversine(car.heading || car.position, booking.pickup.position) })),
-      filter(({ car }) => car.capacity > car.cargo.length), // wait until we have a car with free capacity
+      filter(({ car }) => car.canPickupBooking(booking)), // wait until we have a car with free capacity
       takeUntil(timer(300)), // to be able to sort we have to batch somehow. Lets start with time
       toArray(),
+      filter(c => c.length),
       // tap(cars => cars.length ? null : console.log(`*** available cars to choose from: ${cars.length}`)),
       // naive dispatch, just pick the first car that is closest to the pickup
       map((cars) => cars.sort((a, b) => a.distance - b.distance).shift()?.car),

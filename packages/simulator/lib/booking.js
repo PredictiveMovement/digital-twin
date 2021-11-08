@@ -26,7 +26,7 @@ class Booking extends EventEmitter {
   }
 
   assigned(car) {
-    this.assignedDateTime = virtualTime.time()
+    this.assignedDateTime = this.assignedDateTime || virtualTime.time()
     this.car = car
     this.status = 'Assigned'
     this.emit('assigned', this)
