@@ -88,7 +88,8 @@ const Map = ({ vehicles, bookings, hubs, kommuner, activeCar, setActiveCar, time
             inside(info.coordinate, polygon)
           )
         ) {
-          return current
+        console.log('current', current)
+        return current
         }
         return null
       })
