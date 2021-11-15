@@ -29,7 +29,7 @@ spec:
             - containerPort: 80
           env:
             - name: REACT_APP_SIMULATOR_URL
-              value: https://supplychain-engine.predictivemovement.se
+              value: https://drone-engine.predictivemovement.se
           #   - name: REACT_APP_MAPBOX_ACCESS_TOKEN
           #     valueFrom:
           #       secretKeyRef:
@@ -48,10 +48,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - supplychain.predictivemovement.se
+        - drone.predictivemovement.se
       secretName: visualisation-prod-tls
   rules:
-    - host: supplychain.predictivemovement.se
+    - host: drone.predictivemovement.se
       http:
         paths:
           - backend:

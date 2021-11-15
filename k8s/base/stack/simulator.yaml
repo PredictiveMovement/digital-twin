@@ -34,7 +34,7 @@ spec:
       volumes:
         - name: ombudsnat
           hostPath:
-            path: /storage/predictivemovement/supplychain
+            path: /storage/predictivemovement/drone
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
@@ -46,10 +46,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - supplychain-engine.predictivemovement.se
+        - drone-engine.predictivemovement.se
       secretName: simulator-prod-tls
   rules:
-    - host: supplychain-engine.predictivemovement.se
+    - host: drone-engine.predictivemovement.se
       http:
         paths:
           - backend:
