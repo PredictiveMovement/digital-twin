@@ -88,8 +88,7 @@ const Map = ({ vehicles, bookings, hubs, kommuner, activeCar, setActiveCar, time
             inside(info.coordinate, polygon)
           )
         ) {
-        console.log('current', current)
-        return current
+          return current
         }
         return null
       })
@@ -343,7 +342,7 @@ const Map = ({ vehicles, bookings, hubs, kommuner, activeCar, setActiveCar, time
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
       // initialViewState={mapState.viewport}
       viewState={mapState}
-      onLoad={rotateCamera}
+      // onLoad={rotateCamera}
       onViewStateChange={({ viewState }) => {
         setMapState(viewState)
         if (activeCar) {
