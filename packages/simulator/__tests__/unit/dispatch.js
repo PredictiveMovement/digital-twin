@@ -9,12 +9,12 @@ describe("dispatch", () => {
   const arjeplog = { lon: 17.886855, lat: 66.041054 }
   const ljusdal = { lon: 14.44681991219, lat: 61.59465992477 }
   const stockholm = { lon: 18.063240, lat: 59.334591 }
-  let cars
+  let vehicles
   let bookings
 
   beforeEach(() => {
     virtualTime.setTimeMultiplier(Infinity)
-    cars = from([new Car({ id: 1, position: ljusdal }), new Car({ id: 2, position: arjeplog })]).pipe(shareReplay())
+    vehicles = from([new Car({ id: 1, position: ljusdal }), new Car({ id: 2, position: arjeplog })]).pipe(shareReplay())
     bookings = from([new Booking({
       id: 0,
       pickup: { position: ljusdal },
@@ -23,7 +23,7 @@ describe("dispatch", () => {
   })
 
   it('should dispatch a booking to nearest car', function (done) {
-    dispatch(cars, bookings).subscribe(({ car, booking }) => {
+    dispatch(vehicles, bookings).subscribe(({ car, booking }) => {
       expect(car.position).toEqual(ljusdal)
       done()
     })
@@ -42,7 +42,7 @@ describe("dispatch", () => {
         destination: { position: arjeplog }
       })
     ])
-    dispatch(cars, bookings).pipe(toArray()).subscribe(([assignment1, assignment2]) => {
+    dispatch(vehicles, bookings).pipe(toArray()).subscribe(([assignment1, assignment2]) => {
       expect(assignment1.car.position).toEqual(arjeplog)
       expect(assignment1.car.id).toEqual(2)
       expect(assignment2.car.position).toEqual(ljusdal)
@@ -53,7 +53,7 @@ describe("dispatch", () => {
 
   it('should dispatch two bookings even when they arrive async', function (done) {
     const asyncBookings = new Subject()
-    dispatch(cars, asyncBookings).subscribe(({ booking: { id }, car }) => {
+    dispatch(vehicles, asyncBookings).subscribe(({ booking: { id }, car }) => {
       if (id === 1) {
         expect(car.position).toEqual(ljusdal)
         asyncBookings.next(new Booking({
@@ -74,13 +74,13 @@ describe("dispatch", () => {
     }))
   })
 
-  it('should have cars available even the second time', function (done) {
+  it('should have vehicles available even the second time', function (done) {
     const asyncBookings = new Subject()
-    const cars = new ReplaySubject()
-    cars.next(new Car({ position: ljusdal }))
-    cars.next(new Car({ position: arjeplog }))
+    const vehicles = new ReplaySubject()
+    vehicles.next(new Car({ position: ljusdal }))
+    vehicles.next(new Car({ position: arjeplog }))
 
-    dispatch(cars, asyncBookings).subscribe(({ booking: { id }, car: { position } }) => {
+    dispatch(vehicles, asyncBookings).subscribe(({ booking: { id }, car: { position } }) => {
       if (id === 1) {
         expect(position).toEqual(ljusdal)
         asyncBookings.next(new Booking({
@@ -106,7 +106,7 @@ describe("dispatch", () => {
 
 
   it.only('should dispatch two bookings to one car', function (done) {
-    cars = from([new Car({ id: 1, position: ljusdal })])
+    vehicles = from([new Car({ id: 1, position: ljusdal })])
     bookings = from([
       new Booking({
         id: 1337,
@@ -119,7 +119,7 @@ describe("dispatch", () => {
         destination: { position: ljusdal, name: 'dropoff 2' }
       })
     ])
-    dispatch(cars, bookings).pipe(toArray()).subscribe(([assignment1, assignment2]) => {
+    dispatch(vehicles, bookings).pipe(toArray()).subscribe(([assignment1, assignment2]) => {
       jest.setTimeout(10000)
 
       expect(assignment1.car.id).toEqual(1)
@@ -137,7 +137,7 @@ describe("dispatch", () => {
   })
 
   it('should dispatch three bookings to one car with only capacity for one and still deliver them all', function (done) {
-    cars = from([new Car({ id: 1, position: ljusdal, capacity: 1 })])
+    vehicles = from([new Car({ id: 1, position: ljusdal, capacity: 1 })])
     bookings = from([
       new Booking({
         id: 1337,
@@ -155,7 +155,7 @@ describe("dispatch", () => {
         destination: { position: arjeplog, name: 'dropoff 3' }
       })
     ])
-    dispatch(cars, bookings).pipe(toArray()).subscribe(([assignment1, assignment2, assignment3]) => {
+    dispatch(vehicles, bookings).pipe(toArray()).subscribe(([assignment1, assignment2, assignment3]) => {
       expect(assignment1.car.id).toEqual(1)
       expect(assignment1.booking.id).toEqual(1337)
       expect(assignment2.car.id).toEqual(1)

@@ -30,13 +30,13 @@ describe("A fleet", () => {
   })
 
   it('should initialize correctly', function (done) {
-    fleet = new Fleet({ name: 'postnord', marketshare: 1, numberOfCars: 1, hub: arjeplog })
+    fleet = new Fleet({ name: 'postnord', marketshare: 1, numberOfVehicles: 1, hub: arjeplog })
     expect(fleet.name).toHaveLength(8)
     done()
   })
 
   it('dispatches handled bookings', function () {
-    fleet = new Fleet({ name: 'postnord', marketshare: 1, numberOfCars: 1, hub: arjeplog })
+    fleet = new Fleet({ name: 'postnord', marketshare: 1, numberOfVehicles: 1, hub: arjeplog })
     fleet.handleBooking(testBooking)
 
     expect(dispatch.dispatch.mock.calls.length).toBe(1)
@@ -48,7 +48,7 @@ describe("A fleet", () => {
       car: { id: 1 },
     }]))
 
-    fleet = new Fleet({ name: 'postnord', marketshare: 1, numberOfCars: 1, hub: arjeplog })
+    fleet = new Fleet({ name: 'postnord', marketshare: 1, numberOfVehicles: 1, hub: arjeplog })
     fleet.handleBooking(testBooking)
 
     fleet.dispatchedBookings.pipe(

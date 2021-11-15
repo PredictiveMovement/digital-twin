@@ -34,7 +34,7 @@ const commercialAreasLayer = new GeoJsonLayer({
 const transitionInterpolator = new LinearInterpolator(['bearing']);
 
 
-const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) => {
+const Map = ({ vehicles, bookings, hubs, kommuner, activeCar, setActiveCar, time }) => {
   const [mapState, setMapState] = useState({
     latitude: 65.0964472642777,
     longitude: 17.112050188704504,
@@ -133,7 +133,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
   /*
   const droneLayer = new ScenegraphLayer({
     id: 'drone-layer',
-    data: cars,
+    data: vehicles,
     sizeMinPixels: 1,
     sizeMaxPixels: 15,
     scenegraph: '/airplane.glb',
@@ -165,7 +165,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
 
   const carLayer = new ScatterplotLayer({
     id: 'car-layer',
-    data: cars,
+    data: vehicles,
     opacity: 0.4,
     stroked: false,
     filled: true,
@@ -260,8 +260,8 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
   const arcDataWithQueuedBookings = showQueuedBookings && bookings
     //.filter((booking) => booking.status === 'Queued')
     .map((booking) => {
-      if (!cars) return null
-      const car = cars.find((car) => car.id === booking.carId)
+      if (!vehicles) return null
+      const car = vehicles.find((car) => car.id === booking.carId)
       if (car === undefined) return null
 
 
@@ -290,7 +290,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
     })
     .filter(b => b) // remove null values
 
-  const arcData = cars.map((car) => {
+  const arcData = vehicles.map((car) => {
     return {
       inbound: [167, 55, 255],
       outbound: [167, 55, 255],
@@ -325,16 +325,16 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
 
 
   useEffect(() => {
-    if (!cars.length) return
+    if (!vehicles.length) return
     if (!activeCar) return
-    const car = cars.filter(({ id }) => id === activeCar.id)[0]
+    const car = vehicles.filter(({ id }) => id === activeCar.id)[0]
     setMapState((state) => ({
       ...state,
       zoom: 14,
       longitude: car.position[0],
       latitude: car.position[1],
     }))
-  }, [activeCar, cars])
+  }, [activeCar, vehicles])
 
 
   return (

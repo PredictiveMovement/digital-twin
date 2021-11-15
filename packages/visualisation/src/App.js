@@ -23,7 +23,7 @@ const App = () => {
   useSocket('reset', () => {
     console.log('received reset')
     setBookings([])
-    setCars([])
+    setVehicles([])
     setKommuner([])
     setPostombud([])
     socket.emit('speed', speed) // reset speed on server
@@ -39,12 +39,12 @@ const App = () => {
     return array
   }
 
-  const [cars, setCars] = React.useState([])
-  useSocket('cars', (newCars) => {
+  const [vehicles, setVehicles] = React.useState([])
+  useSocket('vehicles', (newVehicles) => {
     setReset(false)
-    setCars((cars) => [
-      ...cars.filter((car) => !newCars.some((nc) => nc.id === car.id)),
-      ...newCars.map(({ id, heading, bearing, position, fleet, cargo, capacity }) => ({
+    setVehicles((vehicles) => [
+      ...vehicles.filter((vehicle) => !newVehicles.some((nv) => nv.id === vehicle.id)),
+      ...newVehicles.map(({ id, heading, bearing, position, fleet, cargo, capacity }) => ({
         id,
         heading,
         bearing,
@@ -117,7 +117,7 @@ const App = () => {
     setReset(true)
     socket.emit('reset')
     setBookings([])
-    setCars([])
+    setVehicles([])
     setKommuner([])
     setPostombud([])
     setActiveCar(null)
@@ -136,7 +136,7 @@ const App = () => {
       <PlaybackOptions onPause={onPause} onPlay={onPlay} onSpeedChange={onSpeedChange} />
       {reset && <Loading />}
       <Map
-        cars={cars}
+        vehicles={vehicles}
         bookings={bookings}
         hubs={postombud}
         kommuner={kommuner}

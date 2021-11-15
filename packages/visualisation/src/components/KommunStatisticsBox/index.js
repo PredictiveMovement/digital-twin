@@ -19,13 +19,13 @@ z-index: 1;
 width: 250px;
 `
 
-const KommunStatisticsBox = ({ name, totalCars, totalBookings, totalCapacity, totalCo2, averageDeliveryTime, totalDelivered, averageUtilization, totalCargo, totalQueued, averageQueued }) => {
+const KommunStatisticsBox = ({ name, totalVehicles, totalBookings, totalCapacity, totalCo2, averageDeliveryTime, totalDelivered, averageUtilization, totalCargo, totalQueued, averageQueued }) => {
 
     return (
-        !totalCars ? null :
+        !totalVehicles ? null :
         <Wrapper>
             <div>
-                <Paragraph>{totalCars} fordon i {name}</Paragraph>
+                <Paragraph>{totalVehicles} fordon i {name}</Paragraph>
                 <Paragraph>Total kapacitet: {totalCapacity} kollin</Paragraph>
                 <Paragraph>Antal bokningar: {totalBookings} kollin</Paragraph>
                 <Paragraph>Köat: {totalQueued} kollin</Paragraph>

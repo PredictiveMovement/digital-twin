@@ -25,11 +25,11 @@ class Kommun extends EventEmitter {
     this.packageVolumes = packageVolumes
     this.unhandledBookings = new Subject()
     this.population = this.squares.pipe(reduce((a, b) => a + b.population, 0))
-    this.privateCars = new ReplaySubject()
+    this.privateVehicles = new ReplaySubject()
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
-    this.cars = merge(this.privateCars, this.fleets.pipe(
-      mergeMap(fleet => fleet.cars),
+    this.vehicles = merge(this.privateVehicles, this.fleets.pipe(
+      mergeMap(fleet => fleet.vehicles),
       shareReplay()
     ))
 
@@ -63,7 +63,7 @@ class Kommun extends EventEmitter {
         const co2perkm = 125 // gram
         const privateCar = new Car({position: booking.destination.position, weight, capacity: 2, co2PerKmKg: (co2perkm / 1000) / weight}) 
         privateCar.handleBooking(booking)
-        this.privateCars.next(privateCar)
+        this.privateVehicles.next(privateCar)
       })
     }
     return booking

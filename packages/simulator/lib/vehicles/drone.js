@@ -4,13 +4,13 @@ const interpolate = require('../interpolate')
 const { haversine } = require("../distance")
 
 class Drone extends Vehicle {
-  constructor({maxSpeed = 80, position, ...vehicle}) {
+  constructor({maxSpeed = 50, position, ...vehicle}) {
     super(vehicle)
     this.maxSpeed = maxSpeed // km/h
     this.position = this.origin = position
     this.co2PerKmKg = 0.001
     this.maximumWeight = 10 // kg
-    this.range = 100_000 // meters
+    this.range = 25_000 // meters
     this.altitude = 0
     this.maximumAltitude = 800
     this.dropoffTime = 600 // seconds

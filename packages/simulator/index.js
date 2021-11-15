@@ -54,8 +54,8 @@ const pilots = kommuner.pipe(
 
 const engine = {
   virtualTime,
-  cars: pilots.pipe(
-    mergeMap(kommun => kommun.cars),
+  vehicles: pilots.pipe(
+    mergeMap(kommun => kommun.vehicles),
     shareReplay(),
   ),
   dispatchedBookings: pilots.pipe(
@@ -72,8 +72,8 @@ engine.bookingUpdates = engine.dispatchedBookings.pipe(
   share(),
 )
 
-engine.carUpdates = engine.cars.pipe(
-  mergeMap((car) => fromEvent(car, 'moved')),
+engine.vehicleUpdates = engine.vehicles.pipe(
+  mergeMap((vehicle) => fromEvent(vehicle, 'moved')),
   share()
 )
 

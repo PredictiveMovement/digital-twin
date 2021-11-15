@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { SocketIOProvider } from "./context/socketIOProvider";
 
 ReactDOM.render(
-  <SocketIOProvider url={process.env.REACT_APP_SIMULATOR_URL || 'http://localhost:4000'}>
+  <SocketIOProvider url={process.env.REACT_APP_SIMULATOR_URL || '//:4000'}>
     <App />
   </SocketIOProvider>,
   document.getElementById("root")

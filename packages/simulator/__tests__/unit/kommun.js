@@ -48,7 +48,7 @@ describe("A kommun", () => {
   })
 
   it.only('handled bookings are dispatched', function (done) {
-    dispatch.dispatch.mockImplementation((cars, bookings) => bookings.pipe(map(booking => ({
+    dispatch.dispatch.mockImplementation((vehicles, bookings) => bookings.pipe(map(booking => ({
       booking,
       car: { id: 1 },
     }))))
