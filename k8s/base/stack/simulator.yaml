@@ -46,10 +46,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - supplychain-engine.predictivemovement.se
+        - twin-engine.predictivemovement.se
       secretName: simulator-prod-tls
   rules:
-    - host: supplychain-engine.predictivemovement.se
+    - host: twin-engine.predictivemovement.se
       http:
         paths:
           - backend:
