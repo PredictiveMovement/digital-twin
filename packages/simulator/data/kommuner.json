@@ -6905,13 +6905,13 @@
       },
       {
         "name": "Gul",
-        "vehicles": { "medeltungLastbil": 1 },
+        "vehicles": { "lättLastbil": 2 },
         "marketshare": 0.06,
         "hub": [12.6395, 55.606284]
       },
       {
         "name": "Brun",
-        "vehicles": { "medeltungLastbil": 1 },
+        "vehicles": { "lättLastbil": 2 },
         "marketshare": 0.06,
         "hub": [13.199527, 55.688823]
       }
