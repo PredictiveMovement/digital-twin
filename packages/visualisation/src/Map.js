@@ -342,7 +342,7 @@ const Map = ({ cars, bookings, hubs, kommuner, activeCar, setActiveCar, time }) 
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
       // initialViewState={mapState.viewport}
       viewState={mapState}
-      onLoad={rotateCamera}
+      // onLoad={rotateCamera}
       onViewStateChange={({ viewState }) => {
         setMapState(viewState)
         if (activeCar) {
