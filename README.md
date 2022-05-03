@@ -10,12 +10,12 @@ The main reason for doing this research is to limit the risk when experimenting 
 
 This is currently an early version of the simulation. There are quite a few areas of improvement and hopefully we or someone else can contribute to applying all of these areas:
 
-[ ] Multiple handovers - a packet will arrive to Sweden from the borders and then be delivered within certain internal processes within each fleet. This can be visualized. Right now they just "appear" magically in the kommun.
-[ ] Home delivery - We haven't implemented private citizen cars yet. This can be done but needs a bit of performance analysis to not exhaust our servers capacity. We think we can generate these cars dynamically when you zoom above a certain level.
-[ ] Individual booking statistics - We believe we can show statistics for each packet/booking to visualize bottlenecks that can be optimized from a bookings perspective
-[ ] Fleet intelligence - we are right now dispatching bookings with a very unsmart algorighm - always take the closest available car - this is not matching reality in each case. We want to tweak these more - but not too much - we know there are room for improvement even for fleets. Especially smaller fleets.
-[ ] More data points - we know there are datasets available that can improve our estimates. For example from Trafikverket.
-[ ] Machine Learning - we believe we can improve our current hard coded estimates on volumes, traffic, amount of cars etc based on real world data. To exchange these values on certain dates/times we can improve our model significantly. 
+- [ ] Multiple handovers - a packet will arrive to Sweden from the borders and then be delivered within certain internal processes within each fleet. This can be visualized. Right now they just "appear" magically in the kommun.
+- [ ] Home delivery - We haven't implemented private citizen cars yet. This can be done but needs a bit of performance analysis to not exhaust our servers capacity. We think we can generate these cars dynamically when you zoom above a certain level.
+- [ ] Individual booking statistics - We believe we can show statistics for each packet/booking to visualize bottlenecks that can be optimized from a bookings perspective
+- [ ] Fleet intelligence - we are right now dispatching bookings with a very unsmart algorighm - always take the closest available car - this is not matching reality in each case. We want to tweak these more - but not too much - we know there are room for improvement even for fleets. Especially smaller fleets.
+- [ ] More data points - we know there are datasets available that can improve our estimates. For example from Trafikverket.
+- [ ] Machine Learning - we believe we can improve our current hard coded estimates on volumes, traffic, amount of cars etc based on real world data. To exchange these values on certain dates/times we can improve our model significantly. 
 
 ## How to contribute
 
