@@ -4,7 +4,9 @@
 
 This system is trying to replicate the transport system in Sweden with as much accuracy as possible without revealing any personal or commercial data. By taking publicly available datapoints regarding amount of packet deliveries, population within 1km2 square areas together with guestimates on market shares for transport actors we can create synthetic data streams which we than can visualize on a map.
 
-The main reason for doing this research is to limit the risk when experimenting with optimization on a systems level. For example- in Predictive Movement we believe we can reduce the energy consumption and limit the stress on the roads dramatically by optimizing the utilization on a systems level within a area/kommun. By first simulating the current state and the applying these optimizations we can measure the difference and see how much impact we can have.
+The main reason for doing this research is to limit the risk when experimenting with optimization on a systems level. For example
+
+- in Predictive Movement we believe we can reduce the energy consumption and limit the stress on the roads dramatically by optimizing the utilization on a systems level within a area/municipality(kommun). By first simulating the current state and the applying these optimizations we can measure the difference and see how much impact we can have.
 
 ## Current state / limitations
 
