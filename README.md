@@ -25,18 +25,18 @@ This code is released with MIT license - which means you can create your own cop
 
 We have tried to include as much as possible in the mono-repo, including neccessary data sources. Our goul is that it will be as easy as cloning the repo and run:
   
-  cd packages/simulator
-  npm ci
-  npm run dev 
+    cd packages/simulator
+    npm ci
+    npm run dev 
   
 open a new terminal / tmux
   
-  cd packages/visualization
-  npm ci
+    cd packages/visualization
+    npm ci
   
 Add .env with the mapbox token `REACT_APP_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>` - we want to remove this step by using libremap
 
-  npm start
+    npm start
 
 ## License
 
