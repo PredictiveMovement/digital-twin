@@ -25,7 +25,7 @@ This code is released with MIT license - which means you can create your own cop
 
 ## How to run
 
-We have tried to include as much as possible in the mono-repo, including neccessary data sources. Our goul is that it will be as easy as cloning the repo and run:
+We have tried to include as much as possible in the mono-repo, including neccessary data sources. Our goal is that it will be as easy as cloning the repo and run:
   
     cd packages/simulator
     npm ci
