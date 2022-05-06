@@ -10,7 +10,7 @@ const lanstrafiken = {
 class Bus extends Vehicle {
   constructor({ position, stops, ...vehicle }) {
     super({ position, stops, fleet: lanstrafiken, ...vehicle })
-    this.booking = stops.pipe(take(5)).subscribe(({ position: pickup }) => {
+    stops.subscribe(({ position: pickup }) => {
       this.handleBooking(
         new Booking({
           pickup: { position: pickup },

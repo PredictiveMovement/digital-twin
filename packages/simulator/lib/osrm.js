@@ -21,7 +21,6 @@ module.exports = {
       [from.lon, from.lat],
       [to.lon, to.lat],
     ].join(';')
-    console.log('coords', from, to)
     return (
       fetch(
         `${osrmUrl}/route/v1/driving/${coordinates}?steps=true&alternatives=false&overview=full&annotations=true`

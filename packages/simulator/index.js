@@ -88,6 +88,10 @@ const engine = {
     mergeMap((kommun) => kommun.dispatchedBookings),
     shareReplay()
   ),
+  busStops: pilots.pipe(
+    mergeMap((kommun) => kommun.buses.pipe(mergeMap((bus) => from(bus.queue)))),
+    shareReplay()
+  ),
   postombud,
   kommuner,
 }
@@ -108,6 +112,7 @@ engine.bookingUpdates = engine.dispatchedBookings.pipe(
 
 engine.carUpdates = engine.cars.pipe(
   mergeMap((car) => fromEvent(car, 'moved')),
+  tap((car) => console.log(`*** ${car.id}: moved`)),
   share()
 )
 

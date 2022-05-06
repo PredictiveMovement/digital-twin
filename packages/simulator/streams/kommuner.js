@@ -23,11 +23,10 @@ function getPopulationSquares({ geometry: { coordinates } }) {
 
 function getCommercialAreas(kommunkod) {
   return commercialAreas.pipe(
-    filter(area => area.properties.KOMMUNKOD === kommunkod),
+    filter((area) => area.properties.KOMMUNKOD === kommunkod),
     shareReplay()
   )
 }
-
 
 function getPostombud(kommunName) {
   return postombud.pipe(
@@ -38,8 +37,20 @@ function getPostombud(kommunName) {
 
 function read() {
   return from(data).pipe(
+    filter(({ namn }) =>
+      ['Pajala', 'Arjeplog', 'Arvidsjaur'].some((name) => namn.startsWith(name))
+    ),
     map(
-      ({ geometry, namn, epost, postnummer, telefon, kod, pickupPositions, fleets }) =>
+      ({
+        geometry,
+        namn,
+        epost,
+        postnummer,
+        telefon,
+        kod,
+        pickupPositions,
+        fleets,
+      }) =>
         new Kommun({
           geometry,
           name: namn,
@@ -47,21 +58,19 @@ function read() {
           email: epost,
           zip: postnummer,
           telephone: telefon,
-          fleets: fleets || [],
+          fleets: fleets || [],
           pickupPositions: pickupPositions || [],
-          squares: getPopulationSquares({geometry}),
+          squares: getPopulationSquares({ geometry }),
           postombud: getPostombud(namn),
-          packageVolumes: packageVolumes.find(e => namn.startsWith(e.name)),
-          commercialAreas: getCommercialAreas(kod)
+          packageVolumes: packageVolumes.find((e) => namn.startsWith(e.name)),
+          commercialAreas: getCommercialAreas(kod),
         })
     ),
     shareReplay()
   )
 }
 
-
 const kommuner = (module.exports = read())
-
 
 // kommuner.pipe(filter((k) => k.name === 'Arjeplogs kommun')).subscribe((kommun) => console.dir(kommun, { depth: null }))
 //population.pipe(take(50)).subscribe(p => console.dir(p,  { depth: null }))

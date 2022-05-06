@@ -7,8 +7,16 @@ const path = require('path')
 //const url = `https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${key}`
 const gtfs = require('gtfs-stream')
 const request = require('request')
-const { shareReplay, from, of, firstValueFrom } = require('rxjs')
-const { map, mergeMap, filter, toArray, share } = require('rxjs/operators')
+const { shareReplay, from, of, firstValueFrom, groupBy, take } = require('rxjs')
+const {
+  map,
+  mergeMap,
+  switchMap,
+  filter,
+  toArray,
+  share,
+  tap,
+} = require('rxjs/operators')
 
 const getStops = () => {
   //console.log(url)
@@ -48,19 +56,17 @@ const getStops = () => {
       }) => ({ id, tripId, arrivalTime, departureTime })
     ),
     mergeMap(async ({ id, tripId, arrivalTime, departureTime }) =>
-      of(
-        (await stops)
-          .filter(({ stopId }) => stopId === id)
-          .map(({ name, position }) => ({
-            id,
-            tripId,
-            arrivalTime,
-            departureTime,
-            name,
-            position,
-          }))
-          .shift()
-      )
+      (await stops)
+        .filter(({ stopId }) => stopId === id)
+        .map(({ name, position }) => ({
+          id,
+          tripId,
+          arrivalTime,
+          departureTime,
+          name,
+          position,
+        }))
+        .shift()
     )
   )
 }

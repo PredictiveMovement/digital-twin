@@ -2,6 +2,7 @@ const EventEmitter = require('events')
 const {
   from,
   shareReplay,
+  share,
   Subject,
   ReplaySubject,
   mergeMap,
@@ -67,41 +68,32 @@ class Kommun extends EventEmitter {
     this.privateCars = new ReplaySubject()
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
-    this.buses =
-      this.name === 'Kiruna kommun'
-        ? publicTransports.pipe(
-            groupBy(({ tripId }) => tripId),
-            mergeMap((fgroup) =>
-              fgroup.pipe(
-                mergeMap((group) => {
-                  return group.pipe(
-                    take(1),
 
-                    filter(({ position }) =>
-                      isInsideCoordinates(position, this.geometry.coordinates)
-                    ),
-                    map(({ tripId, position }) => {
-                      console.log('move that bus', tripId)
-                      return new Bus({
-                        position,
-                        stops: group,
-                      })
-                    })
-                  )
-                })
-              )
-            )
-          )
-        : from([])
+    this.buses = publicTransports.pipe(
+      groupBy(({ tripId }) => tripId), // en grupp per buss/tripId
+      mergeMap((group) => {
+        console.log('kommun', this.name, 'got bus group', group.key)
+        return group.pipe(
+          take(1), // ta det första stoppet för bussen
+          filter(({ position }) =>
+            isInsideCoordinates(position, this.geometry.coordinates)
+          ),
+          map(({ tripId, position }) => {
+            console.log('move that bus', tripId)
+            return new Bus({
+              position,
+              stops: group,
+            })
+          })
+        )
+      })
+    )
 
     this.cars = merge(
       this.privateCars,
       this.buses,
-      this.fleets.pipe(
-        mergeMap((fleet) => fleet.cars),
-        shareReplay()
-      )
-    )
+      this.fleets.pipe(mergeMap((fleet) => fleet.cars))
+    ).pipe(shareReplay())
 
     this.dispatchedBookings = this.fleets.pipe(
       mergeMap((fleet) => fleet.dispatchedBookings),
