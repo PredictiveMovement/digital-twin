@@ -6,7 +6,6 @@ const readCsv = (path, sheet) => {
   return parse(input, {
     columns: true,
     skip_empty_lines: true,
-
   })
 }
 

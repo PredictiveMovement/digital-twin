@@ -20,7 +20,7 @@ module.exports = volumes
 //     id,
 //     name,
 //     total: Math.floor(totalPaket),
-//     B2B: Math.floor(totalB2B), 
+//     B2B: Math.floor(totalB2B),
 //     B2C: Math.floor(totalB2C),
 //     C2X: Math.floor(totalC2X),
 //     brev: Math.floor(paketBrev),

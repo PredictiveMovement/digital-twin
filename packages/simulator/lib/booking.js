@@ -14,7 +14,7 @@ class Booking extends EventEmitter {
     this.weight = Math.random() * 10 // kg TODO: find reference kg
     Object.assign(this, booking)
     this.position = this.pickup?.position
-    this.on('error', err => console.error('booking error', err))
+    this.on('error', (err) => console.error('booking error', err))
   }
 
   queued(car) {
@@ -52,7 +52,8 @@ class Booking extends EventEmitter {
   delivered(position, date = virtualTime.time()) {
     this.deliveredDateTime = date
     this.deliveredPosition = position
-    this.deliveryTime = (date - (this.assignedDateTime || this.queuedDateTime)) / 1000
+    this.deliveryTime =
+      (date - (this.assignedDateTime || this.queuedDateTime)) / 1000
     this.status = 'Delivered'
     this.emit('delivered', this)
     // console.log(`*** booking ${this.id}: ${this.status}`)
