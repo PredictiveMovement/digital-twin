@@ -24,7 +24,7 @@ const {
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
-const publicTransports = require('../streams/publicTransport')
+const { getBusStops, getStopTimes } = require('../streams/publicTransport')
 const { isInsideCoordinates } = require('./polygon')
 
 // expand fleets so that a fleet with marketshare 12% has 12 cars to choose from
@@ -68,8 +68,16 @@ class Kommun extends EventEmitter {
     this.privateCars = new ReplaySubject()
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
-
-    this.buses = publicTransports.pipe(
+    this.busStops = getBusStops.pipe(
+      filter(({ position }) =>
+        isInsideCoordinates(position, this.geometry.coordinates)
+      ),
+      map(({ position, name }) => ({
+        position,
+        name,
+      }))
+    )
+    this.buses = getStopTimes.pipe(
       groupBy(({ tripId }) => tripId), // en grupp per buss/tripId
       mergeMap((group) => {
         console.log('kommun', this.name, 'got bus group', group.key)

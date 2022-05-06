@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useSocket } from './hooks/useSocket.js'
+import React, {useState} from 'react'
+import {useSocket} from './hooks/useSocket.js'
 import Map from './Map.js'
 import PlaybackOptions from './components/PlaybackOptions/index.js'
 import Loading from './components/Loading/index.js'
@@ -26,6 +26,7 @@ const App = () => {
     setCars([])
     setKommuner([])
     setPostombud([])
+    setBusStops([])
     socket.emit('speed', speed) // reset speed on server
   })
 
@@ -44,7 +45,7 @@ const App = () => {
     setReset(false)
     setCars((cars) => [
       ...cars.filter((car) => !newCars.some((nc) => nc.id === car.id)),
-      ...newCars.map(({ id, heading, bearing, position, fleet, cargo, capacity }) => ({
+      ...newCars.map(({id, heading, bearing, position, fleet, cargo, capacity}) => ({
         id,
         heading,
         bearing,
@@ -64,7 +65,7 @@ const App = () => {
   useSocket('bookings', (newBookings) => {
     setBookings((bookings) => [
       ...bookings.filter((booking) => !newBookings.some((nb) => nb.id === booking.id)),
-      ...newBookings.map(({ name, id, pickup, destination, status, isCommercial, deliveryTime, carId, co2, cost }) => ({
+      ...newBookings.map(({name, id, pickup, destination, status, isCommercial, deliveryTime, carId, co2, cost}) => ({
         id,
         address: name,
         status,
@@ -83,11 +84,19 @@ const App = () => {
   useSocket('postombud', (newPostombud) => {
     setPostombud((current) => [
       ...current,
-      ...newPostombud.map(({ id, operator, position }) => ({
+      ...newPostombud.map(({id, operator, position}) => ({
         position: [position.lon, position.lat],
         operator,
         id,
       })),
+    ])
+  })
+
+  const [busStops, setBusStops] = React.useState([])
+  useSocket('busStops', ({position, name}) => {
+    setBusStops((current) => [
+      ...current,
+      {name, position: [position.lon, position.lat].map(s => parseFloat(s))}
     ])
   })
 
@@ -96,7 +105,7 @@ const App = () => {
     setKommuner((current) => upsert(current, kommun, 'id'))
   })
 
-  const { socket } = useSocket()
+  const {socket} = useSocket()
 
   const onPause = () => {
     socket.emit('pause')
@@ -120,6 +129,7 @@ const App = () => {
     setCars([])
     setKommuner([])
     setPostombud([])
+    setBusStops([])
     setActiveCar(null)
   }
 
@@ -139,6 +149,7 @@ const App = () => {
         cars={cars}
         bookings={bookings}
         hubs={postombud}
+        busStops={busStops}
         kommuner={kommuner}
         activeCar={activeCar}
         time={time}

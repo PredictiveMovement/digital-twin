@@ -88,9 +88,12 @@ const engine = {
     mergeMap((kommun) => kommun.dispatchedBookings),
     shareReplay()
   ),
-  busStops: pilots.pipe(
+  busStopTimes: pilots.pipe(
     mergeMap((kommun) => kommun.buses.pipe(mergeMap((bus) => from(bus.queue)))),
     shareReplay()
+  ),
+  busStops: pilots.pipe(
+    mergeMap((kommun) => kommun.busStops.pipe(shareReplay()))
   ),
   postombud,
   kommuner,
