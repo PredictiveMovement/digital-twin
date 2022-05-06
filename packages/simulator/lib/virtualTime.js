@@ -3,7 +3,6 @@ const EventEmitter = require('events')
 const moment = require('moment')
 
 class VirtualTime extends EventEmitter {
-
   constructor(timeMultiplier = 60, startHour = 5.3) {
     super()
     this.startDate = Date.now()
@@ -33,12 +32,9 @@ class VirtualTime extends EventEmitter {
     this.startDate = Date.now()
     this.timeMultiplier = timeMultiplier - 1 // it makes more sense to have 1 mean realtime and 0 means stop the time.
   }
-
 }
-
-
 
 module.exports = {
   virtualTime: new VirtualTime(), // static global time
-  VirtualTime
+  VirtualTime,
 }

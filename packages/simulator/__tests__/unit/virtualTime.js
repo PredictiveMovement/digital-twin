@@ -5,7 +5,8 @@ expect.extend({
   toBeNear(x, y, z) {
     return {
       pass: Math.round(x / 100) === Math.round(y / 100),
-      message: () => `Not close enough: expected: ${x}, received: ${y} Diff: ${x - y}`,
+      message: () =>
+        `Not close enough: expected: ${x}, received: ${y} Diff: ${x - y}`,
     }
   },
 })
