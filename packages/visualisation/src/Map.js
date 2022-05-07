@@ -276,7 +276,7 @@ const Map = ({
   const busStopLayer = new ScatterplotLayer({
     id: 'busStop-layer',
     data: busStops,
-    opacity: 100,
+    opacity: 0.4,
     stroked: true,
     filled: true,
     radiusScale: 1,
@@ -284,8 +284,8 @@ const Map = ({
     getPosition: (c) => {
       return c.position
     },
-    getRadius: () => 10,
-    getFillColor: [193, 19, 19],
+    getRadius: () => 4,
+    getFillColor: [193, 19, 19, 120],
     pickable: true,
     onHover: ({object, x, y}) => {
       if (!object) return setHoverInfo(null)

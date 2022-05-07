@@ -59,7 +59,7 @@ class Vehicle extends EventEmitter {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
       const newPosition = interpolate.route(route, this.time()) ?? this.heading
       this.updatePosition(newPosition)
-    }, 1000)
+    }, 100)
   }
 
   navigateTo(position) {
@@ -109,7 +109,6 @@ class Vehicle extends EventEmitter {
     if (this._disposed) return
 
     this.emit('pickup', this.id)
-    //console.log('PICKUP', this.queue)
     this.queue.sort(
       (a, b) =>
         haversine(this.position, a.pickup.position) -

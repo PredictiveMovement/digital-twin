@@ -1,6 +1,6 @@
 const Booking = require('../booking')
 const Vehicle = require('./vehicle')
-const { take } = require('rxjs/operators')
+const { take, pairwise } = require('rxjs/operators')
 
 // TODO: create this somewhere else as real fleet
 const lanstrafiken = {
@@ -10,11 +10,13 @@ const lanstrafiken = {
 class Bus extends Vehicle {
   constructor({ position, stops, ...vehicle }) {
     super({ position, stops, fleet: lanstrafiken, ...vehicle })
-    stops.subscribe(({ position: pickup }) => {
+    stops.pipe(
+      pairwise()
+    ).subscribe(([pickup, destination]) => {
       this.handleBooking(
         new Booking({
-          pickup: { position: pickup },
-          dropOff: { position },
+          pickup,
+          destination
         })
       )
     })
