@@ -46,10 +46,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - twin-engine.predictivemovement.se
+        - rorla-engine.predictivemovement.se
       secretName: simulator-prod-tls
   rules:
-    - host: twin-engine.predictivemovement.se
+    - host: rorla-engine.predictivemovement.se
       http:
         paths:
           - backend:
