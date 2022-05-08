@@ -26,6 +26,14 @@ class VirtualTime extends EventEmitter {
     this.emit('pause')
   }
 
+  async setTimeout(time) {
+    if (this.timeMultiplier === 0) return // don't wait when time is stopped
+    if (this.timeMultiplier === Infinity) return // return directly if time is set to infinity
+    return await new Promise((resolve) => {
+      return setTimeout(resolve, time / this.timeMultiplier)
+    })
+  }
+
   // Set the speed in which time should advance
   setTimeMultiplier(timeMultiplier) {
     this.offset = this.time() - Date.now() // save the current offset before reseting the time multiplier

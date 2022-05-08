@@ -72,22 +72,22 @@ class Kommun extends EventEmitter {
       filter(({ position }) =>
         isInsideCoordinates(position, this.geometry.coordinates)
       ),
-      map(({ position, name }) => ({
+      map(({ position, name, departureTime, arrivalTime }) => ({
         position,
         name,
+        departureTime,
+        arrivalTime,
       }))
     )
     this.buses = getStopTimes.pipe(
       groupBy(({ tripId }) => tripId), // en grupp per buss/tripId
       mergeMap((group) => {
-        console.log('kommun', this.name, 'got bus group', group.key)
         return group.pipe(
           take(1), // ta det första stoppet för bussen
           filter(({ position }) =>
             isInsideCoordinates(position, this.geometry.coordinates)
           ),
           map(({ tripId, position }) => {
-            console.log('move that bus', tripId)
             return new Bus({
               position,
               stops: group,
