@@ -28,13 +28,13 @@ spec:
           ports:
             - containerPort: 4000
           volumeMounts:
-            - name: ombudsnat
+            - name: data
               mountPath: /app/data
 
       volumes:
-        - name: ombudsnat
+        - name: data
           hostPath:
-            path: /storage/predictivemovement/supplychain
+            path: /storage/predictivemovement/rorla
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
