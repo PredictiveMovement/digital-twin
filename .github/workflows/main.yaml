@@ -41,7 +41,7 @@ jobs:
       - name: build-and-deploy
         env:
           REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}
-          REACT_APP_SIMULATOR_URL: https://supplychain-engine.predictivemovement.se
+          REACT_APP_SIMULATOR_URL: https://rorla-engine.predictivemovement.se
         run: |
           docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
           skaffold run
