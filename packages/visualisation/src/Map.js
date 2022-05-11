@@ -42,6 +42,7 @@ const Map = ({
   cars,
   bookings,
   hubs,
+  busStops,
   kommuner,
   activeCar,
   setActiveCar,

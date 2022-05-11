@@ -18,10 +18,10 @@ function read() {
       area,
       ruta,
       position: parseRuta(ruta),
-      ages: Object.values(ages).map(nr => parseFloat(nr, 10)),
+      ages: Object.values(ages).map((nr) => parseFloat(nr, 10)),
       population: parseFloat(population, 10),
     })),
-    filter(p => p.population > 0), // only keep squares with people living there. 
+    filter((p) => p.population > 0), // only keep squares with people living there.
     shareReplay()
   )
 }

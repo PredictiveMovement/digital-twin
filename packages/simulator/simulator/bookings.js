@@ -26,8 +26,8 @@ const randomPositions = perlin
   .sort((a, b) => b.probability - a.probability) // sort them so we can just pick how many we want
 
 function generateBookingsInKommun(kommun) {
-  console.log(`*** generateBookingsInKommun ${kommun.name}`)
-  // a square is a km2 box with a population total. We will here populate each square with nearest postombud
+  // console.log(`*** generateBookingsInKommun ${kommun.name}`)
+  // // a square is a km2 box with a population total. We will here populate each square with nearest postombud
   const squaresWithNearestPostombud = kommun.squares.pipe(
     mergeMap((square) =>
       kommun.postombud.pipe(
@@ -39,7 +39,7 @@ function generateBookingsInKommun(kommun) {
         map((ombud) => ombud.sort((a, b) => a.distance - b.distance).shift()),
         map((nearestOmbud) => ({ ...square, nearestOmbud }))
       )
-    ),
+    )
   )
 
   const randomPointsInSquares = squaresWithNearestPostombud.pipe(
@@ -50,32 +50,45 @@ function generateBookingsInKommun(kommun) {
         .map(({ x, y }) => addMeters(position, { x, y }))
         .map((position) => ({ nearestOmbud, position }))
     ),
-    tap(s => `randomInPointInSquares ${kommun.name}`)
+    tap((s) => `randomInPointInSquares ${kommun.name}`)
   )
 
   const bookings = randomPointsInSquares.pipe(
     toArray(), // convert to array to be able to sort the addresses
     mergeMap((a) => from(a.sort((p) => Math.random() - 0.5))),
-    mergeMap(({ nearestOmbud, position}) => kommun.fleets.pipe(
-      first(fleet => nearestOmbud.operator.startsWith(fleet.name), null), // Find DHL_Express or DHL_Freight from DHL
-      mergeMap(fleet => fleet ? of(fleet) : kommun.fleets.pipe(first())), // TODO: defaultIfEmpty
-      map(fleet => ({ nearestOmbud, position, fleet})))
+    mergeMap(({ nearestOmbud, position }) =>
+      kommun.fleets.pipe(
+        first((fleet) => nearestOmbud.operator.startsWith(fleet.name), null), // Find DHL_Express or DHL_Freight from DHL
+        mergeMap((fleet) => (fleet ? of(fleet) : kommun.fleets.pipe(first()))), // TODO: defaultIfEmpty
+        map((fleet) => ({ nearestOmbud, position, fleet }))
+      )
     ),
     mergeMap(({ nearestOmbud, position, fleet }) => {
-      return pelias.nearest(position)
+      return pelias
+        .nearest(position)
         .then((address) => {
           const isCommercial = address.layer === 'venue'
           const homeDelivery = Math.random() < fleet.percentageHomeDelivery
           const returnDelivery = Math.random() < fleet.percentageReturnDelivery
 
-          if (isCommercial || homeDelivery) return new Booking({pickup: fleet.hub, destination: address, origin: fleet.name})
-          if (returnDelivery) return new Booking({pickup: nearestOmbud, destination: hub, origin: fleet.name})
+          if (isCommercial || homeDelivery)
+            return new Booking({
+              pickup: fleet.hub,
+              destination: address,
+              origin: fleet.name,
+            })
+          if (returnDelivery)
+            return new Booking({
+              pickup: nearestOmbud,
+              destination: hub,
+              origin: fleet.name,
+            })
 
           return new Booking({
             pickup: fleet.hub,
             destination: nearestOmbud,
             finalDestination: address,
-            origin: fleet.name
+            origin: fleet.name,
           })
         })
         .catch(() => Promise.resolve(null))
@@ -90,7 +103,7 @@ function generateBookingsInKommun(kommun) {
       })
     }),*/
     //expand(({isCommercial}) => Math.ceil(Math.random() * (isCommercial ? 100 : 2))),
-    filter(p => p !== null),
+    filter((p) => p !== null)
     //retry(5)
   )
   return bookings

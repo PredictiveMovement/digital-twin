@@ -10,8 +10,7 @@ jest.mock('../../lib/dispatchCentral')
 
 const range = (length) => Array.from({ length }).map((_, i) => i)
 
-
-describe("A kommun", () => {
+describe('A kommun', () => {
   const arjeplog = { lon: 17.886855, lat: 66.041054 }
   const ljusdal = { lon: 14.44681991219, lat: 61.59465992477 }
   const squares = from([])
@@ -20,12 +19,14 @@ describe("A kommun", () => {
 
   let testBooking = new Booking({
     pickup: arjeplog,
-    destination: ljusdal
+    destination: ljusdal,
   })
 
   beforeEach(() => {
     virtualTime.setTimeMultiplier(Infinity)
-    fleets = [{ name: 'postnord', marketshare: 1, numberOfCars: 1, hub: arjeplog }]
+    fleets = [
+      { name: 'postnord', marketshare: 1, numberOfCars: 1, hub: arjeplog },
+    ]
     jest.clearAllMocks()
   })
 
@@ -34,7 +35,6 @@ describe("A kommun", () => {
   })
 
   it('should initialize correctly', function (done) {
-
     kommun = new Kommun({ name: 'stockholm', squares, fleets })
     expect(kommun.name).toBe('stockholm')
     done()
@@ -48,17 +48,19 @@ describe("A kommun", () => {
   })
 
   it.only('handled bookings are dispatched', function (done) {
-    dispatch.dispatch.mockImplementation((cars, bookings) => bookings.pipe(map(booking => ({
-      booking,
-      car: { id: 1 },
-    }))))
+    dispatch.dispatch.mockImplementation((cars, bookings) =>
+      bookings.pipe(
+        map((booking) => ({
+          booking,
+          car: { id: 1 },
+        }))
+      )
+    )
 
     kommun = new Kommun({ name: 'stockholm', squares, fleets })
     kommun.handleBooking(testBooking)
 
-    kommun.dispatchedBookings.pipe(
-      first()
-    ).subscribe(({ booking }) => {
+    kommun.dispatchedBookings.pipe(first()).subscribe(({ booking }) => {
       expect(booking.fleet.name).toBe('bring')
       expect(booking.id).toBe(testBooking.id)
       done()

@@ -1,6 +1,5 @@
-import React from 'react';
+import React from 'react'
 import styled from 'styled-components'
-
 
 const StyledButton = styled.button`
   background: transparent;
@@ -12,12 +11,21 @@ const StyledButton = styled.button`
   }
 `
 
-const TransparentButton = ({ onClick, onMouseEnter, onMouseLeave, children }) => {
-    return (
-        <StyledButton onClick={onClick} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-            {children}
-        </StyledButton>
-    )
+const TransparentButton = ({
+  onClick,
+  onMouseEnter,
+  onMouseLeave,
+  children,
+}) => {
+  return (
+    <StyledButton
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      {children}
+    </StyledButton>
+  )
 }
 
-export default TransparentButton;
+export default TransparentButton

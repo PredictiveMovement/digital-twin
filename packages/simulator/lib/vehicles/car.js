@@ -1,4 +1,4 @@
-const Vehicle = require("./vehicle")
+const Vehicle = require('./vehicle')
 
 class Car extends Vehicle {
   constructor(args) {
