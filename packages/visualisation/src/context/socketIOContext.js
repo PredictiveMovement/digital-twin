@@ -1,5 +1,5 @@
-import { createContext } from "react";
+import { createContext } from 'react'
 
-const SocketIOContext = createContext();
+const SocketIOContext = createContext()
 
-export { SocketIOContext };
+export { SocketIOContext }
