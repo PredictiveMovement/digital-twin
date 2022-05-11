@@ -118,7 +118,7 @@ engine.bookingUpdates = engine.dispatchedBookings.pipe(
 
 engine.carUpdates = engine.cars.pipe(
   mergeMap((car) => fromEvent(car, 'moved')),
-  tap((car) => console.log(`*** ${car.id}: moved`)),
+  // tap((car) => console.log(`*** ${car.id}: moved`)),
   share()
 )
 

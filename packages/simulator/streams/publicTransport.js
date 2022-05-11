@@ -17,31 +17,27 @@ const {
   share,
   tap,
 } = require('rxjs/operators')
-
+const { getGtfs } = require('./gtfs')
+const gtfs = getGtfs();
 const getBusStops = from(
-  fs
-    .createReadStream(path.join(__dirname, `../data/${operator}.zip`))
-    .pipe(gtfs({raw: true}))
-).pipe(
-  filter(({type}) => type === 'stop'),
-  map(
-    ({
-      data: {stop_id: stopId, stop_name: name, stop_lat: lat, stop_lon: lon},
-    }) => ({position: {lat, lon}, name})
-  ),
-  shareReplay()
+  gtfs.pipe(
+    filter(({type}) => type === 'stop'),
+    filter(({ data: { location_type } }) => location_type === '0'),
+    map(
+      ({
+        data: {stop_id: stopId, stop_name: name, stop_lat: lat, stop_lon: lon},
+      }) => ({position: {lat, lon}, name})
+    ),
+    shareReplay()
+  )
 )
 
+// stop_times.trip_id -> trips.service_id -> calendar_dates.service_id
 const getStops = () => {
-  const stream = from(
-    fs
-      .createReadStream(path.join(__dirname, `../data/${operator}.zip`))
-      .pipe(gtfs({raw: true}))
-  ).pipe(shareReplay())
-
   const stops = firstValueFrom(
-    stream.pipe(
+    gtfs.pipe(
       filter(({type}) => type === 'stop'),
+      filter(({ data: { location_type } }) => location_type === '0'),
       map(
         ({
           data: {

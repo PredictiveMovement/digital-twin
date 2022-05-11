@@ -255,10 +255,11 @@ const Map = ({
     filled: true,
     radiusScale: 1,
     radiusUnits: 'pixels',
+    radiusMinPixels: 12,
+    radiusMaxPixels: 15,
     getPosition: (c) => {
       return c.position
     },
-    getRadius: () => 2,
     // #127DBD
     getFillColor: [0, 255, 128, 120],
     pickable: true,
@@ -276,16 +277,18 @@ const Map = ({
   const busStopLayer = new ScatterplotLayer({
     id: 'busStop-layer',
     data: busStops,
-    opacity: 0.4,
-    stroked: true,
+    opacity: 0.7,
+    stroked: false,
     filled: true,
     radiusScale: 1,
     radiusUnits: 'pixels',
+    radiusMinPixels: 12,
+    radiusMaxPixels: 15,
     getPosition: (c) => {
       return c.position
     },
     getRadius: () => 4,
-    getFillColor: [193, 19, 19, 120],
+    getFillColor: [255, 255, 255, 120],
     pickable: true,
     onHover: ({object, x, y}) => {
       if (!object) return setHoverInfo(null)
