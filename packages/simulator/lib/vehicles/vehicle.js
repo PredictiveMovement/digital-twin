@@ -109,7 +109,6 @@ class Vehicle extends EventEmitter {
     if (this._disposed) return
 
     this.emit('pickup', this.id)
-    //console.log('PICKUP', this.queue)
     this.queue.sort(
       (a, b) =>
         haversine(this.position, a.pickup.position) -
@@ -160,7 +159,19 @@ class Vehicle extends EventEmitter {
     }
 
     this.booking = this.pickNextFromCargo()
-    if (this.booking) {
+  }
+
+  pickNextFromCargo() {
+    // pick next from cargo
+    this.cargo.sort(
+      (a, b) =>
+        haversine(this.position, a.destination.position) -
+        haversine(this.position, b.destination.position)
+    )
+    const booking = this.cargo.shift()
+    this.emit('cargo', this)
+
+    if (booking) {
       this.navigateTo(this.booking.destination.position)
     } else {
       // If we have no more packages to deliver in cargo, go to the nearest booking in the queue or back to origin
@@ -178,17 +189,6 @@ class Vehicle extends EventEmitter {
         this.navigateTo(this.origin)
       }
     }
-  }
-
-  pickNextFromCargo() {
-    // pick next from cargo
-    this.cargo.sort(
-      (a, b) =>
-        haversine(this.position, a.destination.position) -
-        haversine(this.position, b.destination.position)
-    )
-    const booking = this.cargo.shift()
-    this.emit('cargo', this)
     return booking
   }
 

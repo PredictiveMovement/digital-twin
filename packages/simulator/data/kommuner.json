@@ -1452,6 +1452,19 @@
     "telefon": "0921-62000",
     "epost": "kommunen@boden.se",
     "namn": "Bodens kommun",
+    "fleets": [
+      {
+        "name": "Postnord",
+        "vehicles": {
+          "tungLastbil": 0,
+          "medeltungLastbil": 2,
+          "lättLastbil": 2,
+          "bil": 0
+        },
+        "marketshare": 0.6,
+        "hub": [22.045246, 65.614869]
+      }
+    ],
     "geometry": {
       "coordinates": [
         [
@@ -13087,6 +13100,19 @@
     "telefon": "0920-453000",
     "epost": "lulea.kommun@lulea.se",
     "namn": "Luleå kommun",
+    "fleets": [
+      {
+        "name": "Postnord",
+        "vehicles": {
+          "tungLastbil": 0,
+          "medeltungLastbil": 4,
+          "lättLastbil": 1,
+          "bil": 0
+        },
+        "marketshare": 0.6,
+        "hub": [13.016601, 55.622044]
+      }
+    ],
     "geometry": {
       "coordinates": [
         [

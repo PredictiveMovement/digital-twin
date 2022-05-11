@@ -26,19 +26,15 @@ const { info } = require('./lib/log')
 // https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
 const WORKING_DAYS = 220
 const pilots = kommuner.pipe(
-  filter((kommun) =>
-    //['Arjeplog', 'Arvidsjaur', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
-    ['Pajala'].some((pilot) => kommun.name.startsWith(pilot))
-  ),
   // TODO: Dela upp och gör mer läsbart
   map((kommun) => {
     const file = __dirname + `/data/pm_bookings_${kommun.id}.json`
     let bookings
     if (fs.existsSync(file)) {
       console.log(`*** ${kommun.name}: bookings from cache (${file})`)
-      // bookings = from(JSON.parse(fs.readFileSync(file))).pipe(
-      //   map((b) => new Booking(b))
-      // )
+      bookings = from(JSON.parse(fs.readFileSync(file))).pipe(
+        map((b) => new Booking(b))
+      )
     } else {
       console.log(`*** ${kommun.name}: no cached bookings`)
       bookings = generateBookingsInKommun(kommun).pipe(
@@ -73,9 +69,10 @@ const pilots = kommuner.pipe(
           console.log(`*** ${kommun.name}: wrote bookings to cache (${file})`)
         })
     }
-    // bookings.subscribe((booking) => kommun.handleBooking(booking))
+    bookings.subscribe((booking) => kommun.handleBooking(booking))
     return kommun
-  })
+  }),
+  shareReplay()
 )
 
 const engine = {
@@ -88,9 +85,18 @@ const engine = {
     mergeMap((kommun) => kommun.dispatchedBookings),
     shareReplay()
   ),
-  busStops: pilots.pipe(
-    mergeMap((kommun) => kommun.buses.pipe(mergeMap((bus) => from(bus.queue)))),
+  busStopTimes: pilots.pipe(
+    mergeMap((kommun) =>
+      kommun.buses.pipe(
+        mergeMap((bus) => from(bus.queue).pipe(
+          map(({pickup, destination}) => ({pickup, destination}))
+        ))
+      )
+    ),
     shareReplay()
+  ),
+  busStops: pilots.pipe(
+    mergeMap((kommun) => kommun.busStops.pipe(shareReplay()))
   ),
   postombud,
   kommuner,
