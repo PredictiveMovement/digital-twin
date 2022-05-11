@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
@@ -16,7 +16,7 @@ const Percentage = styled.p`
 const Container = styled.div`
   height: 13px;
   width: 170px;
-  background-color: "#e0e0de";
+  background-color: '#e0e0de';
   border-radius: 6px;
   border: 1px solid white;
 `
@@ -46,7 +46,7 @@ const ProgressBar = ({ completed }) => {
       </Container>
       <Percentage>{completed}%</Percentage>
     </Wrapper>
-  );
-};
+  )
+}
 
-export default ProgressBar;
+export default ProgressBar

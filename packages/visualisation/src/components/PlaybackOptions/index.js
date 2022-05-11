@@ -7,7 +7,6 @@ import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
 import TransparentButton from '../TransparentButton'
 
-
 const Wrapper = styled.div`
   position: absolute;
   bottom: 2rem;
@@ -47,7 +46,11 @@ const PlayButton = ({ onPause, onPlay, onMouseEnter, onMouseLeave }) => {
   }
 
   return (
-    <TransparentButton onClick={handleOnClick} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} >
+    <TransparentButton
+      onClick={handleOnClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       {clicked ? (
         <img src={Play} alt="Play streams" />
       ) : (
@@ -57,7 +60,13 @@ const PlayButton = ({ onPause, onPlay, onMouseEnter, onMouseLeave }) => {
   )
 }
 
-const SpeedSlider = ({ onSpeedChange, onMouseEnter, onMouseLeave, setSpeed, speed }) => {
+const SpeedSlider = ({
+  onSpeedChange,
+  onMouseEnter,
+  onMouseLeave,
+  setSpeed,
+  speed,
+}) => {
   const marks = {
     10: {
       style: {
@@ -111,9 +120,22 @@ const PlaybackOptions = ({ onPause, onPlay, onSpeedChange }) => {
   const [speed, setSpeed] = useState(60)
   return (
     <>
-      {active && <SpeedSlider onSpeedChange={onSpeedChange} onMouseEnter={() => setActive(true)} onMouseLeave={() => setActive(false)} setSpeed={setSpeed} speed={speed} />}
+      {active && (
+        <SpeedSlider
+          onSpeedChange={onSpeedChange}
+          onMouseEnter={() => setActive(true)}
+          onMouseLeave={() => setActive(false)}
+          setSpeed={setSpeed}
+          speed={speed}
+        />
+      )}
       <Wrapper>
-        <PlayButton onPause={onPause} onPlay={onPlay} onMouseEnter={() => setActive(true)} onMouseLeave={() => setActive(false)} />
+        <PlayButton
+          onPause={onPause}
+          onPlay={onPlay}
+          onMouseEnter={() => setActive(true)}
+          onMouseLeave={() => setActive(false)}
+        />
       </Wrapper>
     </>
   )

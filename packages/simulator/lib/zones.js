@@ -1,13 +1,16 @@
 const inside = require('point-in-polygon')
 const zones = [] // could be used for kommun, city centers, etc
 
-const transformed = zones.map(zone => {
-  const coords = zone.coordinates.map(coord => ([coord.longitude, coord.latitude]))
+const transformed = zones.map((zone) => {
+  const coords = zone.coordinates.map((coord) => [
+    coord.longitude,
+    coord.latitude,
+  ])
   return [zone.number, coords]
 })
 
-function findZone (position) {
-  return transformed.find(zone => {
+function findZone(position) {
+  return transformed.find((zone) => {
     return inside([position.lon, position.lat], zone[1])
   })
 }
