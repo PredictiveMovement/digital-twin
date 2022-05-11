@@ -59,7 +59,7 @@ class Vehicle extends EventEmitter {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
       const newPosition = interpolate.route(route, this.time()) ?? this.heading
       this.updatePosition(newPosition)
-    }, 100)
+    }, 1000)
   }
 
   navigateTo(position) {
@@ -83,6 +83,7 @@ class Vehicle extends EventEmitter {
   }
 
   handleBooking(booking) {
+    console.log('** handle booking', booking.id)
     assert(booking instanceof Booking, 'Booking needs to be of type Booking')
     this.history.push({
       status: 'received_booking',

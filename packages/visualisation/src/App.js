@@ -8,10 +8,10 @@ import ResetIcon from './icons/reset.svg'
 import TransparentButton from './components/TransparentButton/index.js'
 
 const Wrapper = styled.div`
-position: absolute;
-z-index: 2;
-bottom: 2.7rem;
-left: 7rem;
+  position: absolute;
+  z-index: 2;
+  bottom: 2.7rem;
+  left: 7rem;
 `
 
 const App = () => {
@@ -31,7 +31,7 @@ const App = () => {
   })
 
   function upsert(array, object, idProperty = 'id') {
-    const current = array.find(k => k[idProperty] === object[idProperty])
+    const current = array.find((k) => k[idProperty] === object[idProperty])
     if (current) {
       Object.assign(current, object)
     } else {
@@ -133,17 +133,19 @@ const App = () => {
     setActiveCar(null)
   }
 
-
-
   return (
     <>
       <Wrapper>
         <TransparentButton onClick={() => resetSimulation()}>
-          <img src={ResetIcon} alt='Reset' />
+          <img src={ResetIcon} alt="Reset" />
         </TransparentButton>
       </Wrapper>
 
-      <PlaybackOptions onPause={onPause} onPlay={onPlay} onSpeedChange={onSpeedChange} />
+      <PlaybackOptions
+        onPause={onPause}
+        onPlay={onPlay}
+        onSpeedChange={onSpeedChange}
+      />
       {reset && <Loading />}
       <Map
         cars={cars}
