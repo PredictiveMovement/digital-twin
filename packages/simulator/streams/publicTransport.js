@@ -5,7 +5,6 @@ const fs = require('fs')
 const path = require('path')
 
 //const url = `https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${key}`
-const gtfs = require('gtfs-stream')
 const request = require('request')
 const {shareReplay, from, of, firstValueFrom, groupBy, take} = require('rxjs')
 const {
@@ -17,12 +16,14 @@ const {
   share,
   tap,
 } = require('rxjs/operators')
-const { getGtfs } = require('./gtfs')
-const gtfs = getGtfs();
+
+const {getGtfsStream} = require('./gtfs')
+const gtfs = getGtfsStream();
+
 const getBusStops = from(
   gtfs.pipe(
     filter(({type}) => type === 'stop'),
-    filter(({ data: { location_type } }) => location_type === '0'),
+    filter(({data: {location_type}}) => location_type === '0'),
     map(
       ({
         data: {stop_id: stopId, stop_name: name, stop_lat: lat, stop_lon: lon},
@@ -34,25 +35,7 @@ const getBusStops = from(
 
 // stop_times.trip_id -> trips.service_id -> calendar_dates.service_id
 const getStops = () => {
-  const stops = firstValueFrom(
-    gtfs.pipe(
-      filter(({type}) => type === 'stop'),
-      filter(({ data: { location_type } }) => location_type === '0'),
-      map(
-        ({
-          data: {
-            stop_id: stopId,
-            stop_name: name,
-            stop_lat: lat,
-            stop_lon: lon,
-          },
-        }) => ({stopId, name, position: {lat, lon}})
-      ),
-      toArray()
-    )
-  )
-
-  return stream.pipe(
+  return gtfs.pipe(
     filter(({type}) => type === 'stop_time'),
     map(
       ({
