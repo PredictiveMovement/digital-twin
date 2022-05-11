@@ -7,7 +7,7 @@ const path = require('path')
 //const url = `https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${key}`
 const gtfs = require('gtfs-stream')
 const request = require('request')
-const { shareReplay, from, of, firstValueFrom, groupBy, take } = require('rxjs')
+const {shareReplay, from, of, firstValueFrom, groupBy, take} = require('rxjs')
 const {
   map,
   mergeMap,
@@ -18,17 +18,30 @@ const {
   tap,
 } = require('rxjs/operators')
 
+const getBusStops = from(
+  fs
+    .createReadStream(path.join(__dirname, `../data/${operator}.zip`))
+    .pipe(gtfs({raw: true}))
+).pipe(
+  filter(({type}) => type === 'stop'),
+  map(
+    ({
+      data: {stop_id: stopId, stop_name: name, stop_lat: lat, stop_lon: lon},
+    }) => ({position: {lat, lon}, name})
+  ),
+  shareReplay()
+)
+
 const getStops = () => {
-  //console.log(url)
   const stream = from(
     fs
       .createReadStream(path.join(__dirname, `../data/${operator}.zip`))
-      .pipe(gtfs({ raw: true }))
+      .pipe(gtfs({raw: true}))
   ).pipe(shareReplay())
 
   const stops = firstValueFrom(
     stream.pipe(
-      filter(({ type }) => type === 'stop'),
+      filter(({type}) => type === 'stop'),
       map(
         ({
           data: {
@@ -37,14 +50,14 @@ const getStops = () => {
             stop_lat: lat,
             stop_lon: lon,
           },
-        }) => ({ stopId, name, position: { lat, lon } })
+        }) => ({stopId, name, position: {lat, lon}})
       ),
       toArray()
     )
   )
 
   return stream.pipe(
-    filter(({ type }) => type === 'stop_time'),
+    filter(({type}) => type === 'stop_time'),
     map(
       ({
         data: {
@@ -53,12 +66,12 @@ const getStops = () => {
           arrival_time: arrivalTime,
           departure_time: departureTime,
         },
-      }) => ({ id, tripId, arrivalTime, departureTime })
+      }) => ({id, tripId, arrivalTime, departureTime})
     ),
-    mergeMap(async ({ id, tripId, arrivalTime, departureTime }) =>
+    mergeMap(async ({id, tripId, arrivalTime, departureTime}) =>
       (await stops)
-        .filter(({ stopId }) => stopId === id)
-        .map(({ name, position }) => ({
+        .filter(({stopId}) => stopId === id)
+        .map(({name, position}) => ({
           id,
           tripId,
           arrivalTime,
@@ -70,5 +83,7 @@ const getStops = () => {
     )
   )
 }
-
-module.exports = getStops()
+module.exports = {
+  getBusStops,
+  getStopTimes: getStops(),
+}

@@ -6,7 +6,7 @@ name: Build & Deploy
 # events but only for the master branch
 on:
   push:
-    branches: [main, feat/supplychain]
+    branches: [main, feat/supplychain, feat/publicTransport]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -41,7 +41,7 @@ jobs:
       - name: build-and-deploy
         env:
           REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}
-          REACT_APP_SIMULATOR_URL: https://supplychain-engine.predictivemovement.se
+          REACT_APP_SIMULATOR_URL: https://rorla-engine.predictivemovement.se
         run: |
           docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
           skaffold run
