@@ -5,7 +5,16 @@ metadata:
 spec:
   tls:
     - hosts:
-        - rorla-engine-stage.predictivemovement.se
-      secretName: simulator-stage-tls
+        - rorla-stage.predictivemovement.se
+      secretName: rorla-stage-tls
   rules:
-    - host: rorla-engine-stage.predictivemovement.se
+    - host: rorla-stage.predictivemovement.se
+      http:
+        paths:
+          - path: /engine
+            pathType: Prefix
+            backend:
+              service: 
+                name: simulator
+                port:
+                  number: 4000

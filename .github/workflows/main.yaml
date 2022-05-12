@@ -18,6 +18,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2
+      - uses: rlespinasse/github-slug-action@v3.x
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: install dependencies
         run: |
@@ -38,10 +39,9 @@ jobs:
           sed -i 's;$KUBE_USER_NAME;${{ secrets.KUBE_USER_NAME }};g' config
           sed -i 's;$KUBE_USER_TOKEN;${{ secrets.KUBE_USER_TOKEN }};g' config
           kubectl config use-context ${{ secrets.KUBE_CLUSTER_NAME }}
-      - name: build-and-deploy
+      - name: build-and-deploy-prod
         env:
           REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}
-          REACT_APP_SIMULATOR_URL: https://rorla-engine.predictivemovement.se
         run: |
           docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
           skaffold run

@@ -46,13 +46,13 @@ metadata:
 spec:
   tls:
     - hosts:
-        - rorla-engine.predictivemovement.se
+        - rorla.predictivemovement.se
       secretName: simulator-prod-tls
   rules:
-    - host: rorla-engine.predictivemovement.se
+    - host: rorla.predictivemovement.se
       http:
         paths:
-          - path: /
+          - path: /engine
             pathType: Prefix
             backend:
               service: 

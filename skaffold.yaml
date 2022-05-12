@@ -10,8 +10,8 @@ build:
       context: packages/visualisation
       docker:
         buildArgs:
-          REACT_APP_MAPBOX_ACCESS_TOKEN: "{{.REACT_APP_MAPBOX_ACCESS_TOKEN}}"
-          REACT_APP_SIMULATOR_URL: https://rorla-engine.predictivemovement.se
+          REACT_APP_MAPBOX_ACCESS_TOKEN: "{{.REACT_APP_MAPBOX_ACCESS_TOKEN}}" # these needs to be set at build time
+          REACT_APP_SIMULATOR_URL: "/engine" # since they are hardcoded to the static files
 deploy:
   kustomize:
     paths:
@@ -19,32 +19,14 @@ deploy:
   statusCheckDeadlineSeconds: 600
 profiles:
 - name: prod
+  activation:
+    - env: GITHUB_REF_SLUG=main
   deploy:
     kustomize:
       paths:
       - k8s/overlays/prod
-  build:
-    artifacts:
-    - image: iteam1337/pm-digital-twin-simulation-engine
-      context: packages/simulator
-    - image: iteam1337/pm-digital-twin-visualisation
-      context: packages/visualisation
-      docker:
-        buildArgs:
-          REACT_APP_MAPBOX_ACCESS_TOKEN: "{{.REACT_APP_MAPBOX_ACCESS_TOKEN}}"
-          REACT_APP_SIMULATOR_URL: https://rorla-engine.predictivemovement.se
 - name: staging
   deploy:
     kustomize:
       paths:
       - k8s/overlays/staging
-  build:
-    artifacts:
-    - image: iteam1337/pm-digital-twin-simulation-engine
-      context: packages/simulator
-    - image: iteam1337/pm-digital-twin-visualisation
-      context: packages/visualisation
-      docker:
-        buildArgs:
-          REACT_APP_MAPBOX_ACCESS_TOKEN: "{{.REACT_APP_MAPBOX_ACCESS_TOKEN}}"
-          REACT_APP_SIMULATOR_URL: https://rorla-engine-stage.predictivemovement.se

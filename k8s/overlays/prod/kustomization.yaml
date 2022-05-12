@@ -4,9 +4,9 @@ kind: Kustomization
 namespace: rorla
 # nameSuffix: -prod
 
-patchesStrategicMerge:
-- visualisation.yaml
-- simulator.yaml
+#patchesStrategicMerge:
+#- visualisation.yaml
+#- simulator.yaml
 
 resources:
 - ../../base

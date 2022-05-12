@@ -7,22 +7,15 @@ spec:
   tls:
     - hosts:
         - rorla-stage.predictivemovement.se
-      secretName: visualisation-stage-tls
+      secretName: rorla-stage-tls
   rules:
     - host: rorla-stage.predictivemovement.se
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: visualisation
-spec:
-  selector:
-    matchLabels:
-      app: visualisation
-  template:
-    spec:
-      containers:
-        - name: visualisation
-          env:
-            - name: REACT_APP_SIMULATOR_URL
-              value: https://rorla-engine-stage.predictivemovement.se
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: 
+                name: visualisation
+                port:
+                  number: 80
