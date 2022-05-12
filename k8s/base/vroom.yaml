@@ -1,4 +1,75 @@
 apiVersion: v1
+kind: Service
+metadata:
+  name: vroom
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+  selector:
+    app: vroom
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vroom
+spec:
+  selector:
+    matchLabels:
+      app: vroom
+  template:
+    metadata:
+      labels:
+        app: vroom
+    spec:
+      containers:
+        - name: vroom
+          image: vroomvrp/vroom-docker:v1.11.0
+          ports:
+            - containerPort: 3000
+          resources: {}
+          env:
+            - name: VROOM_ROUTER
+              value: osrm
+            - name: OSRM_URL
+              value: osrm
+          volumeMounts:
+              - name: vroom
+                mountPath: /vroom-express/config.yml
+                subPath: config.yml
+      volumes:
+        - name: vroom
+          configMap:
+            items:
+              - key: config.yml
+                path: config.yml
+            name: vroom
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vroom-ingress
+  annotations:
+    kubernetes.io/ingress.class: "public"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts:
+        - vroom.predictivemovement.se
+      secretName: vroom-prod-tls
+  rules:
+    - host: vroom.predictivemovement.se
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: 
+                name: vroom
+                port:
+                  number: 3000
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: vroom
