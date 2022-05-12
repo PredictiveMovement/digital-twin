@@ -39,7 +39,7 @@ jobs:
           sed -i 's;$KUBE_USER_NAME;${{ secrets.KUBE_USER_NAME }};g' config
           sed -i 's;$KUBE_USER_TOKEN;${{ secrets.KUBE_USER_TOKEN }};g' config
           kubectl config use-context ${{ secrets.KUBE_CLUSTER_NAME }}
-      - name: build-and-deploy-prod
+      - name: build-and-deploy
         env:
           REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}
         run: |
