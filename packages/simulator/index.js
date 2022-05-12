@@ -28,7 +28,7 @@ const WORKING_DAYS = 220
 const pilots = kommuner.pipe(
   // TODO: Dela upp och gör mer läsbart
   map((kommun) => {
-    const file = __dirname + `/data/pm_bookings_${kommun.id}.json`
+    const file = __dirname + `/.cache/pm_bookings_${kommun.id}.json`
     let bookings
     if (fs.existsSync(file)) {
       console.log(`*** ${kommun.name}: bookings from cache (${file})`)
