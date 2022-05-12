@@ -20,13 +20,14 @@ const {
   reduce,
   mapTo,
   groupBy,
-  take,
 } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
 const { isInsideCoordinates } = require('./polygon')
 const { stops, stopTimes } = require('../streams/publicTransport')
+const { virtualTime } = require('../lib/virtualTime')
+const moment = require('moment')
 
 // expand fleets so that a fleet with marketshare 12% has 12 cars to choose from
 const expandFleets = () => (fleets) =>
@@ -69,31 +70,25 @@ class Kommun extends EventEmitter {
     this.privateCars = new ReplaySubject()
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
-    this.busStops = stops.pipe(
-      filter(({ position }) =>
-        isInsideCoordinates(position, this.geometry.coordinates)
-      ),
-      map(({ position, name, departureTime, arrivalTime }) => ({
-        position,
-        name,
-        departureTime,
-        arrivalTime,
-      }))
-    )
     this.buses = stopTimes.pipe(
-      groupBy(({ tripId }) => tripId), // en grupp per buss/tripId
+      filter(
+        ({ date }) =>
+          moment(date, 'YYYYMMDD').isoWeekday() ===
+          moment(virtualTime.time()).isoWeekday()
+      ),
+      groupBy(({ trip }) => trip.id), // en grupp per buss/tripId
       mergeMap((group) => {
         return group.pipe(
           first(), // ta det första stoppet för bussen
           filter(({ position }) =>
             isInsideCoordinates(position, this.geometry.coordinates)
           ),
-          tap((firstStop) => console.log(firstStop)), // logga det första stoppet
-          map(({ tripId, position }) => {
-            console.log('creating bus', tripId, position)
+          map(({ trip, position }) => {
+            console.log('ny buss', trip.id)
             return new Bus({
+              id: trip.id,
               position,
-              stops: group,
+              stops: group.pipe(),
             })
           })
         )

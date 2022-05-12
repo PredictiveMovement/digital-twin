@@ -59,7 +59,7 @@ class Vehicle extends EventEmitter {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
       const newPosition = interpolate.route(route, this.time()) ?? this.heading
       this.updatePosition(newPosition)
-    }, 1000)
+    }, Math.random() * 200)
   }
 
   navigateTo(position) {
@@ -83,7 +83,7 @@ class Vehicle extends EventEmitter {
   }
 
   handleBooking(booking) {
-    console.log('** handle booking', booking.id)
+    // console.log('** handle booking', booking.id)
     assert(booking instanceof Booking, 'Booking needs to be of type Booking')
     this.history.push({
       status: 'received_booking',
@@ -220,20 +220,20 @@ class Vehicle extends EventEmitter {
     this.position = position
     this.lastPositionUpdate = date
     this.ema = haversine(this.heading, this.position)
-    if (metersMoved > 0) {
+    if (metersMoved > 1) {
       this.bearing = bearing(lastPosition, position) || 0
       this.lastPositions.push({ ...position, date })
       this.emit('moved', this)
-    }
 
-    this.cargo.map((booking) => {
-      booking.moved(
-        this.position,
-        metersMoved,
-        co2 / (this.cargo.length + 1),
-        (h * this.costPerHour) / (this.cargo.length + 1)
-      )
-    })
+      this.cargo.map((booking) => {
+        booking.moved(
+          this.position,
+          metersMoved,
+          co2 / (this.cargo.length + 1),
+          (h * this.costPerHour) / (this.cargo.length + 1)
+        )
+      })
+    }
 
     if (!position.next) {
       this.emit('stopped', this)

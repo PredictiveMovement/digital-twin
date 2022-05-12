@@ -12,9 +12,7 @@ const lanstrafiken = {
 class Bus extends Vehicle {
   constructor({ position, stops, ...vehicle }) {
     super({ position, stops, fleet: lanstrafiken, ...vehicle })
-    stops.pipe(
-      pairwise()
-    ).subscribe(([pickup, destination]) => {
+    stops.pipe(pairwise()).subscribe(([pickup, destination]) => {
       this.handleBooking(
         new Booking({
           // pickup and destination contains both position and arrival and departure time
@@ -40,10 +38,10 @@ class Bus extends Vehicle {
 
   // Wait using the virtual time.
   wait(time) {
-    console.log(`*** bus #${this.id} waits ${time}...`)
-    return virtualTime.setTimeout(time).then(() => {
-      console.log(`*** bus #${this.id} continues...`)
-    })
+    //console.log(
+    //  `*** bus #${this.id} waits ${Math.round(time / 1000 / 60)} min...`
+    //)
+    return virtualTime.setTimeout(time)
   }
 }
 

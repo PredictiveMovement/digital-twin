@@ -39,11 +39,22 @@ const gtfsStream = (file) => {
 }
 
 const stops = gtfsStream('stops').pipe(
-  map(({ stop_id: id, stop_name: name, stop_lat: lat, stop_lon: lon }) => ({
-    id,
-    name,
-    position: { lat, lon },
-  })),
+  map(
+    ({
+      stop_id: id,
+      stop_name: name,
+      stop_lat: lat,
+      stop_lon: lon,
+      parent_station,
+      platform_code,
+    }) => ({
+      id,
+      name,
+      position: { lat, lon },
+      station: parent_station,
+      platform: platform_code,
+    })
+  ),
   shareReplay()
 )
 

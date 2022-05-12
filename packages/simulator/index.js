@@ -16,6 +16,7 @@ const { virtualTime } = require('./lib/virtualTime')
 // TODO: replace this with a better statistical distribution
 
 const postombud = require('./streams/postombud')
+const { stops } = require('./streams/publicTransport')
 
 const fs = require('fs')
 const Booking = require('./lib/booking')
@@ -96,10 +97,7 @@ const engine = {
     ),
     shareReplay()
   ),
-  busStops: kommuner.pipe(
-    mergeMap((kommun) => kommun.busStops),
-    shareReplay()
-  ),
+  busStops: stops.pipe(filter((stop) => !stop.station)),
   postombud,
   kommuner,
 }
