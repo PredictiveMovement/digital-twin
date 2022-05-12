@@ -16,6 +16,7 @@ const {
   filter,
   catchError,
   toArray,
+  first,
   reduce,
   mapTo,
   groupBy,
@@ -24,8 +25,8 @@ const {
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
-const { getBusStops, getStopTimes } = require('../streams/publicTransport')
 const { isInsideCoordinates } = require('./polygon')
+const { stops, stopTimes } = require('../streams/publicTransport')
 
 // expand fleets so that a fleet with marketshare 12% has 12 cars to choose from
 const expandFleets = () => (fleets) =>
@@ -68,7 +69,7 @@ class Kommun extends EventEmitter {
     this.privateCars = new ReplaySubject()
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
-    this.busStops = getBusStops.pipe(
+    this.busStops = stops.pipe(
       filter(({ position }) =>
         isInsideCoordinates(position, this.geometry.coordinates)
       ),
@@ -79,15 +80,17 @@ class Kommun extends EventEmitter {
         arrivalTime,
       }))
     )
-    this.buses = getStopTimes.pipe(
+    this.buses = stopTimes.pipe(
       groupBy(({ tripId }) => tripId), // en grupp per buss/tripId
       mergeMap((group) => {
         return group.pipe(
-          take(1), // ta det första stoppet för bussen
+          first(), // ta det första stoppet för bussen
           filter(({ position }) =>
             isInsideCoordinates(position, this.geometry.coordinates)
           ),
+          tap((firstStop) => console.log(firstStop)), // logga det första stoppet
           map(({ tripId, position }) => {
+            console.log('creating bus', tripId, position)
             return new Bus({
               position,
               stops: group,

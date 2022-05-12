@@ -15,7 +15,6 @@ const { generateBookingsInKommun } = require('./simulator/bookings')
 const { virtualTime } = require('./lib/virtualTime')
 // TODO: replace this with a better statistical distribution
 
-const kommuner = require('./streams/kommuner')
 const postombud = require('./streams/postombud')
 
 const fs = require('fs')
@@ -25,7 +24,7 @@ const { info } = require('./lib/log')
 
 // https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
 const WORKING_DAYS = 220
-const pilots = kommuner.pipe(
+const kommuner = require('./streams/kommuner').pipe(
   // TODO: Dela upp och gör mer läsbart
   map((kommun) => {
     const file = __dirname + `/data/pm_bookings_${kommun.id}.json`
@@ -38,8 +37,8 @@ const pilots = kommuner.pipe(
     } else {
       console.log(`*** ${kommun.name}: no cached bookings`)
       bookings = generateBookingsInKommun(kommun).pipe(
-        take(Math.ceil(kommun.packageVolumes?.total / WORKING_DAYS)) // how many bookings do we want?
-        //take(10)
+        take(Math.ceil(kommun.packageVolumes?.total / WORKING_DAYS)), // how many bookings do we want?
+        take(10)
       )
 
       // TODO: Could we do this without converting to an array? Yes. By using fs stream and write json per line
@@ -77,26 +76,29 @@ const pilots = kommuner.pipe(
 
 const engine = {
   virtualTime,
-  cars: pilots.pipe(
+  cars: kommuner.pipe(
     mergeMap((kommun) => kommun.cars),
     shareReplay()
   ),
-  dispatchedBookings: pilots.pipe(
+  dispatchedBookings: kommuner.pipe(
     mergeMap((kommun) => kommun.dispatchedBookings),
     shareReplay()
   ),
-  busStopTimes: pilots.pipe(
+  busStopTimes: kommuner.pipe(
     mergeMap((kommun) =>
       kommun.buses.pipe(
-        mergeMap((bus) => from(bus.queue).pipe(
-          map(({pickup, destination}) => ({pickup, destination}))
-        ))
+        mergeMap((bus) =>
+          from(bus.queue).pipe(
+            map(({ pickup, destination }) => ({ pickup, destination }))
+          )
+        )
       )
     ),
     shareReplay()
   ),
-  busStops: pilots.pipe(
-    mergeMap((kommun) => kommun.busStops.pipe(shareReplay()))
+  busStops: kommuner.pipe(
+    mergeMap((kommun) => kommun.busStops),
+    shareReplay()
   ),
   postombud,
   kommuner,

@@ -1,68 +1,53 @@
 const fetch = require('node-fetch')
 const key = process.env.TRAFIKLAB_KEY // log in to trafiklab.se and get a key
-const operator = 'norrbotten_light'
 const fs = require('fs')
 const path = require('path')
 
 //const url = `https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${key}`
 const request = require('request')
-const {shareReplay, from, of, firstValueFrom, groupBy, take} = require('rxjs')
+const { shareReplay, from, of, firstValueFrom, groupBy, take } = require('rxjs')
 const {
   map,
   mergeMap,
   switchMap,
   filter,
   toArray,
+  first,
   share,
   tap,
 } = require('rxjs/operators')
-
-const {getGtfsStream} = require('./gtfs')
-const gtfs = getGtfsStream();
-
-const getBusStops = from(
-  gtfs.pipe(
-    filter(({type}) => type === 'stop'),
-    filter(({data: {location_type}}) => location_type === '0'),
-    map(
-      ({
-        data: {stop_id: stopId, stop_name: name, stop_lat: lat, stop_lon: lon},
-      }) => ({position: {lat, lon}, name})
-    ),
-    shareReplay()
-  )
-)
+const { stops, busStops, trips, calendarDates } = require('./gtfs')
 
 // stop_times.trip_id -> trips.service_id -> calendar_dates.service_id
-const getStops = () => {
-  return gtfs.pipe(
-    filter(({type}) => type === 'stop_time'),
-    map(
-      ({
-        data: {
-          stop_id: id,
-          trip_id: tripId,
-          arrival_time: arrivalTime,
-          departure_time: departureTime,
-        },
-      }) => ({id, tripId, arrivalTime, departureTime})
-    ),
-    mergeMap(async ({id, tripId, arrivalTime, departureTime}) =>
-      (await stops)
-        .filter(({stopId}) => stopId === id)
-        .map(({name, position}) => ({
-          id,
-          tripId,
-          arrivalTime,
-          departureTime,
-          name,
-          position,
-        }))
-        .shift()
+const enhancedBusStops = busStops.pipe(
+  mergeMap(({ stopId, ...rest }) =>
+    stops.pipe(
+      first((stop) => stop.id === stopId, 'stop not found'),
+      map((stop) => ({ ...rest, stop }))
     )
-  )
-}
+  ),
+  mergeMap(({ tripId, ...rest }) =>
+    trips.pipe(
+      first((trip) => trip.id === tripId, 'trip not found'),
+      map((trip) => ({ ...rest, trip }))
+    )
+  ),
+  mergeMap(({ trip, ...rest }) =>
+    calendarDates.pipe(
+      first((cd) => cd.id === trip.serviceId, 'calendar date not found'),
+      map(({ date }) => ({ ...rest, trip, date }))
+    )
+  ),
+  map(({ stop: { position, name: stopName }, ...rest }) => ({
+    ...rest,
+    stopName,
+    position: { lat: +position.lat, lon: +position.lon },
+  })),
+  shareReplay()
+)
+
 module.exports = {
-  getBusStops,
-  getStopTimes: getStops(),
+  stops,
+  stopTimes: enhancedBusStops,
 }
+//enhancedBusStops.subscribe((x) => console.log(x))
