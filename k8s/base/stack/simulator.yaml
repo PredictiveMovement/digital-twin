@@ -28,11 +28,11 @@ spec:
           ports:
             - containerPort: 4000
           volumeMounts:
-            - name: data
-              mountPath: /app/data
+            - name: cache
+              mountPath: /app/.cache
 
       volumes:
-        - name: data
+        - name: cache
           hostPath:
             path: /storage/predictivemovement/rorla
 ---
