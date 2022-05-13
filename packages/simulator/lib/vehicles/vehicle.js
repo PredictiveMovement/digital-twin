@@ -220,7 +220,7 @@ class Vehicle extends EventEmitter {
     this.position = position
     this.lastPositionUpdate = date
     this.ema = haversine(this.heading, this.position)
-    if (metersMoved > 1) {
+    if (metersMoved > 0) {
       this.bearing = bearing(lastPosition, position) || 0
       this.lastPositions.push({ ...position, date })
       this.emit('moved', this)
