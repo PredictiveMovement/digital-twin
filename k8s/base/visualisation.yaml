@@ -39,10 +39,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - rorla.predictivemovement.se
-      secretName: visualisation-prod-tls
+        - rorla-stage.predictivemovement.se
+      secretName: visualisation-stage-tls
   rules:
-    - host: rorla.predictivemovement.se
+    - host: rorla-stage.predictivemovement.se
       http:
         paths:
           - path: /
