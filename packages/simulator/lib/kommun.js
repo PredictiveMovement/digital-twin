@@ -88,7 +88,7 @@ class Kommun extends EventEmitter {
             return new Bus({
               id: trip.id,
               position,
-              stops: group.pipe(),
+              stops: group,
             })
           })
         )
