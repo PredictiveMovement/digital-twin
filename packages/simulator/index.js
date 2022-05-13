@@ -39,7 +39,6 @@ const kommuner = require('./streams/kommuner').pipe(
       console.log(`*** ${kommun.name}: no cached bookings`)
       bookings = generateBookingsInKommun(kommun).pipe(
         take(Math.ceil(kommun.packageVolumes?.total / WORKING_DAYS)), // how many bookings do we want?
-        take(10)
       )
 
       // TODO: Could we do this without converting to an array? Yes. By using fs stream and write json per line
