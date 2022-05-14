@@ -25,6 +25,13 @@ spec:
       containers:
         - name: simulator
           image: iteam1337/pm-digital-twin-simulation-engine
+          resources:
+            requests:
+              cpu: "1"
+              memory: "512Mi"
+            limits:
+              cpu: "2"
+              memory: "2Gi"
           ports:
             - containerPort: 4000
           volumeMounts:
