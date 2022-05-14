@@ -50,6 +50,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "public"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   tls:
     - hosts:
@@ -59,7 +60,7 @@ spec:
     - host: rorla-stage.predictivemovement.se
       http:
         paths:
-          - path: /engine
+          - path: /socket.io/.*
             pathType: Prefix
             backend:
               service: 
