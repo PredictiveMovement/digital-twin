@@ -71,11 +71,7 @@ class Kommun extends EventEmitter {
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
     this.buses = stopTimes.pipe(
-      filter(
-        ({ date }) =>
-          moment(date, 'YYYYMMDD').isoWeekday() ===
-          moment(virtualTime.time()).isoWeekday()
-      ),
+      tap(({ date }) => console.log('stop time', date)),
       groupBy(({ trip }) => trip.id), // en grupp per buss/tripId
       mergeMap((group) => {
         return group.pipe(
@@ -83,7 +79,7 @@ class Kommun extends EventEmitter {
           filter(({ position }) =>
             isInsideCoordinates(position, this.geometry.coordinates)
           ),
-          map(({ trip, position }) => {
+          map(({ date, trip, position }) => {
             console.log('ny buss', trip.id)
             return new Bus({
               id: trip.id,

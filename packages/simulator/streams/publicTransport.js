@@ -2,6 +2,8 @@ const fetch = require('node-fetch')
 const key = process.env.TRAFIKLAB_KEY // log in to trafiklab.se and get a key
 const fs = require('fs')
 const path = require('path')
+const { virtualTime } = require('../lib/virtualTime')
+const moment = require('moment')
 
 //const url = `https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${key}`
 const request = require('request')
@@ -18,14 +20,14 @@ const {
 } = require('rxjs/operators')
 const { stops, busStops, trips, calendarDates } = require('./gtfs')
 
+const todaysCalendarDates = calendarDates.pipe(
+  tap((cd) => console.log('cd', cd)),
+  filter(({ date }) => date === moment(virtualTime.time()).format('YYYYMMDD')),
+  shareReplay()
+)
+
 // stop_times.trip_id -> trips.service_id -> calendar_dates.service_id
 const enhancedBusStops = busStops.pipe(
-  mergeMap(({ stopId, ...rest }) =>
-    stops.pipe(
-      first((stop) => stop.id === stopId, 'stop not found'),
-      map((stop) => ({ ...rest, stop }))
-    )
-  ),
   mergeMap(({ tripId, ...rest }) =>
     trips.pipe(
       first((trip) => trip.id === tripId, 'trip not found'),
@@ -33,11 +35,19 @@ const enhancedBusStops = busStops.pipe(
     )
   ),
   mergeMap(({ trip, ...rest }) =>
-    calendarDates.pipe(
+    todaysCalendarDates.pipe(
       first((cd) => cd.id === trip.serviceId, 'calendar date not found'),
       map(({ date }) => ({ ...rest, trip, date }))
     )
   ),
+
+  mergeMap(({ stopId, ...rest }) =>
+    stops.pipe(
+      first((stop) => stop.id === stopId, 'stop not found'),
+      map((stop) => ({ ...rest, stop }))
+    )
+  ),
+
   map(({ stop: { position, name: stopName }, ...rest }) => ({
     ...rest,
     stopName,
