@@ -11,7 +11,7 @@ spec:
     - host: rorla.predictivemovement.se
       http:
         paths:
-          - path: /engine
+          - path: /socket.io/.*
             pathType: Prefix
             backend:
               service: 
