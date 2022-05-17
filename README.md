@@ -42,4 +42,4 @@ Add .env with the mapbox token `REACT_APP_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>` - we
 
 ## License
 
-Predictive Movement is licensed by Iteam Solutions AB under the AGPL license. 
+Predictive Movement is free and open source software licensed by Iteam Solutions AB under the [LICENSE](AGPL license). 
