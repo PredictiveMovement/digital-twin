@@ -25,6 +25,13 @@ spec:
       containers:
         - name: simulator
           image: iteam1337/pm-digital-twin-simulation-engine
+          resources:
+              requests:
+                cpu: "1"
+                memory: "512Mi"
+              limits:
+                cpu: "2"
+                memory: "2Gi"
           ports:
             - containerPort: 4000
           volumeMounts:
@@ -36,22 +43,28 @@ spec:
           hostPath:
             path: /storage/predictivemovement/rorla
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: simulator-ingress
   annotations:
     kubernetes.io/ingress.class: "public"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.org/websocket-services: "simulator"
 spec:
   tls:
     - hosts:
-        - rorla-engine.predictivemovement.se
-      secretName: simulator-prod-tls
+        - rorla-stage.predictivemovement.se
+      secretName: simulator-stage-tls
   rules:
-    - host: rorla-engine.predictivemovement.se
+    - host: rorla-stage.predictivemovement.se
       http:
         paths:
-          - backend:
-              serviceName: simulator
-              servicePort: 4000
+          - path: /socket.io/.*
+            pathType: Prefix
+            backend:
+              service: 
+                name: simulator
+                port:
+                  number: 4000

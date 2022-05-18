@@ -27,18 +27,9 @@ spec:
           image: iteam1337/pm-digital-twin-visualisation
           ports:
             - containerPort: 80
-          env:
-            - name: REACT_APP_SIMULATOR_URL
-              value: https://rorla-engine.predictivemovement.se
-          #   - name: REACT_APP_MAPBOX_ACCESS_TOKEN
-          #     valueFrom:
-          #       secretKeyRef:
-          #         key: REACT_APP_MAPBOX_ACCESS_TOKEN
-          #         name: mapbox-access-tokens
-           
               
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: visualisation-ingress
@@ -48,12 +39,16 @@ metadata:
 spec:
   tls:
     - hosts:
-        - rorla.predictivemovement.se
-      secretName: visualisation-prod-tls
+        - rorla-stage.predictivemovement.se
+      secretName: visualisation-stage-tls
   rules:
-    - host: rorla.predictivemovement.se
+    - host: rorla-stage.predictivemovement.se
       http:
         paths:
-          - backend:
-              serviceName: visualisation
-              servicePort: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service: 
+                name: visualisation
+                port:
+                  number: 80
