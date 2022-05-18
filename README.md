@@ -21,7 +21,7 @@ This is currently an early version of the simulation. There are quite a few area
 
 ## How to contribute
 
-This code is released with MIT license - which means you can create your own copy of this to use within your own fleet if you want to. You can also contribute by sending Pull Requests or issues to us and we will review them and merge them. 
+This code is released as open source - which means you can create your own copy of this to use within your own fleet if you want to. You can also contribute by sending Pull Requests or issues to us and we will review them and merge them. If you want to receive a closed source license, please contact Christian Landgren at Iteam.
 
 ## How to run
 
@@ -42,4 +42,4 @@ Add .env with the mapbox token `REACT_APP_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>` - we
 
 ## License
 
-Predictive Movement is licensed under the MIT license. Please see [LICENSE](LICENSE) for details.
+Predictive Movement is free and open source software licensed by Iteam Solutions AB under the [LICENSE](AGPL license)  
