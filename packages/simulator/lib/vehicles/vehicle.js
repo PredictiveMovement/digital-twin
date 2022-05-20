@@ -96,7 +96,7 @@ class Vehicle extends EventEmitter {
       this.booking = booking
       booking.assigned(this)
       this.status = 'Pickup'
-      this.navigateTo(booking.pickup.position)
+      // this.navigateTo(booking.pickup.position)
     } else {
       // TODO: swith places with current booking if it makes more sense to pick this package up before picking up current
       this.queue.push(booking)
