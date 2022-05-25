@@ -29,7 +29,7 @@ const todaysCalendarDates = calendarDates.pipe(
 const enhancedBusStops = busStops.pipe(
   mergeMap(({ tripId, ...rest }) =>
     trips.pipe(
-      filter((trip) => trip.id === '252500000000000733'),
+      filter((trip) => trip.id === '252500000000000733'), // TODO: Remove single trip filter
       first((trip) => trip.id === tripId, 'trip not found'),
       map((trip) => ({ ...rest, trip }))
     )

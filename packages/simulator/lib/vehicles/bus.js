@@ -1,6 +1,6 @@
 const Booking = require('../booking')
 const Vehicle = require('./vehicle')
-const { take, pairwise, map, finalize } = require('rxjs/operators')
+const { take, pairwise, map, finalize, tap } = require('rxjs/operators')
 const moment = require('moment')
 const { virtualTime } = require('../virtualTime')
 
@@ -17,8 +17,8 @@ class Bus extends Vehicle {
         pairwise(),
         map(([pickup, destination]) => {
           console.log('***START***')
-          console.log(pickup.departureTime)
-          console.log(destination.departureTime)
+          console.log(pickup.departureTime, pickup.arrivalTime)
+          console.log(destination.departureTime, destination.arrivalTime)
           console.log('***END***')
           if (this.id === '252500000000000733') {
             console.log('handling booking for 733', pickup.departureTime)
@@ -51,14 +51,14 @@ class Bus extends Vehicle {
     const waitTime = departure.subtract(moment(this.time())).valueOf()
     this.simulate(false) // pause interpolation while we wait
 
-    if (this.id === '252500000000000733') {
-      console.log('***Start***')
-      console.log('starting bus with id ', '252500000000000733')
-      console.log(moment(booking.pickup.departureTime, 'hh:mm:ss'))
-      console.log(moment(this.time()))
-      console.log(moment.duration(waitTime).humanize())
-      console.log('*** END ***')
-    }
+    // if (this.id === '252500000000000733') {
+    //   console.log('***Start***')
+    //   console.log('starting bus with id ', '252500000000000733')
+    //   console.log(moment(booking.pickup.departureTime, 'hh:mm:ss'))
+    //   console.log(moment(this.time()))
+    //   console.log(moment.duration(waitTime).humanize())
+    //   console.log('*** END ***')
+    // }
     if (waitTime > 0) await this.wait(waitTime)
 
     return this.navigateTo(booking.destination.position) // resume simulation

@@ -9,6 +9,7 @@ const {
   merge,
   of,
   range,
+  Observable,
 } = require('rxjs')
 const {
   map,
@@ -20,6 +21,8 @@ const {
   reduce,
   mapTo,
   groupBy,
+  pluck,
+  startWith,
 } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
@@ -70,25 +73,51 @@ class Kommun extends EventEmitter {
     this.privateCars = new ReplaySubject()
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
-    this.buses = stopTimes.pipe(
-      tap(({ date }) => console.log('stop time', date)),
-      groupBy(({ trip }) => trip.id), // en grupp per buss/tripId
-      mergeMap((group) => {
-        return group.pipe(
-          first(), // ta det första stoppet för bussen
-          filter(({ position }) =>
-            isInsideCoordinates(position, this.geometry.coordinates)
-          ),
-          map(({ date, trip, position }) => {
-            console.log('ny buss', trip.id)
+    // this.buses = stopTimes.pipe(
+    //   // tap(({ date }) => console.log('stop time', date)),
+    //   groupBy(({ trip }) => trip.id), // en grupp per buss/tripId
+    //   tap((trip) => console.log('trip.id', trip.id)),
+    //   mergeMap((stopTimesPerTrip) => {
+    //     return stopTimesPerTrip.pipe(
+    //       first(), // ta ut den första avgångstiden för bussen
+    //       filter(({ position }) =>
+    //         isInsideCoordinates(position, this.geometry.coordinates)
+    //       ),
+    //       tap(console.log),
+    //       map(({ date, trip, position }) => {
+    //         console.log('ny buss', trip.id)
+    //         return new Bus({
+    //           id: trip.id,
+    //           position,
+    //           stops: stopTimesPerTrip,
+    //         })
+    //       })
+    //     )
+    //   }),
+    //   shareReplay()
+    // )
+
+    const tripsInMunicipality = stopTimes.pipe(
+      filter(({ position }) =>
+        isInsideCoordinates(position, this.geometry.coordinates)
+      ),
+      groupBy(({ trip }) => trip.id),
+    )
+
+    this.buses = tripsInMunicipality.pipe(shareReplay(1)).pipe(
+      mergeMap(stopTimesPerTrip =>
+        stopTimesPerTrip.pipe(
+          first(),
+          map((firstStopTime) => {
             return new Bus({
-              id: trip.id,
-              position,
-              stops: group,
+              id: firstStopTime.trip.id,
+              position: firstStopTime.position,
+              stops: stopTimesPerTrip.pipe(startWith(firstStopTime)), // TODO: why do we need startsWith here?
             })
           })
         )
-      })
+      ),
+      shareReplay(),
     )
 
     this.cars = merge(
