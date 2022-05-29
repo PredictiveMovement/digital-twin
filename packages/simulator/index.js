@@ -19,6 +19,7 @@ const postombud = require('./streams/postombud')
 const { stops } = require('./streams/publicTransport')
 
 const fs = require('fs')
+const getDirName = require('path').dirname;
 const Booking = require('./lib/booking')
 
 const { info } = require('./lib/log')
@@ -64,8 +65,14 @@ const kommuner = require('./streams/kommuner').pipe(
           toArray()
         )
         .subscribe((arr) => {
+          fs.mkdir(getDirName(file), { recursive: true }, err => {
+          if (err) {
+            console.error(err)
+            return
+          }
           fs.writeFileSync(file, JSON.stringify(arr))
           console.log(`*** ${kommun.name}: wrote bookings to cache (${file})`)
+          })
         })
     }
     bookings.subscribe((booking) => kommun.handleBooking(booking))
