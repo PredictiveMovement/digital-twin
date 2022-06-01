@@ -29,7 +29,7 @@ const todaysCalendarDates = calendarDates.pipe(
 const enhancedBusStops = busStops.pipe(
   mergeMap(({ tripId, ...rest }) =>
     trips.pipe(
-      filter((trip) => trip.id === '252500000000000733'), // TODO: Remove single trip filter
+      //filter((trip) => trip.id === '252500000000000733'), // TODO: Remove single trip filter
       first((trip) => trip.id === tripId, 'trip not found'),
       map((trip) => ({ ...rest, trip }))
     )
@@ -41,7 +41,7 @@ const enhancedBusStops = busStops.pipe(
     )
   ),
 
-  concatMap(({ stopId, ...rest }) =>
+  mergeMap(({ stopId, ...rest }) =>
     stops.pipe(
       first((stop) => stop.id === stopId, 'stop not found'),
       map((stop) => ({ ...rest, stop }))
@@ -53,6 +53,7 @@ const enhancedBusStops = busStops.pipe(
     stopName,
     position: { lat: +position.lat, lon: +position.lon },
   })),
+  take(50),
   shareReplay()
 )
 
