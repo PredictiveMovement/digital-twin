@@ -73,29 +73,6 @@ class Kommun extends EventEmitter {
     this.privateCars = new ReplaySubject()
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
-    // this.buses = stopTimes.pipe(
-    //   // tap(({ date }) => console.log('stop time', date)),
-    //   groupBy(({ trip }) => trip.id), // en grupp per buss/tripId
-    //   tap((trip) => console.log('trip.id', trip.id)),
-    //   mergeMap((stopTimesPerTrip) => {
-    //     return stopTimesPerTrip.pipe(
-    //       first(), // ta ut den första avgångstiden för bussen
-    //       filter(({ position }) =>
-    //         isInsideCoordinates(position, this.geometry.coordinates)
-    //       ),
-    //       tap(console.log),
-    //       map(({ date, trip, position }) => {
-    //         console.log('ny buss', trip.id)
-    //         return new Bus({
-    //           id: trip.id,
-    //           position,
-    //           stops: stopTimesPerTrip,
-    //         })
-    //       })
-    //     )
-    //   }),
-    //   shareReplay()
-    // )
 
     const tripsInMunicipality = stopTimes.pipe(
       filter(({ position }) =>
