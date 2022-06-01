@@ -13103,12 +13103,9 @@
     "namn": "Luleå kommun",
     "fleets": [
       {
-        "name": "Postnord",
+        "name": "Länstrafiken i Norrbotten",
         "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 4,
-          "lättLastbil": 1,
-          "bil": 0
+          "buss": 10
         },
         "marketshare": 0.6,
         "hub": [13.016601, 55.622044]

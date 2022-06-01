@@ -3,6 +3,7 @@ const Vehicle = require('./vehicle')
 const { take, pairwise, map, finalize, tap } = require('rxjs/operators')
 const moment = require('moment')
 const { virtualTime } = require('../virtualTime')
+const { from } = require('rxjs')
 
 // TODO: create this somewhere else as real fleet
 const lanstrafiken = {
@@ -10,7 +11,7 @@ const lanstrafiken = {
 }
 
 class Bus extends Vehicle {
-  constructor({ position, stops, ...vehicle }) {
+  constructor({ position, stops = from([]), ...vehicle }) {
     super({ position, stops, fleet: lanstrafiken, ...vehicle })
     stops
       .pipe(
@@ -20,9 +21,6 @@ class Bus extends Vehicle {
           console.log(pickup.departureTime, pickup.arrivalTime)
           console.log(destination.departureTime, destination.arrivalTime)
           console.log('***END***')
-          if (this.id === '252500000000000733') {
-            console.log('handling booking for 733', pickup.departureTime)
-          }
 
           this.handleBooking(
             new Booking({
@@ -51,14 +49,6 @@ class Bus extends Vehicle {
     const waitTime = departure.subtract(moment(this.time())).valueOf()
     this.simulate(false) // pause interpolation while we wait
 
-    // if (this.id === '252500000000000733') {
-    //   console.log('***Start***')
-    //   console.log('starting bus with id ', '252500000000000733')
-    //   console.log(moment(booking.pickup.departureTime, 'hh:mm:ss'))
-    //   console.log(moment(this.time()))
-    //   console.log(moment.duration(waitTime).humanize())
-    //   console.log('*** END ***')
-    // }
     if (waitTime > 0) await this.wait(waitTime)
 
     return this.navigateTo(booking.destination.position) // resume simulation

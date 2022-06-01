@@ -3,6 +3,7 @@ const { map, shareReplay, toArray, mergeMap } = require('rxjs/operators')
 const { dispatch } = require('./dispatchCentral')
 const Car = require('./vehicles/car')
 const Drone = require('./vehicles/drone')
+const Bus = require('./vehicles/bus')
 const { convertPosition } = require('../lib/distance')
 const { randomize } = require('../simulator/address')
 
@@ -32,6 +33,10 @@ const vehicleTypes = {
     weight: 5,
     capacity: 1,
     class: Drone,
+  },
+  buss: {
+    passengers: 40,
+    class: Bus,
   },
 }
 
