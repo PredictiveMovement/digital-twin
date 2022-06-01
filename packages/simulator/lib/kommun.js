@@ -94,7 +94,8 @@ class Kommun extends EventEmitter {
             })
           })
         )
-      })
+      }),
+      shareReplay()
     )
 
     this.cars = merge(
