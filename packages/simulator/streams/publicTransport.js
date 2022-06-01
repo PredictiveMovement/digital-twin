@@ -12,6 +12,7 @@ const {
   map,
   mergeMap,
   switchMap,
+  concatMap,
   filter,
   toArray,
   first,
@@ -21,8 +22,7 @@ const {
 const { stops, busStops, trips, calendarDates } = require('./gtfs')
 
 const todaysCalendarDates = calendarDates.pipe(
-  filter(({ date }) => moment(virtualTime.time()).isSame(moment(date), 'day')),
-  shareReplay()
+  filter(({ date }) => moment(virtualTime.time()).isSame(moment(date), 'day'))
 )
 
 // stop_times.trip_id -> trips.service_id -> calendar_dates.service_id
@@ -41,7 +41,7 @@ const enhancedBusStops = busStops.pipe(
     )
   ),
 
-  mergeMap(({ stopId, ...rest }) =>
+  concatMap(({ stopId, ...rest }) =>
     stops.pipe(
       first((stop) => stop.id === stopId, 'stop not found'),
       map((stop) => ({ ...rest, stop }))
