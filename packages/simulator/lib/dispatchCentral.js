@@ -37,11 +37,11 @@ const dispatch = (cars, bookings) => {
           ),
           filter((car) => car),
           map((car) => ({ car, booking: car.handleBooking(booking) })),
-          tap(({ car, booking }) =>
-            console.log(
-              `*** booking ${booking.id} dispatched to car #${car.id} in fleet ${car.fleet.name} ${booking.kommun.name}`
-            )
-          )
+          // tap(({ car, booking }) =>
+          //   console.log(
+          //     `*** booking ${booking.id} dispatched to car #${car.id} in fleet ${car.fleet.name} ${booking.kommun.name}`
+          //   )
+          // )
         ),
       1
     )
