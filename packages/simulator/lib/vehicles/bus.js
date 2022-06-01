@@ -52,6 +52,10 @@ class Bus extends Vehicle {
       booking = this.booking
       this.routeHasStarted = true
     }
+    if (!booking) {
+      this.simulate(false)
+      return
+    }
 
     console.log(this.queue.length)
     booking.pickedUp(this.position)
