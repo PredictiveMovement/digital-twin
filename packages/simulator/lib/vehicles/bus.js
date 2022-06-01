@@ -12,6 +12,7 @@ const lanstrafiken = {
 class Bus extends Vehicle {
   constructor({ position, stops, ...vehicle }) {
     super({ position, stops, fleet: lanstrafiken, ...vehicle })
+    this.routeHasStarted = false
     stops
       .pipe(
         pairwise(),
@@ -44,13 +45,18 @@ class Bus extends Vehicle {
   // This is called when the bus arrives at each stop. Let's check if the departure time
   // is in the future. If it is, we wait until the departure time.
   async pickup() {
-    //const booking = this.booking || this.queue.shift()
-    const booking = this.booking // Should we pick new from queue in this function as the line above or before?
+    let booking
+    if (this.routeHasStarted) {
+      booking = this.queue.shift()
+    } else {
+      booking = this.booking
+      this.routeHasStarted = true
+    }
 
     console.log(this.queue.length)
     booking.pickedUp(this.position)
     this.cargo.push(booking)
-    console.log(booking.pickup.stopName)
+
     this.emit('cargo', this)
     const departure = moment(booking.pickup.departureTime, 'hh:mm:ss')
     console.log(departure)
@@ -60,14 +66,14 @@ class Bus extends Vehicle {
     // if (this.id === '252500000000000733') {
     //   console.log('***Start***')
     //   console.log('starting bus with id ', '252500000000000733')
-    //   console.log(moment(booking.pickup.departureTime, 'hh:mm:ss'))
+    //   console.log(moment(booking.destination.departureTime, 'hh:mm:ss'))
     //   console.log(moment(this.time()))
     //   console.log(moment.duration(waitTime).humanize())
-    //   console.log('*** END ***')
+    //   console.log('* ** END ***')
     // }
     if (waitTime > 0) await this.wait(waitTime)
-
-    return this.navigateTo(booking.pickup.position) // resume simulation
+    console.log('Navigate to', booking.destination.stopName)
+    return this.navigateTo(booking.destination.position) // resume simulation
   }
 
   // Wait using the virtual time.
