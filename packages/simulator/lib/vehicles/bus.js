@@ -22,6 +22,7 @@ class Bus extends Vehicle {
           console.log('***END***')
           if (this.id === '252500000000000733') {
             console.log('handling booking for 733', pickup.departureTime)
+            console.log('handling booking for 733', pickup.stopName)
           }
 
           this.handleBooking(
@@ -43,11 +44,16 @@ class Bus extends Vehicle {
   // This is called when the bus arrives at each stop. Let's check if the departure time
   // is in the future. If it is, we wait until the departure time.
   async pickup() {
-    const booking = this.booking || this.queue.shift()
+    //const booking = this.booking || this.queue.shift()
+    const booking = this.booking // Should we pick new from queue in this function as the line above or before?
+
+    console.log(this.queue.length)
     booking.pickedUp(this.position)
     this.cargo.push(booking)
+    console.log(booking.pickup.stopName)
     this.emit('cargo', this)
     const departure = moment(booking.pickup.departureTime, 'hh:mm:ss')
+    console.log(departure)
     const waitTime = departure.subtract(moment(this.time())).valueOf()
     this.simulate(false) // pause interpolation while we wait
 
@@ -61,7 +67,7 @@ class Bus extends Vehicle {
     // }
     if (waitTime > 0) await this.wait(waitTime)
 
-    return this.navigateTo(booking.destination.position) // resume simulation
+    return this.navigateTo(booking.pickup.position) // resume simulation
   }
 
   // Wait using the virtual time.
