@@ -101,23 +101,23 @@ class Kommun extends EventEmitter {
       filter(({ position }) =>
         isInsideCoordinates(position, this.geometry.coordinates)
       ),
-      groupBy(({ trip }) => trip.id),
+      groupBy(({ trip }) => trip.id)
     )
 
-    this.buses = tripsInMunicipality.pipe(shareReplay(1)).pipe(
-      mergeMap(stopTimesPerTrip =>
-        stopTimesPerTrip.pipe(
+    this.buses = tripsInMunicipality.pipe(
+      mergeMap((stopTimesPerTrip) => {
+        const newStopTimesPerTrip = stopTimesPerTrip.pipe(shareReplay())
+        return newStopTimesPerTrip.pipe(
           first(),
           map((firstStopTime) => {
             return new Bus({
               id: firstStopTime.trip.id,
               position: firstStopTime.position,
-              stops: stopTimesPerTrip.pipe(startWith(firstStopTime)), // TODO: why do we need startsWith here?
+              stops: newStopTimesPerTrip,
             })
           })
         )
-      ),
-      shareReplay(),
+      })
     )
 
     this.cars = merge(
