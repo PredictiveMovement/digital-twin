@@ -125,10 +125,10 @@ function register(io) {
           capacity,
         })
       ),
-      bufferTime(100)
+      throttleTime(50)
     )
     .subscribe((cars) => {
-      if (cars.length) io.emit('cars', cars)
+      if (cars) io.emit('cars', [cars])
     })
 
   setInterval(() => {
