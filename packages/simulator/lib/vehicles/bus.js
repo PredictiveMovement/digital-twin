@@ -13,6 +13,7 @@ class Bus extends Vehicle {
   constructor({ position, stops, ...vehicle }) {
     super({ position, stops, fleet: lanstrafiken, ...vehicle })
     this.routeHasStarted = false
+
     stops
       .pipe(
         pairwise(),
@@ -25,7 +26,8 @@ class Bus extends Vehicle {
           //   console.log('handling booking for 733', pickup.departureTime)
           //   console.log('handling booking for 733', pickup.stopName)
           // }
-
+          // console.log(pickup)
+          // console.log(destination)
           this.handleBooking(
             new Booking({
               // pickup and destination contains both position and arrival and departure time
@@ -33,10 +35,6 @@ class Bus extends Vehicle {
               destination,
             })
           )
-        }),
-        finalize(() => {
-          this.emit('ready', this)
-          console.log('finalize')
         })
       )
       .subscribe(() => {})
@@ -50,6 +48,7 @@ class Bus extends Vehicle {
       booking = this.queue.shift()
     } else {
       booking = this.booking
+      console.log('bus starts trip', booking.car.id)
       this.routeHasStarted = true
     }
     if (!booking) {
@@ -76,7 +75,11 @@ class Bus extends Vehicle {
     //   console.log('* ** END ***')
     // }
     if (waitTime > 0) await this.wait(waitTime)
-    console.log('Navigate to', booking.destination.stopName)
+    console.log(
+      booking.car.id,
+      'is navigating to',
+      booking.destination.stopName
+    )
     return this.navigateTo(booking.destination.position) // resume simulation
   }
 
