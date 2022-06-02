@@ -78,7 +78,7 @@ function register(io) {
       .subscribe((kommun) => socket.emit('kommun', kommun))
 
     merge(engine.dispatchedBookings, engine.busStopTimes)
-      .pipe(cleanBookings(), bufferTime(100, null, 1000))
+      .pipe(bufferTime(100, null, 1000))
       .subscribe((bookings) => {
         if (bookings.length) {
           socket.emit('bookings', bookings)
