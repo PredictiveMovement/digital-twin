@@ -28,25 +28,21 @@ const {
   serviceDatesMap,
 } = require('./gtfs.js')
 
-//console.log(serviceDatesMap)
-// const todaysServices = serviceDates.pipe(
-//   filter(({ date }) => moment(virtualTime.time()).isSame(moment(date), 'day'))
-// )
-
 // stop_times.trip_id -> trips.service_id -> calendar_dates.service_id
 const todaysDate = moment(virtualTime.time()).format('YYYYMMDD')
-const todaysServiceIds = serviceDatesMap[todaysDate]
-console.log(todaysServiceIds)
+const todaysServiceIds = serviceDatesMap[todaysDate].map(
+  ({ serviceId }) => serviceId
+)
 
 const enhancedBusStops = busStops.pipe(
   map(({ tripId, ...rest }) => {
     const trip = tripsMap[tripId]
     return {
       trip,
-      date: serviceDatesMap[trip.serviceId].date,
       ...rest,
     }
   }),
+  filter(({ trip: { serviceId } }) => todaysServiceIds.includes(serviceId)),
 
   mergeMap(({ stopId, ...rest }) =>
     stops.pipe(
