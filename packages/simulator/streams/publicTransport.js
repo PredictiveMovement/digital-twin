@@ -19,27 +19,34 @@ const {
   share,
   tap,
 } = require('rxjs/operators')
-const { stops, busStops, trips, calendarDates } = require('./gtfs')
+const {
+  stops,
+  busStops,
+  trips,
+  serviceDates,
+  tripsMap,
+  serviceDatesMap,
+} = require('./gtfs.js')
 
-const todaysCalendarDates = calendarDates.pipe(
-  filter(({ date }) => moment(virtualTime.time()).isSame(moment(date), 'day'))
-)
+//console.log(serviceDatesMap)
+// const todaysServices = serviceDates.pipe(
+//   filter(({ date }) => moment(virtualTime.time()).isSame(moment(date), 'day'))
+// )
 
 // stop_times.trip_id -> trips.service_id -> calendar_dates.service_id
+const todaysDate = moment(virtualTime.time()).format('YYYYMMDD')
+const todaysServiceIds = serviceDatesMap[todaysDate]
+console.log(todaysServiceIds)
+
 const enhancedBusStops = busStops.pipe(
-  mergeMap(({ tripId, ...rest }) =>
-    trips.pipe(
-      //filter((trip) => trip.id === '252500000000000733'), // TODO: Remove single trip filter
-      first((trip) => trip.id === tripId, 'trip not found'),
-      map((trip) => ({ ...rest, trip }))
-    )
-  ),
-  mergeMap(({ trip, ...rest }) =>
-    todaysCalendarDates.pipe(
-      first((cd) => cd.id === trip.serviceId, 'calendar date not found'),
-      map(({ date }) => ({ ...rest, trip, date }))
-    )
-  ),
+  map(({ tripId, ...rest }) => {
+    const trip = tripsMap[tripId]
+    return {
+      trip,
+      date: serviceDatesMap[trip.serviceId].date,
+      ...rest,
+    }
+  }),
 
   mergeMap(({ stopId, ...rest }) =>
     stops.pipe(
@@ -53,7 +60,6 @@ const enhancedBusStops = busStops.pipe(
     stopName,
     position: { lat: +position.lat, lon: +position.lon },
   })),
-  take(50),
   shareReplay()
 )
 

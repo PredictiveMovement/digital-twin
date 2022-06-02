@@ -17,14 +17,14 @@ class Bus extends Vehicle {
       .pipe(
         pairwise(),
         map(([pickup, destination]) => {
-          console.log('***START***')
-          console.log(pickup.departureTime, pickup.arrivalTime)
-          console.log(destination.departureTime, destination.arrivalTime)
-          console.log('***END***')
-          if (this.id === '252500000000000733') {
-            console.log('handling booking for 733', pickup.departureTime)
-            console.log('handling booking for 733', pickup.stopName)
-          }
+          // console.log('***START***')
+          // console.log(pickup.departureTime, pickup.arrivalTime)
+          // console.log(destination.departureTime, destination.arrivalTime)
+          // console.log('***END***')
+          // if (this.id === '252500000000000733') {
+          //   console.log('handling booking for 733', pickup.departureTime)
+          //   console.log('handling booking for 733', pickup.stopName)
+          // }
 
           this.handleBooking(
             new Booking({
@@ -57,13 +57,13 @@ class Bus extends Vehicle {
       return
     }
 
-    console.log(this.queue.length)
+    //   console.log(this.queue.length)
     booking.pickedUp(this.position)
     this.cargo.push(booking)
 
     this.emit('cargo', this)
     const departure = moment(booking.pickup.departureTime, 'hh:mm:ss')
-    console.log(departure)
+    // console.log(departure)
     const waitTime = departure.subtract(moment(this.time())).valueOf()
     this.simulate(false) // pause interpolation while we wait
 
