@@ -88,7 +88,7 @@ class Kommun extends EventEmitter {
           first(),
           map((firstStopTime) => {
             return new Bus({
-              id: firstStopTime.trip.id,
+              id: firstStopTime.trip.routeId,
               position: firstStopTime.position,
               stops: newStopTimesPerTrip,
             })
@@ -106,7 +106,6 @@ class Kommun extends EventEmitter {
 
     this.dispatchedBookings = this.fleets.pipe(
       mergeMap((fleet) => fleet.dispatchedBookings),
-      //      tap(booking => console.log('dispatched', booking)),
       catchError((error) => {
         console.log(error)
         return of(false)
