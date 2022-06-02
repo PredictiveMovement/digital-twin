@@ -13,7 +13,6 @@ const {
   firstValueFrom,
   groupBy,
   take,
-  first,
   Observable,
 } = require('rxjs')
 const {

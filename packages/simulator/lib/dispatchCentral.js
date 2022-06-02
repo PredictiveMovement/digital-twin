@@ -36,7 +36,7 @@ const dispatch = (cars, bookings) => {
             (cars) => cars.sort((a, b) => a.distance - b.distance).shift()?.car
           ),
           filter((car) => car),
-          map((car) => ({ car, booking: car.handleBooking(booking) })),
+          map((car) => ({ car, booking: car.handleBooking(booking) }))
           // tap(({ car, booking }) =>
           //   console.log(
           //     `*** booking ${booking.id} dispatched to car #${car.id} in fleet ${car.fleet.name} ${booking.kommun.name}`
