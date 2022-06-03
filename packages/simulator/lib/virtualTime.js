@@ -3,7 +3,7 @@ const EventEmitter = require('events')
 const moment = require('moment')
 
 class VirtualTime extends EventEmitter {
-  constructor(timeMultiplier = 20, startHour = 8.6) {
+  constructor(timeMultiplier = 60, startHour = 5.3) {
     super()
     this.startDate = Date.now()
     this.setTimeMultiplier(timeMultiplier)

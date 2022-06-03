@@ -21,7 +21,6 @@ module.exports = {
       [from.lon, from.lat],
       [to.lon, to.lat],
     ].join(';')
-    // console.log('fetching OSRM')
     return (
       fetch(
         `${osrmUrl}/route/v1/driving/${coordinates}?steps=true&alternatives=false&overview=full&annotations=true`
@@ -35,7 +34,6 @@ module.exports = {
             result.routes.sort((a, b) => a.duration < b.duration)[0]
         )
         .then((route) => {
-          // console.log('got route?', !!route)
           if (!route) return {}
 
           route.geometry = { coordinates: decodePolyline(route.geometry) }

@@ -1,6 +1,6 @@
 const Booking = require('../booking')
 const Vehicle = require('./vehicle')
-const { take, pairwise, map, finalize, tap } = require('rxjs/operators')
+const { take, pairwise, map } = require('rxjs/operators')
 const moment = require('moment')
 const { virtualTime } = require('../virtualTime')
 
@@ -18,16 +18,6 @@ class Bus extends Vehicle {
       .pipe(
         pairwise(),
         map(([pickup, destination]) => {
-          // console.log('***START***')
-          // console.log(pickup.departureTime, pickup.arrivalTime)
-          // console.log(destination.departureTime, destination.arrivalTime)
-          // console.log('***END***')
-          // if (this.id === '252500000000000733') {
-          //   console.log('handling booking for 733', pickup.departureTime)
-          //   console.log('handling booking for 733', pickup.stopName)
-          // }
-          // console.log(pickup)
-          // console.log(destination)
           this.handleBooking(
             new Booking({
               // pickup and destination contains both position and arrival and departure time
@@ -62,22 +52,14 @@ class Bus extends Vehicle {
 
     this.emit('cargo', this)
     const departure = moment(booking.pickup.departureTime, 'hh:mm:ss')
-    // console.log(departure)
     const waitTime = departure.subtract(moment(this.time())).valueOf()
     this.simulate(false) // pause interpolation while we wait
 
-    // if (this.id === '252500000000000733') {
-    //   console.log('***Start***')
-    //   console.log('starting bus with id ', '252500000000000733')
-    //   console.log(moment(booking.destination.departureTime, 'hh:mm:ss'))
-    //   console.log(moment(this.time()))
-    //   console.log(moment.duration(waitTime).humanize())
-    //   console.log('* ** END ***')
-    // }
     if (waitTime > 0) await this.wait(waitTime)
     console.log(
+      '*** Navigating bus ',
       booking.car.id,
-      'is navigating to',
+      ' is navigating to ',
       booking.destination.stopName
     )
     return this.navigateTo(booking.destination.position) // resume simulation

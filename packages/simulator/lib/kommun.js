@@ -9,7 +9,6 @@ const {
   merge,
   of,
   range,
-  Observable,
 } = require('rxjs')
 const {
   map,
@@ -21,16 +20,12 @@ const {
   reduce,
   mapTo,
   groupBy,
-  pluck,
-  startWith,
 } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
 const { isInsideCoordinates } = require('./polygon')
 const { stops, stopTimes } = require('../streams/publicTransport')
-const { virtualTime } = require('../lib/virtualTime')
-const moment = require('moment')
 
 // expand fleets so that a fleet with marketshare 12% has 12 cars to choose from
 const expandFleets = () => (fleets) =>
