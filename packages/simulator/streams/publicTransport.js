@@ -12,33 +12,37 @@ const {
   map,
   mergeMap,
   switchMap,
+  concatMap,
   filter,
   toArray,
   first,
   share,
   tap,
 } = require('rxjs/operators')
-const { stops, busStops, trips, calendarDates } = require('./gtfs')
-
-const todaysCalendarDates = calendarDates.pipe(
-  filter(({ date }) => moment(virtualTime.time()).isSame(moment(date), 'day')),
-  shareReplay()
-)
+const {
+  stops,
+  busStops,
+  trips,
+  serviceDates,
+  tripsMap,
+  serviceDatesMap,
+} = require('./gtfs.js')
 
 // stop_times.trip_id -> trips.service_id -> calendar_dates.service_id
+const todaysDate = moment(virtualTime.time()).format('YYYYMMDD')
+const todaysServiceIds = serviceDatesMap[todaysDate].map(
+  ({ serviceId }) => serviceId
+)
+
 const enhancedBusStops = busStops.pipe(
-  mergeMap(({ tripId, ...rest }) =>
-    trips.pipe(
-      first((trip) => trip.id === tripId, 'trip not found'),
-      map((trip) => ({ ...rest, trip }))
-    )
-  ),
-  mergeMap(({ trip, ...rest }) =>
-    todaysCalendarDates.pipe(
-      first((cd) => cd.id === trip.serviceId, 'calendar date not found'),
-      map(({ date }) => ({ ...rest, trip, date }))
-    )
-  ),
+  map(({ tripId, ...rest }) => {
+    const trip = tripsMap[tripId]
+    return {
+      trip,
+      ...rest,
+    }
+  }),
+  filter(({ trip: { serviceId } }) => todaysServiceIds.includes(serviceId)),
 
   mergeMap(({ stopId, ...rest }) =>
     stops.pipe(

@@ -9,7 +9,6 @@ const {
   merge,
   of,
   range,
-  Observable,
 } = require('rxjs')
 const {
   map,
@@ -21,16 +20,12 @@ const {
   reduce,
   mapTo,
   groupBy,
-  pluck,
-  startWith,
 } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
 const { isInsideCoordinates } = require('./polygon')
 const { stops, stopTimes } = require('../streams/publicTransport')
-const { virtualTime } = require('../lib/virtualTime')
-const moment = require('moment')
 
 // expand fleets so that a fleet with marketshare 12% has 12 cars to choose from
 const expandFleets = () => (fleets) =>
@@ -73,51 +68,29 @@ class Kommun extends EventEmitter {
     this.privateCars = new ReplaySubject()
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
-    // this.buses = stopTimes.pipe(
-    //   // tap(({ date }) => console.log('stop time', date)),
-    //   groupBy(({ trip }) => trip.id), // en grupp per buss/tripId
-    //   tap((trip) => console.log('trip.id', trip.id)),
-    //   mergeMap((stopTimesPerTrip) => {
-    //     return stopTimesPerTrip.pipe(
-    //       first(), // ta ut den första avgångstiden för bussen
-    //       filter(({ position }) =>
-    //         isInsideCoordinates(position, this.geometry.coordinates)
-    //       ),
-    //       tap(console.log),
-    //       map(({ date, trip, position }) => {
-    //         console.log('ny buss', trip.id)
-    //         return new Bus({
-    //           id: trip.id,
-    //           position,
-    //           stops: stopTimesPerTrip,
-    //         })
-    //       })
-    //     )
-    //   }),
-    //   shareReplay()
-    // )
 
     const tripsInMunicipality = stopTimes.pipe(
       filter(({ position }) =>
         isInsideCoordinates(position, this.geometry.coordinates)
       ),
-      groupBy(({ trip }) => trip.id),
+      groupBy(({ trip }) => trip.id)
     )
 
-    this.buses = tripsInMunicipality.pipe(shareReplay(1)).pipe(
-      mergeMap(stopTimesPerTrip =>
-        stopTimesPerTrip.pipe(
+    this.buses = tripsInMunicipality.pipe(
+      mergeMap((stopTimesPerTrip) => {
+        const newStopTimesPerTrip = stopTimesPerTrip.pipe(shareReplay())
+        return newStopTimesPerTrip.pipe(
           first(),
           map((firstStopTime) => {
             return new Bus({
-              id: firstStopTime.trip.id,
+              id: firstStopTime.trip.routeId,
               position: firstStopTime.position,
-              stops: stopTimesPerTrip.pipe(startWith(firstStopTime)), // TODO: why do we need startsWith here?
+              stops: newStopTimesPerTrip,
             })
           })
         )
-      ),
-      shareReplay(),
+      }),
+      shareReplay()
     )
 
     this.cars = merge(
@@ -128,7 +101,6 @@ class Kommun extends EventEmitter {
 
     this.dispatchedBookings = this.fleets.pipe(
       mergeMap((fleet) => fleet.dispatchedBookings),
-      //      tap(booking => console.log('dispatched', booking)),
       catchError((error) => {
         console.log(error)
         return of(false)

@@ -19,6 +19,7 @@ const postombud = require('./streams/postombud')
 const { stops } = require('./streams/publicTransport')
 
 const fs = require('fs')
+const getDirName = require('path').dirname
 const Booking = require('./lib/booking')
 
 const { info } = require('./lib/log')
@@ -38,7 +39,7 @@ const kommuner = require('./streams/kommuner').pipe(
     } else {
       console.log(`*** ${kommun.name}: no cached bookings`)
       bookings = generateBookingsInKommun(kommun).pipe(
-        take(Math.ceil(kommun.packageVolumes?.total / WORKING_DAYS)), // how many bookings do we want?
+        take(Math.ceil(kommun.packageVolumes?.total / WORKING_DAYS)) // how many bookings do we want?
       )
 
       // TODO: Could we do this without converting to an array? Yes. By using fs stream and write json per line
@@ -64,8 +65,14 @@ const kommuner = require('./streams/kommuner').pipe(
           toArray()
         )
         .subscribe((arr) => {
-          fs.writeFileSync(file, JSON.stringify(arr))
-          console.log(`*** ${kommun.name}: wrote bookings to cache (${file})`)
+          fs.mkdir(getDirName(file), { recursive: true }, (err) => {
+            if (err) {
+              console.error(err)
+              return
+            }
+            fs.writeFileSync(file, JSON.stringify(arr))
+            console.log(`*** ${kommun.name}: wrote bookings to cache (${file})`)
+          })
         })
     }
     bookings.subscribe((booking) => kommun.handleBooking(booking))
