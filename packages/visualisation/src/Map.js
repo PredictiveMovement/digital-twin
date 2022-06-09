@@ -253,9 +253,9 @@ const Map = ({
     opacity: 0.4,
     stroked: false,
     filled: true,
-    radiusScale: 5,
+    radiusScale: 2,
     radiusUnits: 'pixels',
-    radiusMinPixels: 3,
+    radiusMinPixels: 1,
     radiusMaxPixels: 5,
     getPosition: (c) => {
       return c.position
