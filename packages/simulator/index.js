@@ -23,6 +23,7 @@ const getDirName = require('path').dirname
 const Booking = require('./lib/booking')
 
 const { info } = require('./lib/log')
+const { busDispatch } = require('./lib/busDispatch')
 
 // https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
 const WORKING_DAYS = 220
@@ -91,16 +92,12 @@ const engine = {
     mergeMap((kommun) => kommun.dispatchedBookings),
     shareReplay()
   ),
-  busStopTimes: kommuner.pipe(
-    mergeMap((kommun) =>
-      kommun.buses.pipe(
-        mergeMap((bus) =>
-          from(bus.queue).pipe(
-            map(({ pickup, destination }) => ({ pickup, destination }))
-          )
-        )
-      )
-    ),
+  busStartingPoints: kommuner.pipe(
+    mergeMap((kommun) => kommun.busStartingPoints),
+    shareReplay()
+  ),
+  buses: kommuner.pipe(
+    mergeMap((kommun) => kommun.buses),
     shareReplay()
   ),
   busStops: stops.pipe(filter((stop) => !stop.station)),
@@ -131,6 +128,10 @@ engine.carUpdates = engine.cars.pipe(
 engine.dispatchedBookings.subscribe((booking) =>
   info(`Booking ${booking?.id} dispatched to fleet ${booking?.fleet?.name}`)
 )
+
+engine.dispatchedBuses = kommuner
+  .pipe(mergeMap((kommun) => kommun.dispatchedBuses))
+  .subscribe((plan) => console.log('received plan'))
 
 // TODO: see if we can remove this
 process.setMaxListeners(0)

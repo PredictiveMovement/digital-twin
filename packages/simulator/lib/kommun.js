@@ -20,12 +20,15 @@ const {
   reduce,
   mapTo,
   groupBy,
+  last,
 } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
 const { isInsideCoordinates } = require('./polygon')
 const { stops, stopTimes } = require('../streams/publicTransport')
+const { busDispatch } = require('./busDispatch')
+const Booking = require('./booking')
 
 // expand fleets so that a fleet with marketshare 12% has 12 cars to choose from
 const expandFleets = () => (fleets) =>
@@ -69,35 +72,23 @@ class Kommun extends EventEmitter {
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
 
-    const tripsInMunicipality = stopTimes.pipe(
-      filter(({ position }) =>
-        isInsideCoordinates(position, this.geometry.coordinates)
-      ),
-      groupBy(({ trip }) => trip.id)
-    )
+    const tripsInMunicipality = stopTimes.pipe(groupBy(({ trip }) => trip.id))
 
-    this.buses = tripsInMunicipality.pipe(
-      mergeMap((stopTimesPerTrip) => {
-        const newStopTimesPerTrip = stopTimesPerTrip.pipe(shareReplay())
-        return newStopTimesPerTrip.pipe(
-          first(),
-          map((firstStopTime) => {
-            return new Bus({
-              id: firstStopTime.trip.routeId,
-              position: firstStopTime.position,
-              stops: newStopTimesPerTrip,
-            })
-          })
-        )
-      }),
+    this.busStartingPoints = tripsInMunicipality.pipe(
+      mergeMap((stopTimesPerTrip) =>
+        merge(stopTimesPerTrip.pipe(first()), stopTimesPerTrip.pipe(last()))
+      ),
       shareReplay()
     )
 
     this.cars = merge(
       this.privateCars,
-      this.buses,
       this.fleets.pipe(mergeMap((fleet) => fleet.cars))
     ).pipe(shareReplay())
+
+    this.buses = this.cars
+      .pipe(filter((car) => car instanceof Bus))
+      .pipe(shareReplay())
 
     this.dispatchedBookings = this.fleets.pipe(
       mergeMap((fleet) => fleet.dispatchedBookings),
@@ -107,6 +98,24 @@ class Kommun extends EventEmitter {
       }),
       shareReplay()
     )
+
+    this.buses.subscribe((bus) => console.log(`${this.name} bus: ${bus.id}`))
+    this.busStartingPoints.subscribe((stop) =>
+      console.log(`${this.name} stop: ${stop.stopName} ${stop.departureTime}`)
+    )
+    this.dispatchedBuses = busDispatch(this.buses, this.busStartingPoints)
+
+    this.dispatchedBuses.subscribe(({ bus, stops: [first, ...stops] }) => {
+      stops.map((stop) =>
+        bus.handleBooking(
+          new Booking({
+            pickup: first,
+            destination: stop,
+          })
+        )
+      )
+      console.log(`Bus ${bus.id} dispatched to ${stops.length + 1} stops`)
+    })
   }
 
   handleBooking(booking) {

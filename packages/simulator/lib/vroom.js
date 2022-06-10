@@ -1,46 +1,23 @@
 const fetch = require('node-fetch')
-const vroomUrl = process.env.VROOM_URL || 'https://froom.predictivemovement.se'
+const vroomUrl = process.env.VROOM_URL || 'https://vroom.predictivemovement.se'
 const { decodePolyline } = require('./osrm')
 
 module.exports = {
-  plan(stops, vehicles, bookings) {
+  async plan({ jobs, shipments, vehicles }) {
+    const result = await fetch(vroomUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jobs,
+        shipments,
+        vehicles,
+      }),
+    }).then((res) => res.json())
+    if (result.error) throw new Error(result.error)
     return (
-      fetch(vroomUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          jobs: stops.map((stop) => ({
-            id: stop.id,
-            description: stop.description,
-            location: stop.location,
-          })),
-          shipments: bookings.map((booking) => ({
-            id: booking.id,
-            description: booking.description,
-            location: booking.location,
-          })),
-          vehicles: vehicles.map((vehicle) => ({
-            id: vehicle.id,
-            start: vehicle.position,
-            end: vehicle.heading.position,
-          })),
-        }),
-      })
-        .then((response) => response.json())
-        // fastest route
-        .then(
-          (result) =>
-            result.routes &&
-            result.routes.sort((a, b) => a.duration < b.duration)[0]
-        )
-        .then((route) => {
-          if (!route) return {}
-
-          route.geometry = { coordinates: decodePolyline(route.geometry) }
-          return route
-        })
+      result.routes && result.routes.sort((a, b) => a.duration < b.duration)[0]
     )
   },
 }

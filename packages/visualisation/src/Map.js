@@ -293,7 +293,7 @@ const Map = ({
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         type: 'busStop',
-        title: 'Busstopp ' + object.name,
+        title: `Busstopp ${object.name}`,
         x,
         y,
       })
