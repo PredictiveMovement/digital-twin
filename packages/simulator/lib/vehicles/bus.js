@@ -52,7 +52,7 @@ class Bus extends Vehicle {
     this.cargo.push(booking)
 
     this.emit('cargo', this)
-    const departure = moment(booking.pickup.departureTime, 'hh:mm:ss')
+    const departure = moment(booking.pickup.departureTime, 'HH:mm:ss')
     const waitTime = departure.subtract(moment(this.time())).valueOf()
     this.simulate(false) // pause interpolation while we wait
 
