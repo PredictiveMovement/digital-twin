@@ -39,11 +39,11 @@ const enhancedBusStops = busStops.pipe(
     const trip = tripsMap[tripId]
     return {
       trip,
+      tripId,
       ...rest,
     }
   }),
   filter(({ trip: { serviceId } }) => todaysServiceIds.includes(serviceId)),
-
   mergeMap(({ stopId, ...rest }) =>
     stops.pipe(
       first((stop) => stop.id === stopId, 'stop not found'),
@@ -63,4 +63,4 @@ module.exports = {
   stops,
   stopTimes: enhancedBusStops,
 }
-//enhancedBusStops.subscribe((x) => console.log(x))
+// enhancedBusStops.subscribe((x) => x)

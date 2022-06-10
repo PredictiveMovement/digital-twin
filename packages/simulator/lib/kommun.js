@@ -73,7 +73,7 @@ class Kommun extends EventEmitter {
       filter(({ position }) =>
         isInsideCoordinates(position, this.geometry.coordinates)
       ),
-      groupBy(({ trip }) => trip.id)
+      groupBy(({ tripId }) => tripId)
     )
 
     this.buses = tripsInMunicipality.pipe(
