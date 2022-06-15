@@ -38,7 +38,9 @@ function getPostombud(kommunName) {
 function read() {
   return from(data).pipe(
     filter(({ namn }) =>
-      ['Pajala', 'Arjeplog', 'Arvidsjaur', 'Luleå', 'Boden'].some((name) => namn.startsWith(name))
+      ['Pajala', 'Arjeplog', 'Arvidsjaur', 'Luleå', 'Boden'].some((name) =>
+        namn.startsWith(name)
+      )
     ),
     map(
       ({
