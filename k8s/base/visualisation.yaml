@@ -27,7 +27,7 @@ spec:
           image: iteam1337/pm-digital-twin-visualisation
           ports:
             - containerPort: 80
-              
+
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -48,7 +48,7 @@ spec:
           - path: /
             pathType: Prefix
             backend:
-              service: 
+              service:
                 name: visualisation
                 port:
                   number: 80

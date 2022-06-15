@@ -26,12 +26,12 @@ spec:
         - name: simulator
           image: iteam1337/pm-digital-twin-simulation-engine
           resources:
-              requests:
-                cpu: "1"
-                memory: "512Mi"
-              limits:
-                cpu: "2"
-                memory: "2Gi"
+            requests:
+              cpu: "1"
+              memory: "512Mi"
+            limits:
+              cpu: "2"
+              memory: "2Gi"
           ports:
             - containerPort: 4000
           volumeMounts:
@@ -55,16 +55,16 @@ metadata:
 spec:
   tls:
     - hosts:
-        - rorla-stage.predictivemovement.se
+        - rorla-engine-stage.predictivemovement.se
       secretName: simulator-stage-tls
   rules:
-    - host: rorla-stage.predictivemovement.se
+    - host: rorla-engine-stage.predictivemovement.se
       http:
         paths:
           - path: /socket.io/.*
             pathType: Prefix
             backend:
-              service: 
+              service:
                 name: simulator
                 port:
                   number: 4000
