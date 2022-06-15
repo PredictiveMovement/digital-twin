@@ -1,4 +1,4 @@
-const { share, merge, fromEvent, of } = require('rxjs')
+const { from, share, merge, fromEvent, of } = require('rxjs')
 const { mergeMap } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
@@ -8,6 +8,12 @@ const kommuner = require('./streams/kommuner')
 const regions = require('./streams/regions')(kommuner)
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
+
+const { save } = require('./lib/elastic')
+const statsCollector = require('./lib/statistics')
+from(
+  [statsCollector.exampleJourney] // TODO: Hook into stream
+).subscribe(statsCollector.collectJourney)
 
 const engine = {
   experiments: [],
