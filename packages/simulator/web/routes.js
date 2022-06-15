@@ -1,6 +1,6 @@
 const engine = require('../index')
 // const postombud = require("../streams/postombud");
-const {fromEvent, interval, of, from, merge, combineLatest} = require('rxjs')
+const { fromEvent, interval, of, from, merge, combineLatest } = require('rxjs')
 const {
   map,
   toArray,
@@ -17,15 +17,15 @@ const {
   windowTime,
 } = require('rxjs/operators')
 
-const {virtualTime} = require('../lib/virtualTime')
-const {busStops} = require('../index')
+const { virtualTime } = require('../lib/virtualTime')
+const { busStops } = require('../index')
 
 const cleanBookings = () => (bookings) =>
   bookings.pipe(
     map(
       ({
-        pickup: {position: pickup},
-        destination: {position: destination, name},
+        pickup: { position: pickup },
+        destination: { position: destination, name },
         id,
         status,
         isCommercial,
@@ -71,16 +71,14 @@ function register(io) {
     engine.postombud.pipe(toArray()).subscribe((postombud) => {
       socket.emit('postombud', postombud)
     })
-    engine.busStops.subscribe(busStops =>
-      socket.emit('busStops', busStops)
-    )
+    engine.busStops.subscribe((busStops) => socket.emit('busStops', busStops))
 
     engine.kommuner
-      .pipe(map(({id, name, geometry}) => ({id, name, geometry})))
+      .pipe(map(({ id, name, geometry }) => ({ id, name, geometry })))
       .subscribe((kommun) => socket.emit('kommun', kommun))
 
     merge(engine.dispatchedBookings, engine.busStopTimes)
-      .pipe(cleanBookings(), bufferTime(100, null, 1000))
+      .pipe(bufferTime(100, null, 1000))
       .subscribe((bookings) => {
         if (bookings.length) {
           socket.emit('bookings', bookings)
@@ -101,7 +99,7 @@ function register(io) {
       map(
         ({
           booking,
-          position: {lon, lat},
+          position: { lon, lat },
           id,
           altitude,
           heading,
@@ -127,10 +125,10 @@ function register(io) {
           capacity,
         })
       ),
-      bufferTime(100)
+      throttleTime(50)
     )
     .subscribe((cars) => {
-      if (cars.length) io.emit('cars', cars)
+      if (cars) io.emit('cars', [cars])
     })
 
   setInterval(() => {
@@ -139,7 +137,7 @@ function register(io) {
 
   engine.kommuner
     .pipe(
-      mergeMap(({id, dispatchedBookings, name, cars}) => {
+      mergeMap(({ id, dispatchedBookings, name, cars }) => {
         const totalBookings = dispatchedBookings.pipe(
           scan((a) => a + 1, 0),
           startWith(0)
@@ -148,14 +146,14 @@ function register(io) {
         const averageDeliveryTime = dispatchedBookings.pipe(
           mergeMap((booking) => fromEvent(booking, 'delivered')),
           scan(
-            ({total, deliveryTimeTotal}, {deliveryTime}) => ({
+            ({ total, deliveryTimeTotal }, { deliveryTime }) => ({
               total: total + 1,
               deliveryTimeTotal: deliveryTimeTotal + deliveryTime,
             }),
-            {total: 0, deliveryTimeTotal: 0}
+            { total: 0, deliveryTimeTotal: 0 }
           ),
-          startWith({total: 0, deliveryTimeTotal: 0}),
-          map(({total, deliveryTimeTotal}) => ({
+          startWith({ total: 0, deliveryTimeTotal: 0 }),
+          map(({ total, deliveryTimeTotal }) => ({
             totalDelivered: total,
             averageDeliveryTime: deliveryTimeTotal / total / 60 / 60,
           }))
@@ -163,7 +161,7 @@ function register(io) {
 
         const averageUtilization = cars.pipe(
           mergeMap((car) => fromEvent(car, 'cargo')),
-          scan((acc, car) => ({...acc, [car.id]: car}), {}),
+          scan((acc, car) => ({ ...acc, [car.id]: car }), {}),
           map((cars) => {
             const result = {
               totalCapacity: 0,
@@ -179,7 +177,7 @@ function register(io) {
             })
             return result
           }),
-          map(({totalCargo, totalCapacity, totalQueued, totalCo2}) => ({
+          map(({ totalCargo, totalCapacity, totalQueued, totalCo2 }) => ({
             totalCargo,
             totalCapacity,
             totalQueued,
@@ -226,7 +224,7 @@ function register(io) {
                 averageQueued,
                 averageUtilization,
               },
-              {totalDelivered, averageDeliveryTime},
+              { totalDelivered, averageDeliveryTime },
               totalCapacity,
             ]) => ({
               id,
@@ -255,7 +253,7 @@ function register(io) {
         //   throttleTime(5000)
         // )
       }),
-      filter(({totalCars}) => totalCars > 0)
+      filter(({ totalCars }) => totalCars > 0)
     )
     .subscribe((kommun) => {
       io.emit('kommun', kommun)

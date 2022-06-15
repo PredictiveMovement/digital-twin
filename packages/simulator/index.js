@@ -15,17 +15,18 @@ const { generateBookingsInKommun } = require('./simulator/bookings')
 const { virtualTime } = require('./lib/virtualTime')
 // TODO: replace this with a better statistical distribution
 
-const kommuner = require('./streams/kommuner')
 const postombud = require('./streams/postombud')
+const { stops } = require('./streams/publicTransport')
 
 const fs = require('fs')
+const getDirName = require('path').dirname
 const Booking = require('./lib/booking')
 
 const { info } = require('./lib/log')
 
 // https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
 const WORKING_DAYS = 220
-const pilots = kommuner.pipe(
+const kommuner = require('./streams/kommuner').pipe(
   // TODO: Dela upp och gör mer läsbart
   map((kommun) => {
     const file = __dirname + `/.cache/pm_bookings_${kommun.id}.json`
@@ -39,7 +40,6 @@ const pilots = kommuner.pipe(
       console.log(`*** ${kommun.name}: no cached bookings`)
       bookings = generateBookingsInKommun(kommun).pipe(
         take(Math.ceil(kommun.packageVolumes?.total / WORKING_DAYS)) // how many bookings do we want?
-        //take(10)
       )
 
       // TODO: Could we do this without converting to an array? Yes. By using fs stream and write json per line
@@ -65,8 +65,14 @@ const pilots = kommuner.pipe(
           toArray()
         )
         .subscribe((arr) => {
-          fs.writeFileSync(file, JSON.stringify(arr))
-          console.log(`*** ${kommun.name}: wrote bookings to cache (${file})`)
+          fs.mkdir(getDirName(file), { recursive: true }, (err) => {
+            if (err) {
+              console.error(err)
+              return
+            }
+            fs.writeFileSync(file, JSON.stringify(arr))
+            console.log(`*** ${kommun.name}: wrote bookings to cache (${file})`)
+          })
         })
     }
     bookings.subscribe((booking) => kommun.handleBooking(booking))
@@ -77,27 +83,27 @@ const pilots = kommuner.pipe(
 
 const engine = {
   virtualTime,
-  cars: pilots.pipe(
+  cars: kommuner.pipe(
     mergeMap((kommun) => kommun.cars),
     shareReplay()
   ),
-  dispatchedBookings: pilots.pipe(
+  dispatchedBookings: kommuner.pipe(
     mergeMap((kommun) => kommun.dispatchedBookings),
     shareReplay()
   ),
-  busStopTimes: pilots.pipe(
+  busStopTimes: kommuner.pipe(
     mergeMap((kommun) =>
       kommun.buses.pipe(
-        mergeMap((bus) => from(bus.queue).pipe(
-          map(({pickup, destination}) => ({pickup, destination}))
-        ))
+        mergeMap((bus) =>
+          from(bus.queue).pipe(
+            map(({ pickup, destination }) => ({ pickup, destination }))
+          )
+        )
       )
     ),
     shareReplay()
   ),
-  busStops: pilots.pipe(
-    mergeMap((kommun) => kommun.busStops.pipe(shareReplay()))
-  ),
+  busStops: stops.pipe(filter((stop) => !stop.station)),
   postombud,
   kommuner,
 }
@@ -118,7 +124,7 @@ engine.bookingUpdates = engine.dispatchedBookings.pipe(
 
 engine.carUpdates = engine.cars.pipe(
   mergeMap((car) => fromEvent(car, 'moved')),
-  tap((car) => console.log(`*** ${car.id}: moved`)),
+  // tap((car) => console.log(`*** ${car.id}: moved`)),
   share()
 )
 

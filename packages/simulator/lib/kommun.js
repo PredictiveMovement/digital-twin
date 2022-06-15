@@ -16,16 +16,16 @@ const {
   filter,
   catchError,
   toArray,
+  first,
   reduce,
   mapTo,
   groupBy,
-  take,
 } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
-const { getBusStops, getStopTimes } = require('../streams/publicTransport')
 const { isInsideCoordinates } = require('./polygon')
+const { stops, stopTimes } = require('../streams/publicTransport')
 
 // expand fleets so that a fleet with marketshare 12% has 12 cars to choose from
 const expandFleets = () => (fleets) =>
@@ -68,33 +68,29 @@ class Kommun extends EventEmitter {
     this.privateCars = new ReplaySubject()
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
-    this.busStops = getBusStops.pipe(
+
+    const tripsInMunicipality = stopTimes.pipe(
       filter(({ position }) =>
         isInsideCoordinates(position, this.geometry.coordinates)
       ),
-      map(({ position, name, departureTime, arrivalTime }) => ({
-        position,
-        name,
-        departureTime,
-        arrivalTime,
-      }))
+      groupBy(({ tripId }) => tripId)
     )
-    this.buses = getStopTimes.pipe(
-      groupBy(({ tripId }) => tripId), // en grupp per buss/tripId
-      mergeMap((group) => {
-        return group.pipe(
-          take(1), // ta det första stoppet för bussen
-          filter(({ position }) =>
-            isInsideCoordinates(position, this.geometry.coordinates)
-          ),
-          map(({ tripId, position }) => {
+
+    this.buses = tripsInMunicipality.pipe(
+      mergeMap((stopTimesPerTrip) => {
+        const newStopTimesPerTrip = stopTimesPerTrip.pipe(shareReplay())
+        return newStopTimesPerTrip.pipe(
+          first(),
+          map((firstStopTime) => {
             return new Bus({
-              position,
-              stops: group,
+              id: firstStopTime.trip.routeId,
+              position: firstStopTime.position,
+              stops: newStopTimesPerTrip,
             })
           })
         )
-      })
+      }),
+      shareReplay()
     )
 
     this.cars = merge(
@@ -105,7 +101,6 @@ class Kommun extends EventEmitter {
 
     this.dispatchedBookings = this.fleets.pipe(
       mergeMap((fleet) => fleet.dispatchedBookings),
-      //      tap(booking => console.log('dispatched', booking)),
       catchError((error) => {
         console.log(error)
         return of(false)

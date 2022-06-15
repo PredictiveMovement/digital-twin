@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import {useSocket} from './hooks/useSocket.js'
+import React, { useState } from 'react'
+import { useSocket } from './hooks/useSocket.js'
 import Map from './Map.js'
 import PlaybackOptions from './components/PlaybackOptions/index.js'
 import Loading from './components/Loading/index.js'
@@ -45,15 +45,17 @@ const App = () => {
     setReset(false)
     setCars((cars) => [
       ...cars.filter((car) => !newCars.some((nc) => nc.id === car.id)),
-      ...newCars.map(({id, heading, bearing, position, fleet, cargo, capacity}) => ({
-        id,
-        heading,
-        bearing,
-        position,
-        fleet,
-        cargo,
-        capacity
-      })),
+      ...newCars.map(
+        ({ id, heading, bearing, position, fleet, cargo, capacity }) => ({
+          id,
+          heading,
+          bearing,
+          position,
+          fleet,
+          cargo,
+          capacity,
+        })
+      ),
     ])
   })
 
@@ -64,19 +66,34 @@ const App = () => {
   const [bookings, setBookings] = React.useState([])
   useSocket('bookings', (newBookings) => {
     setBookings((bookings) => [
-      ...bookings.filter((booking) => !newBookings.some((nb) => nb.id === booking.id)),
-      ...newBookings.map(({name, id, pickup, destination, status, isCommercial, deliveryTime, carId, co2, cost}) => ({
-        id,
-        address: name,
-        status,
-        co2,
-        cost,
-        isCommercial,
-        pickup: [pickup.lon, pickup.lat],
-        destination: [destination.lon, destination.lat],
-        carId,
-        deliveryTime
-      }))
+      ...bookings.filter(
+        (booking) => !newBookings.some((nb) => nb.id === booking.id)
+      ),
+      ...newBookings.map(
+        ({
+          name,
+          id,
+          pickup,
+          destination,
+          status,
+          isCommercial,
+          deliveryTime,
+          carId,
+          co2,
+          cost,
+        }) => ({
+          id,
+          address: name,
+          status,
+          co2,
+          cost,
+          isCommercial,
+          pickup: [pickup.lon, pickup.lat],
+          destination: [destination.lon, destination.lat],
+          carId,
+          deliveryTime,
+        })
+      ),
     ])
   })
 
@@ -84,7 +101,7 @@ const App = () => {
   useSocket('postombud', (newPostombud) => {
     setPostombud((current) => [
       ...current,
-      ...newPostombud.map(({id, operator, position}) => ({
+      ...newPostombud.map(({ id, operator, position }) => ({
         position: [position.lon, position.lat],
         operator,
         id,
@@ -93,10 +110,13 @@ const App = () => {
   })
 
   const [busStops, setBusStops] = React.useState([])
-  useSocket('busStops', ({position, name}) => {
+  useSocket('busStops', ({ position, name }) => {
     setBusStops((current) => [
       ...current,
-      {name, position: [position.lon, position.lat].map(s => parseFloat(s))}
+      {
+        name,
+        position: [position.lon, position.lat].map((s) => parseFloat(s)),
+      },
     ])
   })
 
@@ -105,7 +125,7 @@ const App = () => {
     setKommuner((current) => upsert(current, kommun, 'id'))
   })
 
-  const {socket} = useSocket()
+  const { socket } = useSocket()
 
   const onPause = () => {
     socket.emit('pause')
