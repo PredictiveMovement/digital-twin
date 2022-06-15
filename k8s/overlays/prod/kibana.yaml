@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kibana-ingress
+spec:
+  tls:
+    - hosts:
+        - kibana.predictivemovement.se
+      secretName: rorla-prod-tls
+  rules:
+    - host: kibana.predictivemovement.se
+      http:
+        paths:
+          - backend:
+              serviceName: kibana
+              servicePort: 5601

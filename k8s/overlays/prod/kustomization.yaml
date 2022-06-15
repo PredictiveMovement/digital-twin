@@ -5,8 +5,9 @@ namespace: rorla
 nameSuffix: -prod
 
 patchesStrategicMerge:
-- visualisation.yaml
-- simulator.yaml
+  - visualisation.yaml
+  - simulator.yaml
+  - kibana.yaml
 
 resources:
-- ../../base
+  - ../../base
