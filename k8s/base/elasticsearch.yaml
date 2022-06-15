@@ -67,7 +67,7 @@ spec:
             - name: path.data
               value: /data/elasticsearch
             - name: cluster.name
-              value: predictivemovement
+              value: rorla-stage
             - name: cluster.initial_master_nodes
               value: "elasticsearch-0"
             - name: ES_JAVA_OPTS

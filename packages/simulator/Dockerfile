@@ -4,7 +4,9 @@ WORKDIR /app
 COPY ./package.json .
 COPY ./package-lock.json .
 RUN npm ci
-COPY . . 
+COPY . .
+
+ENV ELASTICSEARCH $ELASTICSEARCH
 
 EXPOSE 4000
 CMD npm start
