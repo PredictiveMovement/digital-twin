@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useCallback} from 'react'
-import {StaticMap} from 'react-map-gl'
+import React, { useState, useEffect, useCallback } from 'react'
+import { StaticMap } from 'react-map-gl'
 import DeckGL, {
   PolygonLayer,
   ScatterplotLayer,
@@ -88,7 +88,7 @@ const Map = ({
     getFillColor: [0, 0, 0, 0], // this isn't actually opaque, it just ends up not rendering any color
     pickable: true,
     onHover: (info, event) => {
-      const {object} = info
+      const { object } = info
       setKommunInfo((current) => {
         if (!!object) return object
         // Seems to happen if you leave the viewport at the same time you leave a polygon
@@ -107,7 +107,7 @@ const Map = ({
     },
   })
 
-  const getColorBasedOnFleet = ({fleet}) => {
+  const getColorBasedOnFleet = ({ fleet }) => {
     switch (fleet.toLowerCase()) {
       case 'brun':
         return [234, 181, 67]
@@ -180,18 +180,18 @@ const Map = ({
   const carLayer = new ScatterplotLayer({
     id: 'car-layer',
     data: cars,
-    opacity: 0.4,
+    //opacity: 0.7,
     stroked: false,
     filled: true,
-    radiusScale: 1,
+    radiusScale: 6,
     radiusUnits: 'pixels',
     getPosition: (c) => {
       return c.position
     },
-    getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
+    //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
     getFillColor: getColorBasedOnFleet,
     pickable: true,
-    onHover: ({object, x, y}) => {
+    onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         ...object,
@@ -200,7 +200,7 @@ const Map = ({
         y,
       })
     },
-    onClick: ({object}) => {
+    onClick: ({ object }) => {
       setMapState({
         ...mapState,
         zoom: 14,
@@ -224,14 +224,14 @@ const Map = ({
     },
     getRadius: () => 4,
     // #fab
-    getFillColor: ({status}) =>
+    getFillColor: ({ status }) =>
       status === 'Delivered'
         ? [170, 255, 187]
         : status === 'Picked up'
-          ? [170, 187, 255, 55]
-          : [255, 170, 187, 55],
+        ? [170, 187, 255, 55]
+        : [255, 170, 187, 55],
     pickable: true,
-    onHover: ({object, x, y}) => {
+    onHover: ({ object, x, y }) => {
       // console.log('booking', object)
       if (!object) return setHoverInfo(null)
       setHoverInfo({
@@ -253,16 +253,17 @@ const Map = ({
     opacity: 0.4,
     stroked: false,
     filled: true,
-    radiusScale: 1,
+    radiusScale: 5,
     radiusUnits: 'pixels',
+    radiusMinPixels: 3,
+    radiusMaxPixels: 5,
     getPosition: (c) => {
       return c.position
     },
-    getRadius: () => 2,
     // #127DBD
     getFillColor: [0, 255, 128, 120],
     pickable: true,
-    onHover: ({object, x, y}) => {
+    onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         type: 'hub',
@@ -276,18 +277,19 @@ const Map = ({
   const busStopLayer = new ScatterplotLayer({
     id: 'busStop-layer',
     data: busStops,
-    opacity: 0.4,
-    stroked: true,
+    opacity: 0.7,
+    stroked: false,
     filled: true,
-    radiusScale: 1,
-    radiusUnits: 'pixels',
+    radiusScale: 3,
+    radiusMinPixels: 2,
+    radiusMaxPixels: 6,
     getPosition: (c) => {
       return c.position
     },
     getRadius: () => 4,
-    getFillColor: [193, 19, 19, 120],
+    getFillColor: [255, 255, 255, 120],
     pickable: true,
-    onHover: ({object, x, y}) => {
+    onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         type: 'busStop',
@@ -372,7 +374,7 @@ const Map = ({
   useEffect(() => {
     if (!cars.length) return
     if (!activeCar) return
-    const car = cars.filter(({id}) => id === activeCar.id)[0]
+    const car = cars.filter(({ id }) => id === activeCar.id)[0]
     setMapState((state) => ({
       ...state,
       zoom: 14,
@@ -387,7 +389,7 @@ const Map = ({
       // initialViewState={mapState.viewport}
       viewState={mapState}
       // onLoad={rotateCamera}
-      onViewStateChange={({viewState}) => {
+      onViewStateChange={({ viewState }) => {
         setMapState(viewState)
         if (activeCar) {
           setActiveCar(null)
