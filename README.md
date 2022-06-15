@@ -23,7 +23,7 @@ This is currently an early version of the simulation. There are quite a few area
 
 This code is released as open source - which means you can create your own copy of this to use within your own fleet if you want to. You can also contribute by sending Pull Requests or issues to us and we will review them and merge them. If you want to receive a closed source license, please contact Christian Landgren at Iteam.
 
-## How to run
+### How to run
 
 We have tried to include as much as possible in the mono-repo, including neccessary data sources. Our goal is that it will be as easy as cloning the repo and run:
   
@@ -39,6 +39,10 @@ open a new terminal / tmux
 Add .env with the mapbox token `REACT_APP_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>` - we want to remove this step by using libremap
 
     npm start
+
+### Branch Strategy
+- `main` — is CI/CD to production cluster
+- `develop` — is where all PRs target and which runs CI/CD to staging cluster
 
 ## License
 
