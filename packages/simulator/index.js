@@ -8,6 +8,12 @@ const regions = require('./streams/regions')
 const kommuner = require('./streams/kommuner')
 const { safeId } = require('./lib/id')
 
+const { save } = require('./lib/elastic')
+const statsCollector = require('./lib/statistics')
+from(
+  [statsCollector.exampleJourney] // TODO: Hook into stream
+).subscribe(statsCollector.collectJourney)
+
 const engine = {
   experiments: [],
   createExperiment: ({ id = safeId() } = {}) => {
