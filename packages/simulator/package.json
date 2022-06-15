@@ -12,6 +12,7 @@
   "author": "Iteam",
   "license": "MIT",
   "dependencies": {
+    "@elastic/elasticsearch": "^7.17.0",
     "chalk": "^3.0.0",
     "csv-parse": "^4.16.0",
     "csv-stream": "^0.2.0",
