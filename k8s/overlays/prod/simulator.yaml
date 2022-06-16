@@ -5,10 +5,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - rorla-engine.predictivemovement.se
+        - rorla.predictivemovement.se
       secretName: rorla-prod-tls
   rules:
-    - host: rorla-engine.predictivemovement.se
+    - host: rorla.predictivemovement.se
       http:
         paths:
           - path: /socket.io/.*
