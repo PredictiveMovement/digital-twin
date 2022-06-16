@@ -72,7 +72,12 @@ class Kommun extends EventEmitter {
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
 
-    const tripsInMunicipality = stopTimes.pipe(groupBy(({ trip }) => trip.id))
+    const tripsInMunicipality = stopTimes.pipe(
+      filter(({ position }) =>
+        isInsideCoordinates(position, this.geometry.coordinates)
+      ),
+      groupBy(({ tripId }) => tripId)
+    )
 
     this.busStartingPoints = tripsInMunicipality.pipe(
       mergeMap((stopTimesPerTrip) =>
