@@ -1,54 +1,23 @@
-const engine = require('../index')
+const engine = require('../../index')
 // const postombud = require("../streams/postombud");
-const { fromEvent, interval, of, from, merge, combineLatest } = require('rxjs')
+const { fromEvent, combineLatest } = require('rxjs')
 const {
   map,
-  toArray,
   mergeMap,
-  mergeAll,
-  tap,
   bufferTime,
-  bufferCount,
   scan,
-  distinct,
   filter,
   startWith,
   throttleTime,
-  windowTime,
 } = require('rxjs/operators')
 
-const { virtualTime } = require('../lib/virtualTime')
-const { busStops } = require('../index')
-
-const cleanBookings = () => (bookings) =>
-  bookings.pipe(
-    map(
-      ({
-        pickup: { position: pickup },
-        destination: { position: destination, name },
-        id,
-        status,
-        isCommercial,
-        co2,
-        cost,
-        deliveryTime,
-        car,
-      }) => ({
-        id,
-        pickup,
-        destination,
-        name,
-        status,
-        isCommercial,
-        deliveryTime,
-        co2,
-        cost,
-        carId: car?.id,
-      })
-    )
-  )
+const { virtualTime } = require('../../lib/virtualTime')
+const parcelDeliveries = require('./parcelDeliveryRoutes')
+const parcelDeliveryEngine =
+  require('../../lib/parcelDeliveriesEngine').getEngine(engine)
 
 function register(io) {
+  const runParcelDeliveries = false
   io.on('connection', function (socket) {
     socket.emit('reset')
 
@@ -68,16 +37,17 @@ function register(io) {
       virtualTime.setTimeMultiplier(speed)
     })
 
-    engine.postombud.pipe(toArray()).subscribe((postombud) => {
-      socket.emit('postombud', postombud)
-    })
+    if (runParcelDeliveries) {
+      parcelDeliveries.register(parcelDeliveryEngine, socket)
+    }
+
     engine.busStops.subscribe((busStops) => socket.emit('busStops', busStops))
 
     engine.kommuner
       .pipe(map(({ id, name, geometry }) => ({ id, name, geometry })))
       .subscribe((kommun) => socket.emit('kommun', kommun))
 
-    merge(engine.dispatchedBookings, engine.busStopTimes)
+    engine.busStopTimes
       .pipe(bufferTime(100, null, 1000))
       .subscribe((bookings) => {
         if (bookings.length) {
@@ -86,13 +56,6 @@ function register(io) {
       })
   })
 
-  engine.bookingUpdates
-    .pipe(cleanBookings(), bufferTime(100, null, 1000))
-    .subscribe((bookings) => {
-      if (bookings.length) {
-        io.emit('bookings', bookings)
-      }
-    })
   engine.carUpdates
     .pipe(
       //distinct(car => car.id),
@@ -125,10 +88,10 @@ function register(io) {
           capacity,
         })
       ),
-      throttleTime(50)
+      bufferTime(100)
     )
     .subscribe((cars) => {
-      if (cars) io.emit('cars', [cars])
+      if (cars.length) io.emit('cars', cars)
     })
 
   setInterval(() => {

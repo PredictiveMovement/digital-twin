@@ -38,7 +38,7 @@ class Bus extends Vehicle {
       booking = this.queue.shift()
     } else {
       booking = this.booking
-      console.log('bus starts trip', booking.car.id)
+      //      console.log('bus starts trip', booking.car.id)
       this.routeHasStarted = true
     }
     if (!booking) {
@@ -56,12 +56,12 @@ class Bus extends Vehicle {
     this.simulate(false) // pause interpolation while we wait
 
     if (waitTime > 0) await this.wait(waitTime)
-    console.log(
-      '*** Navigating bus ',
-      booking.car.id,
-      ' is navigating to ',
-      booking.destination.stopName
-    )
+    // console.log(
+    //   '*** Navigating bus ',
+    //   booking.car.id,
+    //   ' is navigating to ',
+    //   booking.destination.stopName
+    // )
     return this.navigateTo(booking.destination.position) // resume simulation
   }
 

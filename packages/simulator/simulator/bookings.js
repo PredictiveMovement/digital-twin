@@ -1,7 +1,10 @@
 const { from, range, concatAll, expand, shareReplay, of } = require('rxjs')
+const getDirName = require('path').dirname
+const fs = require('fs')
 const {
   map,
   tap,
+  take,
   filter,
   first,
   concatMap,
@@ -24,6 +27,60 @@ const randomPositions = perlin
   // .generatePerlinNoise(1, 1)
   .map((probability, i) => ({ x: xy(i).x * 10, y: xy(i).y * 10, probability }))
   .sort((a, b) => b.probability - a.probability) // sort them so we can just pick how many we want
+
+function getBookings(kommun) {
+  const file = __dirname + `/../.cache/pm_bookings_${kommun.id}.json`
+  let bookings
+  if (fs.existsSync(file)) {
+    console.log(`*** ${kommun.name}: bookings from cache (${file})`)
+    bookings = from(JSON.parse(fs.readFileSync(file))).pipe(
+      map((b) => new Booking(b))
+    )
+  } else {
+    // https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
+    const WORKING_DAYS = 220
+    console.log(`*** ${kommun.name}: no cached bookings`)
+    bookings = generateBookingsInKommun(kommun).pipe(
+      take(Math.ceil(kommun.packageVolumes?.total / WORKING_DAYS)) // how many bookings do we want?
+    )
+
+    // TODO: Could we do this without converting to an array? Yes. By using fs stream and write json per line
+    bookings
+      .pipe(
+        map(
+          ({
+            id,
+            origin,
+            pickup: { position: pickup },
+            finalDestination: { position: finalDestination } = {},
+            destination: { position: destination, name },
+          }) => ({
+            id,
+            origin,
+            pickup: { position: pickup },
+            finalDestination:
+              (finalDestination && { position: finalDestination }) || undefined,
+            destination: { position: destination, name },
+          })
+        ), // remove all unneccessary data such as car and eventemitter etc
+        //tap(console.log),
+        toArray()
+      )
+      .subscribe((arr) => {
+        fs.mkdir(getDirName(file), { recursive: true }, (err) => {
+          if (err) {
+            console.error(err)
+            return
+          }
+          fs.writeFileSync(file, JSON.stringify(arr))
+          console.log(`*** ${kommun.name}: wrote bookings to cache (${file})`)
+        })
+      })
+  }
+
+  bookings.subscribe((booking) => kommun.handleBooking(booking))
+  return kommun
+}
 
 function generateBookingsInKommun(kommun) {
   // console.log(`*** generateBookingsInKommun ${kommun.name}`)
@@ -109,7 +166,7 @@ function generateBookingsInKommun(kommun) {
   return bookings
 }
 
-module.exports = { generateBookingsInKommun }
+module.exports = { getBookings }
 
 // kommuner.pipe(
 //   first(k => k.name.startsWith('Arjeplog')),
