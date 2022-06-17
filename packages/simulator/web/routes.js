@@ -15,6 +15,9 @@ const {
   startWith,
   throttleTime,
   windowTime,
+  first,
+  groupBy,
+  last,
 } = require('rxjs/operators')
 
 const { virtualTime } = require('../lib/virtualTime')
@@ -95,7 +98,13 @@ function register(io) {
     })
   engine.carUpdates
     .pipe(
-      //distinct(car => car.id),
+      windowTime(100), // start a window every x ms
+      mergeMap((win) =>
+        win.pipe(
+          groupBy((car) => car.id), // create a stream for each car in this window
+          mergeMap((cars) => cars.pipe(last())) // take the first car in this window
+        )
+      ),
       map(
         ({
           booking,
@@ -125,10 +134,10 @@ function register(io) {
           capacity,
         })
       ),
-      throttleTime(50)
+      bufferCount(100)
     )
     .subscribe((cars) => {
-      if (cars) io.emit('cars', [cars])
+      if (cars) io.emit('cars', cars)
     })
 
   setInterval(() => {

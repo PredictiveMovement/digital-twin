@@ -10,10 +10,10 @@ const lanstrafiken = {
 }
 
 class Bus extends Vehicle {
-  constructor({ position, stops, ...vehicle }) {
-    super({ position, stops, fleet: lanstrafiken, ...vehicle })
+  constructor({ position, id, stops, ...vehicle }) {
+    super({ position, id, stops, fleet: lanstrafiken, ...vehicle })
     this.routeHasStarted = false
-
+    console.log('init bus id', id)
     stops
       .pipe(
         pairwise(),
