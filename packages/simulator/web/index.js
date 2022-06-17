@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 const { env } = require('process')
-const routes = require('./routes/index')
+const routes = require('./routes')
 const port = env.PORT || 4000
 
 const ok = function (req, res) {

@@ -1,6 +1,6 @@
-const engine = require('../../lib/engines/index')
+const engine = require('../../lib/engines')
 const parcelDeliveryEngine =
-  require('../../lib/engines/parcelDeliveriesEngine').getEngine(engine)
+  require('../../lib/engines/parcelDeliveryEngine').getEngine(engine)
 
 const { fromEvent, combineLatest } = require('rxjs')
 const {
@@ -14,7 +14,7 @@ const {
 } = require('rxjs/operators')
 
 const { virtualTime } = require('../../lib/virtualTime')
-const parcelDeliveries = require('./parcelDeliveryRoutes')
+const parcelDeliveryRoutes = require('./parcelDeliveryRoutes')
 
 function register(io) {
   const runParcelDeliveries = false
@@ -38,7 +38,7 @@ function register(io) {
     })
 
     if (runParcelDeliveries) {
-      parcelDeliveries.register(parcelDeliveryEngine, socket)
+      parcelDeliveryRoutes.register(parcelDeliveryEngine, socket)
     }
 
     engine.busStops.subscribe((busStops) => socket.emit('busStops', busStops))
