@@ -21,7 +21,6 @@ const {
 } = require('rxjs/operators')
 
 const { virtualTime } = require('../lib/virtualTime')
-const { busStops } = require('../index')
 
 const cleanBookings = () => (bookings) =>
   bookings.pipe(
@@ -80,7 +79,7 @@ function register(io) {
       .pipe(map(({ id, name, geometry }) => ({ id, name, geometry })))
       .subscribe((kommun) => socket.emit('kommun', kommun))
 
-    merge(engine.dispatchedBookings, engine.busStopTimes)
+    engine.dispatchedBookings
       .pipe(bufferTime(100, null, 1000))
       .subscribe((bookings) => {
         if (bookings.length) {
@@ -134,10 +133,10 @@ function register(io) {
           capacity,
         })
       ),
-      bufferCount(100)
+      bufferCount(10)
     )
     .subscribe((cars) => {
-      if (cars) io.emit('cars', cars)
+      if (cars.length) io.emit('cars', cars)
     })
 
   setInterval(() => {
