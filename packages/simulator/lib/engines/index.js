@@ -1,11 +1,11 @@
 const { shareReplay, from, fromEvent } = require('rxjs')
 const { map, mergeMap, filter, share } = require('rxjs/operators')
 
-const { virtualTime } = require('./lib/virtualTime')
+const { virtualTime } = require('../virtualTime')
 
-const { stops } = require('./streams/publicTransport')
+const { stops } = require('../../streams/publicTransport')
 
-const kommuner = require('./streams/kommuner')
+const kommuner = require('../../streams/kommuner')
 
 const engine = {
   virtualTime,

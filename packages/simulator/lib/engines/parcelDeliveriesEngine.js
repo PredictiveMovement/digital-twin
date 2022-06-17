@@ -1,6 +1,6 @@
-const postombud = require('../streams/postombud')
+const postombud = require('../../streams/postombud')
 const { shareReplay, mergeMap, share, map } = require('rxjs/operators')
-const { getBookings } = require('./booking')
+const { getBookings } = require('../booking')
 function getEngine(engine) {
   engine.kommuner.pipe(map(getBookings), shareReplay())
 

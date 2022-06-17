@@ -1,5 +1,7 @@
-const engine = require('../../index')
-// const postombud = require("../streams/postombud");
+const engine = require('../../lib/engines/index')
+const parcelDeliveryEngine =
+  require('../../lib/engines/parcelDeliveriesEngine').getEngine(engine)
+
 const { fromEvent, combineLatest } = require('rxjs')
 const {
   map,
@@ -13,8 +15,6 @@ const {
 
 const { virtualTime } = require('../../lib/virtualTime')
 const parcelDeliveries = require('./parcelDeliveryRoutes')
-const parcelDeliveryEngine =
-  require('../../lib/parcelDeliveriesEngine').getEngine(engine)
 
 function register(io) {
   const runParcelDeliveries = false
