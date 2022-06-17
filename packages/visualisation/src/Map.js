@@ -120,7 +120,7 @@ const Map = ({
       case 'röd':
         return [235, 77, 75]
       case 'länstrafiken i norrbotten':
-        return [232, 67, 147, 120]
+        return [255, 48, 48, 120]
       case 'drönarleverans ab':
         return [119, 155, 172]
       case 'privat':
