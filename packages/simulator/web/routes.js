@@ -101,7 +101,7 @@ function register(io) {
       mergeMap((win) =>
         win.pipe(
           groupBy((car) => car.id), // create a stream for each car in this window
-          mergeMap((cars) => cars.pipe(last())) // take the first car in this window
+          mergeMap((cars) => cars.pipe(last())) // take the last update in this window
         )
       ),
       map(
