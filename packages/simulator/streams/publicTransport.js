@@ -29,7 +29,7 @@ const {
 } = require('./gtfs.js')
 
 // stop_times.trip_id -> trips.service_id -> calendar_dates.service_id
-const todaysDate = moment(virtualTime.time()).format('YYYYMMDD')
+const todaysDate = moment().format('YYYYMMDD')
 const todaysServiceIds = serviceDatesMap[todaysDate].map(
   ({ serviceId }) => serviceId
 )

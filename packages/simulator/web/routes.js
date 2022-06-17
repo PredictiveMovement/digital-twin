@@ -50,7 +50,37 @@ const cleanBookings = () => (bookings) =>
     )
   )
 
+const cleanCars = ({
+  booking,
+  position: { lon, lat },
+  id,
+  altitude,
+  heading,
+  speed,
+  bearing,
+  status,
+  fleet,
+  cargo,
+  capacity,
+  queue,
+  co2,
+}) => ({
+  id,
+  heading: [heading.lon, heading.lat], // contains route to plot or interpolate on client side.
+  speed,
+  bearing,
+  position: [lon, lat, altitude || 0],
+  status,
+  fleet: fleet?.name || 'Privat',
+  co2,
+  cargo: cargo.length + (booking ? 1 : 0),
+  queue: queue.length + (booking ? 1 : 0),
+  capacity,
+})
+
 function register(io) {
+  const experiment = engine.createExperiment() // move this to a start event
+
   io.on('connection', function (socket) {
     socket.emit('reset')
 
@@ -70,16 +100,18 @@ function register(io) {
       virtualTime.setTimeMultiplier(speed)
     })
 
-    engine.postombud.pipe(toArray()).subscribe((postombud) => {
+    experiment.postombud.pipe(toArray()).subscribe((postombud) => {
       socket.emit('postombud', postombud)
     })
-    engine.busStops.subscribe((busStops) => socket.emit('busStops', busStops))
+    experiment.busStops.subscribe((busStops) =>
+      socket.emit('busStops', busStops)
+    )
 
-    engine.kommuner
+    experiment.kommuner
       .pipe(map(({ id, name, geometry }) => ({ id, name, geometry })))
       .subscribe((kommun) => socket.emit('kommun', kommun))
 
-    engine.dispatchedBookings
+    experiment.dispatchedBookings
       .pipe(bufferTime(100, null, 1000))
       .subscribe((bookings) => {
         if (bookings.length) {
@@ -88,14 +120,14 @@ function register(io) {
       })
   })
 
-  engine.bookingUpdates
+  experiment.bookingUpdates
     .pipe(cleanBookings(), bufferTime(100, null, 1000))
     .subscribe((bookings) => {
       if (bookings.length) {
         io.emit('bookings', bookings)
       }
     })
-  engine.carUpdates
+  experiment.carUpdates
     .pipe(
       windowTime(100), // start a window every x ms
       mergeMap((win) =>
@@ -104,46 +136,17 @@ function register(io) {
           mergeMap((cars) => cars.pipe(last())) // take the last update in this window
         )
       ),
-      map(
-        ({
-          booking,
-          position: { lon, lat },
-          id,
-          altitude,
-          heading,
-          speed,
-          bearing,
-          status,
-          fleet,
-          cargo,
-          capacity,
-          queue,
-          co2,
-        }) => ({
-          id,
-          heading: [heading.lon, heading.lat], // contains route to plot or interpolate on client side.
-          speed,
-          bearing,
-          position: [lon, lat, altitude || 0],
-          status,
-          fleet: fleet?.name || 'Privat',
-          co2,
-          cargo: cargo.length + (booking ? 1 : 0),
-          queue: queue.length + (booking ? 1 : 0),
-          capacity,
-        })
-      ),
-      bufferCount(10)
+      map(cleanCars)
     )
-    .subscribe((cars) => {
-      if (cars.length) io.emit('cars', cars)
+    .subscribe((car) => {
+      if (car) io.emit('cars', [car])
     })
 
   setInterval(() => {
-    io.emit('time', virtualTime.time())
+    io.emit('time', experiment.virtualTime.time())
   }, 1000)
 
-  engine.kommuner
+  experiment.kommuner
     .pipe(
       mergeMap(({ id, dispatchedBookings, name, cars }) => {
         const totalBookings = dispatchedBookings.pipe(
