@@ -51,11 +51,10 @@ class Bus extends Vehicle {
     this.cargo.push(booking)
 
     this.emit('cargo', this)
-    const departure = moment(booking.pickup.departureTime, 'hh:mm:ss')
-    const waitTime = departure.subtract(moment(this.time())).valueOf()
+    const departure = moment(booking.pickup.departureTime, 'hh:mm:ss').valueOf()
     this.simulate(false) // pause interpolation while we wait
 
-    if (waitTime > 0) await this.wait(waitTime)
+    if (waitTime > 0) await virtualTime.waitUntil(departure)
     console.log(
       '*** Navigating bus ',
       booking.car.id,
@@ -63,14 +62,6 @@ class Bus extends Vehicle {
       booking.destination.stopName
     )
     return this.navigateTo(booking.destination.position) // resume simulation
-  }
-
-  // Wait using the virtual time.
-  wait(time) {
-    //console.log(
-    //  `*** bus #${this.id} waits ${Math.round(time / 1000 / 60)} min...`
-    //)
-    return virtualTime.setTimeout(time)
   }
 }
 

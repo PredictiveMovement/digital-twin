@@ -26,14 +26,14 @@ class VirtualTime extends EventEmitter {
     this.emit('pause')
   }
 
-  async setTimeout(time) {
+  async waitUntil(time, checkInterval = 100) {
     if (this.timeMultiplier === 0) return // don't wait when time is stopped
     if (this.timeMultiplier === Infinity) return // return directly if time is set to infinity
     const waitUntil = this.time() + time
     return await new Promise((resolve) => {
       return setInterval(
         () => (this.time() >= waitUntil ? resolve() : null),
-        100
+        checkInterval
       )
     })
   }
