@@ -255,7 +255,7 @@ const Map = ({
     filled: true,
     radiusScale: 5,
     radiusUnits: 'pixels',
-    radiusMinPixels: 3,
+    radiusMinPixels: 2,
     radiusMaxPixels: 5,
     getPosition: (c) => {
       return c.position

@@ -29,12 +29,11 @@ class VirtualTime extends EventEmitter {
   async waitUntil(time, checkInterval = 100) {
     if (this.timeMultiplier === 0) return // don't wait when time is stopped
     if (this.timeMultiplier === Infinity) return // return directly if time is set to infinity
-    const waitUntil = this.time() + time
+    const waitUntil = time
     return await new Promise((resolve) => {
-      return setInterval(
-        () => (this.time() >= waitUntil ? resolve() : null),
-        checkInterval
-      )
+      return setInterval(() => {
+        if (this.time() >= waitUntil) return resolve()
+      }, checkInterval)
     })
   }
 
