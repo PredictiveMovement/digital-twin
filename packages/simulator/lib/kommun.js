@@ -1,4 +1,3 @@
-const EventEmitter = require('events')
 const {
   from,
   shareReplay,
@@ -23,9 +22,6 @@ const {
 } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
-const Bus = require('./vehicles/bus')
-const { isInsideCoordinates } = require('./polygon')
-const { stops, stopTimes } = require('../streams/publicTransport')
 
 // expand fleets so that a fleet with marketshare 12% has 12 cars to choose from
 const expandFleets = () => (fleets) =>
@@ -40,7 +36,7 @@ const pickRandom = () => (stream) =>
     map((arr) => arr[Math.floor(arr.length * Math.random())])
   )
 
-class Kommun extends EventEmitter {
+class Kommun {
   constructor({
     geometry,
     name,
@@ -53,7 +49,6 @@ class Kommun extends EventEmitter {
     squares,
     fleets,
   }) {
-    super()
     this.squares = squares
     this.geometry = geometry
     this.name = name
@@ -69,33 +64,8 @@ class Kommun extends EventEmitter {
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
 
-    const tripsInMunicipality = stopTimes.pipe(
-      filter(({ position }) =>
-        isInsideCoordinates(position, this.geometry.coordinates)
-      ),
-      groupBy(({ tripId }) => tripId)
-    )
-
-    this.buses = tripsInMunicipality.pipe(
-      mergeMap((stopTimesPerTrip) => {
-        const newStopTimesPerTrip = stopTimesPerTrip.pipe(shareReplay())
-        return newStopTimesPerTrip.pipe(
-          first(),
-          map((firstStopTime) => {
-            return new Bus({
-              id: firstStopTime.trip.routeId,
-              position: firstStopTime.position,
-              stops: newStopTimesPerTrip,
-            })
-          })
-        )
-      }),
-      shareReplay()
-    )
-
     this.cars = merge(
       this.privateCars,
-      this.buses,
       this.fleets.pipe(mergeMap((fleet) => fleet.cars))
     ).pipe(shareReplay())
 

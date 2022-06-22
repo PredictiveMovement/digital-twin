@@ -15,10 +15,12 @@ const {
   startWith,
   throttleTime,
   windowTime,
+  first,
+  groupBy,
+  last,
 } = require('rxjs/operators')
 
 const { virtualTime } = require('../lib/virtualTime')
-const { busStops } = require('../index')
 
 const cleanBookings = () => (bookings) =>
   bookings.pipe(
@@ -77,7 +79,7 @@ function register(io) {
       .pipe(map(({ id, name, geometry }) => ({ id, name, geometry })))
       .subscribe((kommun) => socket.emit('kommun', kommun))
 
-    merge(engine.dispatchedBookings, engine.busStopTimes)
+    engine.dispatchedBookings
       .pipe(bufferTime(100, null, 1000))
       .subscribe((bookings) => {
         if (bookings.length) {
@@ -95,7 +97,13 @@ function register(io) {
     })
   engine.carUpdates
     .pipe(
-      //distinct(car => car.id),
+      windowTime(100), // start a window every x ms
+      mergeMap((win) =>
+        win.pipe(
+          groupBy((car) => car.id), // create a stream for each car in this window
+          mergeMap((cars) => cars.pipe(last())) // take the last update in this window
+        )
+      ),
       map(
         ({
           booking,
@@ -125,10 +133,10 @@ function register(io) {
           capacity,
         })
       ),
-      throttleTime(50)
+      bufferCount(10)
     )
     .subscribe((cars) => {
-      if (cars) io.emit('cars', [cars])
+      if (cars.length) io.emit('cars', cars)
     })
 
   setInterval(() => {
