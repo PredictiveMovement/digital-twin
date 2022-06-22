@@ -22,7 +22,7 @@ function nearest(position) {
 
   return osrm.nearest(position).then((data) => {
     // if we randomized in the middle of nowhere, or a street with no name, try again?
-    if (!data.waypoints || !data.waypoints.length) return null
+    if (!data?.waypoints?.length) return null
 
     const nearest = data.waypoints[0]
     const [lon, lat] = nearest.location

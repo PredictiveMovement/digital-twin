@@ -40,7 +40,7 @@ spec:
   tls:
     - hosts:
         - rorla-stage.predictivemovement.se
-      secretName: visualisation-stage-tls
+      secretName: rorla-stage-tls
   rules:
     - host: rorla-stage.predictivemovement.se
       http:
