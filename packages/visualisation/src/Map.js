@@ -17,6 +17,7 @@ import Button from './components/Button'
 
 import mapboxgl from 'mapbox-gl'
 import HoverInfoBox from './components/HoverInfoBox'
+import SideMenu from './components/SideMenu'
 // @ts-ignore
 mapboxgl.workerClass =
   // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -411,6 +412,7 @@ const Map = ({
         showQueuedBookings && arcLayerQueuedBookings,
       ]}
     >
+      <SideMenu />
       <div
         style={{
           right: '40px',

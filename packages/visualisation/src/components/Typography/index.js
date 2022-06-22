@@ -3,9 +3,10 @@ import styled from 'styled-components'
 const Paragraph = styled.p`
   margin: 0;
   font-weight: ${(props) => (props.thin ? 300 : 400)};
-  font-size: 12pt;
+  /* font-size: 12pt; */
+  font-size: 14px;
   font-family: 'Roboto', sans-serif;
-  color: white;
+  color: ${(props) => (props.black ? 'black' : 'white')};
 `
 
 const H4 = styled.h4`
@@ -13,4 +14,12 @@ const H4 = styled.h4`
   margin: 0;
 `
 
-export { Paragraph, H4 }
+const H1 = styled.h1`
+  font-size: 20px;
+`
+
+const H2 = styled.h2`
+  font-size: 18px;
+`
+
+export { Paragraph, H4, H1, H2 }
