@@ -1,7 +1,7 @@
-const { shareReplay, share, merge, fromEvent, of } = require('rxjs')
-const { mergeMap, filter, map } = require('rxjs/operators')
+const { share, merge, fromEvent, of } = require('rxjs')
+const { mergeMap } = require('rxjs/operators')
 
-const { virtualTime, VirtualTime } = require('./lib/virtualTime')
+const { virtualTime } = require('./lib/virtualTime')
 
 const postombud = require('./streams/postombud')
 const regions = require('./streams/regions')
