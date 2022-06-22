@@ -38,6 +38,10 @@ const tripMapper = ({
   headsign,
   routeId,
 })
+const routeNamesMapper = ({ route_id: id, route_short_name: lineNumber }) => ({
+  id,
+  lineNumber,
+})
 
 const serviceDatesMapper = ({
   service_id: serviceId,
@@ -145,5 +149,6 @@ module.exports = {
   trips,
   serviceDates,
   serviceDatesMap: getServicesMap('calendar_dates', serviceDatesMapper),
+  routeNamesMap: getMap('routes', routeNamesMapper),
   tripsMap: getMap('trips', tripMapper),
 }
