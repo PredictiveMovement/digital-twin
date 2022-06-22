@@ -1,21 +1,16 @@
 const engine = require('../index')
 // const postombud = require("../streams/postombud");
-const { fromEvent, interval, of, from, merge, combineLatest } = require('rxjs')
+const { fromEvent, combineLatest } = require('rxjs')
 const {
   map,
   toArray,
   mergeMap,
-  mergeAll,
-  tap,
   bufferTime,
-  bufferCount,
   scan,
-  distinct,
   filter,
   startWith,
   throttleTime,
   windowTime,
-  first,
   groupBy,
   last,
 } = require('rxjs/operators')
