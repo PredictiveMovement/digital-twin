@@ -26,6 +26,8 @@ const { info } = require('./lib/log')
 
 // https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
 const WORKING_DAYS = 220
+
+const regions = require('./streams/regions')
 const kommuner = require('./streams/kommuner').pipe(
   // TODO: Dela upp och gör mer läsbart
   map((kommun) => {
@@ -91,19 +93,12 @@ const engine = {
     mergeMap((kommun) => kommun.dispatchedBookings),
     shareReplay()
   ),
-  busStopTimes: kommuner.pipe(
-    mergeMap((kommun) =>
-      kommun.buses.pipe(
-        mergeMap((bus) =>
-          from(bus.queue).pipe(
-            map(({ pickup, destination }) => ({ pickup, destination }))
-          )
-        )
-      )
-    ),
+  buses: regions.pipe(mergeMap((region) => region.buses)),
+  busStops: regions.pipe(
+    mergeMap((region) => region.stops),
+    filter((stop) => !stop.station),
     shareReplay()
   ),
-  busStops: stops.pipe(filter((stop) => !stop.station)),
   postombud,
   kommuner,
 }
@@ -122,7 +117,7 @@ engine.bookingUpdates = engine.dispatchedBookings.pipe(
   share()
 )
 
-engine.carUpdates = engine.cars.pipe(
+engine.carUpdates = merge(engine.cars, engine.buses).pipe(
   mergeMap((car) => fromEvent(car, 'moved')),
   // tap((car) => console.log(`*** ${car.id}: moved`)),
   share()
