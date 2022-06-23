@@ -38,6 +38,10 @@ const tripMapper = ({
   headsign,
   routeId,
 })
+const routeNamesMapper = ({ route_id: id, route_short_name: lineNumber }) => ({
+  id,
+  lineNumber,
+})
 
 const serviceDatesMapper = ({
   service_id: serviceId,
@@ -131,10 +135,11 @@ const busStops = gtfsStream('stop_times').pipe(
   map(
     ({
       stop_id: stopId,
+      stop_headsign: finalStop,
       trip_id: tripId,
       arrival_time: arrivalTime,
       departure_time: departureTime,
-    }) => ({ stopId, tripId, arrivalTime, departureTime })
+    }) => ({ stopId, tripId, arrivalTime, departureTime, finalStop })
   ),
   shareReplay()
 )
@@ -145,5 +150,6 @@ module.exports = {
   trips,
   serviceDates,
   serviceDatesMap: getServicesMap('calendar_dates', serviceDatesMapper),
+  routeNamesMap: getMap('routes', routeNamesMapper),
   tripsMap: getMap('trips', tripMapper),
 }
