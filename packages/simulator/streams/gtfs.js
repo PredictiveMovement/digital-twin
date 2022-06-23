@@ -135,10 +135,11 @@ const busStops = gtfsStream('stop_times').pipe(
   map(
     ({
       stop_id: stopId,
+      stop_headsign: finalStop,
       trip_id: tripId,
       arrival_time: arrivalTime,
       departure_time: departureTime,
-    }) => ({ stopId, tripId, arrivalTime, departureTime })
+    }) => ({ stopId, tripId, arrivalTime, departureTime, finalStop })
   ),
   shareReplay()
 )
