@@ -13,18 +13,25 @@ const Arrow = styled.button`
   cursor: pointer;
   width: 100%;
   padding: 0;
+  gap: 1rem;
+`
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `
 
 const DropDown = ({ title, children }) => {
   const [open, setOpen] = useState(false)
   return (
-    <>
+    <Wrapper>
       <Arrow onClick={() => setOpen((current) => !current)}>
         <H2>{title}</H2>
         {open ? <CloseArrow /> : <OpenArrow />}
       </Arrow>
       {open && children}
-    </>
+    </Wrapper>
   )
 }
 

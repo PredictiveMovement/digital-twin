@@ -1,4 +1,4 @@
-const History = () => {
+const HistoryIcon = () => {
   return (
     <svg
       width="26"
@@ -15,4 +15,4 @@ const History = () => {
   )
 }
 
-export default History
+export default HistoryIcon

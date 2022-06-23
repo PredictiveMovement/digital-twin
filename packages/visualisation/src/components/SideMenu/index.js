@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import PmLogo from '../../icons/svg/PmLogo'
-import History from '../../icons/svg/History'
-import Guide from '../../icons/svg/Guide'
+import HistoryIcon from '../../icons/svg/HistoryIcon'
+import GuideIcon from '../../icons/svg/GuideIcon'
 import MenuArrow from '../../icons/svg/MenuArrow'
-import { Paragraph, H1 } from '../Typography'
-import DropDown from '../DropDown'
+import GuideSection from '../GuideSection'
+import HistorySection from '../HistorySection'
 
 const Menu = styled.nav`
   background-color: #10c57b;
@@ -31,18 +31,6 @@ const MenuItem = styled.li`
   z-index: 4;
 `
 
-const MenuContainer = styled.div`
-  width: 300px;
-  background-color: white;
-  position: absolute;
-  bottom: 0;
-  left: 3.8rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  padding-top: 2.5rem;
-  top: 0;
-`
-
 const ActiveMenu = styled.div`
   margin-left: 1.2rem;
   z-index: 4;
@@ -63,7 +51,7 @@ const SideMenu = () => {
               setOpen((current) => (current === 'guide' ? 'map' : 'guide'))
             }
           >
-            <Guide />
+            <GuideIcon />
             {open === 'guide' && (
               <ActiveMenu>
                 <MenuArrow />
@@ -75,7 +63,7 @@ const SideMenu = () => {
               setOpen((current) => (current === 'history' ? 'map' : 'history'))
             }
           >
-            <History />
+            <HistoryIcon />
             {open === 'history' && (
               <ActiveMenu>
                 <MenuArrow />
@@ -84,34 +72,8 @@ const SideMenu = () => {
           </MenuItem>
         </List>
       </Menu>
-      {open === 'guide' && (
-        //To do: break out to own component?
-        <MenuContainer>
-          <H1>Guide</H1>
-          <Paragraph black>
-            I den här guiden hittar du information om Predictive Movements
-            digitala tvilling.
-          </Paragraph>
-
-          <DropDown title="Färgkoder">
-            <>
-              <p>Färginfo</p>
-            </>
-          </DropDown>
-          <DropDown title="Navigering">
-            <>
-              <p>Navigering</p>
-            </>
-          </DropDown>
-        </MenuContainer>
-      )}
-
-      {open === 'history' && (
-        //To do: break out to own component?
-        <MenuContainer>
-          <p>Time</p>
-        </MenuContainer>
-      )}
+      {open === 'guide' && <GuideSection />}
+      {open === 'history' && <HistorySection />}
     </>
   )
 }

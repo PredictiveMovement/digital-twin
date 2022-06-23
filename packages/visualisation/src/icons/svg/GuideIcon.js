@@ -1,4 +1,4 @@
-const Guide = () => {
+const GuideIcon = () => {
   return (
     <svg
       width="26"
@@ -33,4 +33,4 @@ const Guide = () => {
   )
 }
 
-export default Guide
+export default GuideIcon

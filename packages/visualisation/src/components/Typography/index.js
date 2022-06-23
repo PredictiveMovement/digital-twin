@@ -16,10 +16,12 @@ const H4 = styled.h4`
 
 const H1 = styled.h1`
   font-size: 20px;
+  margin: 0;
 `
 
 const H2 = styled.h2`
   font-size: 18px;
+  margin: 0;
 `
 
 export { Paragraph, H4, H1, H2 }
