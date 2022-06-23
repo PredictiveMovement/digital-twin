@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import styled from 'styled-components'
 import PmLogo from '../../icons/svg/PmLogo'
 import HistoryIcon from '../../icons/svg/HistoryIcon'
@@ -6,6 +6,7 @@ import GuideIcon from '../../icons/svg/GuideIcon'
 import MenuArrow from '../../icons/svg/MenuArrow'
 import GuideSection from '../GuideSection'
 import HistorySection from '../HistorySection'
+import useOutsideClick from '../../hooks/useClickOutside'
 
 const Menu = styled.nav`
   background-color: #10c57b;
@@ -37,10 +38,16 @@ const ActiveMenu = styled.div`
 `
 
 const SideMenu = () => {
+  const ref = useRef()
+
   const [open, setOpen] = useState('map')
 
+  useOutsideClick(ref, () => {
+    setOpen('map')
+  })
+
   return (
-    <>
+    <div ref={ref}>
       <Menu>
         <List>
           <MenuItem onClick={() => setOpen('map')}>
@@ -74,7 +81,7 @@ const SideMenu = () => {
       </Menu>
       {open === 'guide' && <GuideSection />}
       {open === 'history' && <HistorySection />}
-    </>
+    </div>
   )
 }
 

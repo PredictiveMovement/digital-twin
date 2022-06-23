@@ -1,4 +1,6 @@
 import styled from 'styled-components'
+import { H1, Paragraph } from '../Typography'
+import DropDown from '../DropDown'
 
 const MenuContainer = styled.div`
   display: flex;
@@ -17,7 +19,18 @@ const MenuContainer = styled.div`
 const HistorySection = () => {
   return (
     <MenuContainer>
-      <p>Time</p>
+      <H1>Experiment</H1>
+      <DropDown title="Pågående expriment">
+        <DropDown small title="Experimentpremisser">
+          <Paragraph black> Premisser</Paragraph>
+        </DropDown>
+        <DropDown small title="Resultat">
+          <Paragraph black>Här kan du se resultatet av experimentet.</Paragraph>
+        </DropDown>
+      </DropDown>
+      <DropDown title="Sparade experiment">
+        <Paragraph black>Sparat</Paragraph>
+      </DropDown>
     </MenuContainer>
   )
 }

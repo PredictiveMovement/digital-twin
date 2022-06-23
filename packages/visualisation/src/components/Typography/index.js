@@ -24,4 +24,9 @@ const H2 = styled.h2`
   margin: 0;
 `
 
-export { Paragraph, H4, H1, H2 }
+const H3 = styled.h3`
+  font-size: 14px;
+  margin: 0;
+`
+
+export { Paragraph, H4, H1, H2, H3 }
