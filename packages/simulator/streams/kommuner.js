@@ -1,8 +1,8 @@
 /**
  * TODO: Describe the stream that this file exports and what its data means
  */
-const { from, shareReplay, withLatestFrom } = require('rxjs')
-const { map, tap, filter, reduce } = require('rxjs/operators')
+const { from, shareReplay, withLatestFrom, merge } = require('rxjs')
+const { map, tap, filter, reduce, finalize, share } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
 const population = require('./population')
@@ -10,6 +10,8 @@ const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
 const inside = require('point-in-polygon')
 const commercialAreas = from(require('../data/scb_companyAreas.json').features)
+const { generateBookingsInKommun } = require('../simulator/bookings')
+const bookingsCache = require('../streams/cacheBookingStream')
 
 function getPopulationSquares({ geometry: { coordinates } }) {
   return population.pipe(
@@ -68,6 +70,19 @@ function read() {
           commercialAreas: getCommercialAreas(kod),
         })
     ),
+    // ),
+    // map((kommun) => {
+    //   kommun.bookings = merge(
+    //     bookingsCache.read(__dirname + `/.cache/pm_bookings_${kommun.id}.json`),
+    //     generateBookingsInKommun(kommun),
+    //     share()
+    //   )
+    //   kommun.bookings.pipe(
+    //     bookingsCache.write(__dirname + `/.cache/pm_bookings_${kommun.id}.json`)
+    //   )
+    //   return kommun
+    // }),
+
     shareReplay()
   )
 }

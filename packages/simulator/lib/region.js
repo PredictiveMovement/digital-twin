@@ -20,6 +20,7 @@ const {
   mapTo,
   groupBy,
 } = require('rxjs/operators')
+const { tripsMap } = require('../streams/gtfs')
 const Bus = require('./vehicles/bus')
 
 class Region {
@@ -31,14 +32,16 @@ class Region {
     this.stops = stops
 
     this.buses = stopTimes.pipe(
-      groupBy(({ trip }) => trip?.routeId),
+      groupBy(({ tripId }) => tripId),
       mergeMap((stopTimesPerRoute) => {
-        const stops = stopTimesPerRoute.pipe(share())
-        return stopTimesPerRoute.pipe(
+        const stops = stopTimesPerRoute.pipe(shareReplay())
+        return stops.pipe(
           first(),
           map((firstStopTime) => {
             return new Bus({
-              id: firstStopTime.trip.routeId,
+              id: firstStopTime.tripId,
+              finalStop: firstStopTime.finalStop,
+              lineNumber: firstStopTime.lineNumber,
               position: firstStopTime.position,
               stops,
             })

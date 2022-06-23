@@ -1,6 +1,6 @@
 const Booking = require('../booking')
 const Vehicle = require('./vehicle')
-const { take, pairwise, map } = require('rxjs/operators')
+const { take, pairwise, map, toArray } = require('rxjs/operators')
 const moment = require('moment')
 const { virtualTime } = require('../virtualTime')
 
@@ -10,10 +10,19 @@ const lanstrafiken = {
 }
 
 class Bus extends Vehicle {
-  constructor({ position, id, stops, ...vehicle }) {
-    super({ position, id, stops, fleet: lanstrafiken, ...vehicle })
-    this.routeHasStarted = false
-    console.log('init bus id', id)
+  constructor({ position, lineNumber, id, stops, finalStop, ...vehicle }) {
+    super({
+      position,
+      id,
+      stops,
+      fleet: lanstrafiken,
+      ...vehicle,
+    })
+    this.lineNumber = lineNumber
+    this.finalStop = finalStop
+    // stops
+    //   .pipe(toArray())
+    //   .subscribe((stops) => console.log('init bus id', id, 'stops', stops))
     stops
       .pipe(
         pairwise(),
@@ -33,44 +42,29 @@ class Bus extends Vehicle {
   // This is called when the bus arrives at each stop. Let's check if the departure time
   // is in the future. If it is, we wait until the departure time.
   async pickup() {
-    let booking
-    if (this.routeHasStarted) {
-      booking = this.queue.shift()
-    } else {
-      booking = this.booking
-      console.log('bus starts trip', booking.car.id)
-      this.routeHasStarted = true
-    }
-    if (!booking) {
+    this.booking = this.queue.shift()
+    if (!this.booking) {
       this.simulate(false)
       return
     }
 
-    //   console.log(this.queue.length)
-    booking.pickedUp(this.position)
-    this.cargo.push(booking)
+    this.booking.pickedUp(this.position)
+    this.cargo.push(this.booking)
 
     this.emit('cargo', this)
-    const departure = moment(booking.pickup.departureTime, 'hh:mm:ss')
-    const waitTime = departure.subtract(moment(this.time())).valueOf()
+    const departure = moment(
+      this.booking.pickup.departureTime,
+      'hh:mm:ss'
+    ).valueOf()
     this.simulate(false) // pause interpolation while we wait
+    const waitingtime = moment(departure).diff(moment(virtualTime.time()))
 
-    if (waitTime > 0) await this.wait(waitTime)
-    console.log(
-      '*** Navigating bus ',
-      booking.car.id,
-      ' is navigating to ',
-      booking.destination.stopName
-    )
-    return this.navigateTo(booking.destination.position) // resume simulation
-  }
-
-  // Wait using the virtual time.
-  wait(time) {
-    //console.log(
-    //  `*** bus #${this.id} waits ${Math.round(time / 1000 / 60)} min...`
-    //)
-    return virtualTime.setTimeout(time)
+    if (waitingtime > 0) await virtualTime.waitUntil(departure)
+    if (!this.booking) {
+      this.simulate(false)
+      return
+    }
+    return this.navigateTo(this.booking.destination.position) // resume simulation
   }
 }
 
