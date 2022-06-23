@@ -40,6 +40,7 @@ class Region {
           map((firstStopTime) => {
             return new Bus({
               id: firstStopTime.tripId,
+              finalStop: firstStopTime.finalStop,
               lineNumber: firstStopTime.lineNumber,
               position: firstStopTime.position,
               stops,
