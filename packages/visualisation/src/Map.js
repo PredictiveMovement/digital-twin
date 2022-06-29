@@ -9,6 +9,7 @@ import DeckGL, {
 } from 'deck.gl'
 //import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
+import { ParagraphLarge } from './components/Typography'
 
 //import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
@@ -413,16 +414,6 @@ const Map = ({
     >
       <div
         style={{
-          right: '40px',
-          top: '20px',
-          position: 'absolute',
-          color: 'rgba(255,255,255,0.5)',
-        }}
-      >
-        {new Date(time).toLocaleTimeString()}
-      </div>
-      <div
-        style={{
           bottom: '150px',
           right: '200px',
           position: 'absolute',
@@ -458,7 +449,24 @@ const Map = ({
       />
       {hoverInfo && mapState.zoom > 8 && <HoverInfoBox data={hoverInfo} />}
 
-      {kommunInfo && <KommunStatisticsBox {...kommunInfo} />}
+      {kommunInfo && (
+        <>
+          <div
+            style={{
+              right: '10rem',
+              top: '30px',
+              position: 'absolute',
+            }}
+          >
+            <ParagraphLarge>
+              Just nu är klockan
+              <b> {new Date(time).toLocaleTimeString()} </b> <br />i
+              <b> {kommunInfo.name} </b>
+            </ParagraphLarge>
+          </div>
+          <KommunStatisticsBox {...kommunInfo} />
+        </>
+      )}
     </DeckGL>
   )
 }
