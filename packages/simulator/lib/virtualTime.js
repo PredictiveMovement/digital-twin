@@ -3,7 +3,7 @@ const EventEmitter = require('events')
 const moment = require('moment')
 
 class VirtualTime extends EventEmitter {
-  constructor(timeMultiplier = 60, startHour = 5.3) {
+  constructor(timeMultiplier = 1, startHour = 5.3) {
     super()
     this.startDate = Date.now()
     this.setTimeMultiplier(timeMultiplier)
@@ -26,11 +26,14 @@ class VirtualTime extends EventEmitter {
     this.emit('pause')
   }
 
-  async setTimeout(time) {
+  async waitUntil(time, checkInterval = 100) {
     if (this.timeMultiplier === 0) return // don't wait when time is stopped
     if (this.timeMultiplier === Infinity) return // return directly if time is set to infinity
+    const waitUntil = time
     return await new Promise((resolve) => {
-      return setTimeout(resolve, time / this.timeMultiplier)
+      return setInterval(() => {
+        if (this.time() >= waitUntil) return resolve()
+      }, checkInterval)
     })
   }
 

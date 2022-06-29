@@ -1,2 +1,2 @@
 feed_id,feed_publisher_name,feed_publisher_url,feed_lang,feed_version
-SE-norrbotten,Samtrafiken i Sverige AB,https://www.samtrafiken.se,sv,2022-05-05
+SE-norrbotten,Samtrafiken i Sverige AB,https://www.samtrafiken.se,sv,2022-06-22

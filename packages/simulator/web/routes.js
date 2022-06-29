@@ -1,24 +1,21 @@
 const engine = require('../index')
 // const postombud = require("../streams/postombud");
-const { fromEvent, interval, of, from, merge, combineLatest } = require('rxjs')
+const { fromEvent, combineLatest } = require('rxjs')
 const {
   map,
   toArray,
   mergeMap,
-  mergeAll,
-  tap,
   bufferTime,
-  bufferCount,
   scan,
-  distinct,
   filter,
   startWith,
   throttleTime,
   windowTime,
+  groupBy,
+  last,
 } = require('rxjs/operators')
 
 const { virtualTime } = require('../lib/virtualTime')
-const { busStops } = require('../index')
 
 const cleanBookings = () => (bookings) =>
   bookings.pipe(
@@ -48,7 +45,39 @@ const cleanBookings = () => (bookings) =>
     )
   )
 
+const cleanCars = ({
+  booking,
+  position: { lon, lat },
+  id,
+  altitude,
+  heading,
+  speed,
+  bearing,
+  status,
+  fleet,
+  cargo,
+  capacity,
+  queue,
+  co2,
+  lineNumber,
+}) => ({
+  id,
+  heading: [heading.lon, heading.lat], // contains route to plot or interpolate on client side.
+  speed,
+  bearing,
+  position: [lon, lat, altitude || 0],
+  status,
+  fleet: fleet?.name || 'Privat',
+  co2,
+  cargo: cargo.length + (booking ? 1 : 0),
+  queue: queue.length + (booking ? 1 : 0),
+  capacity,
+  lineNumber,
+})
+
 function register(io) {
+  const experiment = engine.createExperiment() // move this to a start event
+
   io.on('connection', function (socket) {
     socket.emit('reset')
 
@@ -68,16 +97,18 @@ function register(io) {
       virtualTime.setTimeMultiplier(speed)
     })
 
-    engine.postombud.pipe(toArray()).subscribe((postombud) => {
+    experiment.postombud.pipe(toArray()).subscribe((postombud) => {
       socket.emit('postombud', postombud)
     })
-    engine.busStops.subscribe((busStops) => socket.emit('busStops', busStops))
+    experiment.busStops.subscribe((busStops) =>
+      socket.emit('busStops', busStops)
+    )
 
-    engine.kommuner
+    experiment.kommuner
       .pipe(map(({ id, name, geometry }) => ({ id, name, geometry })))
       .subscribe((kommun) => socket.emit('kommun', kommun))
 
-    merge(engine.dispatchedBookings, engine.busStopTimes)
+    experiment.dispatchedBookings
       .pipe(bufferTime(100, null, 1000))
       .subscribe((bookings) => {
         if (bookings.length) {
@@ -86,56 +117,33 @@ function register(io) {
       })
   })
 
-  engine.bookingUpdates
+  experiment.bookingUpdates
     .pipe(cleanBookings(), bufferTime(100, null, 1000))
     .subscribe((bookings) => {
       if (bookings.length) {
         io.emit('bookings', bookings)
       }
     })
-  engine.carUpdates
+  experiment.carUpdates
     .pipe(
-      //distinct(car => car.id),
-      map(
-        ({
-          booking,
-          position: { lon, lat },
-          id,
-          altitude,
-          heading,
-          speed,
-          bearing,
-          status,
-          fleet,
-          cargo,
-          capacity,
-          queue,
-          co2,
-        }) => ({
-          id,
-          heading: [heading.lon, heading.lat], // contains route to plot or interpolate on client side.
-          speed,
-          bearing,
-          position: [lon, lat, altitude || 0],
-          status,
-          fleet: fleet?.name || 'Privat',
-          co2,
-          cargo: cargo.length + (booking ? 1 : 0),
-          queue: queue.length + (booking ? 1 : 0),
-          capacity,
-        })
+      windowTime(100), // start a window every x ms
+      mergeMap((win) =>
+        win.pipe(
+          groupBy((car) => car.id), // create a stream for each car in this window
+          mergeMap((cars) => cars.pipe(last())) // take the last update in this window
+        )
       ),
-      throttleTime(50)
+      map(cleanCars)
     )
-    .subscribe((cars) => {
-      if (cars) io.emit('cars', [cars])
+    .subscribe((car) => {
+      if (car) io.emit('cars', [car])
     })
 
   setInterval(() => {
-    io.emit('time', virtualTime.time())
+    io.emit('time', experiment.virtualTime.time())
   }, 1000)
 
-  engine.kommuner
+  experiment.kommuner
     .pipe(
       mergeMap(({ id, dispatchedBookings, name, cars }) => {
         const totalBookings = dispatchedBookings.pipe(

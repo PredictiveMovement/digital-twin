@@ -120,7 +120,7 @@ const Map = ({
       case 'röd':
         return [235, 77, 75]
       case 'länstrafiken i norrbotten':
-        return [232, 67, 147, 120]
+        return [232, 67, 147, 244]
       case 'drönarleverans ab':
         return [119, 155, 172]
       case 'privat':
@@ -255,7 +255,7 @@ const Map = ({
     filled: true,
     radiusScale: 5,
     radiusUnits: 'pixels',
-    radiusMinPixels: 3,
+    radiusMinPixels: 2,
     radiusMaxPixels: 5,
     getPosition: (c) => {
       return c.position
