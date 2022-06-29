@@ -10,7 +10,7 @@ import TransparentButton from '../TransparentButton'
 const Wrapper = styled.div`
   position: absolute;
   bottom: 2rem;
-  left: 1.5rem;
+  left: 5rem;
   z-index: 2;
   display: flex;
   align-items: center;
@@ -21,7 +21,7 @@ const SliderWrapper = styled.div`
   height: 14vh;
   position: absolute;
   bottom: 6rem;
-  left: 1rem;
+  left: 4.5rem;
   z-index: 2;
   position: absolute;
   padding-top: 30px;
