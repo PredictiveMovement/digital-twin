@@ -2,11 +2,11 @@ const { from } = require('rxjs')
 const { safeId } = require('../id')
 const polarbrödÄlvsByn = {
   lat: 65.669641,
-  lng: 20.975453,
+  lon: 20.975453,
 }
 const arjeplog = {
   lat: 66.050503,
-  lng: 17.88777,
+  lon: 17.88777,
 }
 function generatePassengers() {
   const passenger = {
@@ -14,6 +14,7 @@ function generatePassengers() {
     from: arjeplog,
     to: polarbrödÄlvsByn,
     position: arjeplog,
+    name: 'average joe',
   }
   passengers = [passenger]
   return from(passengers)

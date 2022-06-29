@@ -122,10 +122,6 @@ function register(io) {
     experiment.busStops.subscribe((busStops) =>
       socket.emit('busStops', busStops)
     )
-    experiment.passengers.subscribe((passenger) => {
-      console.log('passenger', passenger)
-      socket.emit('passenger', passenger)
-    })
 
     experiment.kommuner
       .pipe(map(({ id, name, geometry }) => ({ id, name, geometry })))
@@ -138,6 +134,9 @@ function register(io) {
           socket.emit('bookings', bookings)
         }
       })
+    experiment.passengers.subscribe((passenger) => {
+      socket.emit('passenger', passenger)
+    })
   })
 
   experiment.bookingUpdates

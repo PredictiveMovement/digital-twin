@@ -60,14 +60,17 @@ const App = () => {
   })
 
   function upsert(array, object, idProperty = 'id') {
-    const current = array.find((k) => k[idProperty] === object[idProperty])
+    const currentIndex = array.findIndex(
+      (k) => k[idProperty] === object[idProperty]
+    )
+    let new_arr = [...array]
 
-    if (current) {
-      Object.assign(current, object)
+    if (currentIndex > 0) {
+      new_arr[currentIndex] = object
     } else {
-      array.push(object)
+      new_arr.push(object)
     }
-    return array
+    return new_arr
   }
 
   const [cars, setCars] = React.useState([])
@@ -170,12 +173,19 @@ const App = () => {
     setNewParameters(currentParameters)
   })
   const [passengers, setPassengers] = React.useState([])
-  useSocket('passenger', (passenger) => {
+  useSocket('passenger', ({ name, position, id }) => {
     setPassengers((currentPassengers) =>
-      upsert(currentPassengers, passenger, 'id')
+      upsert(
+        currentPassengers,
+        {
+          id,
+          name,
+          position: [position.lon, position.lat].map((s) => parseFloat(s)),
+        },
+        'id'
+      )
     )
   })
-  console.log(passengers)
 
   const onPause = () => {
     socket.emit('pause')
@@ -196,6 +206,7 @@ const App = () => {
     setReset(true)
     socket.emit('reset')
     setBookings([])
+    setPassengers([])
     setCars([])
     setKommuner([])
     setPostombud([])

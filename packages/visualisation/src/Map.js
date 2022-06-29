@@ -215,7 +215,7 @@ const Map = ({
   })
   const passengerLayer = new ScatterplotLayer({
     id: 'passenger-layer',
-    data: cars,
+    data: passengers,
     //opacity: 0.7,
     stroked: false,
     filled: true,
