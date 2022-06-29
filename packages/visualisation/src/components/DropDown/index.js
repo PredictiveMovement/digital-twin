@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import { H2, H3 } from '../Typography'
-import OpenArrow from '../../icons/svg/OpenArrow'
-import CloseArrow from '../../icons/svg/CloseArrow'
+import openArrow from '../../icons/svg/openArrow.svg'
+import closeArrow from '../../icons/svg/closeArrow.svg'
 
 const Arrow = styled.button`
   display: flex;
@@ -14,6 +14,7 @@ const Arrow = styled.button`
   width: ${(props) => (props.small ? '90%' : '100%')};
   padding: 0;
   gap: 1rem;
+  z-index: 5;
 `
 
 const Wrapper = styled.div`
@@ -29,7 +30,11 @@ const DropDown = ({ title, small, children }) => {
     <Wrapper small={small}>
       <Arrow small={small} onClick={() => setOpen((current) => !current)}>
         {small ? <H3>{title}</H3> : <H2>{title}</H2>}
-        {open ? <CloseArrow /> : <OpenArrow />}
+        {open ? (
+          <img src={closeArrow} alt="Close" />
+        ) : (
+          <img src={openArrow} alt="Open" />
+        )}
       </Arrow>
       {open && children}
     </Wrapper>

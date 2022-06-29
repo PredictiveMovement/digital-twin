@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import DropDown from '../DropDown'
 import { H1, Paragraph } from '../Typography'
-import IdeaIcon from '../../icons/svg/IdeaIcon'
+import ideaIcon from '../../icons/svg/ideaIcon.svg'
 
 const Circle = styled.div`
   width: 24px;
@@ -69,7 +69,7 @@ const GuideSection = () => {
 
       <DropDown title="Navigering">
         <Flex>
-          <IdeaIcon />
+          <img src={ideaIcon} alt="Idea" />
           <div style={{ maxWidth: '250px' }}>
             <Paragraph black>
               Ett tips om hur man kan navigera i den digitala tvillingen, lorem

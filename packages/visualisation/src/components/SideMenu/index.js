@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
-import PmLogo from '../../icons/svg/PmLogo'
-import HistoryIcon from '../../icons/svg/HistoryIcon'
-import GuideIcon from '../../icons/svg/GuideIcon'
-import MenuArrow from '../../icons/svg/MenuArrow'
+import pmLogo from '../../icons/svg/pmLogo.svg'
+import historyIcon from '../../icons/svg/historyIcon.svg'
+import guideIcon from '../../icons/svg/guideIcon.svg'
+import menuActive from '../../icons/svg/menuActive.svg'
 import GuideSection from '../GuideSection'
 import HistorySection from '../HistorySection'
 import useOutsideClick from '../../hooks/useClickOutside'
@@ -48,26 +48,22 @@ const SideMenu = () => {
     setOpen('map')
   })
 
-  React.useEffect(() => {
-    console.log(open)
-  }, [open])
-
   return (
     <div ref={ref}>
       <Menu>
         <List>
           <MenuItem onClick={() => setOpen('map')}>
-            <PmLogo />
+            <img src={pmLogo} alt="Logo" />
           </MenuItem>
           <MenuItem
             onClick={() =>
               setOpen((current) => (current === 'guide' ? 'map' : 'guide'))
             }
           >
-            <GuideIcon />
+            <img src={guideIcon} alt="Guide" />
             {open === 'guide' && (
               <ActiveMenu>
-                <MenuArrow />
+                <img src={menuActive} alt="Open" />
               </ActiveMenu>
             )}
           </MenuItem>
@@ -76,10 +72,10 @@ const SideMenu = () => {
               setOpen((current) => (current === 'history' ? 'map' : 'history'))
             }
           >
-            <HistoryIcon />
+            <img src={historyIcon} alt="History" />
             {open === 'history' && (
               <ActiveMenu>
-                <MenuArrow />
+                <img src={menuActive} alt="Open" />
               </ActiveMenu>
             )}
           </MenuItem>
