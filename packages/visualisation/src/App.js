@@ -6,6 +6,7 @@ import Loading from './components/Loading/index.js'
 import styled from 'styled-components'
 import ResetIcon from './icons/reset.svg'
 import TransparentButton from './components/TransparentButton/index.js'
+import SideMenu from './components/SideMenu/index.js'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -160,6 +161,7 @@ const App = () => {
           <img src={ResetIcon} alt="Reset" />
         </TransparentButton>
       </Wrapper>
+      <SideMenu />
 
       <PlaybackOptions
         onPause={onPause}

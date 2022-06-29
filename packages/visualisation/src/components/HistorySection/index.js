@@ -15,6 +15,7 @@ const MenuContainer = styled.div`
   padding-right: 2rem;
   padding-top: 2.5rem;
   top: 0;
+  z-index: 4;
 `
 const HistorySection = () => {
   return (

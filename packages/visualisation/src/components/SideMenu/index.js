@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 import PmLogo from '../../icons/svg/PmLogo'
 import HistoryIcon from '../../icons/svg/HistoryIcon'
@@ -15,6 +15,7 @@ const Menu = styled.nav`
   top: 0;
   position: absolute;
   cursor: auto;
+  z-index: 5;
 `
 
 const List = styled.ol`
@@ -24,7 +25,6 @@ const List = styled.ol`
 
 const MenuItem = styled.li`
   cursor: pointer;
-  margin-top: 64px;
   margin: 4rem 1rem 0 1rem;
   list-style-type: none;
   display: flex;
@@ -34,7 +34,9 @@ const MenuItem = styled.li`
 
 const ActiveMenu = styled.div`
   margin-left: 1.2rem;
-  z-index: 4;
+  z-index: 10;
+  position: absolute;
+  left: 2.6rem;
 `
 
 const SideMenu = () => {
@@ -45,6 +47,10 @@ const SideMenu = () => {
   useOutsideClick(ref, () => {
     setOpen('map')
   })
+
+  React.useEffect(() => {
+    console.log(open)
+  }, [open])
 
   return (
     <div ref={ref}>
