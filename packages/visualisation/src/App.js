@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   position: absolute;
   z-index: 2;
   bottom: 2.7rem;
-  left: 7rem;
+  left: 10rem;
 `
 
 const App = () => {
