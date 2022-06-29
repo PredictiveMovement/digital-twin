@@ -1,64 +1,62 @@
 import React from 'react'
 import styled from 'styled-components'
-import ProgressBar from '../ProgressBar'
-import { Paragraph } from '../Typography'
+import { Paragraph, H4, ParagraphBold } from '../Typography'
 
 const Wrapper = styled.div`
   position: absolute;
-  top: 36px;
-  left: 36px;
+  right: 3rem;
+  top: 6rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-space-between;
-  background-color: #10c57b;
-  padding: 1.7rem;
-  border-radius: 4px;
-  height: 180px;
-  justify-content: space-between;
+  background-color: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 6px;
   z-index: 1;
-  width: 250px;
 `
 
-const KommunStatisticsBox = ({
-  name,
-  totalCars,
-  totalBookings,
-  totalCapacity,
-  totalCo2,
-  averageDeliveryTime,
-  totalDelivered,
-  averageUtilization,
-  totalCargo,
-  totalQueued,
-  averageQueued,
-}) => {
-  return !totalCars ? null : (
-    <Wrapper>
-      <div>
-        <Paragraph>
-          {totalCars} fordon i {name}
-        </Paragraph>
-        <Paragraph>Total kapacitet: {totalCapacity} kollin</Paragraph>
-        <Paragraph>Antal bokningar: {totalBookings} kollin</Paragraph>
-        <Paragraph>Köat: {totalQueued} kollin</Paragraph>
-        <Paragraph>Lastat: {totalCargo} kollin</Paragraph>
-        {<Paragraph>CO2: {Math.round(totalCo2 * 10) / 10} kg</Paragraph>}
-        <Paragraph>
-          Levererade: {totalDelivered} kollin (
-          {Math.round((totalDelivered / totalBookings) * 100)}%)
-        </Paragraph>
-        <Paragraph>
-          Medel leveranstid: {Math.ceil(10 * averageDeliveryTime) / 10}h
-        </Paragraph>
+const Grid = styled.div`
+  display: grid;
+  gap: 1.2rem;
+  grid-template-columns: 3fr 2fr;
+`
 
-        {/* <Paragraph>Total cargo: {totalCargo}</Paragraph> */}
-        {/* <Paragraph>Co2: XXX</Paragraph> */}
-        {/* <Paragraph>Antal kollin upphämtade från avlastningscentralen: {bookingsFromHub} st</Paragraph> */}
-      </div>
-      {/* <div> */}
-      <Paragraph thin>Medelfyllnadsgrad per bil:</Paragraph>
-      {<ProgressBar completed={Math.round(averageUtilization * 100)} />}
-      {/* </div> */}
+const GridWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+`
+
+const KommunStatisticsBox = ({ name }) => {
+  return (
+    <Wrapper>
+      <H4>{name}</H4>
+      <GridWrapper>
+        <Grid>
+          <ParagraphBold black>Antal fordon</ParagraphBold>
+          <Paragraph black>xxxx fordon</Paragraph>
+        </Grid>
+        <Grid>
+          <ParagraphBold black>Total kapacitet</ParagraphBold>
+          <Paragraph black>xxxx personer</Paragraph>
+        </Grid>
+        <Grid>
+          <ParagraphBold black>CO2</ParagraphBold>
+          <Paragraph black>xxxx kg</Paragraph>
+        </Grid>
+        <Grid>
+          <ParagraphBold black>Genomsnittskostnad</ParagraphBold>
+          <Paragraph black>xxxx kr/resenär</Paragraph>
+        </Grid>
+        <Grid>
+          <ParagraphBold black>Medelfyllnadsgrad per bil</ParagraphBold>
+          <Paragraph black>xx%</Paragraph>
+        </Grid>
+        <Grid>
+          <ParagraphBold black>Genomsnittlig restid</ParagraphBold>
+          <Paragraph black>xxxx</Paragraph>
+        </Grid>
+      </GridWrapper>
     </Wrapper>
   )
 }
