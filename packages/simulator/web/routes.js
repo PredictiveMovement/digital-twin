@@ -1,5 +1,3 @@
-const engine = require('../index')
-// const postombud = require("../streams/postombud");
 const { fromEvent, combineLatest } = require('rxjs')
 const {
   map,
@@ -15,6 +13,7 @@ const {
   last,
 } = require('rxjs/operators')
 
+const engine = require('../index')
 const { virtualTime } = require('../lib/virtualTime')
 const { saveParameters } = require('../lib/fileUtils')
 
@@ -123,6 +122,10 @@ function register(io) {
     experiment.busStops.subscribe((busStops) =>
       socket.emit('busStops', busStops)
     )
+    experiment.passengers.subscribe((passenger) => {
+      console.log('passenger', passenger)
+      socket.emit('passenger', passenger)
+    })
 
     experiment.kommuner
       .pipe(map(({ id, name, geometry }) => ({ id, name, geometry })))

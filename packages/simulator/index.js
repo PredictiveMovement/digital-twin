@@ -6,6 +6,7 @@ const { virtualTime } = require('./lib/virtualTime')
 const postombud = require('./streams/postombud')
 const regions = require('./streams/regions')
 const kommuner = require('./streams/kommuner')
+const passengers = require('./lib/generators/passengers')
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
 
@@ -30,10 +31,7 @@ const engine = {
       busStops: regions.pipe(mergeMap((region) => region.stops)),
       postombud,
       kommuner,
-      parameters,
     }
-
-    // Add these separate streams here so we don't have to register more than one event listener per booking and car
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(
       mergeMap((booking) =>
         merge(

@@ -61,6 +61,7 @@ const App = () => {
 
   function upsert(array, object, idProperty = 'id') {
     const current = array.find((k) => k[idProperty] === object[idProperty])
+
     if (current) {
       Object.assign(current, object)
     } else {
@@ -168,6 +169,13 @@ const App = () => {
     setCurrentParameters(currentParameters)
     setNewParameters(currentParameters)
   })
+  const [passengers, setPassengers] = React.useState([])
+  useSocket('passenger', (passenger) => {
+    setPassengers((currentPassengers) =>
+      upsert(currentPassengers, passenger, 'id')
+    )
+  })
+  console.log(passengers)
 
   const onPause = () => {
     socket.emit('pause')
@@ -220,6 +228,7 @@ const App = () => {
       {reset && <Loading />}
       <Map
         activeLayers={activeLayers}
+        passengers={passengers}
         cars={cars}
         bookings={bookings}
         hubs={postombud}
