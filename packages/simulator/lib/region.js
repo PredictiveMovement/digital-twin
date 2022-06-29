@@ -22,9 +22,10 @@ const {
 } = require('rxjs/operators')
 const { tripsMap } = require('../streams/gtfs')
 const Bus = require('./vehicles/bus')
+const dispatch = require('./dispatchCentral')
 
 class Region {
-  constructor({ geometry, name, id, stops, stopTimes }) {
+  constructor({ geometry, name, id, stops, stopTimes, passengers }) {
     this.geometry = geometry
     this.name = name
     this.id = id
@@ -49,6 +50,18 @@ class Region {
         )
       }),
       shareReplay()
+    )
+    dispatch([new Taxi()], this.generateBookings(passengers))
+  }
+
+  generateBookings(passengers) {
+    return passengers.pipe(
+      mergeMap((passenger) => {
+        return new Booking({
+          pickup: passenger.from,
+          destination: passenger.to,
+        })
+      })
     )
   }
 }
