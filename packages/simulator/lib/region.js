@@ -51,7 +51,7 @@ class Region {
       }),
       shareReplay()
     )
-    dispatch([new Taxi()], this.generateBookings(passengers))
+    // dispatch([new Taxi()], this.generateBookings(passengers))
   }
 
   generateBookings(passengers) {
