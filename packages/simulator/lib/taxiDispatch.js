@@ -74,6 +74,7 @@ const taxiDispatch = (taxis, passengers) =>
             taxi: taxis[index],
             steps: route.steps.map((step) => {
               if (step.id !== undefined) {
+                step.passenger = passengers[step.id]
                 step.id = passengers[step.id].id
               }
               return step
