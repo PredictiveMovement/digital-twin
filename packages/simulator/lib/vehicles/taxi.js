@@ -4,8 +4,8 @@ class Taxi extends Vehicle {
   position
   heading
 
-  constructor({ id, position }) {
-    super()
+  constructor({ id, position, ...vehicle }) {
+    super({ position, id, fleet: 'taxi', ...vehicle })
     this.id = id
     this.position = position
     this.heading = null

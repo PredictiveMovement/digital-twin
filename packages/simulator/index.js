@@ -6,7 +6,6 @@ const { virtualTime } = require('./lib/virtualTime')
 const postombud = require('./streams/postombud')
 const regions = require('./streams/regions')
 const kommuner = require('./streams/kommuner')
-const passengers = require('./lib/generators/passengers')
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
 
@@ -47,7 +46,11 @@ const engine = {
       share()
     )
 
-    experiment.carUpdates = merge(experiment.cars, experiment.buses).pipe(
+    experiment.carUpdates = merge(
+      experiment.cars,
+      experiment.buses,
+      experiment.taxis
+    ).pipe(
       mergeMap((car) => fromEvent(car, 'moved')),
       share()
     )

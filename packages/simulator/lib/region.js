@@ -66,7 +66,7 @@ class Region {
       // console.log('Taxi bookings', JSON.stringify(e, null, 2))
       e.map(({ taxi, steps }) => steps.map((step) => taxi.addInstruction(step)))
     })
-    this.taxis = taxis
+    this.taxis = taxis.pipe(tap(console.log), shareReplay())
     this.journeys = from([])
   }
 }
