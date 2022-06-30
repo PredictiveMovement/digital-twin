@@ -14,73 +14,72 @@ const {
 const { plan } = require('./vroom')
 const moment = require('moment')
 
-const bookingToShipment = (
+const passengerToShipment = (
   { id, destination, pickup, position, arrivalTime, departureTime },
   i
 ) => ({
   id: i,
+  description: id,
+  amount: [1],
   delivery: {
     id: i,
-    location: [destination.position.lat, destination.position.lon],
+    location: [destination.lat, destination.lon],
   },
   pickup: {
     id: i,
-    location: [pickup.position.lat, pickup.position.lon],
+    location: [pickup.lat, pickup.lon],
   },
-  // time_windows: [
-  //   [
-  //     moment(arrivalTime, 'HH:mm:ss')
-  //       .subtract(moment().startOf('day'))
-  //       .valueOf(),
-  //     moment(departureTime, 'HH:mm:ss')
-  //       .subtract(moment().startOf('day'))
-  //       .valueOf(),
-  //   ],
-  // ],
-  // time_window: {},
-  // location: [position.lat, position.lon],
 })
 
-const taxiToVehicle = ({ position, heading }, i) => ({
+const taxiToVehicle = ({ id, position, heading }, i) => ({
   id: i,
+  description: id,
+  capacity: [4],
   start: [position.lat, position.lon],
   end: heading ? [heading.lat, heading.lon] : undefined,
 })
 
-const taxiDispatch = (taxis, stops) =>
-  stops.pipe(
+const taxiDispatch = (taxis, passengers) =>
+  passengers.pipe(
     //tap((stop) => console.log('stop', stop)),
     toArray(),
-    mergeMap((stops) =>
+    mergeMap((passengers) =>
       taxis.pipe(
         //tap((taxi) => console.log('taxi', taxi)),
         takeUntil(timer(5000)), // to be able to sort we have to batch somehow. Lets start with time
         toArray(),
         filter((taxis) => taxis.length > 0),
-        tap((taxis) =>
-          console.log('taxi dispatch', stops.length, taxis.length)
-        ),
+        // tap((taxis) =>
+        //   console.log('taxi dispatch', passengers.length, taxis.length)
+        // ),
         mergeMap(async (taxis) => {
+          // console.log(
+          //   'PLAN PLEASE',
+          //   JSON.stringify(passengers.map(passengerToShipment), null, 2)
+          // )
           const result = await plan({
-            shipments: stops.map(bookingToShipment),
+            shipments: passengers.map(passengerToShipment),
             vehicles: taxis.map(taxiToVehicle),
           })
           return {
             taxis,
-            result,
+            routes: result.routes,
           }
         }),
-        tap(console.log),
-        map(({ taxis, result: { vehicle: i, steps } = {} }) => ({
-          taxi: taxis[i],
-          stops: steps
-            .map((steps) => {
-              console.log(steps)
-              return steps
-            })
-            .filter((s) => s.id !== undefined)
-            .map(({ id: i }) => stops[i]),
-        }))
+        // tap((res) =>
+        //   console.log('vroom result: ', JSON.stringify(res, null, 2))
+        // ),
+        map(({ taxis, routes = [] }) => {
+          return routes.map((route, index) => ({
+            taxi: taxis[index],
+            steps: route.steps.map((step) => {
+              if (step.id !== undefined) {
+                step.id = passengers[step.id].id
+              }
+              return step
+            }),
+          }))
+        })
       )
     )
   )

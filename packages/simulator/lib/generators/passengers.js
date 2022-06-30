@@ -11,15 +11,21 @@ const arjeplog = {
 function generatePassengers() {
   const passenger = {
     id: safeId(),
-    from: arjeplog,
-    to: polarbrödÄlvsByn,
+    pickup: arjeplog,
+    destination: polarbrödÄlvsByn,
     position: arjeplog,
     name: 'average joe',
   }
-  passengers = [passenger]
+  const passenger2 = {
+    id: safeId(),
+    pickup: { lon: 10.886855, lat: 50.041054 },
+    destination: { lon: 10.986855, lat: 50.141054 },
+    position: { lon: 10.886855, lat: 50.041054 },
+    name: 'average elsewhere',
+  }
+  passengers = [passenger, passenger2]
   return from(passengers)
 }
-
 module.exports = {
   generatePassengers,
 }

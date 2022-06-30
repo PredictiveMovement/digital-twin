@@ -31,6 +31,7 @@ const engine = {
       busStops: regions.pipe(mergeMap((region) => region.stops)),
       postombud,
       kommuner,
+      passengers: regions.pipe(mergeMap((region) => region.passengers)),
     }
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(
       mergeMap((booking) =>

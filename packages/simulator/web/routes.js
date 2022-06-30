@@ -137,6 +137,9 @@ function register(io) {
     experiment.passengers.subscribe((passenger) => {
       socket.emit('passenger', passenger)
     })
+    experiment.journeys.subscribe((journey) => {
+      socket.emit('journey', journey)
+    })
   })
 
   experiment.bookingUpdates

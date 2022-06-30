@@ -17,8 +17,6 @@ module.exports = {
       }),
     }).then((res) => res.json())
     if (result.error) throw new Error(result.error)
-    return (
-      result.routes && result.routes.sort((a, b) => a.duration < b.duration)[0]
-    )
+    return result
   },
 }

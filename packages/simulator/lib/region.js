@@ -35,6 +35,7 @@ class Region {
     this.id = id
     this.unhandledBookings = new Subject()
     this.stops = stops
+    this.passengers = passengers
 
     this.buses = stopTimes.pipe(
       groupBy(({ tripId }) => tripId),
@@ -57,29 +58,13 @@ class Region {
     )
 
     this.taxis = from([
-      new Taxi({ id: safeId(), position: { lon: 17.886855, lat: 66.041054 } }),
+      new Taxi({ id: safeId(), position: { lon: 10.886855, lat: 50.041054 } }),
+      new Taxi({ id: safeId(), position: { lon: 17.686855, lat: 66.141054 } }),
     ]) // En taxi i Arjeplog.
 
-    this.journeys = this.generateBookings(passengers)
-
-    taxiDispatch(this.taxis, this.journeys).subscribe((e) => {
+    this.journeys = taxiDispatch(this.taxis, passengers) /*.subscribe((e) => {
       console.log('Taxi bookings', JSON.stringify(e, null, 2))
-    })
-  }
-
-  generateBookings(passengers) {
-    return passengers.pipe(
-      map((passenger) => {
-        return new Booking({
-          pickup: {
-            position: passenger.from,
-          },
-          destination: {
-            position: passenger.to,
-          },
-        })
-      })
-    )
+    })*/
   }
 }
 
