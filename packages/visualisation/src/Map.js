@@ -449,24 +449,19 @@ const Map = ({
       />
       {hoverInfo && mapState.zoom > 8 && <HoverInfoBox data={hoverInfo} />}
 
-      {kommunInfo && (
-        <>
-          <div
-            style={{
-              right: '10rem',
-              top: '30px',
-              position: 'absolute',
-            }}
-          >
-            <ParagraphLarge>
-              Just nu är klockan
-              <b> {new Date(time).toLocaleTimeString()} </b> <br />i
-              <b> {kommunInfo.name} </b>
-            </ParagraphLarge>
-          </div>
-          <KommunStatisticsBox {...kommunInfo} />
-        </>
-      )}
+      <div
+        style={{
+          right: '10rem',
+          top: '30px',
+          position: 'absolute',
+        }}
+      >
+        <ParagraphLarge>
+          Just nu är klockan
+          <b> {new Date(time).toLocaleTimeString()} </b> <br />i simuleringen
+        </ParagraphLarge>
+      </div>
+      {kommunInfo && <KommunStatisticsBox {...kommunInfo} />}
     </DeckGL>
   )
 }
