@@ -19,6 +19,10 @@ const Container = styled.div`
   ${Wrapper}:hover & {
     height: 8px;
   }
+
+  @media (max-width: 1500px) {
+    width: 60vw;
+  }
 `
 
 const Filler = styled.div`
