@@ -4,6 +4,8 @@ const { virtualTime } = require('../lib/virtualTime')
 const { safeId } = require('./id')
 
 class Booking extends EventEmitter {
+  position
+
   constructor(booking) {
     super()
     this.id = safeId()

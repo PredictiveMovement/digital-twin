@@ -14,19 +14,31 @@ const {
 const { plan } = require('./vroom')
 const moment = require('moment')
 
-const stopToJob = ({ id, position, arrivalTime, departureTime }, i) => ({
+const bookingToShipment = (
+  { id, destination, pickup, position, arrivalTime, departureTime },
+  i
+) => ({
   id: i,
-  time_windows: [
-    [
-      moment(arrivalTime, 'HH:mm:ss')
-        .subtract(moment().startOf('day'))
-        .valueOf(),
-      moment(departureTime, 'HH:mm:ss')
-        .subtract(moment().startOf('day'))
-        .valueOf(),
-    ],
-  ],
-  location: [position.lat, position.lon],
+  delivery: {
+    id: i,
+    location: [destination.position.lat, destination.position.lon],
+  },
+  pickup: {
+    id: i,
+    location: [pickup.position.lat, pickup.position.lon],
+  },
+  // time_windows: [
+  //   [
+  //     moment(arrivalTime, 'HH:mm:ss')
+  //       .subtract(moment().startOf('day'))
+  //       .valueOf(),
+  //     moment(departureTime, 'HH:mm:ss')
+  //       .subtract(moment().startOf('day'))
+  //       .valueOf(),
+  //   ],
+  // ],
+  // time_window: {},
+  // location: [position.lat, position.lon],
 })
 
 const taxiToVehicle = ({ position, heading }, i) => ({
@@ -50,7 +62,7 @@ const taxiDispatch = (taxis, stops) =>
         ),
         mergeMap(async (taxis) => {
           const result = await plan({
-            jobs: stops.map(stopToJob),
+            shipments: stops.map(bookingToShipment),
             vehicles: taxis.map(taxiToVehicle),
           })
           return {
@@ -58,10 +70,15 @@ const taxiDispatch = (taxis, stops) =>
             result,
           }
         }),
+        tap(console.log),
         map(({ taxis, result: { vehicle: i, steps } = {} }) => ({
           taxi: taxis[i],
           stops: steps
-            .filter((s) => s.type === 'job')
+            .map((steps) => {
+              console.log(steps)
+              return steps
+            })
+            .filter((s) => s.id !== undefined)
             .map(({ id: i }) => stops[i]),
         }))
       )

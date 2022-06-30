@@ -23,6 +23,10 @@ const {
 const { tripsMap } = require('../streams/gtfs')
 const Bus = require('./vehicles/bus')
 const dispatch = require('./dispatchCentral')
+const { safeId } = require('./id')
+const { taxiDispatch } = require('./taxiDispatch')
+const Taxi = require('./vehicles/taxi')
+const Booking = require('./booking')
 
 class Region {
   constructor({ geometry, name, id, stops, stopTimes, passengers }) {
@@ -51,15 +55,28 @@ class Region {
       }),
       shareReplay()
     )
-    // dispatch([new Taxi()], this.generateBookings(passengers))
+
+    this.taxis = from([
+      new Taxi({ id: safeId(), position: { lon: 17.886855, lat: 66.041054 } }),
+    ]) // En taxi i Arjeplog.
+
+    this.journeys = this.generateBookings(passengers)
+
+    taxiDispatch(this.taxis, this.journeys).subscribe((e) => {
+      console.log('Taxi bookings', JSON.stringify(e, null, 2))
+    })
   }
 
   generateBookings(passengers) {
     return passengers.pipe(
-      mergeMap((passenger) => {
+      map((passenger) => {
         return new Booking({
-          pickup: passenger.from,
-          destination: passenger.to,
+          pickup: {
+            position: passenger.from,
+          },
+          destination: {
+            position: passenger.to,
+          },
         })
       })
     )
