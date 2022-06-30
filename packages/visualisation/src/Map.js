@@ -13,7 +13,7 @@ import { ParagraphLarge } from './components/Typography'
 
 //import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
-
+import TimeProgressBar from './components/TimeProgressBar'
 import Button from './components/Button'
 
 import mapboxgl from 'mapbox-gl'
@@ -467,6 +467,7 @@ const Map = ({
           <KommunStatisticsBox {...kommunInfo} />
         </>
       )}
+      <TimeProgressBar time={time} />
     </DeckGL>
   )
 }
