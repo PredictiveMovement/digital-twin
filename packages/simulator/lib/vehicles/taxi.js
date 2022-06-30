@@ -11,8 +11,11 @@ class Taxi extends Vehicle {
     this.heading = null
     this.currentPassengerCount = 0
     this.queue = []
+    this.booking = true
   }
-  canPickupBooking() {}
+  canPickupBooking() {
+    true
+  }
   hej() {
     console.log('hej')
   }
@@ -30,7 +33,17 @@ class Taxi extends Vehicle {
     }
   }
   pickup() {
-    console.log('hej')
+    console.log('pickup')
+    console.log(this.queue)
+    const next = this.queue.shift()
+
+    if (next) {
+      const location = next.location
+      this.navigateTo({
+        lat: location[0],
+        lon: location[1],
+      })
+    }
   }
 }
 

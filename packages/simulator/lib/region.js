@@ -8,6 +8,7 @@ const {
   merge,
   of,
   range,
+  fromEvent,
 } = require('rxjs')
 const {
   map,
@@ -57,16 +58,15 @@ class Region {
       shareReplay()
     )
 
-    const taxis = from([
+    this.taxis = from([
       new Taxi({ id: safeId(), position: { lon: 10.886855, lat: 50.041054 } }),
       new Taxi({ id: safeId(), position: { lon: 17.686855, lat: 66.141054 } }),
-    ]) // En taxi i Arjeplog.
+    ]).pipe(shareReplay())
 
-    taxiDispatch(taxis, passengers).subscribe((e) => {
+    taxiDispatch(this.taxis, passengers).subscribe((e) => {
       // console.log('Taxi bookings', JSON.stringify(e, null, 2))
       e.map(({ taxi, steps }) => steps.map((step) => taxi.addInstruction(step)))
     })
-    this.taxis = taxis.pipe(tap(console.log), shareReplay())
     this.journeys = from([])
   }
 }

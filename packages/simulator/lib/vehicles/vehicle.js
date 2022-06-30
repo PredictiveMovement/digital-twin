@@ -234,7 +234,6 @@ class Vehicle extends EventEmitter {
         )
       })
     }
-
     if (!position.next) {
       this.emit('stopped', this)
       this.simulate(false)
