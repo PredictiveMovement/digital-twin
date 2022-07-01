@@ -69,12 +69,13 @@ class Vehicle extends EventEmitter {
       .then((route) => {
         route.started = this.time()
         this.route = route
-        //info(`Car ${this.id} navigates to`, position)
         if (!route.legs)
           throw new Error(
             `Route not found from: ${JSON.stringify(
               this.position
-            )} to: ${JSON.stringify(this.heading)}`
+            )} to: ${JSON.stringify(this.heading)} from: ${JSON.stringify(
+              this.position
+            )}`
           )
         this.simulate(this.route)
         return this.heading

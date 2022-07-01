@@ -31,10 +31,10 @@ const passengerToShipment = (
   },
 })
 
-const taxiToVehicle = ({ id, position, heading }, i) => ({
+const taxiToVehicle = ({ id, position, capacity, heading }, i) => ({
   id: i,
   description: id,
-  capacity: [4],
+  capacity: [capacity],
   start: [position.lat, position.lon],
   end: heading ? [heading.lat, heading.lon] : undefined,
 })
