@@ -420,7 +420,7 @@ const Map = ({
         }}
       >
         <Button
-          text="Upphämtning / Avlämning"
+          text="Visa rutter"
           onClick={() => {
             setShowArcLayer(false)
             setShowQueuedBookings((current) => !current)
@@ -435,7 +435,7 @@ const Map = ({
         }}
       >
         <Button
-          text={'Nästa stopp'}
+          text={'Visa nästa stopp'}
           onClick={() => {
             setShowQueuedBookings(false)
             setShowArcLayer((current) => !current)
