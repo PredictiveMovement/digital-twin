@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { H1, ParagraphLarge } from '../Typography'
 import Button from '../Button'
+import React from 'react'
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -36,6 +37,11 @@ const ButtonWrapper = styled.div`
 `
 
 const WelcomeBox = () => {
+  const setCookie = () => {
+    //Cookie lives for 30 days
+    document.cookie = 'hideWelcomeBox=true; max-age=' + 30 * 24 * 60 * 60
+  }
+
   return (
     <Wrapper>
       <Container>
@@ -60,7 +66,7 @@ const WelcomeBox = () => {
           Läs mer om Predictive Movement
         </Link>
         <ButtonWrapper>
-          <Button text="Okej" onClick={() => console.log('close plz')} block />
+          <Button text="Okej" onClick={() => setCookie()} block />
         </ButtonWrapper>
       </Container>
     </Wrapper>
