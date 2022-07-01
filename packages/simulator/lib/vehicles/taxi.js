@@ -21,14 +21,16 @@ class Taxi extends Vehicle {
   canPickupBooking() {
     true
   }
-  hej() {
-    console.log('hej')
-  }
   addInstruction(instruction) {
+    if (instruction.type === 'start') {
+      return
+    }
+    // console.log(instruction)
     const location = instruction.location
     if (!this.busy) {
       this.busy = true
       this.status = 'Pickup'
+      this.instruction = instruction
       this.navigateTo({
         lat: location[0],
         lon: location[1],
@@ -38,11 +40,12 @@ class Taxi extends Vehicle {
     }
   }
   pickup() {
-    console.log(`pickup in taxi ${this.id}, ${this.queue.length}`)
-    const next = this.queue.shift()
-
-    if (next) {
-      const location = next.location
+    if (this.instruction.passenger && this.instruction.type === 'pickup') {
+      this.instruction.passenger.pickedUp()
+    }
+    this.instruction = this.queue.shift()
+    if (this.instruction) {
+      const location = this.instruction.location
       this.navigateTo({
         lat: location[0],
         lon: location[1],

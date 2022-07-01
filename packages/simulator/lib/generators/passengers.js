@@ -9,9 +9,11 @@ class Passenger extends EventEmitter {
     this.destination = destination
     this.name = name
     this.position = position
+    this.inCar = false
   }
   pickedUp() {
-    emit('pickedUp', this.id)
+    this.inCar = true
+    this.emit('pickedup', { id: this.id, position: this.position, inCar: true })
   }
 }
 const polarbrödÄlvsByn = {
@@ -32,7 +34,7 @@ function generatePassengers() {
   }
   const passenger2 = {
     id: safeId(),
-    pickup: { lon: 10.886855, lat: 50.041054 },
+    pickup: { lon: 10.986855, lat: 50.041054 },
     destination: { lon: 10.986855, lat: 50.141054 },
     position: { lon: 10.886855, lat: 50.041054 },
     name: 'average elsewhere',

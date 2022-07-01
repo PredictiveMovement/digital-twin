@@ -59,7 +59,7 @@ class Region {
     )
 
     this.taxis = from([
-      new Taxi({ id: safeId(), position: { lon: 10.886855, lat: 50.041054 } }),
+      // new Taxi({ id: safeId(), position: { lon: 10.886855, lat: 50.041054 } }),
       new Taxi({ id: safeId(), position: { lon: 17.686855, lat: 66.141054 } }),
     ]).pipe(shareReplay())
 

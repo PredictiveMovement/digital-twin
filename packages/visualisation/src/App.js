@@ -67,7 +67,7 @@ const App = () => {
     )
     let new_arr = [...array]
 
-    if (currentIndex > 0) {
+    if (currentIndex >= 0) {
       new_arr[currentIndex] = object
     } else {
       new_arr.push(object)
@@ -175,8 +175,7 @@ const App = () => {
     setNewParameters(currentParameters)
   })
   const [passengers, setPassengers] = React.useState([])
-  useSocket('passenger', ({ name, position, id }) => {
-    console.log({ name, id, position })
+  useSocket('passenger', ({ name, position, id, inCar }) => {
     setPassengers((currentPassengers) =>
       upsert(
         currentPassengers,
@@ -184,6 +183,7 @@ const App = () => {
           id,
           name,
           position: [position.lon, position.lat].map((s) => parseFloat(s)),
+          inCar,
         },
         'id'
       )

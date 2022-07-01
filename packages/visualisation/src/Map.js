@@ -228,7 +228,8 @@ const Map = ({
       return c.position
     },
     //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
-    getFillColor: [0, 0, 255, 255],
+    getFillColor: ({ inCar }) => (inCar ? [0, 0, 0, 0] : [0, 0, 255, 255]),
+
     pickable: true,
     onHover: ({ object, x, y }) => {
       if (!object) return setHoverInfo(null)

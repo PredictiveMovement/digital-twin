@@ -142,7 +142,11 @@ function register(io) {
       socket.emit('taxi', { id, position: [lon, lat] })
     })
   })
-
+  experiment.passengerUpdates.subscribe((passenger) => {
+    if (passenger) {
+      io.emit('passenger', passenger)
+    }
+  })
   experiment.bookingUpdates
     .pipe(cleanBookings(), bufferTime(100, null, 1000))
     .subscribe((bookings) => {

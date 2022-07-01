@@ -45,6 +45,10 @@ const engine = {
       ),
       share()
     )
+    experiment.passengerUpdates = experiment.passengers.pipe(
+      mergeMap((passenger) => fromEvent(passenger, 'pickedup')),
+      share()
+    )
 
     experiment.carUpdates = merge(
       // experiment.cars,
