@@ -451,9 +451,10 @@ const Map = ({
 
       <div
         style={{
-          right: '10rem',
+          right: '3rem',
           top: '30px',
           position: 'absolute',
+          textAlign: 'right',
         }}
       >
         <ParagraphLarge>
