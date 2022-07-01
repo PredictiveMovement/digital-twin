@@ -16,11 +16,17 @@ const Container = styled.div`
   background-color: #fdfeff;
   z-index: 5;
   position: absolute;
-  top: 30%;
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  left: 40%;
+  width: 580px;
+  height: 350px;
+
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
 `
 
 const Link = styled.a`
