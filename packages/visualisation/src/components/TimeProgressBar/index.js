@@ -4,24 +4,22 @@ import styled from 'styled-components'
 const Wrapper = styled.div`
   position: absolute;
   bottom: 2.5rem;
-  left: 15rem;
   height: 50px;
   display: flex;
   align-items: center;
+  left: 15rem;
+  right: 15rem;
 `
 
 const Container = styled.div`
   height: 8px;
-  width: 70vw;
+  width: 100%;
+  zindex: 1000;
   background-color: #c2c2c1;
   height: 2px;
 
   ${Wrapper}:hover & {
     height: 8px;
-  }
-
-  @media (max-width: 1500px) {
-    width: 60vw;
   }
 `
 
