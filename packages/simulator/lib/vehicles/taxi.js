@@ -1,16 +1,21 @@
 const Vehicle = require('../vehicles/vehicle')
+
+const fleet = {
+  name: 'taxi',
+}
+
 class Taxi extends Vehicle {
   id
   position
   heading
-
   constructor({ id, position, ...vehicle }) {
-    super({ position, id, fleet: 'taxi', ...vehicle })
+    super({ position, id, fleet, ...vehicle })
     this.id = id
     this.position = position
     this.heading = null
     this.currentPassengerCount = 0
     this.queue = []
+    this.capacity = 4
     this.booking = true
   }
   canPickupBooking() {
@@ -33,8 +38,7 @@ class Taxi extends Vehicle {
     }
   }
   pickup() {
-    console.log('pickup')
-    console.log(this.queue)
+    console.log(`pickup in taxi ${this.id}, ${this.queue.length}`)
     const next = this.queue.shift()
 
     if (next) {
