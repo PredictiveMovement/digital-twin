@@ -42,12 +42,12 @@ const Circle = styled.div`
   border-radius: 50%;
   position: absolute;
   top: 1.25rem;
-  left: ${({ completed }) => `${completed - 0.3}%`};
+  left: ${({ completed }) => `calc(${completed}% - 5px)`};
 
   ${Wrapper}:hover & {
     height: 30px;
     width: 30px;
-    left: ${({ completed }) => `${completed - 1.2}%`};
+    left: ${({ completed }) => `calc(${completed}% - 10px)`};
     top: 9px;
   }
 `
@@ -58,7 +58,7 @@ const TimeStamp = styled.p`
 `
 
 const TimeWrapper = styled.div`
-  left: ${({ completed }) => `${completed - 2.5}%`};
+  left: ${({ completed }) => `calc(${completed}% - 27px)`};
   position: absolute;
   bottom: 2rem;
   display: none;
