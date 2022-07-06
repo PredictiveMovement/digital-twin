@@ -46,6 +46,12 @@ const ButtonWrapper = styled.div`
 const WelcomeBox = () => {
   const [showWelcomeBox, setShowWelcomeBox] = React.useState(true)
 
+  React.useEffect(() => {
+    if (getCookie('hideWelcomeBox')) {
+      setShowWelcomeBox(false)
+    }
+  }, [document.cookie])
+
   const getCookie = (name) => {
     const cookieArr = document.cookie.split(';')
     for (let i = 0; i < cookieArr.length; i++) {
@@ -56,12 +62,6 @@ const WelcomeBox = () => {
     }
     return null
   }
-
-  React.useEffect(() => {
-    if (getCookie('hideWelcomeBox')) {
-      setShowWelcomeBox(false)
-    }
-  }, [document.cookie])
 
   const setCookie = () => {
     //Cookie lives for 30 days
