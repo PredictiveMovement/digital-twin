@@ -21,7 +21,6 @@ const App = () => {
   const [reset, setReset] = useState(false)
   const [speed, setSpeed] = React.useState(60)
   const [time, setTime] = React.useState(Date.now())
-  const [showWelcomeBox, setShowWelcomeBox] = React.useState(true)
 
   useSocket('reset', () => {
     console.log('received reset')
@@ -166,26 +165,9 @@ const App = () => {
     setActiveCar(null)
   }
 
-  const getCookie = (name) => {
-    const cookieArr = document.cookie.split(';')
-    for (let i = 0; i < cookieArr.length; i++) {
-      const cookiePair = cookieArr[i].split('=')
-      if (name === cookiePair[0].trim()) {
-        return decodeURIComponent(cookiePair[1])
-      }
-    }
-    return null
-  }
-
-  React.useEffect(() => {
-    if (getCookie('hideWelcomeBox')) {
-      setShowWelcomeBox(false)
-    }
-  }, [document.cookie])
-
   return (
     <>
-      {showWelcomeBox && <WelcomeBox />}
+      <WelcomeBox />
 
       <Wrapper>
         <TransparentButton onClick={() => resetSimulation()}>

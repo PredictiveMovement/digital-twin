@@ -9,6 +9,7 @@ const Wrapper = styled.div`
   position: absolute;
   backdrop-filter: blur(1px);
   z-index: 100;
+  display: ${(props) => (props.showWelcomeBox ? 'block' : 'none')};
 `
 
 const Container = styled.div`
@@ -43,13 +44,33 @@ const ButtonWrapper = styled.div`
 `
 
 const WelcomeBox = () => {
+  const [showWelcomeBox, setShowWelcomeBox] = React.useState(true)
+
+  const getCookie = (name) => {
+    const cookieArr = document.cookie.split(';')
+    for (let i = 0; i < cookieArr.length; i++) {
+      const cookiePair = cookieArr[i].split('=')
+      if (name === cookiePair[0].trim()) {
+        return decodeURIComponent(cookiePair[1])
+      }
+    }
+    return null
+  }
+
+  React.useEffect(() => {
+    if (getCookie('hideWelcomeBox')) {
+      setShowWelcomeBox(false)
+    }
+  }, [document.cookie])
+
   const setCookie = () => {
     //Cookie lives for 30 days
     document.cookie = 'hideWelcomeBox=true; max-age=' + 30 * 24 * 60 * 60
+    setShowWelcomeBox(false)
   }
 
   return (
-    <Wrapper>
+    <Wrapper showWelcomeBox={showWelcomeBox}>
       <Container>
         <H1 large>
           Välkommen till Predictive Movements <br /> digitala tvilling
