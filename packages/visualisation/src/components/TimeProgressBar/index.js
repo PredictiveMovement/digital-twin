@@ -58,7 +58,7 @@ const TimeStamp = styled.p`
 `
 
 const TimeWrapper = styled.div`
-  left: ${({ completed }) => `calc(${completed}% - 27px)`};
+  left: ${({ completed }) => `calc(${completed}% - 16px)`};
   position: absolute;
   bottom: 2rem;
   display: none;
@@ -81,7 +81,12 @@ const ProgressBar = ({ time }) => {
           {completed !== 100 && <Circle completed={completed} />}
         </Filler>
         <TimeWrapper completed={completed}>
-          <TimeStamp>{new Date(time).toLocaleTimeString()}</TimeStamp>
+          <TimeStamp>
+            {new Date(time).toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </TimeStamp>
         </TimeWrapper>
       </Container>
     </Wrapper>
