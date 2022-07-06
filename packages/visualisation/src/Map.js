@@ -4,7 +4,6 @@ import DeckGL, {
   PolygonLayer,
   ScatterplotLayer,
   ArcLayer,
-  IconLayer,
   LinearInterpolator,
 } from 'deck.gl'
 //import { GeoJsonLayer } from '@deck.gl/layers'
