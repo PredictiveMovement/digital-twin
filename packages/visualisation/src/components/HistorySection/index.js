@@ -1,6 +1,8 @@
 import styled from 'styled-components'
-import { H1, Paragraph } from '../Typography'
+import { H1, H3, Paragraph } from '../Typography'
 import DropDown from '../DropDown'
+import checkIcon from '../../icons/svg/checkIcon.svg'
+import { useState } from 'react'
 
 const MenuContainer = styled.div`
   display: flex;
@@ -17,13 +19,63 @@ const MenuContainer = styled.div`
   top: 0;
   z-index: 4;
 `
+
+const Button = styled.button`
+  width: 16px;
+  height: 16px;
+  background-color: #666666;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  background-image: ${(props) => (props.checked ? `url(${checkIcon})` : null)};
+  background-repeat: no-repeat;
+  background-position: center;
+`
+
+const Flex = styled.div`
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+`
+
+const ParagraphMedium = styled(Paragraph)`
+  font-size: 14px;
+`
+
+const CheckItem = ({ text }) => {
+  const [checked, setChecked] = useState(false)
+  return (
+    <Flex>
+      <Button
+        checked={checked}
+        onClick={() => setChecked((current) => !current)}
+      ></Button>
+      <ParagraphMedium black> {text}</ParagraphMedium>
+    </Flex>
+  )
+}
+
 const HistorySection = () => {
   return (
     <MenuContainer>
       <H1>Experiment</H1>
       <DropDown title="Pågående expriment">
         <DropDown small title="Experimentpremisser">
-          <Paragraph black> Premisser</Paragraph>
+          <ParagraphMedium black>
+            Här kan du justera premisserna i ditt experiment. Du behöver starta
+            om experimentet för att ändra premisserna.
+          </ParagraphMedium>
+
+          <H3>Fordon</H3>
+
+          <CheckItem text="Busslinjer" />
+          <CheckItem text="Buss" />
+          <CheckItem text="Privatpersoners bilar" />
+          <CheckItem text="Taxi" />
+          <CheckItem text="Sjukresor" />
+          <CheckItem text="Flygbil" />
+          <CheckItem text="Skolskjuts" />
+          <CheckItem text="Färdtjänst" />
         </DropDown>
         <DropDown small title="Resultat">
           <Paragraph black>Här kan du se resultatet av experimentet.</Paragraph>
