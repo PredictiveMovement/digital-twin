@@ -40,6 +40,7 @@ const commercialAreasLayer = new GeoJsonLayer({
 const transitionInterpolator = new LinearInterpolator(['bearing'])
 
 const Map = ({
+  activeLayers,
   cars,
   bookings,
   hubs,
@@ -407,7 +408,7 @@ const Map = ({
         hubLayer,
         busStopLayer,
         bookingLayer,
-        carLayer,
+        activeLayers.carLayer && carLayer,
         showArcLayer && arcLayer,
         showQueuedBookings && arcLayerQueuedBookings,
       ]}

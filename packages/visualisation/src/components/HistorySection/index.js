@@ -42,20 +42,24 @@ const ParagraphMedium = styled(Paragraph)`
   font-size: 14px;
 `
 
-const CheckItem = ({ text }) => {
-  const [checked, setChecked] = useState(false)
+const CheckItem = ({ text, setLayer }) => {
+  const [checked, setChecked] = useState(true)
   return (
     <Flex>
       <Button
         checked={checked}
-        onClick={() => setChecked((current) => !current)}
+        onClick={() => {
+          setChecked((current) => !current)
+          setLayer((current) => !current)
+          console.log('here?')
+        }}
       ></Button>
       <ParagraphMedium black> {text}</ParagraphMedium>
     </Flex>
   )
 }
 
-const HistorySection = () => {
+const HistorySection = ({ activeLayers }) => {
   return (
     <MenuContainer>
       <H1>Experiment</H1>
@@ -68,14 +72,14 @@ const HistorySection = () => {
 
           <H3>Fordon</H3>
 
-          <CheckItem text="Busslinjer" />
-          <CheckItem text="Buss" />
+          <CheckItem text="Buss" setLayer={activeLayers.setCarLayer} />
+          {/* <CheckItem text="Buss" />
           <CheckItem text="Privatpersoners bilar" />
           <CheckItem text="Taxi" />
           <CheckItem text="Sjukresor" />
           <CheckItem text="Flygbil" />
           <CheckItem text="Skolskjuts" />
-          <CheckItem text="Färdtjänst" />
+          <CheckItem text="Färdtjänst" /> */}
         </DropDown>
         <DropDown small title="Resultat">
           <Paragraph black>Här kan du se resultatet av experimentet.</Paragraph>

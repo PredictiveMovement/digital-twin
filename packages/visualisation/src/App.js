@@ -21,6 +21,16 @@ const App = () => {
   const [reset, setReset] = useState(false)
   const [speed, setSpeed] = React.useState(60)
   const [time, setTime] = React.useState(Date.now())
+  const [carLayer, setCarLayer] = React.useState(true)
+
+  const activeLayers = {
+    carLayer: carLayer,
+    setCarLayer: setCarLayer,
+  }
+
+  React.useEffect(() => {
+    console.log('show layer', carLayer)
+  }, [carLayer])
 
   useSocket('reset', () => {
     console.log('received reset')
@@ -174,7 +184,7 @@ const App = () => {
           <img src={ResetIcon} alt="Reset" />
         </TransparentButton>
       </Wrapper>
-      <SideMenu />
+      <SideMenu activeLayers={activeLayers} />
 
       <PlaybackOptions
         onPause={onPause}
@@ -183,6 +193,7 @@ const App = () => {
       />
       {reset && <Loading />}
       <Map
+        activeLayers={activeLayers}
         cars={cars}
         bookings={bookings}
         hubs={postombud}

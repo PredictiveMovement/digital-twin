@@ -39,7 +39,7 @@ const ActiveMenu = styled.div`
   left: 2.6rem;
 `
 
-const SideMenu = () => {
+const SideMenu = ({ activeLayers }) => {
   const ref = useRef()
 
   const [open, setOpen] = useState('map')
@@ -82,7 +82,7 @@ const SideMenu = () => {
         </List>
       </Menu>
       {open === 'guide' && <GuideSection />}
-      {open === 'history' && <HistorySection />}
+      {open === 'history' && <HistorySection activeLayers={activeLayers} />}
     </div>
   )
 }
