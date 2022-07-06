@@ -4,15 +4,15 @@ import Map from './Map.js'
 import PlaybackOptions from './components/PlaybackOptions/index.js'
 import Loading from './components/Loading/index.js'
 import styled from 'styled-components'
-import ResetIcon from './icons/reset.svg'
+import ResetIcon from './icons/svg/resetIcon.svg'
 import TransparentButton from './components/TransparentButton/index.js'
 import SideMenu from './components/SideMenu/index.js'
 
 const Wrapper = styled.div`
   position: absolute;
   z-index: 2;
-  bottom: 2.7rem;
-  left: 10rem;
+  bottom: 3rem;
+  left: 11.3rem;
 `
 
 const App = () => {

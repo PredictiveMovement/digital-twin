@@ -13,7 +13,7 @@ import { ParagraphLarge } from './components/Typography'
 
 //import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
-
+import TimeProgressBar from './components/TimeProgressBar'
 import Button from './components/Button'
 
 import mapboxgl from 'mapbox-gl'
@@ -420,7 +420,7 @@ const Map = ({
         }}
       >
         <Button
-          text="Upphämtning / Avlämning"
+          text="Visa rutter"
           onClick={() => {
             setShowArcLayer(false)
             setShowQueuedBookings((current) => !current)
@@ -435,7 +435,7 @@ const Map = ({
         }}
       >
         <Button
-          text={'Nästa stopp'}
+          text={'Visa nästa stopp'}
           onClick={() => {
             setShowQueuedBookings(false)
             setShowArcLayer((current) => !current)
@@ -448,7 +448,7 @@ const Map = ({
         mapStyle="mapbox://styles/mapbox/dark-v10"
       />
       {hoverInfo && mapState.zoom > 8 && <HoverInfoBox data={hoverInfo} />}
-
+      <TimeProgressBar time={time} />
       <div
         style={{
           right: '3rem',
