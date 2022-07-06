@@ -13,14 +13,14 @@ const ParagraphBold = styled(Paragraph)`
 `
 
 const ParagraphLarge = styled.p`
+  color: ${(props) => (props.black ? 'black' : 'white')};
   font-family: 'Roboto', sans-serif;
-  color: #ffff;
   margin: 0;
   font-size: 16px;
 `
 
 const H1 = styled.h1`
-  font-size: 20px;
+  font-size: ${(props) => (props.large ? '24px' : '20px')};
   margin: 0;
 `
 
