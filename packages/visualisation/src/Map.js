@@ -458,8 +458,14 @@ const Map = ({
         }}
       >
         <ParagraphLarge>
-          Just nu är klockan
-          <b> {new Date(time).toLocaleTimeString()} </b> <br />i simuleringen
+          Just nu är klockan{' '}
+          <b>
+            {new Date(time).toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </b>{' '}
+          <br />i simuleringen
         </ParagraphLarge>
       </div>
       {kommunInfo && <KommunStatisticsBox {...kommunInfo} />}
