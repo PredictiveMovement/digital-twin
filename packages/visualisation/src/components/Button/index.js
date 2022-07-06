@@ -6,7 +6,7 @@ const StyledButton = styled.button`
   height: 50px;
   background-color: #fefefe;
   border: none;
-  position: absolute;
+  position: ${(props) => (props.block ? 'block' : 'absolute')};
   z-index: 2;
   cursor: pointer;
   font-size: 14px;
@@ -14,8 +14,12 @@ const StyledButton = styled.button`
   border-radius: 2px;
 `
 
-const Button = ({ text, onClick }) => {
-  return <StyledButton onClick={() => onClick()}>{text}</StyledButton>
+const Button = ({ text, onClick, block }) => {
+  return (
+    <StyledButton onClick={() => onClick()} block={block}>
+      {text}
+    </StyledButton>
+  )
 }
 
 export default Button

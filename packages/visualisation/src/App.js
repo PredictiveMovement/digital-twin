@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import ResetIcon from './icons/svg/resetIcon.svg'
 import TransparentButton from './components/TransparentButton/index.js'
 import SideMenu from './components/SideMenu/index.js'
+import WelcomeBox from './components/WelcomeBox/index.js'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -166,6 +167,8 @@ const App = () => {
 
   return (
     <>
+      <WelcomeBox />
+
       <Wrapper>
         <TransparentButton onClick={() => resetSimulation()}>
           <img src={ResetIcon} alt="Reset" />
