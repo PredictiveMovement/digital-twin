@@ -6,11 +6,15 @@ spec:
   tls:
     - hosts:
         - kibana.predictivemovement.se
-      secretName: rorla-prod-tls
+      secretName: kibana-prod-tls
   rules:
     - host: kibana.predictivemovement.se
       http:
         paths:
-          - backend:
-              serviceName: kibana
-              servicePort: 5601
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kibana
+                port:
+                  number: 5601

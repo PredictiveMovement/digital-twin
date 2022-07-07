@@ -1,4 +1,4 @@
-const { share, merge, fromEvent, of } = require('rxjs')
+const { from, share, merge, fromEvent, of } = require('rxjs')
 const { mergeMap } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
