@@ -23,14 +23,16 @@ const App = () => {
   const [time, setTime] = React.useState(Date.now())
   const [carLayer, setCarLayer] = React.useState(true)
 
+  const { socket } = useSocket()
+
   const activeLayers = {
     carLayer: carLayer,
     setCarLayer: setCarLayer,
   }
 
   React.useEffect(() => {
-    console.log('show layer', carLayer)
-  }, [carLayer])
+    socket.emit('carLayer', activeLayers.carLayer)
+  }, [activeLayers.carLayer])
 
   useSocket('reset', () => {
     console.log('received reset')
@@ -146,8 +148,6 @@ const App = () => {
   useSocket('kommun', (kommun) => {
     setKommuner((current) => upsert(current, kommun, 'id'))
   })
-
-  const { socket } = useSocket()
 
   const onPause = () => {
     socket.emit('pause')

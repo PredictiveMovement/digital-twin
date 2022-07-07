@@ -78,6 +78,8 @@ const cleanCars = ({
 function register(io) {
   const experiment = engine.createExperiment() // move this to a start event
 
+  let emitCars = true
+
   io.on('connection', function (socket) {
     socket.emit('reset')
 
@@ -95,6 +97,10 @@ function register(io) {
 
     socket.on('speed', (speed) => {
       virtualTime.setTimeMultiplier(speed)
+    })
+
+    socket.on('carLayer', (value) => {
+      emitCars == value
     })
 
     experiment.postombud.pipe(toArray()).subscribe((postombud) => {
@@ -136,7 +142,9 @@ function register(io) {
       map(cleanCars)
     )
     .subscribe((car) => {
-      if (car) io.emit('cars', [car])
+      if (car && emitCars) {
+        io.emit('cars', [car])
+      }
     })
 
   setInterval(() => {

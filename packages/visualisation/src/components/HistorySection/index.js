@@ -2,7 +2,6 @@ import styled from 'styled-components'
 import { H1, H3, Paragraph } from '../Typography'
 import DropDown from '../DropDown'
 import checkIcon from '../../icons/svg/checkIcon.svg'
-import { useState } from 'react'
 
 const MenuContainer = styled.div`
   display: flex;
@@ -42,14 +41,12 @@ const ParagraphMedium = styled(Paragraph)`
   font-size: 14px;
 `
 
-const CheckItem = ({ text, setLayer }) => {
-  const [checked, setChecked] = useState(true)
+const CheckItem = ({ text, setLayer, checked }) => {
   return (
     <Flex>
       <Button
         checked={checked}
         onClick={() => {
-          setChecked((current) => !current)
           setLayer((current) => !current)
           console.log('here?')
         }}
@@ -72,7 +69,11 @@ const HistorySection = ({ activeLayers }) => {
 
           <H3>Fordon</H3>
 
-          <CheckItem text="Buss" setLayer={activeLayers.setCarLayer} />
+          <CheckItem
+            text="Buss"
+            setLayer={activeLayers.setCarLayer}
+            checked={activeLayers.carLayer}
+          />
           {/* <CheckItem text="Buss" />
           <CheckItem text="Privatpersoners bilar" />
           <CheckItem text="Taxi" />
