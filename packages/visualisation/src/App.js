@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSocket } from './hooks/useSocket.js'
 import Map from './Map.js'
 import PlaybackOptions from './components/PlaybackOptions/index.js'
@@ -19,18 +19,21 @@ const Wrapper = styled.div`
 const App = () => {
   const [activeCar, setActiveCar] = useState(null)
   const [reset, setReset] = useState(false)
-  const [speed, setSpeed] = React.useState(60)
-  const [time, setTime] = React.useState(Date.now())
-  const [carLayer, setCarLayer] = React.useState(true)
+  const [speed, setSpeed] = useState(60)
+  const [time, setTime] = useState(Date.now())
+  const [carLayer, setCarLayer] = useState(true)
+  const [postombudLayer, setPostombudLayer] = useState(true)
 
   const { socket } = useSocket()
 
   const activeLayers = {
-    carLayer: carLayer,
-    setCarLayer: setCarLayer,
+    carLayer,
+    setCarLayer,
+    postombudLayer,
+    setPostombudLayer,
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     socket.emit('carLayer', activeLayers.carLayer)
   }, [activeLayers.carLayer])
 

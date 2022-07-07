@@ -74,6 +74,11 @@ const HistorySection = ({ activeLayers }) => {
             setLayer={activeLayers.setCarLayer}
             checked={activeLayers.carLayer}
           />
+          <CheckItem
+            text="Postombud"
+            setLayer={activeLayers.setPostombudLayer}
+            checked={activeLayers.postombudLayer}
+          />
           {/* <CheckItem text="Buss" />
           <CheckItem text="Privatpersoners bilar" />
           <CheckItem text="Taxi" />

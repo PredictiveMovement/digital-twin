@@ -405,7 +405,7 @@ const Map = ({
         // The order of these layers matter, roughly equal to increasing z-index by 1
         kommunLayer, // TODO: This hides some items behind it, sort of
         //commercialAreasLayer,
-        hubLayer,
+        activeLayers.postombudLayer && hubLayer,
         busStopLayer,
         bookingLayer,
         activeLayers.carLayer && carLayer,
