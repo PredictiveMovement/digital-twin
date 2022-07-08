@@ -23,6 +23,7 @@ const App = () => {
   const [time, setTime] = useState(Date.now())
   const [carLayer, setCarLayer] = useState(true)
   const [postombudLayer, setPostombudLayer] = useState(true)
+  const [fixedRoute, setFixedRoute] = useState(50)
 
   const { socket } = useSocket()
 
@@ -187,7 +188,11 @@ const App = () => {
           <img src={ResetIcon} alt="Reset" />
         </TransparentButton>
       </Wrapper>
-      <SideMenu activeLayers={activeLayers} />
+      <SideMenu
+        activeLayers={activeLayers}
+        fixedRoute={fixedRoute}
+        setFixedRoute={setFixedRoute}
+      />
 
       <PlaybackOptions
         onPause={onPause}

@@ -1,7 +1,11 @@
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import Slider from '@mui/material/Slider'
+
 import { H1, H3, Paragraph } from '../Typography'
 import DropDown from '../DropDown'
 import checkIcon from '../../icons/svg/checkIcon.svg'
+import { useSocket } from '../../hooks/useSocket'
 
 const MenuContainer = styled.div`
   display: flex;
@@ -41,6 +45,11 @@ const ParagraphMedium = styled(Paragraph)`
   font-size: 14px;
 `
 
+const FlexSpaceBetween = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
 const CheckItem = ({ text, setLayer, checked }) => {
   return (
     <Flex>
@@ -56,7 +65,14 @@ const CheckItem = ({ text, setLayer, checked }) => {
   )
 }
 
-const HistorySection = ({ activeLayers }) => {
+const HistorySection = ({ activeLayers, fixedRoute, setFixedRoute }) => {
+  const { socket } = useSocket()
+
+  const onChange = (e) => {
+    setFixedRoute(e.target.value)
+    socket.emit('fixedRoute', e.target.value)
+  }
+
   return (
     <MenuContainer>
       <H1>Experiment</H1>
@@ -74,6 +90,22 @@ const HistorySection = ({ activeLayers }) => {
             setLayer={activeLayers.setCarLayer}
             checked={activeLayers.carLayer}
           />
+          <div style={{ marginBottom: '0.5rem', marginTop: '-0.7rem' }}>
+            <Slider
+              aria-label="Custom marks"
+              size="small"
+              value={fixedRoute}
+              onChange={onChange}
+            />
+            <FlexSpaceBetween>
+              <Paragraph black small>
+                Fasta
+              </Paragraph>
+              <Paragraph black small>
+                Dynamiska
+              </Paragraph>
+            </FlexSpaceBetween>
+          </div>
           <CheckItem
             text="Postombud"
             setLayer={activeLayers.setPostombudLayer}

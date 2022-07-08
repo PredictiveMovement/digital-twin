@@ -103,6 +103,11 @@ function register(io) {
       emitCars == value
     })
 
+    // Reciving a percentage of how many fixed vs dynamic routes
+    // socket.on('fixedRoute', (value) => {
+    //   console.log('total fixed route: ', value)
+    // })
+
     experiment.postombud.pipe(toArray()).subscribe((postombud) => {
       socket.emit('postombud', postombud)
     })
