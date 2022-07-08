@@ -57,7 +57,6 @@ const CheckItem = ({ text, setLayer, checked }) => {
         checked={checked}
         onClick={() => {
           setLayer((current) => !current)
-          console.log('here?')
         }}
       ></Button>
       <ParagraphMedium black> {text}</ParagraphMedium>
