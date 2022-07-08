@@ -26,7 +26,11 @@ const connect = Promise.all(
         body: mappings[index],
       })
       .catch((err) => {
-        if (err.meta.body.error.type === 'resource_already_exists_exception') {
+        console.log(err.meta)
+        if (
+          err.meta.body &&
+          err.meta.body.error.type === 'resource_already_exists_exception'
+        ) {
           console.log(`
             Index ${index} already mapped.
             If you want to re-map it:
@@ -41,16 +45,17 @@ const connect = Promise.all(
 )
 
 const save = (booking, indexName) => {
-  return connect.then(() =>
-    client
-      .index({
-        index: indexName,
-        id: booking.id,
-        body: booking,
-      })
-      .then((_) => console.log('Saved!'))
-      .catch(console.error)
-      .finally(() => process.exit())
+  return connect.then(
+    () =>
+      client
+        .index({
+          index: indexName,
+          id: booking.id,
+          body: booking,
+        })
+        .then((_) => console.log('Saved!'))
+        .catch(console.error)
+    // .finally(() => process.exit())
   )
 }
 

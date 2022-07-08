@@ -1,6 +1,7 @@
 const { from } = require('rxjs')
 const { subscribe } = require('rxjs/operators')
 const { save } = require('./elastic')
+const { safeId } = require('./id')
 
 // TODO: Remove exampleJourney once the stream feeds this function instead
 const exampleJourney = {
@@ -23,6 +24,34 @@ const exampleJourney = {
   fleet: { name: 'Länstrafiken Norrbotten' },
   assignedDateTime: 1655271228420,
 }
+
+const generateJourneys = () => {
+  const journeys = []
+  for (let i = 0; i < 100; i++) {
+    journeys.push({
+      id: safeId(),
+      status: 'Assigned',
+      co2: Math.random() * 200,
+      cost: Math.random() * 80,
+      distance: Math.random() * 450,
+      tripTime: Math.random() * 3000000,
+      weight: 0.041350018304702196,
+      pickup: { position: { lon: 11.016601, lat: 52.622044 } },
+      destination: { position: { lon: 22.20803, lat: 65.5825 } },
+      finalDestination: {
+        name: 'Lillstrandsvägen 2B',
+        position: { lon: 24.229152, lat: 66.589606 },
+      },
+      origin: 'Länstrafiken Norrbotten',
+      position: { lon: 13.016601, lat: 55.622044 },
+      kommun: { name: 'Luleå kommun', id: '2580' },
+      fleet: { name: 'Länstrafiken Norrbotten' },
+      assignedDateTime: 1655271228420 + i * 1000,
+    })
+  }
+  return journeys
+}
+
 const collectJourney = (incomingJourney) => {
   const journey = {
     id: incomingJourney.id,
@@ -49,4 +78,5 @@ const collectJourney = (incomingJourney) => {
 module.exports = {
   collectJourney,
   exampleJourney,
+  generateJourneys,
 }

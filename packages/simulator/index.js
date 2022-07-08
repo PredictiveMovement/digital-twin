@@ -11,7 +11,7 @@ const { safeId } = require('./lib/id')
 const { save } = require('./lib/elastic')
 const statsCollector = require('./lib/statistics')
 from(
-  [statsCollector.exampleJourney] // TODO: Hook into stream
+  statsCollector.generateJourneys() // TODO: Hook into stream
 ).subscribe(statsCollector.collectJourney)
 
 const engine = {

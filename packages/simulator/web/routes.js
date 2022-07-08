@@ -78,6 +78,8 @@ const cleanCars = ({
 function register(io) {
   const experiment = engine.createExperiment() // move this to a start event
 
+  console.log('Experiment', experiment.id)
+
   io.on('connection', function (socket) {
     socket.emit('reset')
 
