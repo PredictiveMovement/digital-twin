@@ -74,6 +74,7 @@ const NewExperimentSection = ({
               value={newParameters.fixedRoute}
               onChange={onChange}
               valueLabelDisplay="auto"
+              valueLabelFormat={(value) => `${value}%`}
             />
             <FlexSpaceBetween>
               <Paragraph black small>

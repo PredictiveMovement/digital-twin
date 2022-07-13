@@ -6,11 +6,11 @@ import DeckGL, {
   ArcLayer,
   LinearInterpolator,
 } from 'deck.gl'
-//import { GeoJsonLayer } from '@deck.gl/layers'
+import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
 import { ParagraphLarge } from './components/Typography'
 
-//import CommercialAreas from './data/commercial_areas.json'
+import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 import TimeProgressBar from './components/TimeProgressBar'
 import Button from './components/Button'
@@ -22,8 +22,6 @@ mapboxgl.workerClass =
   // eslint-disable-next-line import/no-webpack-loader-syntax
   require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default
 
-/*
-
 const commercialAreasLayer = new GeoJsonLayer({
   id: 'commercial-areas',
   data: CommercialAreas,
@@ -32,9 +30,8 @@ const commercialAreasLayer = new GeoJsonLayer({
   extured: false,
   wireframe: false,
   lineJointRounded: true,
-  getLineColor: [0, 255, 128],
+  getLineColor: [0, 128, 255],
 })
-*/
 
 const transitionInterpolator = new LinearInterpolator(['bearing'])
 
@@ -110,28 +107,55 @@ const Map = ({
     },
   })
 
+  const busStopLayer = new ScatterplotLayer({
+    id: 'busStop-layer',
+    data: busStops,
+    opacity: 0.7,
+    stroked: false,
+    filled: true,
+    radiusScale: 3,
+    radiusMinPixels: 2,
+    radiusMaxPixels: 6,
+    getPosition: (c) => {
+      return c.position
+    },
+    getRadius: () => 4,
+    getFillColor: [255, 255, 255, 80],
+    pickable: true,
+    onHover: ({ object, x, y }) => {
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        type: 'busStop',
+        title: 'Busstopp ' + object.name,
+        x,
+        y,
+      })
+    },
+  })
+
   const getColorBasedOnFleet = ({ fleet }) => {
+    const opacity = Math.round((4 / 5) * 255)
     switch (fleet.toLowerCase()) {
       case 'brun':
-        return [234, 181, 67]
+        return [234, 181, 67, opacity]
       case 'bring':
-        return [189, 197, 129]
+        return [189, 197, 129, opacity]
       case 'gul':
-        return [249, 202, 36]
+        return [249, 202, 36, opacity]
       case 'postnord':
-        return [57, 123, 184]
+        return [57, 123, 184, opacity]
       case 'röd':
-        return [235, 77, 75]
+        return [235, 77, 75, opacity]
       case 'länstrafiken i norrbotten':
-        return [232, 67, 147, 244]
+        return [232, 67, 147, opacity]
       case 'drönarleverans ab':
-        return [119, 155, 172]
+        return [119, 155, 172, opacity]
       case 'privat':
-        return [34, 166, 179]
+        return [34, 166, 179, opacity]
       case 'taxi':
-        return [255, 255, 0]
+        return [255, 255, 0, opacity]
       default:
-        return [254, 254, 254]
+        return [254, 254, 254, opacity]
     }
   }
 
@@ -184,7 +208,7 @@ const Map = ({
 
   const carLayer = new ScatterplotLayer({
     id: 'car-layer',
-    data: cars,
+    data: cars.filter((v) => v.vehicleType === 'car'),
     //opacity: 0.7,
     stroked: false,
     filled: true,
@@ -215,6 +239,74 @@ const Map = ({
       setActiveCar(object)
     },
   })
+
+  const taxiLayer = new ScatterplotLayer({
+    id: 'taxi-layer',
+    data: cars.filter((v) => v.vehicleType === 'taxi'),
+    //opacity: 0.7,
+    stroked: false,
+    filled: true,
+    radiusScale: 6,
+    radiusUnits: 'pixels',
+    getPosition: (c) => {
+      return c.position
+    },
+    //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
+    getFillColor: getColorBasedOnFleet,
+    pickable: true,
+    onHover: ({ object, x, y }) => {
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        ...object,
+        type: 'car',
+        x,
+        y,
+      })
+    },
+    onClick: ({ object }) => {
+      setMapState({
+        ...mapState,
+        zoom: 14,
+        longitude: object.position[0],
+        latitude: object.position[1],
+      })
+      setActiveCar(object)
+    },
+  })
+
+  const busLayer = new ScatterplotLayer({
+    id: 'bus-layer',
+    data: cars.filter((v) => v.vehicleType === 'bus'),
+    //opacity: 0.7,
+    stroked: false,
+    filled: true,
+    radiusScale: 6,
+    radiusUnits: 'pixels',
+    getPosition: (c) => {
+      return c.position
+    },
+    getFillColor: getColorBasedOnFleet,
+    pickable: true,
+    onHover: ({ object, x, y }) => {
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        ...object,
+        type: 'car',
+        x,
+        y,
+      })
+    },
+    onClick: ({ object }) => {
+      setMapState({
+        ...mapState,
+        zoom: 14,
+        longitude: object.position[0],
+        latitude: object.position[1],
+      })
+      setActiveCar(object)
+    },
+  })
+
   const passengerLayer = new ScatterplotLayer({
     id: 'passenger-layer',
     data: passengers,
@@ -227,7 +319,7 @@ const Map = ({
       return c.position
     },
     //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
-    getFillColor: ({ inCar }) => (inCar ? [0, 0, 0, 0] : [0, 0, 255, 255]),
+    getFillColor: ({ inCar }) => (inCar ? [0, 0, 0, 0] : [0, 128, 255, 170]),
 
     pickable: true,
     onHover: ({ object, x, y }) => {
@@ -304,31 +396,6 @@ const Map = ({
     },
   })
 
-  const busStopLayer = new ScatterplotLayer({
-    id: 'busStop-layer',
-    data: busStops,
-    opacity: 0.7,
-    stroked: false,
-    filled: true,
-    radiusScale: 3,
-    radiusMinPixels: 2,
-    radiusMaxPixels: 6,
-    getPosition: (c) => {
-      return c.position
-    },
-    getRadius: () => 4,
-    getFillColor: [255, 255, 255, 120],
-    pickable: true,
-    onHover: ({ object, x, y }) => {
-      if (!object) return setHoverInfo(null)
-      setHoverInfo({
-        type: 'busStop',
-        title: 'Busstopp ' + object.name,
-        x,
-        y,
-      })
-    },
-  })
   const [showQueuedBookings, setShowQueuedBookings] = useState(false)
 
   const arcDataWithQueuedBookings =
@@ -431,13 +498,15 @@ const Map = ({
       controller={true}
       layers={[
         // The order of these layers matter, roughly equal to increasing z-index by 1
-        kommunLayer, // TODO: This hides some items behind it, sort of
-        passengerLayer,
-        //commercialAreasLayer,
+        activeLayers.kommunLayer && kommunLayer, // TODO: This hides some items behind it, sort of
+        activeLayers.passengerLayer && passengerLayer,
+        activeLayers.commercialAreasLayer && commercialAreasLayer,
         activeLayers.postombudLayer && hubLayer,
-        busStopLayer,
+        activeLayers.busStopLayer && busStopLayer,
         bookingLayer,
         activeLayers.carLayer && carLayer,
+        activeLayers.taxiLayer && taxiLayer,
+        activeLayers.busLayer && busLayer,
         showArcLayer && arcLayer,
         showQueuedBookings && arcLayerQueuedBookings,
       ]}
