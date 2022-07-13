@@ -44,15 +44,16 @@ class Taxi extends Vehicle {
   }
   pickup() {
     if (this.instruction.passenger && this.instruction.type === 'pickup') {
-      this.instruction.passenger.pickedUp()
-      console.log('picked up passenger', this.instruction.passenger)
-      this.cargo.push(this.instruction.passenger)
+      const passenger = this.instruction.passenger
+      passenger.pickedUp()
+      console.log(`Picked up passenger - ${passenger.id} ${passenger.name}`)
+      this.cargo.push(passenger)
     }
     if (this.instruction.passenger && this.instruction.type === 'delivery') {
-      this.instruction.passenger.delivered()
-      this.cargo = this.cargo.filter(
-        (passenger) => passenger !== this.instruction.passenger
-      )
+      const passenger = this.instruction.passenger
+      passenger.delivered()
+      console.log(`Delivered passenger - ${passenger.id} ${passenger.name}`)
+      this.cargo = this.cargo.filter((passenger) => passenger !== passenger)
     }
     this.instruction = this.instructions.shift()
     if (this.instruction) {
