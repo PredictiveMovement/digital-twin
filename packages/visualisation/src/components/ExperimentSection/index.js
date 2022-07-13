@@ -4,11 +4,26 @@ import Slider from '@mui/material/Slider'
 import { H1, H3, Paragraph, ParagraphBold } from '../Typography'
 import checkIcon from '../../icons/svg/checkIcon.svg'
 
+const WhiteCircle = styled.div`
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 1px solid #666;
+`
+
 const Circle = styled.div`
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${({ backgroundColor = 'transparent' }) => backgroundColor};
+`
+
+const Donut = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid ${({ borderColor = 'transparent' }) => borderColor};
 `
 
 const MenuContainer = styled.div`
@@ -67,7 +82,7 @@ const Grid = styled.div`
   gap: 1rem 1.5rem;
 `
 
-const CheckItem = ({ text, setLayer, checked, color }) => {
+const CheckItem = ({ text, setLayer, checked, color, borderOnly = false }) => {
   return (
     <Flex>
       <Button
@@ -76,7 +91,13 @@ const CheckItem = ({ text, setLayer, checked, color }) => {
           setLayer((current) => !current)
         }}
       />
-      <Circle backgroundColor={color} />
+      {borderOnly ? (
+        <Donut borderColor={color} />
+      ) : color === '#FFFFFF' ? (
+        <WhiteCircle />
+      ) : (
+        <Circle backgroundColor={color} />
+      )}
       <ParagraphMedium black> {text}</ParagraphMedium>
     </Flex>
   )
@@ -127,10 +148,30 @@ const ExperimentSection = ({ activeLayers, currentParameters }) => {
           color="#74CBFF"
         />
         <CheckItem
+          text="Busshållplatser"
+          setLayer={activeLayers.setBusStopLayer}
+          checked={activeLayers.busStopLayer}
+          color="#FFFFFF"
+        />
+        <CheckItem
           text="Postombud"
           setLayer={activeLayers.setPostombudLayer}
           checked={activeLayers.postombudLayer}
           color="#13C57B"
+        />
+        <CheckItem
+          text="Kommersiella distrikt"
+          setLayer={activeLayers.setCommercialAreasLayer}
+          checked={activeLayers.commercialAreasLayer}
+          color="#0080FF"
+          borderOnly
+        />
+        <CheckItem
+          text="Kommungränser"
+          setLayer={activeLayers.setKommunLayer}
+          checked={activeLayers.kommunLayer}
+          color="#13C57B"
+          borderOnly
         />
       </Container>
 

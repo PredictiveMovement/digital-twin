@@ -6,11 +6,11 @@ import DeckGL, {
   ArcLayer,
   LinearInterpolator,
 } from 'deck.gl'
-//import { GeoJsonLayer } from '@deck.gl/layers'
+import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
 import { ParagraphLarge } from './components/Typography'
 
-//import CommercialAreas from './data/commercial_areas.json'
+import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 import TimeProgressBar from './components/TimeProgressBar'
 import Button from './components/Button'
@@ -22,8 +22,6 @@ mapboxgl.workerClass =
   // eslint-disable-next-line import/no-webpack-loader-syntax
   require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default
 
-/*
-
 const commercialAreasLayer = new GeoJsonLayer({
   id: 'commercial-areas',
   data: CommercialAreas,
@@ -32,9 +30,8 @@ const commercialAreasLayer = new GeoJsonLayer({
   extured: false,
   wireframe: false,
   lineJointRounded: true,
-  getLineColor: [0, 255, 128],
+  getLineColor: [0, 128, 255],
 })
-*/
 
 const transitionInterpolator = new LinearInterpolator(['bearing'])
 
@@ -184,7 +181,7 @@ const Map = ({
 
   const carLayer = new ScatterplotLayer({
     id: 'car-layer',
-    data: cars,
+    data: cars.filter((v) => v.vehicleType === 'car'),
     //opacity: 0.7,
     stroked: false,
     filled: true,
@@ -215,6 +212,75 @@ const Map = ({
       setActiveCar(object)
     },
   })
+
+  const taxiLayer = new ScatterplotLayer({
+    id: 'taxi-layer',
+    data: cars.filter((v) => v.vehicleType === 'taxi'),
+    //opacity: 0.7,
+    stroked: false,
+    filled: true,
+    radiusScale: 6,
+    radiusUnits: 'pixels',
+    getPosition: (c) => {
+      return c.position
+    },
+    //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
+    getFillColor: getColorBasedOnFleet,
+    pickable: true,
+    onHover: ({ object, x, y }) => {
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        ...object,
+        type: 'car',
+        x,
+        y,
+      })
+    },
+    onClick: ({ object }) => {
+      setMapState({
+        ...mapState,
+        zoom: 14,
+        longitude: object.position[0],
+        latitude: object.position[1],
+      })
+      setActiveCar(object)
+    },
+  })
+
+  const busLayer = new ScatterplotLayer({
+    id: 'bus-layer',
+    data: cars.filter((v) => v.vehicleType === 'bus'),
+    //opacity: 0.7,
+    stroked: false,
+    filled: true,
+    radiusScale: 6,
+    radiusUnits: 'pixels',
+    getPosition: (c) => {
+      return c.position
+    },
+    //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
+    getFillColor: getColorBasedOnFleet,
+    pickable: true,
+    onHover: ({ object, x, y }) => {
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        ...object,
+        type: 'car',
+        x,
+        y,
+      })
+    },
+    onClick: ({ object }) => {
+      setMapState({
+        ...mapState,
+        zoom: 14,
+        longitude: object.position[0],
+        latitude: object.position[1],
+      })
+      setActiveCar(object)
+    },
+  })
+
   const passengerLayer = new ScatterplotLayer({
     id: 'passenger-layer',
     data: passengers,
@@ -227,7 +293,7 @@ const Map = ({
       return c.position
     },
     //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
-    getFillColor: ({ inCar }) => (inCar ? [0, 0, 0, 0] : [0, 0, 255, 255]),
+    getFillColor: ({ inCar }) => (inCar ? [0, 0, 0, 0] : [116, 203, 255, 255]),
 
     pickable: true,
     onHover: ({ object, x, y }) => {
@@ -431,13 +497,15 @@ const Map = ({
       controller={true}
       layers={[
         // The order of these layers matter, roughly equal to increasing z-index by 1
-        kommunLayer, // TODO: This hides some items behind it, sort of
-        passengerLayer,
-        //commercialAreasLayer,
+        activeLayers.kommunLayer && kommunLayer, // TODO: This hides some items behind it, sort of
+        activeLayers.passengerLayer && passengerLayer,
+        activeLayers.commercialAreasLayer && commercialAreasLayer,
         activeLayers.postombudLayer && hubLayer,
-        busStopLayer,
+        activeLayers.busStopLayer && busStopLayer,
         bookingLayer,
         activeLayers.carLayer && carLayer,
+        activeLayers.taxiLayer && taxiLayer,
+        activeLayers.busLayer && busLayer,
         showArcLayer && arcLayer,
         showQueuedBookings && arcLayerQueuedBookings,
       ]}

@@ -57,8 +57,8 @@ const engine = {
     )
 
     experiment.carUpdates = merge(
-      // experiment.cars,
-      // experiment.buses,
+      experiment.cars,
+      experiment.buses,
       experiment.taxis
     ).pipe(
       mergeMap((car) => fromEvent(car, 'moved')),
