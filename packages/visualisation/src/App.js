@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSocket } from './hooks/useSocket.js'
 import Map from './Map.js'
 import PlaybackOptions from './components/PlaybackOptions/index.js'
@@ -19,8 +19,35 @@ const Wrapper = styled.div`
 const App = () => {
   const [activeCar, setActiveCar] = useState(null)
   const [reset, setReset] = useState(false)
-  const [speed, setSpeed] = React.useState(60)
-  const [time, setTime] = React.useState(Date.now())
+  const [speed, setSpeed] = useState(60)
+  const [time, setTime] = useState(Date.now())
+  const [carLayer, setCarLayer] = useState(true)
+  const [taxiLayer, setTaxiLayer] = useState(true)
+  const [passengerLayer, setPassengerLayer] = useState(true)
+  const [postombudLayer, setPostombudLayer] = useState(false)
+  const [newParameters, setNewParameters] = useState({})
+  const [currentParameters, setCurrentParameters] = useState({})
+
+  const { socket } = useSocket()
+
+  const activeLayers = {
+    carLayer,
+    setCarLayer,
+    postombudLayer,
+    setPostombudLayer,
+    taxiLayer,
+    setTaxiLayer,
+    passengerLayer,
+    setPassengerLayer,
+  }
+
+  const newExperiment = (object) => {
+    socket.emit('experimentParameters', newParameters)
+  }
+
+  useEffect(() => {
+    socket.emit('carLayer', activeLayers.carLayer)
+  }, [activeLayers.carLayer])
 
   useSocket('reset', () => {
     console.log('received reset')
@@ -137,7 +164,10 @@ const App = () => {
     setKommuner((current) => upsert(current, kommun, 'id'))
   })
 
-  const { socket } = useSocket()
+  useSocket('parameters', (currentParameters) => {
+    setCurrentParameters(currentParameters)
+    setNewParameters(currentParameters)
+  })
 
   const onPause = () => {
     socket.emit('pause')
@@ -174,7 +204,13 @@ const App = () => {
           <img src={ResetIcon} alt="Reset" />
         </TransparentButton>
       </Wrapper>
-      <SideMenu />
+      <SideMenu
+        activeLayers={activeLayers}
+        currentParameters={currentParameters}
+        newParameters={newParameters}
+        newExperiment={newExperiment}
+        setNewParameters={setNewParameters}
+      />
 
       <PlaybackOptions
         onPause={onPause}
@@ -183,6 +219,7 @@ const App = () => {
       />
       {reset && <Loading />}
       <Map
+        activeLayers={activeLayers}
         cars={cars}
         bookings={bookings}
         hubs={postombud}
