@@ -35,9 +35,9 @@ const CarInfo = ({ data }) => {
     <Wrapper left={data.x - 8} top={data.y - 80}>
       <div>
         <Paragraph>{`Fordon ${data.id}`}</Paragraph>
-        {data.lineNumber !== undefined &&
+        {data.lineNumber !== undefined && (
           <Paragraph>Linje: {data.lineNumber}</Paragraph>
-        }
+        )}
         <Paragraph>Kör för {data.fleet}</Paragraph>
         <Paragraph>Köat: {data.queue || 0} paket</Paragraph>
         <Paragraph>Co2: {data.co2 || 0} kg</Paragraph>
@@ -47,7 +47,7 @@ const CarInfo = ({ data }) => {
       <div>
         <Paragraph>Fyllnadsgrad:</Paragraph>
         <ProgressBar
-          completed={(100 * Math.round((data.cargo * 10) / data.capacity)) / 10}
+          completed={Math.round((data.cargo / data.capacity) * 100)}
         />
       </div>
     </Wrapper>

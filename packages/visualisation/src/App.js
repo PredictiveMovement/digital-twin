@@ -90,6 +90,7 @@ const App = () => {
           cargo,
           capacity,
           lineNumber,
+          queue,
         }) => ({
           id,
           heading,
@@ -99,6 +100,7 @@ const App = () => {
           cargo,
           capacity,
           lineNumber,
+          queue,
         })
       ),
     ])

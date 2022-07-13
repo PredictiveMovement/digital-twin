@@ -14,6 +14,8 @@ class Taxi extends Vehicle {
     this.position = position
     this.heading = null
     this.currentPassengerCount = 0
+    this.cargo = []
+    this.instructions = []
     this.queue = []
     this.capacity = 4
     this.booking = true
@@ -36,14 +38,22 @@ class Taxi extends Vehicle {
         lon: location[1],
       })
     } else {
-      this.queue.push(instruction)
+      this.instructions.push(instruction)
     }
   }
   pickup() {
     if (this.instruction.passenger && this.instruction.type === 'pickup') {
       this.instruction.passenger.pickedUp()
+      console.log('picked up passenger', this.instruction.passenger)
+      this.cargo.push(this.instruction.passenger)
     }
-    this.instruction = this.queue.shift()
+    if (this.instruction.passenger && this.instruction.type === 'delivery') {
+      this.instruction.passenger.delivered()
+      this.cargo = this.cargo.filter(
+        (passenger) => passenger !== this.instruction.passenger
+      )
+    }
+    this.instruction = this.instructions.shift()
     if (this.instruction) {
       const location = this.instruction.location
       this.navigateTo({

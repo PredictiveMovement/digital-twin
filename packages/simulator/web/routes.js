@@ -69,8 +69,8 @@ const cleanCars = ({
   status,
   fleet: fleet?.name || 'Privat',
   co2,
-  cargo: cargo.length + (booking ? 1 : 0),
-  queue: queue.length + (booking ? 1 : 0),
+  cargo: cargo.length,
+  queue: queue.length,
   capacity,
   lineNumber,
 })

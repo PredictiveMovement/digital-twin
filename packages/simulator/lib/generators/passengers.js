@@ -11,9 +11,26 @@ class Passenger extends EventEmitter {
     this.position = position
     this.inCar = false
   }
+
+  moved(position, metersMoved, co2, cost) {
+    this.position = position
+    this.distance += metersMoved
+    this.cost += cost
+    this.co2 += co2
+    this.emit('moved', this)
+  }
+
   pickedUp() {
     this.inCar = true
     this.emit('pickedup', { id: this.id, position: this.position, inCar: true })
+  }
+  delivered() {
+    this.inCar = false
+    this.emit('delivered', {
+      id: this.id,
+      position: this.position,
+      inCar: false,
+    })
   }
 }
 const polarbrödÄlvsByn = {
