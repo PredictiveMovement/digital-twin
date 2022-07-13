@@ -22,9 +22,13 @@ const App = () => {
   const [speed, setSpeed] = useState(60)
   const [time, setTime] = useState(Date.now())
   const [carLayer, setCarLayer] = useState(true)
+  const [busLayer, setBusLayer] = useState(true)
   const [taxiLayer, setTaxiLayer] = useState(true)
+  const [busStopLayer, setBusStopLayer] = useState(true)
   const [passengerLayer, setPassengerLayer] = useState(true)
   const [postombudLayer, setPostombudLayer] = useState(false)
+  const [commercialAreasLayer, setCommercialAreasLayer] = useState(true)
+  const [kommunLayer, setKommunLayer] = useState(true)
   const [newParameters, setNewParameters] = useState({})
   const [currentParameters, setCurrentParameters] = useState({})
 
@@ -33,12 +37,20 @@ const App = () => {
   const activeLayers = {
     carLayer,
     setCarLayer,
+    busLayer,
+    setBusLayer,
     postombudLayer,
     setPostombudLayer,
     taxiLayer,
     setTaxiLayer,
     passengerLayer,
     setPassengerLayer,
+    busStopLayer,
+    setBusStopLayer,
+    commercialAreasLayer,
+    setCommercialAreasLayer,
+    kommunLayer,
+    setKommunLayer,
   }
 
   const newExperiment = (object) => {

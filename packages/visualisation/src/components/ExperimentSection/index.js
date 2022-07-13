@@ -4,11 +4,26 @@ import Slider from '@mui/material/Slider'
 import { H1, H3, Paragraph, ParagraphBold } from '../Typography'
 import checkIcon from '../../icons/svg/checkIcon.svg'
 
+const WhiteCircle = styled.div`
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+`
+
 const Circle = styled.div`
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${({ backgroundColor = 'transparent' }) => backgroundColor};
+`
+
+const Donut = styled.div`
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 4px solid ${({ borderColor = 'transparent' }) => borderColor};
 `
 
 const MenuContainer = styled.div`
@@ -67,7 +82,7 @@ const Grid = styled.div`
   gap: 1rem 1.5rem;
 `
 
-const CheckItem = ({ text, setLayer, checked, color }) => {
+const CheckItem = ({ text, setLayer, checked, color, borderOnly = false }) => {
   return (
     <Flex>
       <Button
@@ -76,7 +91,13 @@ const CheckItem = ({ text, setLayer, checked, color }) => {
           setLayer((current) => !current)
         }}
       />
-      <Circle backgroundColor={color} />
+      {borderOnly ? (
+        <Donut borderColor={color} />
+      ) : color === '#FFFFFFAA' ? (
+        <WhiteCircle />
+      ) : (
+        <Circle backgroundColor={color} />
+      )}
       <ParagraphMedium black> {text}</ParagraphMedium>
     </Flex>
   )
@@ -86,6 +107,11 @@ const ExperimentSection = ({ activeLayers, currentParameters }) => {
   return (
     <MenuContainer>
       <H1>Pågående experiment</H1>
+      <ParagraphMedium black>
+        Experiment id: <strong>{currentParameters.id}</strong>
+        <br />
+        Starttid: <strong>{currentParameters.startDate}</strong>
+      </ParagraphMedium>
       <ParagraphMedium black>
         Här kan ändra vad som visas i simuleringen till höger.
       </ParagraphMedium>
@@ -98,11 +124,13 @@ const ExperimentSection = ({ activeLayers, currentParameters }) => {
           checked={activeLayers.carLayer}
           color="#E74493"
         />
-        <div style={{ marginBottom: '0.5rem', marginTop: '-0.7rem' }}>
+        <div style={{ marginBottom: '0.5rem', marginTop: '2rem' }}>
           <Slider
             aria-label="Custom marks"
             size="small"
             value={currentParameters.fixedRoute}
+            valueLabelDisplay="on"
+            valueLabelFormat={(value) => `${value}%`}
             disabled
           />
           <FlexSpaceBetween>
@@ -118,19 +146,39 @@ const ExperimentSection = ({ activeLayers, currentParameters }) => {
           text="Taxi"
           setLayer={activeLayers.setTaxiLayer}
           checked={activeLayers.taxiLayer}
-          color="#FBFF33"
+          color="#FBFF33AA"
         />
         <CheckItem
           text="Passagerare"
           setLayer={activeLayers.setPassengerLayer}
           checked={activeLayers.passengerLayer}
-          color="#74CBFF"
+          color="#0080FFAA"
+        />
+        <CheckItem
+          text="Busshållplatser"
+          setLayer={activeLayers.setBusStopLayer}
+          checked={activeLayers.busStopLayer}
+          color="#FFFFFFAA"
         />
         <CheckItem
           text="Postombud"
           setLayer={activeLayers.setPostombudLayer}
           checked={activeLayers.postombudLayer}
-          color="#13C57B"
+          color="#13C57BAA"
+        />
+        <CheckItem
+          text="Kommersiella distrikt"
+          setLayer={activeLayers.setCommercialAreasLayer}
+          checked={activeLayers.commercialAreasLayer}
+          color="#0080FFAA"
+          borderOnly
+        />
+        <CheckItem
+          text="Kommungränser"
+          setLayer={activeLayers.setKommunLayer}
+          checked={activeLayers.kommunLayer}
+          color="#13C57BAA"
+          borderOnly
         />
       </Container>
 

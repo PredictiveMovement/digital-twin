@@ -1,33 +1,9 @@
-const {
-  from,
-  shareReplay,
-  share,
-  Subject,
-  ReplaySubject,
-  mergeMap,
-  merge,
-  of,
-  range,
-  fromEvent,
-} = require('rxjs')
-const {
-  map,
-  tap,
-  filter,
-  catchError,
-  toArray,
-  first,
-  reduce,
-  mapTo,
-  groupBy,
-} = require('rxjs/operators')
-const { tripsMap } = require('../streams/gtfs')
+const { from, shareReplay, Subject, mergeMap } = require('rxjs')
+const { map, first, groupBy } = require('rxjs/operators')
 const Bus = require('./vehicles/bus')
-const dispatch = require('./dispatchCentral')
 const { safeId } = require('./id')
 const { taxiDispatch } = require('./taxiDispatch')
 const Taxi = require('./vehicles/taxi')
-const Booking = require('./models/booking')
 
 class Region {
   constructor({ geometry, name, id, stops, stopTimes, passengers }) {
@@ -59,15 +35,12 @@ class Region {
     )
 
     this.taxis = from([
-      // new Taxi({ id: safeId(), position: { lon: 10.886855, lat: 50.041054 } }),
       new Taxi({ id: safeId(), position: { lon: 17.867348, lat: 66.065143 } }),
     ]).pipe(shareReplay())
 
     taxiDispatch(this.taxis, passengers).subscribe((e) => {
-      // console.log('Taxi bookings', JSON.stringify(e, null, 2))
       e.map(({ taxi, steps }) => steps.map((step) => taxi.addInstruction(step)))
     })
-    this.journeys = from([])
   }
 }
 
