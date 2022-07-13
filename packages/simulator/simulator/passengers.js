@@ -4,6 +4,11 @@ const { safeId } = require('../lib/id')
 const Passenger = require('../lib/models/passenger')
 
 const polarbrödÄlvsByn = {
+  lat: 65.669641,
+  lon: 20.975453,
+}
+
+const elsewhere = {
   lat: 66.051716,
   lon: 18.020213,
 }
@@ -23,9 +28,9 @@ function generatePassengers() {
   }
   const passenger2 = {
     id: safeId(),
-    pickup: { lon: 10.986855, lat: 50.041054 },
-    destination: { lon: 10.986855, lat: 50.141054 },
-    position: { lon: 10.886855, lat: 50.041054 },
+    pickup: polarbrödÄlvsByn,
+    destination: arjeplog,
+    position: polarbrödÄlvsByn,
     name: 'average elsewhere',
   }
   passengers = [new Passenger(passenger), new Passenger(passenger2)]
