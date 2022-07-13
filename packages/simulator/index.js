@@ -7,10 +7,20 @@ const postombud = require('./streams/postombud')
 const regions = require('./streams/regions')
 const kommuner = require('./streams/kommuner')
 const { safeId } = require('./lib/id')
+const { readParameters } = require('./lib/fileUtils')
 
 const engine = {
   experiments: [],
   createExperiment: ({ id = safeId() } = {}) => {
+    const savedParams = readParameters()
+    console.log('Starting experiment with params:', savedParams)
+
+    const parameters = {
+      personalCars: savedParams.personalCars || true,
+      taxis: savedParams.taxis || true,
+      fixedRoute: savedParams.fixedRoute || 100,
+    }
+
     const experiment = {
       id,
       virtualTime, // TODO: move this from being a static property to being a property of the experiment
@@ -20,6 +30,7 @@ const engine = {
       busStops: regions.pipe(mergeMap((region) => region.stops)),
       postombud,
       kommuner,
+      parameters,
     }
 
     // Add these separate streams here so we don't have to register more than one event listener per booking and car
