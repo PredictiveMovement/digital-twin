@@ -16,13 +16,12 @@ const engine = {
     console.log('Starting experiment with params:', savedParams)
 
     const parameters = {
-      personalCars: savedParams.personalCars || true,
-      taxis: savedParams.taxis || true,
+      id,
+      startDate: new Date(),
       fixedRoute: savedParams.fixedRoute || 100,
     }
 
     const experiment = {
-      id,
       virtualTime, // TODO: move this from being a static property to being a property of the experiment
       cars: kommuner.pipe(mergeMap((kommun) => kommun.cars)),
       dispatchedBookings: kommuner.pipe(mergeMap((k) => k.dispatchedBookings)),
@@ -30,6 +29,7 @@ const engine = {
       busStops: regions.pipe(mergeMap((region) => region.stops)),
       postombud,
       kommuner,
+      parameters,
       passengers: regions.pipe(mergeMap((region) => region.passengers)),
       taxis: regions.pipe(mergeMap((region) => region.taxis)),
     }

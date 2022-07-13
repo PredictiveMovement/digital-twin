@@ -22,6 +22,7 @@ const App = () => {
   const [speed, setSpeed] = useState(60)
   const [time, setTime] = useState(Date.now())
   const [carLayer, setCarLayer] = useState(true)
+  const [busLayer, setBusLayer] = useState(true)
   const [taxiLayer, setTaxiLayer] = useState(true)
   const [busStopLayer, setBusStopLayer] = useState(true)
   const [passengerLayer, setPassengerLayer] = useState(true)
@@ -36,6 +37,8 @@ const App = () => {
   const activeLayers = {
     carLayer,
     setCarLayer,
+    busLayer,
+    setBusLayer,
     postombudLayer,
     setPostombudLayer,
     taxiLayer,

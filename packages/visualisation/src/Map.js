@@ -107,28 +107,55 @@ const Map = ({
     },
   })
 
+  const busStopLayer = new ScatterplotLayer({
+    id: 'busStop-layer',
+    data: busStops,
+    opacity: 0.7,
+    stroked: false,
+    filled: true,
+    radiusScale: 3,
+    radiusMinPixels: 2,
+    radiusMaxPixels: 6,
+    getPosition: (c) => {
+      return c.position
+    },
+    getRadius: () => 4,
+    getFillColor: [255, 255, 255, 80],
+    pickable: true,
+    onHover: ({ object, x, y }) => {
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        type: 'busStop',
+        title: 'Busstopp ' + object.name,
+        x,
+        y,
+      })
+    },
+  })
+
   const getColorBasedOnFleet = ({ fleet }) => {
+    const opacity = Math.round((4 / 5) * 255)
     switch (fleet.toLowerCase()) {
       case 'brun':
-        return [234, 181, 67]
+        return [234, 181, 67, opacity]
       case 'bring':
-        return [189, 197, 129]
+        return [189, 197, 129, opacity]
       case 'gul':
-        return [249, 202, 36]
+        return [249, 202, 36, opacity]
       case 'postnord':
-        return [57, 123, 184]
+        return [57, 123, 184, opacity]
       case 'röd':
-        return [235, 77, 75]
+        return [235, 77, 75, opacity]
       case 'länstrafiken i norrbotten':
-        return [232, 67, 147, 244]
+        return [232, 67, 147, opacity]
       case 'drönarleverans ab':
-        return [119, 155, 172]
+        return [119, 155, 172, opacity]
       case 'privat':
-        return [34, 166, 179]
+        return [34, 166, 179, opacity]
       case 'taxi':
-        return [255, 255, 0]
+        return [255, 255, 0, opacity]
       default:
-        return [254, 254, 254]
+        return [254, 254, 254, opacity]
     }
   }
 
@@ -258,7 +285,6 @@ const Map = ({
     getPosition: (c) => {
       return c.position
     },
-    //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
     getFillColor: getColorBasedOnFleet,
     pickable: true,
     onHover: ({ object, x, y }) => {
@@ -293,7 +319,7 @@ const Map = ({
       return c.position
     },
     //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
-    getFillColor: ({ inCar }) => (inCar ? [0, 0, 0, 0] : [116, 203, 255, 255]),
+    getFillColor: ({ inCar }) => (inCar ? [0, 0, 0, 0] : [0, 128, 255, 170]),
 
     pickable: true,
     onHover: ({ object, x, y }) => {
@@ -370,31 +396,6 @@ const Map = ({
     },
   })
 
-  const busStopLayer = new ScatterplotLayer({
-    id: 'busStop-layer',
-    data: busStops,
-    opacity: 0.7,
-    stroked: false,
-    filled: true,
-    radiusScale: 3,
-    radiusMinPixels: 2,
-    radiusMaxPixels: 6,
-    getPosition: (c) => {
-      return c.position
-    },
-    getRadius: () => 4,
-    getFillColor: [255, 255, 255, 120],
-    pickable: true,
-    onHover: ({ object, x, y }) => {
-      if (!object) return setHoverInfo(null)
-      setHoverInfo({
-        type: 'busStop',
-        title: 'Busstopp ' + object.name,
-        x,
-        y,
-      })
-    },
-  })
   const [showQueuedBookings, setShowQueuedBookings] = useState(false)
 
   const arcDataWithQueuedBookings =
