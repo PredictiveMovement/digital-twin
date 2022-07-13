@@ -1,12 +1,30 @@
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 import pmLogo from '../../icons/svg/pmLogo.svg'
+import plus from '../../icons/svg/plus.svg'
+import experimentIcon from '../../icons/svg/experimentIcon.svg'
 import historyIcon from '../../icons/svg/historyIcon.svg'
-import guideIcon from '../../icons/svg/guideIcon.svg'
 import menuActive from '../../icons/svg/menuActive.svg'
-import GuideSection from '../GuideSection'
-import HistorySection from '../HistorySection'
+import SavedExperimentSection from '../SavedExperimentSection'
+import ExperimentSection from '../ExperimentSection'
+import NewExperimentSection from '../NewExperimentSection'
 import useOutsideClick from '../../hooks/useClickOutside'
+import { keyframes } from 'styled-components'
+
+const pulseAnimation = keyframes`
+  0%
+  {
+    transform: scale( 1.2 );
+  }
+  50%
+  {
+    transform: scale( .90 );
+  }
+  100%
+  {
+    transform: scale( 1.2 );
+  }
+`
 
 const Menu = styled.nav`
   background-color: #10c57b;
@@ -39,7 +57,19 @@ const ActiveMenu = styled.div`
   left: 2.6rem;
 `
 
-const SideMenu = () => {
+const PulseIcon = styled.img`
+  animation-name: ${pulseAnimation};
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+`
+
+const SideMenu = ({
+  activeLayers,
+  currentParameters,
+  newParameters,
+  newExperiment,
+  setNewParameters,
+}) => {
   const ref = useRef()
 
   const [open, setOpen] = useState('map')
@@ -47,7 +77,6 @@ const SideMenu = () => {
   useOutsideClick(ref, () => {
     setOpen('map')
   })
-
   return (
     <div ref={ref}>
       <Menu>
@@ -57,11 +86,13 @@ const SideMenu = () => {
           </MenuItem>
           <MenuItem
             onClick={() =>
-              setOpen((current) => (current === 'guide' ? 'map' : 'guide'))
+              setOpen((current) =>
+                current === 'newExperiment' ? 'map' : 'newExperiment'
+              )
             }
           >
-            <img src={guideIcon} alt="Guide" />
-            {open === 'guide' && (
+            <img src={plus} alt="New Experiment" />
+            {open === 'newExperiment' && (
               <ActiveMenu>
                 <img src={menuActive} alt="Open" />
               </ActiveMenu>
@@ -69,11 +100,27 @@ const SideMenu = () => {
           </MenuItem>
           <MenuItem
             onClick={() =>
-              setOpen((current) => (current === 'history' ? 'map' : 'history'))
+              setOpen((current) =>
+                current === 'experiment' ? 'map' : 'experiment'
+              )
             }
           >
-            <img src={historyIcon} alt="History" />
-            {open === 'history' && (
+            <PulseIcon src={experimentIcon} alt="Experiment" />
+            {open === 'experiment' && (
+              <ActiveMenu>
+                <img src={menuActive} alt="Open" />
+              </ActiveMenu>
+            )}
+          </MenuItem>
+          <MenuItem
+            onClick={() =>
+              setOpen((current) =>
+                current === 'savedExperiment' ? 'map' : 'savedExperiment'
+              )
+            }
+          >
+            <img src={historyIcon} alt="Saved Experiment" />
+            {open === 'savedExperiment' && (
               <ActiveMenu>
                 <img src={menuActive} alt="Open" />
               </ActiveMenu>
@@ -81,8 +128,20 @@ const SideMenu = () => {
           </MenuItem>
         </List>
       </Menu>
-      {open === 'guide' && <GuideSection />}
-      {open === 'history' && <HistorySection />}
+      {open === 'experiment' && (
+        <ExperimentSection
+          currentParameters={currentParameters}
+          activeLayers={activeLayers}
+        />
+      )}
+      {open === 'savedExperiment' && <SavedExperimentSection />}
+      {open === 'newExperiment' && (
+        <NewExperimentSection
+          newParameters={newParameters}
+          newExperiment={newExperiment}
+          setNewParameters={setNewParameters}
+        />
+      )}
     </div>
   )
 }
