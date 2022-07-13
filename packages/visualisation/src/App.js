@@ -52,6 +52,8 @@ const App = () => {
   useSocket('reset', () => {
     console.log('received reset')
     setBookings([])
+    setTaxis([])
+    setPassengers([])
     setCars([])
     setKommuner([])
     setPostombud([])
@@ -60,13 +62,17 @@ const App = () => {
   })
 
   function upsert(array, object, idProperty = 'id') {
-    const current = array.find((k) => k[idProperty] === object[idProperty])
-    if (current) {
-      Object.assign(current, object)
+    const currentIndex = array.findIndex(
+      (k) => k[idProperty] === object[idProperty]
+    )
+    let new_arr = [...array]
+
+    if (currentIndex >= 0) {
+      new_arr[currentIndex] = object
     } else {
-      array.push(object)
+      new_arr.push(object)
     }
-    return array
+    return new_arr
   }
 
   const [cars, setCars] = React.useState([])
@@ -84,6 +90,8 @@ const App = () => {
           cargo,
           capacity,
           lineNumber,
+          queue,
+          vehicleType,
         }) => ({
           id,
           heading,
@@ -93,6 +101,8 @@ const App = () => {
           cargo,
           capacity,
           lineNumber,
+          queue,
+          vehicleType,
         })
       ),
     ])
@@ -168,6 +178,36 @@ const App = () => {
     setCurrentParameters(currentParameters)
     setNewParameters(currentParameters)
   })
+  const [passengers, setPassengers] = React.useState([])
+  useSocket('passenger', ({ name, position, id, inCar }) => {
+    setPassengers((currentPassengers) =>
+      upsert(
+        currentPassengers,
+        {
+          id,
+          name,
+          position: [position.lon, position.lat].map((s) => parseFloat(s)),
+          inCar,
+        },
+        'id'
+      )
+    )
+  })
+  const [taxis, setTaxis] = React.useState([])
+  useSocket('taxi', ({ name, position, id }) => {
+    console.log({ name, position, id })
+    setTaxis((currenttaxis) =>
+      upsert(
+        currenttaxis,
+        {
+          id,
+          name,
+          position,
+        },
+        'id'
+      )
+    )
+  })
 
   const onPause = () => {
     socket.emit('pause')
@@ -188,6 +228,8 @@ const App = () => {
     setReset(true)
     socket.emit('reset')
     setBookings([])
+    setPassengers([])
+    setTaxis([])
     setCars([])
     setKommuner([])
     setPostombud([])
@@ -220,6 +262,8 @@ const App = () => {
       {reset && <Loading />}
       <Map
         activeLayers={activeLayers}
+        passengers={passengers}
+        taxis={taxis}
         cars={cars}
         bookings={bookings}
         hubs={postombud}

@@ -1,9 +1,11 @@
 const EventEmitter = require('events')
 const { random } = require('nanoid')
-const { virtualTime } = require('../lib/virtualTime')
-const { safeId } = require('./id')
+const { virtualTime } = require('../virtualTime')
+const { safeId } = require('../id')
 
 class Booking extends EventEmitter {
+  position
+
   constructor(booking) {
     super()
     this.id = safeId()

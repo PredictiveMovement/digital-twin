@@ -1,5 +1,3 @@
-const engine = require('../index')
-// const postombud = require("../streams/postombud");
 const { fromEvent, combineLatest } = require('rxjs')
 const {
   map,
@@ -15,6 +13,7 @@ const {
   last,
 } = require('rxjs/operators')
 
+const engine = require('../index')
 const { virtualTime } = require('../lib/virtualTime')
 const { saveParameters } = require('../lib/fileUtils')
 
@@ -61,6 +60,7 @@ const cleanCars = ({
   queue,
   co2,
   lineNumber,
+  vehicleType,
 }) => ({
   id,
   heading: [heading.lon, heading.lat], // contains route to plot or interpolate on client side.
@@ -70,10 +70,11 @@ const cleanCars = ({
   status,
   fleet: fleet?.name || 'Privat',
   co2,
-  cargo: cargo.length + (booking ? 1 : 0),
-  queue: queue.length + (booking ? 1 : 0),
+  cargo: cargo.length,
+  queue: queue.length,
   capacity,
   lineNumber,
+  vehicleType,
 })
 
 function register(io) {
@@ -135,8 +136,19 @@ function register(io) {
           socket.emit('bookings', bookings)
         }
       })
+    experiment.passengers.subscribe((passenger) => {
+      socket.emit('passenger', passenger)
+    })
+    experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
+      console.log({ lat, lon }, 'position for', id)
+      socket.emit('taxi', { id, position: [lon, lat] })
+    })
   })
-
+  experiment.passengerUpdates.subscribe((passenger) => {
+    if (passenger) {
+      io.emit('passenger', passenger)
+    }
+  })
   experiment.bookingUpdates
     .pipe(cleanBookings(), bufferTime(100, null, 1000))
     .subscribe((bookings) => {
