@@ -27,7 +27,7 @@ const dispatch = require('./dispatchCentral')
 const { safeId } = require('./id')
 const { taxiDispatch } = require('./taxiDispatch')
 const Taxi = require('./vehicles/taxi')
-const Booking = require('./booking')
+const Booking = require('./models/booking')
 
 class Region {
   constructor({ geometry, name, id, stops, stopTimes, passengers }) {
@@ -60,7 +60,7 @@ class Region {
 
     this.taxis = from([
       // new Taxi({ id: safeId(), position: { lon: 10.886855, lat: 50.041054 } }),
-      new Taxi({ id: safeId(), position: { lon: 17.686855, lat: 66.141054 } }),
+      new Taxi({ id: safeId(), position: { lon: 17.867348, lat: 66.065143 } }),
     ]).pipe(shareReplay())
 
     taxiDispatch(this.taxis, passengers).subscribe((e) => {

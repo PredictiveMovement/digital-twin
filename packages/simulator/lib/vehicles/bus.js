@@ -1,4 +1,4 @@
-const Booking = require('../booking')
+const Booking = require('../models/booking')
 const Vehicle = require('./vehicle')
 const { take, pairwise, map, toArray } = require('rxjs/operators')
 const moment = require('moment')
@@ -20,6 +20,7 @@ class Bus extends Vehicle {
     })
     this.lineNumber = lineNumber
     this.finalStop = finalStop
+    this.vehicleType = 'bus'
     // stops
     //   .pipe(toArray())
     //   .subscribe((stops) => console.log('init bus id', id, 'stops', stops))

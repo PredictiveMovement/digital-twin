@@ -60,6 +60,7 @@ const cleanCars = ({
   queue,
   co2,
   lineNumber,
+  vehicleType,
 }) => ({
   id,
   heading: [heading.lon, heading.lat], // contains route to plot or interpolate on client side.
@@ -73,6 +74,7 @@ const cleanCars = ({
   queue: queue.length,
   capacity,
   lineNumber,
+  vehicleType,
 })
 
 function register(io) {

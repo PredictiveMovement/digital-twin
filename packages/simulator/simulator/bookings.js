@@ -13,7 +13,7 @@ const pelias = require('../lib/pelias')
 const { isInsideCoordinates } = require('../lib/polygon')
 const { haversine, addMeters, convertPosition } = require('../lib/distance')
 const perlin = require('perlin-noise')
-const Booking = require('../lib/booking')
+const Booking = require('../lib/models/booking')
 const Car = require('../lib/vehicles/car')
 
 const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })

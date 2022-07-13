@@ -19,6 +19,7 @@ class Taxi extends Vehicle {
     this.queue = []
     this.capacity = 4
     this.booking = true
+    this.vehicleType = 'taxi'
   }
   canPickupBooking() {
     true

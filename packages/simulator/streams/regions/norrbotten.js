@@ -1,5 +1,5 @@
 const { stops, stopTimes } = require('../publicTransport')
-const { generatePassengers } = require('../../lib/generators/passengers')
+const { generatePassengers } = require('../../simulator/passengers')
 const Region = require('../../lib/region')
 const { shareReplay } = require('rxjs')
 

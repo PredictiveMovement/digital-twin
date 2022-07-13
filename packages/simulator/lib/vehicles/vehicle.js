@@ -2,7 +2,7 @@ const osrm = require('../osrm')
 const { haversine, bearing } = require('../distance')
 const interpolate = require('../interpolate')
 const EventEmitter = require('events')
-const Booking = require('../booking')
+const Booking = require('../models/booking')
 const { safeId } = require('../id')
 const { assert } = require('console')
 const { error, info } = require('../log')
@@ -36,6 +36,7 @@ class Vehicle extends EventEmitter {
     this.fleet = fleet
     this.created = this.time()
     this.co2PerKmKg = co2PerKmKg
+    this.vehicleType = 'default'
     this.on('error', (err) => error('Car error', err))
     this.emit('moved', this)
   }

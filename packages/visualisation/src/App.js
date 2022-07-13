@@ -91,6 +91,7 @@ const App = () => {
           capacity,
           lineNumber,
           queue,
+          vehicleType,
         }) => ({
           id,
           heading,
@@ -101,6 +102,7 @@ const App = () => {
           capacity,
           lineNumber,
           queue,
+          vehicleType,
         })
       ),
     ])

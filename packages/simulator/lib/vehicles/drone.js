@@ -14,6 +14,7 @@ class Drone extends Vehicle {
     this.altitude = 0
     this.maximumAltitude = 800
     this.dropoffTime = 600 // seconds
+    this.vehicleType = 'drone'
   }
 
   simulate(route) {

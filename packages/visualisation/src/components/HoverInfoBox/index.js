@@ -31,6 +31,10 @@ const Wrapper = styled.div`
 `
 
 const CarInfo = ({ data }) => {
+  const label =
+    data.vehicleType === 'taxi' || data.vehicleType === 'bus'
+      ? 'Passagerare'
+      : 'Paket'
   return (
     <Wrapper left={data.x - 8} top={data.y - 80}>
       <div>
@@ -39,10 +43,16 @@ const CarInfo = ({ data }) => {
           <Paragraph>Linje: {data.lineNumber}</Paragraph>
         )}
         <Paragraph>Kör för {data.fleet}</Paragraph>
-        <Paragraph>Köat: {data.queue || 0} paket</Paragraph>
+        <Paragraph>
+          Köat: {data.queue || 0} {label}
+        </Paragraph>
         <Paragraph>Co2: {data.co2 || 0} kg</Paragraph>
-        <Paragraph>Lastat: {data.cargo} paket</Paragraph>
-        <Paragraph>Kapacitet: {data.capacity} paket</Paragraph>
+        <Paragraph>
+          Lastat: {data.cargo} {label}
+        </Paragraph>
+        <Paragraph>
+          Kapacitet: {data.capacity} {label}
+        </Paragraph>
       </div>
       <div>
         <Paragraph>Fyllnadsgrad:</Paragraph>
