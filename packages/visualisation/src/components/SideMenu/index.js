@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 import pmLogo from '../../icons/svg/pmLogo.svg'
+import experimentIcon from '../../icons/svg/experimentIcon.svg'
 import historyIcon from '../../icons/svg/historyIcon.svg'
-import guideIcon from '../../icons/svg/guideIcon.svg'
 import menuActive from '../../icons/svg/menuActive.svg'
-import GuideSection from '../GuideSection'
-import HistorySection from '../HistorySection'
+import SavedExperimentSection from '../SavedExperimentSection'
+import ExperimentSection from '../ExperimentSection'
 import useOutsideClick from '../../hooks/useClickOutside'
 
 const Menu = styled.nav`
@@ -57,11 +57,13 @@ const SideMenu = ({ activeLayers, fixedRoute, setFixedRoute }) => {
           </MenuItem>
           <MenuItem
             onClick={() =>
-              setOpen((current) => (current === 'guide' ? 'map' : 'guide'))
+              setOpen((current) =>
+                current === 'experiment' ? 'map' : 'experiment'
+              )
             }
           >
-            <img src={guideIcon} alt="Guide" />
-            {open === 'guide' && (
+            <img src={experimentIcon} alt="Experiment" />
+            {open === 'experiment' && (
               <ActiveMenu>
                 <img src={menuActive} alt="Open" />
               </ActiveMenu>
@@ -69,11 +71,13 @@ const SideMenu = ({ activeLayers, fixedRoute, setFixedRoute }) => {
           </MenuItem>
           <MenuItem
             onClick={() =>
-              setOpen((current) => (current === 'history' ? 'map' : 'history'))
+              setOpen((current) =>
+                current === 'savedExperiment' ? 'map' : 'savedExperiment'
+              )
             }
           >
-            <img src={historyIcon} alt="History" />
-            {open === 'history' && (
+            <img src={historyIcon} alt="savedExperiment" />
+            {open === 'savedExperiment' && (
               <ActiveMenu>
                 <img src={menuActive} alt="Open" />
               </ActiveMenu>
@@ -81,14 +85,14 @@ const SideMenu = ({ activeLayers, fixedRoute, setFixedRoute }) => {
           </MenuItem>
         </List>
       </Menu>
-      {open === 'guide' && <GuideSection />}
-      {open === 'history' && (
-        <HistorySection
+      {open === 'experiment' && (
+        <ExperimentSection
           activeLayers={activeLayers}
           fixedRoute={fixedRoute}
           setFixedRoute={setFixedRoute}
         />
       )}
+      {open === 'savedExperiment' && <SavedExperimentSection />}
     </div>
   )
 }

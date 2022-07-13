@@ -1,11 +1,16 @@
-import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Slider from '@mui/material/Slider'
 
 import { H1, H3, Paragraph } from '../Typography'
-import DropDown from '../DropDown'
 import checkIcon from '../../icons/svg/checkIcon.svg'
 import { useSocket } from '../../hooks/useSocket'
+
+const Circle = styled.div`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: ${(props) => props.backgroundColor};
+`
 
 const MenuContainer = styled.div`
   display: flex;
@@ -50,7 +55,13 @@ const FlexSpaceBetween = styled.div`
   justify-content: space-between;
 `
 
-const CheckItem = ({ text, setLayer, checked }) => {
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`
+
+const CheckItem = ({ text, setLayer, checked, color }) => {
   return (
     <Flex>
       <Button
@@ -58,13 +69,14 @@ const CheckItem = ({ text, setLayer, checked }) => {
         onClick={() => {
           setLayer((current) => !current)
         }}
-      ></Button>
+      />
+      <Circle backgroundColor={color} />
       <ParagraphMedium black> {text}</ParagraphMedium>
     </Flex>
   )
 }
 
-const HistorySection = ({ activeLayers, fixedRoute, setFixedRoute }) => {
+const ExperimentSection = ({ activeLayers, fixedRoute, setFixedRoute }) => {
   const { socket } = useSocket()
 
   const onChange = (e) => {
@@ -74,59 +86,56 @@ const HistorySection = ({ activeLayers, fixedRoute, setFixedRoute }) => {
 
   return (
     <MenuContainer>
-      <H1>Experiment</H1>
-      <DropDown title="Pågående expriment">
-        <DropDown small title="Experimentpremisser">
-          <ParagraphMedium black>
-            Här kan du justera premisserna i ditt experiment. Du behöver starta
-            om experimentet för att ändra premisserna.
-          </ParagraphMedium>
+      <H1>Pågående experiment</H1>
+      <ParagraphMedium black>
+        Här kan du justera premisserna i ditt experiment. Du behöver starta om
+        experimentet för att ändra premisserna.
+      </ParagraphMedium>
 
-          <H3>Fordon</H3>
-
-          <CheckItem
-            text="Buss"
-            setLayer={activeLayers.setCarLayer}
-            checked={activeLayers.carLayer}
+      <H3>Fordon</H3>
+      <Container>
+        <CheckItem
+          text="Buss"
+          setLayer={activeLayers.setCarLayer}
+          checked={activeLayers.carLayer}
+          color="#E74493"
+        />
+        <div style={{ marginBottom: '0.5rem', marginTop: '-0.7rem' }}>
+          <Slider
+            aria-label="Custom marks"
+            size="small"
+            value={fixedRoute}
+            onChange={onChange}
+            disabled
           />
-          <div style={{ marginBottom: '0.5rem', marginTop: '-0.7rem' }}>
-            <Slider
-              aria-label="Custom marks"
-              size="small"
-              value={fixedRoute}
-              onChange={onChange}
-            />
-            <FlexSpaceBetween>
-              <Paragraph black small>
-                Fasta
-              </Paragraph>
-              <Paragraph black small>
-                Dynamiska
-              </Paragraph>
-            </FlexSpaceBetween>
-          </div>
-          <CheckItem
-            text="Postombud"
-            setLayer={activeLayers.setPostombudLayer}
-            checked={activeLayers.postombudLayer}
-          />
-          {/* <CheckItem text="Buss" />
+          <FlexSpaceBetween>
+            <Paragraph black small>
+              Fasta
+            </Paragraph>
+            <Paragraph black small>
+              Dynamiska
+            </Paragraph>
+          </FlexSpaceBetween>
+        </div>
+        <CheckItem
+          text="Postombud"
+          setLayer={activeLayers.setPostombudLayer}
+          checked={activeLayers.postombudLayer}
+          color="#13C57B"
+        />
+      </Container>
+      {/* <CheckItem text="Buss" />
           <CheckItem text="Privatpersoners bilar" />
           <CheckItem text="Taxi" />
           <CheckItem text="Sjukresor" />
           <CheckItem text="Flygbil" />
           <CheckItem text="Skolskjuts" />
           <CheckItem text="Färdtjänst" /> */}
-        </DropDown>
-        <DropDown small title="Resultat">
+      {/* <DropDown small title="Resultat">
           <Paragraph black>Här kan du se resultatet av experimentet.</Paragraph>
-        </DropDown>
-      </DropDown>
-      <DropDown title="Sparade experiment">
-        <Paragraph black>Sparat</Paragraph>
-      </DropDown>
+        </DropDown> */}
     </MenuContainer>
   )
 }
 
-export default HistorySection
+export default ExperimentSection
