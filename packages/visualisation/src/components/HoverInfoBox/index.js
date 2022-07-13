@@ -31,23 +31,66 @@ const Wrapper = styled.div`
 `
 
 const CarInfo = ({ data }) => {
+  const label =
+    data.vehicleType === 'taxi' || data.vehicleType === 'bus'
+      ? 'Passagerare'
+      : 'Paket'
   return (
     <Wrapper left={data.x - 8} top={data.y - 80}>
       <div>
         <Paragraph>{`Fordon ${data.id}`}</Paragraph>
-        <Paragraph>Linje: {data.lineNumber}</Paragraph>
+        {data.lineNumber !== undefined && (
+          <Paragraph>Linje: {data.lineNumber}</Paragraph>
+        )}
         <Paragraph>Kör för {data.fleet}</Paragraph>
-        <Paragraph>Köat: {data.queue || 0} paket</Paragraph>
+        <Paragraph>
+          Köat: {data.queue || 0} {label}
+        </Paragraph>
         <Paragraph>Co2: {data.co2 || 0} kg</Paragraph>
-        <Paragraph>Lastat: {data.cargo} paket</Paragraph>
-        <Paragraph>Kapacitet: {data.capacity} paket</Paragraph>
+        <Paragraph>
+          Lastat: {data.cargo} {label}
+        </Paragraph>
+        <Paragraph>
+          Kapacitet: {data.capacity} {label}
+        </Paragraph>
       </div>
       <div>
         <Paragraph>Fyllnadsgrad:</Paragraph>
         <ProgressBar
-          completed={(100 * Math.round((data.cargo * 10) / data.capacity)) / 10}
+          completed={Math.round((data.cargo / data.capacity) * 100)}
         />
       </div>
+    </Wrapper>
+  )
+}
+
+const PassengerInfo = ({ data }) => {
+  return (
+    <Wrapper left={data.x} top={data.y}>
+      <Paragraph>Passagerare {data.id}</Paragraph>
+      <Paragraph>Namn: {data.name}</Paragraph>
+    </Wrapper>
+  )
+}
+
+const GenericInfo = ({ data }) => {
+  return (
+    <Wrapper left={data.x} top={data.y - 40}>
+      <Paragraph>{data.title}</Paragraph>
+      <Paragraph>{data.subTitle}</Paragraph>
+      {data.deliveryTime ? (
+        <Paragraph>
+          Leveranstid: {Math.ceil((10 * data.deliveryTime) / 60 / 60) / 10} h
+        </Paragraph>
+      ) : null}
+      {data.co2 ? (
+        <Paragraph>CO2: {Math.ceil(10 * data.co2) / 10} kg</Paragraph>
+      ) : null}
+      {data.cost ? (
+        <Paragraph>
+          Schablonkostnad: {Math.ceil(10 * data.cost) / 10} kr
+        </Paragraph>
+      ) : null}
     </Wrapper>
   )
 }
@@ -55,27 +98,10 @@ const CarInfo = ({ data }) => {
 const HoverInfoBox = ({ data }) => {
   return (
     <>
-      {data.type === 'car' ? (
-        <CarInfo data={data} />
-      ) : (
-        <Wrapper left={data.x} top={data.y - 40}>
-          <Paragraph>{data.title}</Paragraph>
-          <Paragraph>{data.subTitle}</Paragraph>
-          {data.deliveryTime ? (
-            <Paragraph>
-              Leveranstid: {Math.ceil((10 * data.deliveryTime) / 60 / 60) / 10}{' '}
-              h
-            </Paragraph>
-          ) : null}
-          {data.co2 ? (
-            <Paragraph>CO2: {Math.ceil(10 * data.co2) / 10} kg</Paragraph>
-          ) : null}
-          {data.cost ? (
-            <Paragraph>
-              Schablonkostnad: {Math.ceil(10 * data.cost) / 10} kr
-            </Paragraph>
-          ) : null}
-        </Wrapper>
+      {data.type === 'car' && <CarInfo data={data} />}
+      {data.type === 'passenger' && <PassengerInfo data={data} />}
+      {data.type !== 'passenger' && data.type !== 'car' && (
+        <GenericInfo data={data} />
       )}
     </>
   )

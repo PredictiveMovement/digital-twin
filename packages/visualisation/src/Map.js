@@ -4,7 +4,6 @@ import DeckGL, {
   PolygonLayer,
   ScatterplotLayer,
   ArcLayer,
-  IconLayer,
   LinearInterpolator,
 } from 'deck.gl'
 //import { GeoJsonLayer } from '@deck.gl/layers'
@@ -41,6 +40,8 @@ const transitionInterpolator = new LinearInterpolator(['bearing'])
 
 const Map = ({
   activeLayers,
+  taxis,
+  passengers,
   cars,
   bookings,
   hubs,
@@ -127,6 +128,8 @@ const Map = ({
         return [119, 155, 172]
       case 'privat':
         return [34, 166, 179]
+      case 'taxi':
+        return [255, 255, 0]
       default:
         return [254, 254, 254]
     }
@@ -210,6 +213,31 @@ const Map = ({
         latitude: object.position[1],
       })
       setActiveCar(object)
+    },
+  })
+  const passengerLayer = new ScatterplotLayer({
+    id: 'passenger-layer',
+    data: passengers,
+    //opacity: 0.7,
+    stroked: false,
+    filled: true,
+    radiusScale: 6,
+    radiusUnits: 'pixels',
+    getPosition: (c) => {
+      return c.position
+    },
+    //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
+    getFillColor: ({ inCar }) => (inCar ? [0, 0, 0, 0] : [0, 0, 255, 255]),
+
+    pickable: true,
+    onHover: ({ object, x, y }) => {
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        ...object,
+        type: 'passenger',
+        x,
+        y,
+      })
     },
   })
 
@@ -404,6 +432,7 @@ const Map = ({
       layers={[
         // The order of these layers matter, roughly equal to increasing z-index by 1
         kommunLayer, // TODO: This hides some items behind it, sort of
+        passengerLayer,
         //commercialAreasLayer,
         activeLayers.postombudLayer && hubLayer,
         busStopLayer,

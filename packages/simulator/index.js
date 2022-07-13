@@ -30,10 +30,9 @@ const engine = {
       busStops: regions.pipe(mergeMap((region) => region.stops)),
       postombud,
       kommuner,
-      parameters,
+      passengers: regions.pipe(mergeMap((region) => region.passengers)),
+      taxis: regions.pipe(mergeMap((region) => region.taxis)),
     }
-
-    // Add these separate streams here so we don't have to register more than one event listener per booking and car
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(
       mergeMap((booking) =>
         merge(
@@ -46,8 +45,22 @@ const engine = {
       ),
       share()
     )
+    experiment.passengerUpdates = experiment.passengers.pipe(
+      mergeMap((passenger) =>
+        merge(
+          of(passenger),
+          fromEvent(passenger, 'pickedup'),
+          fromEvent(passenger, 'delivered')
+        )
+      ),
+      share()
+    )
 
-    experiment.carUpdates = merge(experiment.cars, experiment.buses).pipe(
+    experiment.carUpdates = merge(
+      // experiment.cars,
+      // experiment.buses,
+      experiment.taxis
+    ).pipe(
       mergeMap((car) => fromEvent(car, 'moved')),
       share()
     )

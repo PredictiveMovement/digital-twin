@@ -1,7 +1,7 @@
 const fs = require('fs')
 const { from } = require('rxjs')
 const { map, tap, toArray } = require('rxjs/operators')
-const Booking = require('../lib/booking')
+const Booking = require('../lib/models/booking')
 const { dirname: getDirName } = require('path')
 
 const cleanBooking = ({
