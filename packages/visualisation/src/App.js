@@ -22,8 +22,9 @@ const App = () => {
   const [speed, setSpeed] = useState(60)
   const [time, setTime] = useState(Date.now())
   const [carLayer, setCarLayer] = useState(true)
-  const [postombudLayer, setPostombudLayer] = useState(true)
-  const [fixedRoute, setFixedRoute] = useState(50) // TODO: replace calls to setFixedRoute with calls to setParameters({...parameters, fixedRoute: value})
+  const [taxiLayer, setTaxiLayer] = useState(true)
+  const [passengerLayer, setPassengerLayer] = useState(true)
+  const [postombudLayer, setPostombudLayer] = useState(false)
   const [newParameters, setNewParameters] = useState({})
   const [currentParameters, setCurrentParameters] = useState({})
 
@@ -34,6 +35,10 @@ const App = () => {
     setCarLayer,
     postombudLayer,
     setPostombudLayer,
+    taxiLayer,
+    setTaxiLayer,
+    passengerLayer,
+    setPassengerLayer,
   }
 
   const newExperiment = (object) => {
@@ -201,9 +206,10 @@ const App = () => {
       </Wrapper>
       <SideMenu
         activeLayers={activeLayers}
-        fixedRoute={fixedRoute}
         currentParameters={currentParameters}
-        setFixedRoute={setFixedRoute}
+        newParameters={newParameters}
+        newExperiment={newExperiment}
+        setNewParameters={setNewParameters}
       />
 
       <PlaybackOptions
@@ -222,7 +228,6 @@ const App = () => {
         activeCar={activeCar}
         time={time}
         setActiveCar={setActiveCar}
-        newExperiment={newExperiment}
       />
     </>
   )

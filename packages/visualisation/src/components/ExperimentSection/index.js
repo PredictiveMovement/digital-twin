@@ -1,9 +1,8 @@
 import styled from 'styled-components'
 import Slider from '@mui/material/Slider'
 
-import { H1, H3, Paragraph } from '../Typography'
+import { H1, H3, Paragraph, ParagraphBold } from '../Typography'
 import checkIcon from '../../icons/svg/checkIcon.svg'
-import { useSocket } from '../../hooks/useSocket'
 
 const Circle = styled.div`
   width: 24px;
@@ -58,7 +57,14 @@ const FlexSpaceBetween = styled.div`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+`
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1rem 1.5rem;
 `
 
 const CheckItem = ({ text, setLayer, checked, color }) => {
@@ -76,24 +82,16 @@ const CheckItem = ({ text, setLayer, checked, color }) => {
   )
 }
 
-const ExperimentSection = ({ activeLayers, fixedRoute, setFixedRoute }) => {
-  const { socket } = useSocket()
-
-  const onChange = (e) => {
-    setFixedRoute(e.target.value)
-    socket.emit('fixedRoute', e.target.value)
-  }
-
+const ExperimentSection = ({ activeLayers, currentParameters }) => {
   return (
     <MenuContainer>
       <H1>Pågående experiment</H1>
       <ParagraphMedium black>
-        Här kan du justera premisserna i ditt experiment. Du behöver starta om
-        experimentet för att ändra premisserna.
+        Här kan ändra vad som visas i simuleringen till höger.
       </ParagraphMedium>
 
-      <H3>Fordon</H3>
       <Container>
+        <H3>Fordon</H3>
         <CheckItem
           text="Buss"
           setLayer={activeLayers.setCarLayer}
@@ -104,8 +102,7 @@ const ExperimentSection = ({ activeLayers, fixedRoute, setFixedRoute }) => {
           <Slider
             aria-label="Custom marks"
             size="small"
-            value={fixedRoute}
-            onChange={onChange}
+            value={currentParameters.fixedRoute}
             disabled
           />
           <FlexSpaceBetween>
@@ -118,22 +115,47 @@ const ExperimentSection = ({ activeLayers, fixedRoute, setFixedRoute }) => {
           </FlexSpaceBetween>
         </div>
         <CheckItem
+          text="Taxi"
+          setLayer={activeLayers.setTaxiLayer}
+          checked={activeLayers.taxiLayer}
+          color="#FBFF33"
+        />
+        <CheckItem
+          text="Passagerare"
+          setLayer={activeLayers.setPassengerLayer}
+          checked={activeLayers.passengerLayer}
+          color="#74CBFF"
+        />
+        <CheckItem
           text="Postombud"
           setLayer={activeLayers.setPostombudLayer}
           checked={activeLayers.postombudLayer}
           color="#13C57B"
         />
       </Container>
-      {/* <CheckItem text="Buss" />
-          <CheckItem text="Privatpersoners bilar" />
-          <CheckItem text="Taxi" />
-          <CheckItem text="Sjukresor" />
-          <CheckItem text="Flygbil" />
-          <CheckItem text="Skolskjuts" />
-          <CheckItem text="Färdtjänst" /> */}
-      {/* <DropDown small title="Resultat">
-          <Paragraph black>Här kan du se resultatet av experimentet.</Paragraph>
-        </DropDown> */}
+
+      <Container>
+        <H3>Resultat</H3>
+
+        <ParagraphMedium black>
+          Här kan du se resultatet av experimentet.
+        </ParagraphMedium>
+
+        <Grid>
+          <ParagraphBold black>Antal fordon</ParagraphBold>
+          <Paragraph black>Data</Paragraph>
+          <ParagraphBold black>Antal resenärer</ParagraphBold>
+          <Paragraph black>Data</Paragraph>
+          <ParagraphBold black>CO2</ParagraphBold>
+          <Paragraph black>Data</Paragraph>
+          <ParagraphBold black>Genomsnittlig konstnad</ParagraphBold>
+          <Paragraph black>Data</Paragraph>
+          <ParagraphBold black>Medelfyllnadsgrad per bil</ParagraphBold>
+          <Paragraph black>Data</Paragraph>
+          <ParagraphBold black>Genomsnittlig restid</ParagraphBold>
+          <Paragraph black>Data</Paragraph>
+        </Grid>
+      </Container>
     </MenuContainer>
   )
 }
