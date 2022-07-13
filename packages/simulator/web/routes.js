@@ -16,6 +16,7 @@ const {
 } = require('rxjs/operators')
 
 const { virtualTime } = require('../lib/virtualTime')
+const { saveParameters } = require('../lib/fileUtils')
 
 const cleanBookings = () => (bookings) =>
   bookings.pipe(
@@ -82,6 +83,7 @@ function register(io) {
 
   io.on('connection', function (socket) {
     socket.emit('reset')
+    socket.emit('parameters', experiment.parameters)
 
     socket.on('reset', () => {
       process.kill(process.pid, 'SIGUSR2')
@@ -103,10 +105,17 @@ function register(io) {
       emitCars == value
     })
 
-    // Reciving a percentage of how many fixed vs dynamic routes
+    // Receiving a percentage of how many fixed vs dynamic routes
     // socket.on('fixedRoute', (value) => {
     //   console.log('total fixed route: ', value)
     // })
+
+    // Receiving a new set of experiment parameters
+    socket.on('experimentParameters', (value) => {
+      console.log('new expiriment settings: ', value)
+      saveParameters(value)
+      socket.emit('reset')
+    })
 
     experiment.postombud.pipe(toArray()).subscribe((postombud) => {
       socket.emit('postombud', postombud)

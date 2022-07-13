@@ -49,6 +49,7 @@ const Map = ({
   activeCar,
   setActiveCar,
   time,
+  newExperiment,
 }) => {
   const [mapState, setMapState] = useState({
     latitude: 65.0964472642777,
@@ -413,6 +414,20 @@ const Map = ({
         showQueuedBookings && arcLayerQueuedBookings,
       ]}
     >
+      <div
+        style={{
+          bottom: '220px',
+          right: '200px',
+          position: 'absolute',
+        }}
+      >
+        <Button
+          text="Nytt experiement"
+          onClick={() => {
+            newExperiment({ test: true })
+          }}
+        />
+      </div>
       <div
         style={{
           bottom: '150px',

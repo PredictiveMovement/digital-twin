@@ -23,7 +23,9 @@ const App = () => {
   const [time, setTime] = useState(Date.now())
   const [carLayer, setCarLayer] = useState(true)
   const [postombudLayer, setPostombudLayer] = useState(true)
-  const [fixedRoute, setFixedRoute] = useState(50)
+  const [fixedRoute, setFixedRoute] = useState(50) // TODO: replace calls to setFixedRoute with calls to setParameters({...parameters, fixedRoute: value})
+  const [newParameters, setNewParameters] = useState({})
+  const [currentParameters, setCurrentParameters] = useState({})
 
   const { socket } = useSocket()
 
@@ -32,6 +34,10 @@ const App = () => {
     setCarLayer,
     postombudLayer,
     setPostombudLayer,
+  }
+
+  const newExperiment = (object) => {
+    socket.emit('experimentParameters', newParameters)
   }
 
   useEffect(() => {
@@ -153,6 +159,11 @@ const App = () => {
     setKommuner((current) => upsert(current, kommun, 'id'))
   })
 
+  useSocket('parameters', (currentParameters) => {
+    setCurrentParameters(currentParameters)
+    setNewParameters(currentParameters)
+  })
+
   const onPause = () => {
     socket.emit('pause')
     console.log('pause stream')
@@ -191,6 +202,7 @@ const App = () => {
       <SideMenu
         activeLayers={activeLayers}
         fixedRoute={fixedRoute}
+        currentParameters={currentParameters}
         setFixedRoute={setFixedRoute}
       />
 
@@ -210,6 +222,7 @@ const App = () => {
         activeCar={activeCar}
         time={time}
         setActiveCar={setActiveCar}
+        newExperiment={newExperiment}
       />
     </>
   )
