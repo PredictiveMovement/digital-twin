@@ -57,7 +57,7 @@ const gtfsStream = (file) => {
   return new Observable((observer) => {
     const stream = fs
       .createReadStream(path.join(__dirname, `../data/${operator}/${file}.txt`))
-      .pipe(csv.createStream())
+      .pipe(csv.createStream({ enclosedChar: '"' }))
     stream.on('data', (data) => {
       // console.log(`data ${Object.values(data)}`)
       return observer.next(data)
