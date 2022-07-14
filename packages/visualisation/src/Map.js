@@ -111,7 +111,6 @@ const Map = ({
   const busStopLayer = new ScatterplotLayer({
     id: 'busStop-layer',
     data: busStops,
-    opacity: 0.7,
     stroked: false,
     filled: true,
     radiusScale: 3,
@@ -152,11 +151,15 @@ const Map = ({
   const busLineLayer = new GeoJsonLayer({
     id: 'busLineLayer',
     data: geoJsonFromBusLines(lineShapes),
-    lineWidthScale: 5,
+    lineWidthScale: 3,
     lineWidthMinPixels: 2,
+    lineWidthMaxPixels: 6,
     getFillColor: [240, 10, 30, 120],
     getLineColor: [240, 10, 30, 120],
-    getLineWidth: 1,
+    getLineWidth: 4,
+    pointType: 'circle',
+    lineJointRounded: true,
+    lineCapRounded: true,
   })
 
   const getColorBasedOnFleet = ({ fleet }) => {
@@ -303,7 +306,6 @@ const Map = ({
   const busLayer = new ScatterplotLayer({
     id: 'bus-layer',
     data: cars.filter((v) => v.vehicleType === 'bus'),
-    //opacity: 0.7,
     stroked: false,
     filled: true,
     radiusScale: 6,
@@ -535,7 +537,7 @@ const Map = ({
         activeLayers.busLayer && busLayer,
         showArcLayer && arcLayer,
         showQueuedBookings && arcLayerQueuedBookings,
-        busLineLayer,
+        activeLayers.busLineLayer && busLineLayer,
       ]}
     >
       <div
