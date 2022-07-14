@@ -231,10 +231,6 @@ class Vehicle extends EventEmitter {
     }
     this.co2 += co2
 
-    console.log(
-      `Vehicle of type ${this.vehicleType} has moved ${km} km, co2: ${co2} (${this.co2PerKmKg})`
-    )
-
     /*
      * Distance traveled.
      */
@@ -249,6 +245,7 @@ class Vehicle extends EventEmitter {
       this.lastPositions.push({ ...position, date })
       this.emit('moved', this)
 
+      // NOTE: cargo is passengers or packages.
       this.cargo.map((booking) => {
         booking.moved(
           this.position,
