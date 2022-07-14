@@ -48,7 +48,7 @@ const CarInfo = ({ data }) => {
         </Paragraph>
         <Paragraph>Co2: {Math.ceil(10 * data.co2) / 10 || 0} kg</Paragraph>
         <Paragraph>
-          Kört: {Math.ceil(10 * data.distance) / 10 || 0} km
+          Körsträcka: {Math.ceil(10 * data.distance) / 10 || 0} km
         </Paragraph>
         <Paragraph>
           Lastat: {data.cargo} {label}
