@@ -128,7 +128,7 @@ function register(io) {
     )
 
     experiment.kommuner
-      .pipe(map(({ id, name, geometry }) => ({ id, name, geometry })))
+      .pipe(map(({ id, name, geometry, co2 }) => ({ id, name, geometry, co2 })))
       .subscribe((kommun) => socket.emit('kommun', kommun))
 
     experiment.dispatchedBookings

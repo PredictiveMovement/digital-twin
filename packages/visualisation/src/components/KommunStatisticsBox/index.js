@@ -27,7 +27,7 @@ const GridWrapper = styled.div`
   margin-top: 1.5rem;
 `
 
-const KommunStatisticsBox = ({ name }) => {
+const KommunStatisticsBox = ({ name, co2 }) => {
   return (
     <Wrapper>
       <H4>{name}</H4>
@@ -42,7 +42,7 @@ const KommunStatisticsBox = ({ name }) => {
         </Grid>
         <Grid>
           <ParagraphBold black>CO2</ParagraphBold>
-          <Paragraph black>xxxx kg</Paragraph>
+          <Paragraph black>{co2} kg</Paragraph>
         </Grid>
         <Grid>
           <ParagraphBold black>Genomsnittskostnad</ParagraphBold>
