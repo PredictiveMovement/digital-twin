@@ -96,6 +96,7 @@ const App = () => {
         ({
           id,
           co2,
+          distance,
           heading,
           bearing,
           position,
@@ -108,6 +109,7 @@ const App = () => {
         }) => ({
           id,
           co2,
+          distance,
           heading,
           bearing,
           position,

@@ -31,6 +31,7 @@ class Vehicle extends EventEmitter {
     this.weight = weight // http://www.lastbilsteori.se/lastvikt.html
     this.costPerHour = 3000 / 12 // ?
     this.co2 = 0
+    this.distance = 0
     this.status = status
     this.lastPositions = []
     this.fleet = fleet
@@ -214,10 +215,31 @@ class Vehicle extends EventEmitter {
       metersMoved / 1000,
       (date - this.lastPositionUpdate) / 1000 / 60 / 60,
     ]
-    // https://www.naturvardsverket.se/data-och-statistik/klimat/vaxthusgaser-utslapp-fran-inrikes-transporter/
-    // https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
-    const co2 = (this.weight + this.cargoWeight()) * km * this.co2PerKmKg
+
+    /*
+     * CO2
+     *
+     * https://www.naturvardsverket.se/data-och-statistik/klimat/vaxthusgaser-utslapp-fran-inrikes-transporter/
+     * https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
+     */
+
+    let co2
+    if (this.vehicleType === 'bus' || this.vehicleType === 'taxi') {
+      co2 = km * this.co2PerKmKg
+    } else {
+      co2 = (this.weight + this.cargoWeight()) * km * this.co2PerKmKg
+    }
     this.co2 += co2
+
+    console.log(
+      `Vehicle of type ${this.vehicleType} has moved ${km} km, co2: ${co2} (${this.co2PerKmKg})`
+    )
+
+    /*
+     * Distance traveled.
+     */
+    this.distance += km
+
     this.speed = Math.round(km / h || 0)
     this.position = position
     this.lastPositionUpdate = date
