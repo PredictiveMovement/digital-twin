@@ -119,10 +119,16 @@ const ExperimentSection = ({ activeLayers, currentParameters }) => {
       <Container>
         <H3>Fordon</H3>
         <CheckItem
-          text="Buss"
-          setLayer={activeLayers.setCarLayer}
-          checked={activeLayers.carLayer}
+          text="Bussar"
+          setLayer={activeLayers.setBusLayer}
+          checked={activeLayers.busLayer}
           color="#E74493"
+        />
+        <CheckItem
+          text="Busslinjer"
+          setLayer={activeLayers.setBusLineLayer}
+          checked={activeLayers.busLineLayer}
+          color="#F00A1D"
         />
         <div style={{ marginBottom: '0.5rem', marginTop: '2rem' }}>
           <Slider

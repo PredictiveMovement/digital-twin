@@ -6,13 +6,22 @@ const { taxiDispatch } = require('./taxiDispatch')
 const Taxi = require('./vehicles/taxi')
 
 class Region {
-  constructor({ geometry, name, id, stops, stopTimes, passengers }) {
+  constructor({
+    geometry,
+    name,
+    id,
+    stops,
+    stopTimes,
+    lineShapes,
+    passengers,
+  }) {
     this.geometry = geometry
     this.name = name
     this.id = id
     this.unhandledBookings = new Subject()
     this.stops = stops
     this.passengers = passengers.pipe(shareReplay())
+    this.lineShapes = lineShapes
 
     this.buses = stopTimes.pipe(
       groupBy(({ tripId }) => tripId),
