@@ -95,6 +95,7 @@ const App = () => {
       ...newCars.map(
         ({
           id,
+          co2,
           heading,
           bearing,
           position,
@@ -106,6 +107,7 @@ const App = () => {
           vehicleType,
         }) => ({
           id,
+          co2,
           heading,
           bearing,
           position,
