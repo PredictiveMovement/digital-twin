@@ -27,7 +27,7 @@ const commercialAreasLayer = new GeoJsonLayer({
   data: CommercialAreas,
   stroked: true,
   filled: false,
-  extured: false,
+  extruded: false,
   wireframe: false,
   lineJointRounded: true,
   getLineColor: [0, 128, 255],
@@ -43,6 +43,7 @@ const Map = ({
   bookings,
   hubs,
   busStops,
+  lineShapes,
   kommuner,
   activeCar,
   setActiveCar,
@@ -131,6 +132,31 @@ const Map = ({
         y,
       })
     },
+  })
+
+  const geoJsonFromBusLine = (coordinates, lineNumber) => ({
+    type: 'Feature',
+    geometry: {
+      type: 'LineString',
+      coordinates,
+    },
+    properties: {
+      name: `bus line ${lineNumber}`,
+    },
+  })
+  const geoJsonFromBusLines = (lineShapes) => {
+    return lineShapes.map(({ stops, lineNumber }) =>
+      geoJsonFromBusLine(stops, lineNumber)
+    )
+  }
+  const busLineLayer = new GeoJsonLayer({
+    id: 'busLineLayer',
+    data: geoJsonFromBusLines(lineShapes),
+    lineWidthScale: 5,
+    lineWidthMinPixels: 2,
+    getFillColor: [240, 10, 30, 120],
+    getLineColor: [240, 10, 30, 120],
+    getLineWidth: 1,
   })
 
   const getColorBasedOnFleet = ({ fleet }) => {
@@ -509,6 +535,7 @@ const Map = ({
         activeLayers.busLayer && busLayer,
         showArcLayer && arcLayer,
         showQueuedBookings && arcLayerQueuedBookings,
+        busLineLayer,
       ]}
     >
       <div
