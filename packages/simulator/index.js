@@ -27,6 +27,7 @@ const engine = {
       dispatchedBookings: kommuner.pipe(mergeMap((k) => k.dispatchedBookings)),
       buses: regions.pipe(mergeMap((region) => region.buses)),
       busStops: regions.pipe(mergeMap((region) => region.stops)),
+      lineShapes: regions.pipe(mergeMap((region) => region.lineShapes)),
       postombud,
       kommuner,
       parameters,

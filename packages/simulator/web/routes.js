@@ -124,6 +124,9 @@ function register(io) {
     experiment.busStops.subscribe((busStops) =>
       socket.emit('busStops', busStops)
     )
+    experiment.lineShapes.subscribe((lineShapes) =>
+      socket.emit('lineShapes', lineShapes)
+    )
 
     experiment.kommuner
       .pipe(map(({ id, name, geometry }) => ({ id, name, geometry })))

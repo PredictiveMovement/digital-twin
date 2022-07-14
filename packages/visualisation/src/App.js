@@ -27,7 +27,8 @@ const App = () => {
   const [busStopLayer, setBusStopLayer] = useState(true)
   const [passengerLayer, setPassengerLayer] = useState(true)
   const [postombudLayer, setPostombudLayer] = useState(false)
-  const [commercialAreasLayer, setCommercialAreasLayer] = useState(true)
+  const [commercialAreasLayer, setCommercialAreasLayer] = useState(false)
+  const [busLineLayer, setBusLineLayer] = useState(true)
   const [kommunLayer, setKommunLayer] = useState(true)
   const [newParameters, setNewParameters] = useState({})
   const [currentParameters, setCurrentParameters] = useState({})
@@ -51,6 +52,8 @@ const App = () => {
     setCommercialAreasLayer,
     kommunLayer,
     setKommunLayer,
+    setBusLineLayer,
+    busLineLayer,
   }
 
   const newExperiment = (object) => {
@@ -70,6 +73,7 @@ const App = () => {
     setKommuner([])
     setPostombud([])
     setBusStops([])
+    setLineShapes([])
     socket.emit('speed', speed) // reset speed on server
   })
 
@@ -181,6 +185,17 @@ const App = () => {
     ])
   })
 
+  const [lineShapes, setLineShapes] = React.useState([])
+  useSocket('lineShapes', ({ stops, lineNumber }) => {
+    setLineShapes((current) => [
+      ...current,
+      {
+        lineNumber,
+        stops,
+      },
+    ])
+  })
+
   const [kommuner, setKommuner] = React.useState([])
   useSocket('kommun', (kommun) => {
     setKommuner((current) => upsert(current, kommun, 'id'))
@@ -284,6 +299,7 @@ const App = () => {
         activeCar={activeCar}
         time={time}
         setActiveCar={setActiveCar}
+        lineShapes={lineShapes}
       />
     </>
   )
