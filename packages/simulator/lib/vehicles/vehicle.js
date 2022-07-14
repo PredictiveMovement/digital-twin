@@ -231,6 +231,9 @@ class Vehicle extends EventEmitter {
     }
     this.co2 += co2
 
+    // TODO: Find which kommun the vehicle is in
+    // TODO: Add co2 to that kommun
+
     /*
      * Distance traveled.
      */

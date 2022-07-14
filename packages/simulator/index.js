@@ -1,5 +1,5 @@
 const { share, merge, fromEvent, of } = require('rxjs')
-const { mergeMap } = require('rxjs/operators')
+const { map, mergeMap, tap } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
 
@@ -8,6 +8,8 @@ const regions = require('./streams/regions')
 const kommuner = require('./streams/kommuner')
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
+
+const { isInsideCoordinates } = require('./lib/polygon')
 
 const engine = {
   experiments: [],
@@ -63,6 +65,20 @@ const engine = {
       experiment.taxis
     ).pipe(
       mergeMap((car) => fromEvent(car, 'moved')),
+      map((car) => {
+        experiment.kommuner.forEach((kommun) => {
+          if (isInsideCoordinates(car.position, kommun.geometry.coordinates)) {
+            console.log(
+              `Vehicle (${car.vehicleType}) ${car.id} is in ${kommun.name}`
+            )
+            // NOTE: add car co2 to kommun
+            // TODO: fix this, it adds too much
+            kommun.co2 += car.co2
+          }
+        })
+
+        return car
+      }),
       share()
     )
 
