@@ -151,11 +151,25 @@ const Map = ({
   const busLineLayer = new GeoJsonLayer({
     id: 'busLineLayer',
     data: geoJsonFromBusLines(lineShapes),
+    onHover: ({ object, x, y }) => {
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        type: 'busLine',
+        title: object.properties.name,
+        x,
+        y,
+      })
+    },
+    pickable: true,
     lineWidthScale: 3,
     lineWidthMinPixels: 2,
     lineWidthMaxPixels: 6,
-    getFillColor: [240, 10, 30, 120],
-    getLineColor: [240, 10, 30, 120],
+    getLineColor: (e) => {
+      if (hoverInfo && hoverInfo.title === e.properties.name) {
+        return [240, 10, 30]
+      }
+      return [240, 10, 30, 90]
+    },
     getLineWidth: 4,
     pointType: 'circle',
     lineJointRounded: true,
@@ -527,17 +541,17 @@ const Map = ({
       layers={[
         // The order of these layers matter, roughly equal to increasing z-index by 1
         activeLayers.kommunLayer && kommunLayer, // TODO: This hides some items behind it, sort of
-        activeLayers.passengerLayer && passengerLayer,
         activeLayers.commercialAreasLayer && commercialAreasLayer,
         activeLayers.postombudLayer && hubLayer,
-        activeLayers.busStopLayer && busStopLayer,
         bookingLayer,
-        activeLayers.carLayer && carLayer,
-        activeLayers.taxiLayer && taxiLayer,
-        activeLayers.busLayer && busLayer,
         showArcLayer && arcLayer,
         showQueuedBookings && arcLayerQueuedBookings,
         activeLayers.busLineLayer && busLineLayer,
+        activeLayers.busStopLayer && busStopLayer,
+        activeLayers.carLayer && carLayer,
+        activeLayers.taxiLayer && taxiLayer,
+        activeLayers.busLayer && busLayer,
+        activeLayers.passengerLayer && passengerLayer,
       ]}
     >
       <div
@@ -575,7 +589,7 @@ const Map = ({
         preventStyleDiffing={true}
         mapStyle="mapbox://styles/mapbox/dark-v10"
       />
-      {hoverInfo && mapState.zoom > 8 && <HoverInfoBox data={hoverInfo} />}
+      {hoverInfo && mapState.zoom > 6 && <HoverInfoBox data={hoverInfo} />}
       <TimeProgressBar time={time} />
       <div
         style={{
