@@ -181,7 +181,7 @@ function register(io) {
 
   experiment.kommuner
     .pipe(
-      mergeMap(({ id, dispatchedBookings, name, cars }) => {
+      mergeMap(({ id, dispatchedBookings, name, cars, co2 }) => {
         const totalBookings = dispatchedBookings.pipe(
           scan((a) => a + 1, 0),
           startWith(0)
@@ -227,7 +227,7 @@ function register(io) {
             totalQueued,
             averageUtilization: totalCargo / totalCapacity,
             averageQueued: totalQueued / totalCapacity,
-            totalCo2,
+            totalCo2: co2,
           })),
           startWith({
             totalCargo: 0,
