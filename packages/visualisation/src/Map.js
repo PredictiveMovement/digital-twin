@@ -541,17 +541,17 @@ const Map = ({
       layers={[
         // The order of these layers matter, roughly equal to increasing z-index by 1
         activeLayers.kommunLayer && kommunLayer, // TODO: This hides some items behind it, sort of
-        activeLayers.passengerLayer && passengerLayer,
         activeLayers.commercialAreasLayer && commercialAreasLayer,
         activeLayers.postombudLayer && hubLayer,
-        activeLayers.busStopLayer && busStopLayer,
         bookingLayer,
-        activeLayers.carLayer && carLayer,
-        activeLayers.taxiLayer && taxiLayer,
-        activeLayers.busLayer && busLayer,
         showArcLayer && arcLayer,
         showQueuedBookings && arcLayerQueuedBookings,
         activeLayers.busLineLayer && busLineLayer,
+        activeLayers.busStopLayer && busStopLayer,
+        activeLayers.carLayer && carLayer,
+        activeLayers.taxiLayer && taxiLayer,
+        activeLayers.busLayer && busLayer,
+        activeLayers.passengerLayer && passengerLayer,
       ]}
     >
       <div
