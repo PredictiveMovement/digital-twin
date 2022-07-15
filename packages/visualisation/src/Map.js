@@ -151,6 +151,16 @@ const Map = ({
   const busLineLayer = new GeoJsonLayer({
     id: 'busLineLayer',
     data: geoJsonFromBusLines(lineShapes),
+    onHover: ({ object, x, y }) => {
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        type: 'busLine',
+        title: object.properties.name,
+        x,
+        y,
+      })
+    },
+    pickable: true,
     lineWidthScale: 3,
     lineWidthMinPixels: 2,
     lineWidthMaxPixels: 6,
