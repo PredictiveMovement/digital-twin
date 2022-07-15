@@ -1,5 +1,5 @@
 const { share, merge, fromEvent, of } = require('rxjs')
-const { map, mergeMap, tap } = require('rxjs/operators')
+const { map, mergeMap } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
 
@@ -65,20 +65,6 @@ const engine = {
       experiment.taxis
     ).pipe(
       mergeMap((car) => fromEvent(car, 'moved')),
-      map((car) => {
-        experiment.kommuner.forEach((kommun) => {
-          if (isInsideCoordinates(car.position, kommun.geometry.coordinates)) {
-            console.log(
-              `Vehicle (${car.vehicleType}) ${car.id} is in ${kommun.name}`
-            )
-            // NOTE: add car co2 to kommun
-            // TODO: fix this, it adds too much
-            kommun.co2 += car.co2
-          }
-        })
-
-        return car
-      }),
       share()
     )
 
@@ -86,7 +72,6 @@ const engine = {
       info(`Booking ${booking?.id} dispatched to fleet ${booking?.fleet?.name}`)
     )
     engine.experiments.push(experiment)
-
     return experiment
   },
 }
