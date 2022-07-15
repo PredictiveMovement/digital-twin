@@ -1,5 +1,5 @@
 const { share, merge, fromEvent, of } = require('rxjs')
-const { map, mergeMap } = require('rxjs/operators')
+const { mergeMap } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
 
@@ -8,8 +8,6 @@ const regions = require('./streams/regions')
 const kommuner = require('./streams/kommuner')
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
-
-const { isInsideCoordinates } = require('./lib/polygon')
 
 const engine = {
   experiments: [],
@@ -72,6 +70,7 @@ const engine = {
       info(`Booking ${booking?.id} dispatched to fleet ${booking?.fleet?.name}`)
     )
     engine.experiments.push(experiment)
+
     return experiment
   },
 }
