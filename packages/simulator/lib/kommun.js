@@ -62,7 +62,7 @@ class Kommun {
     this.population = this.squares.pipe(reduce((a, b) => a + b.population, 0))
     this.privateCars = new ReplaySubject()
 
-    this.co2 = 1337
+    this.co2 = 0
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
 
