@@ -35,8 +35,8 @@ class Taxi extends Vehicle {
       this.status = 'Pickup'
       this.instruction = instruction
       this.navigateTo({
-        lat: location[0],
-        lon: location[1],
+        lat: location[1],
+        lon: location[0],
       })
     } else {
       this.instructions.push(instruction)
@@ -59,8 +59,8 @@ class Taxi extends Vehicle {
     if (this.instruction) {
       const location = this.instruction.location
       this.navigateTo({
-        lat: location[0],
-        lon: location[1],
+        lat: location[1],
+        lon: location[0],
       })
     }
   }
