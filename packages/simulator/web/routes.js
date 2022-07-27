@@ -139,17 +139,17 @@ function register(io) {
           socket.emit('bookings', bookings)
         }
       })
-    experiment.passengers.subscribe((passenger) => {
-      socket.emit('passenger', passenger)
+    experiment.passengers.subscribe(({ position, id }) => {
+      socket.emit('passenger', { id, position })
     })
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
       console.log({ lat, lon }, 'position for', id)
       socket.emit('taxi', { id, position: [lon, lat] })
     })
   })
-  experiment.passengerUpdates.subscribe((passenger) => {
-    if (passenger) {
-      io.emit('passenger', passenger)
+  experiment.passengerUpdates.subscribe(({ position: { position: p }, id }) => {
+    if (p) {
+      io.emit('passenger', { id, position: p })
     }
   })
   experiment.bookingUpdates

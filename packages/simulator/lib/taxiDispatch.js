@@ -41,8 +41,7 @@ const taxiToVehicle = ({ id, position, capacity, heading }, i) => ({
 
 const taxiDispatch = (taxis, passengers) =>
   passengers.pipe(
-    //tap((stop) => console.log('stop', stop)),
-    toArray(),
+    // toArray(),
     mergeMap((passengers) =>
       taxis.pipe(
         //tap((taxi) => console.log('taxi', taxi)),
@@ -57,13 +56,13 @@ const taxiDispatch = (taxis, passengers) =>
           //   'PLAN PLEASE',
           //   JSON.stringify(passengers.map(passengerToShipment), null, 2)
           // )
-          const result = await plan({
-            shipments: passengers.map(passengerToShipment),
-            vehicles: taxis.map(taxiToVehicle),
-          })
+          // const result = await plan({
+          //   // shipments: passengers.map(passengerToShipment),
+          //   vehicles: taxis.map(taxiToVehicle),
+          // })
           return {
             taxis,
-            routes: result.routes,
+            routes: [],
           }
         }),
         // tap((res) =>
