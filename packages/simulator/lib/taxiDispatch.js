@@ -23,11 +23,11 @@ const passengerToShipment = (
   amount: [1],
   delivery: {
     id: i,
-    location: [destination.lat, destination.lon],
+    location: [destination.lon, destination.lat],
   },
   pickup: {
     id: i,
-    location: [pickup.lat, pickup.lon],
+    location: [pickup.lon, pickup.lat],
   },
 })
 
@@ -35,7 +35,7 @@ const taxiToVehicle = ({ id, position, capacity, heading }, i) => ({
   id: i,
   description: id,
   capacity: [capacity],
-  start: [position.lat, position.lon],
+  start: [position.lon, position.lat],
   end: heading ? [heading.lat, heading.lon] : undefined,
 })
 
