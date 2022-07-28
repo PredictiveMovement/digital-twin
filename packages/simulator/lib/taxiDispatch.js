@@ -41,28 +41,21 @@ const taxiToVehicle = ({ id, position, capacity, heading }, i) => ({
 
 const taxiDispatch = (taxis, passengers) =>
   passengers.pipe(
-    // toArray(),
     mergeMap((passengers) =>
       taxis.pipe(
-        //tap((taxi) => console.log('taxi', taxi)),
-        takeUntil(timer(5000)), // to be able to sort we have to batch somehow. Lets start with time
-        toArray(),
         filter((taxis) => taxis.length > 0),
-        // tap((taxis) =>
-        //   console.log('taxi dispatch', passengers.length, taxis.length)
-        // ),
         mergeMap(async (taxis) => {
-          // console.log(
-          //   'PLAN PLEASE',
-          //   JSON.stringify(passengers.map(passengerToShipment), null, 2)
-          // )
-          // const result = await plan({
-          //   // shipments: passengers.map(passengerToShipment),
-          //   vehicles: taxis.map(taxiToVehicle),
-          // })
+          console.log(
+            'PLAN PLEASE',
+            JSON.stringify(passengers.map(passengerToShipment), null, 2)
+          )
+          const result = await plan({
+            shipments: passengers.map(passengerToShipment),
+            vehicles: taxis.map(taxiToVehicle),
+          })
           return {
             taxis,
-            routes: [],
+            routes: result.routes,
           }
         }),
         // tap((res) =>

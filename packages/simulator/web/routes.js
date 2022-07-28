@@ -139,17 +139,21 @@ function register(io) {
           socket.emit('bookings', bookings)
         }
       })
-    experiment.passengers.subscribe(({ position, id }) => {
-      socket.emit('passenger', { id, position })
+    experiment.passengers.subscribe((passengers) => {
+      console.log('sending', passengers.length)
+      return passengers.map(({ id, position }) =>
+        socket.emit('passenger', { id, position })
+      )
     })
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
       console.log({ lat, lon }, 'position for', id)
       socket.emit('taxi', { id, position: [lon, lat] })
     })
   })
-  experiment.passengerUpdates.subscribe(({ position: { position: p }, id }) => {
-    if (p) {
-      io.emit('passenger', { id, position: p })
+  experiment.passengerUpdates.subscribe(({ position, id }) => {
+    if (position) {
+      console.log({ id, position })
+      io.emit('passenger', { id, position })
     }
   })
   experiment.bookingUpdates

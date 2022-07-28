@@ -1,4 +1,13 @@
-const { tap, filter, mergeMap, concatMap } = require('rxjs/operators')
+const {
+  takeUntil,
+  tap,
+  filter,
+  mergeMap,
+  mergeAll,
+  concatMap,
+  toArray,
+} = require('rxjs/operators')
+const { timer, bufferTime, windowTime } = require('rxjs')
 const pelias = require('../lib/pelias')
 const { addMeters } = require('../lib/distance')
 const perlin = require('perlin-noise')
@@ -10,7 +19,6 @@ const polarbrödÄlvsByn = {
   lat: 65.669641,
   lon: 20.975453,
 }
-const reducePopulationFactor = 10
 
 const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
 
@@ -30,7 +38,7 @@ const generatePassengers = (kommuner) =>
       squares.pipe(
         mergeMap(({ population, position }) =>
           randomPositions
-            .slice(0, population / reducePopulationFactor)
+            .slice(0, population)
             .map(({ x, y }) => addMeters(position, { x, y }))
         ),
         concatMap((position) =>
@@ -41,7 +49,8 @@ const generatePassengers = (kommuner) =>
         ),
         filter((p) => p !== null)
       )
-    )
+    ),
+    bufferTime(15000, 25000)
   )
 
 const createPassengerFromAddress = ({ position }) =>
