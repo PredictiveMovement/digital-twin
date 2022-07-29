@@ -140,13 +140,13 @@ function register(io) {
         }
       })
     experiment.passengers.subscribe((passengers) => {
-      console.log('sending', passengers.length)
+      console.log('sending', passengers.length, 'passengers')
       return passengers.map(({ id, position, name }) =>
         socket.emit('passenger', { id, position, name })
       )
     })
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
-      console.log({ lat, lon }, 'position for', id)
+      // console.log({ lat, lon }, 'position for', id)
       socket.emit('taxi', { id, position: [lon, lat] })
     })
   })

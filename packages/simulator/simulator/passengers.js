@@ -50,7 +50,7 @@ const generatePassengers = (kommuner) =>
         filter((p) => p !== null)
       )
     ),
-    bufferTime(15000, 25000)
+    bufferTime(12000, 2500000)
   )
 
 const createPassengerFromAddress = ({ position }) =>

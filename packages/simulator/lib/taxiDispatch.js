@@ -1,18 +1,5 @@
-const { mergeAll, timer, of } = require('rxjs')
-const {
-  toArray,
-  map,
-  tap,
-  filter,
-  takeUntil,
-  delay,
-  mergeMap,
-  catchError,
-  groupBy,
-  take,
-} = require('rxjs/operators')
+const { toArray, map, filter, mergeMap, take } = require('rxjs/operators')
 const { plan } = require('./vroom')
-const moment = require('moment')
 
 const passengerToShipment = (
   { id, destination, pickup, position, arrivalTime, departureTime },
@@ -43,12 +30,15 @@ const taxiDispatch = (taxis, passengers) =>
   passengers.pipe(
     mergeMap((passengers) =>
       taxis.pipe(
+        take(200),
+        toArray(),
         filter((taxis) => taxis.length > 0),
         mergeMap(async (taxis) => {
-          console.log(
-            'PLAN PLEASE',
-            JSON.stringify(passengers.map(passengerToShipment), null, 2)
-          )
+          // console.log(
+          //   'PLAN PLEASE',
+          //   JSON.stringify(passengers.map(passengerToShipment), null, 2)
+          // )
+          console.log('calling vroom')
           const result = await plan({
             shipments: passengers.map(passengerToShipment),
             vehicles: taxis.map(taxiToVehicle),
