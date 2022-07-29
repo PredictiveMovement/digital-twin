@@ -4,7 +4,7 @@ const { decodePolyline } = require('./osrm')
 
 module.exports = {
   async plan({ jobs, shipments, vehicles }) {
-    console.log('VROOM', shipments)
+    // console.log('VROOM', shipments)
     const result = await fetch(vroomUrl, {
       method: 'POST',
       headers: {
@@ -14,9 +14,16 @@ module.exports = {
         jobs,
         shipments,
         vehicles,
+        options: {
+          x: 1,
+        },
       }),
     }).then((res) => res.json())
     if (result.error) throw new Error(result.error)
+    console.log(
+      'Results from vroom, computing_times:',
+      result.summary.computing_times
+    )
     return result
   },
 }
