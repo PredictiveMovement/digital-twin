@@ -81,6 +81,8 @@ function register(io) {
   const experiment = engine.createExperiment() // move this to a start event
 
   let emitCars = true
+  let emitTaxiUpdates = true
+  let emitBusUpdates = true
 
   io.on('connection', function (socket) {
     socket.emit('reset')
@@ -103,13 +105,16 @@ function register(io) {
     })
 
     socket.on('carLayer', (value) => {
-      emitCars == value
+      emitCars = value
     })
 
-    // Receiving a percentage of how many fixed vs dynamic routes
-    // socket.on('fixedRoute', (value) => {
-    //   console.log('total fixed route: ', value)
-    // })
+    socket.on('taxiUpdatesToggle', (value) => {
+      emitTaxiUpdates = value
+    })
+
+    socket.on('busUpdatesToggle', (value) => {
+      emitBusUpdates = value
+    })
 
     // Receiving a new set of experiment parameters
     socket.on('experimentParameters', (value) => {
@@ -175,8 +180,15 @@ function register(io) {
       map(cleanCars)
     )
     .subscribe((car) => {
-      if (car && emitCars) {
-        io.emit('cars', [car])
+      if (!car) return
+      if (car.vehicleType === 'bus') {
+        if (emitBusUpdates) io.emit('cars', [car])
+        return
+      } else if (car.vehicleType === 'taxi') {
+        if (emitTaxiUpdates) io.emit('cars', [car])
+        return
+      } else if (emitCars) {
+        return io.emit('cars', [car])
       }
     })
 

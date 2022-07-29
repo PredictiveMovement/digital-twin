@@ -64,6 +64,14 @@ const App = () => {
     socket.emit('carLayer', activeLayers.carLayer)
   }, [activeLayers.carLayer])
 
+  useEffect(() => {
+    socket.emit('taxiUpdatesToggle', activeLayers.taxiLayer)
+  }, [activeLayers.taxiLayer])
+
+  useEffect(() => {
+    socket.emit('busUpdatesToggle', activeLayers.busLayer)
+  }, [activeLayers.busLayer])
+
   useSocket('reset', () => {
     console.log('received reset')
     setBookings([])
