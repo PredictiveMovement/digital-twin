@@ -81,6 +81,8 @@ function register(io) {
   const experiment = engine.createExperiment() // move this to a start event
 
   let emitCars = true
+  let emitTaxiUpdates = true
+  let emitBusUpdates = true
 
   io.on('connection', function (socket) {
     socket.emit('reset')
@@ -103,13 +105,16 @@ function register(io) {
     })
 
     socket.on('carLayer', (value) => {
-      emitCars == value
+      emitCars = value
     })
 
-    // Receiving a percentage of how many fixed vs dynamic routes
-    // socket.on('fixedRoute', (value) => {
-    //   console.log('total fixed route: ', value)
-    // })
+    socket.on('taxiUpdatesToggle', (value) => {
+      emitTaxiUpdates = value
+    })
+
+    socket.on('busUpdatesToggle', (value) => {
+      emitBusUpdates = value
+    })
 
     // Receiving a new set of experiment parameters
     socket.on('experimentParameters', (value) => {
@@ -139,17 +144,21 @@ function register(io) {
           socket.emit('bookings', bookings)
         }
       })
-    experiment.passengers.subscribe((passenger) => {
-      socket.emit('passenger', passenger)
+    experiment.passengers.subscribe((passengers) => {
+      console.log('sending', passengers.length, 'passengers')
+      return passengers.map(({ id, position, name }) =>
+        socket.emit('passenger', { id, position, name })
+      )
     })
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
-      console.log({ lat, lon }, 'position for', id)
+      // console.log({ lat, lon }, 'position for', id)
       socket.emit('taxi', { id, position: [lon, lat] })
     })
   })
-  experiment.passengerUpdates.subscribe((passenger) => {
-    if (passenger) {
-      io.emit('passenger', passenger)
+  experiment.passengerUpdates.subscribe(({ position, id, name }) => {
+    if (position) {
+      console.log({ id, position })
+      io.emit('passenger', { id, position, name })
     }
   })
   experiment.bookingUpdates
@@ -171,8 +180,15 @@ function register(io) {
       map(cleanCars)
     )
     .subscribe((car) => {
-      if (car && emitCars) {
-        io.emit('cars', [car])
+      if (!car) return
+      if (car.vehicleType === 'bus') {
+        if (emitBusUpdates) io.emit('cars', [car])
+        return
+      } else if (car.vehicleType === 'taxi') {
+        if (emitTaxiUpdates) io.emit('cars', [car])
+        return
+      } else if (emitCars) {
+        return io.emit('cars', [car])
       }
     })
 

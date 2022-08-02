@@ -1,18 +1,5 @@
-const { mergeAll, timer, of } = require('rxjs')
-const {
-  toArray,
-  map,
-  tap,
-  filter,
-  takeUntil,
-  delay,
-  mergeMap,
-  catchError,
-  groupBy,
-  take,
-} = require('rxjs/operators')
+const { toArray, map, filter, mergeMap, take } = require('rxjs/operators')
 const { plan } = require('./vroom')
-const moment = require('moment')
 
 const passengerToShipment = (
   { id, destination, pickup, position, arrivalTime, departureTime },
@@ -41,22 +28,17 @@ const taxiToVehicle = ({ id, position, capacity, heading }, i) => ({
 
 const taxiDispatch = (taxis, passengers) =>
   passengers.pipe(
-    //tap((stop) => console.log('stop', stop)),
-    toArray(),
     mergeMap((passengers) =>
       taxis.pipe(
-        //tap((taxi) => console.log('taxi', taxi)),
-        takeUntil(timer(5000)), // to be able to sort we have to batch somehow. Lets start with time
+        take(200),
         toArray(),
         filter((taxis) => taxis.length > 0),
-        // tap((taxis) =>
-        //   console.log('taxi dispatch', passengers.length, taxis.length)
-        // ),
         mergeMap(async (taxis) => {
           // console.log(
           //   'PLAN PLEASE',
           //   JSON.stringify(passengers.map(passengerToShipment), null, 2)
           // )
+          console.log('calling vroom')
           const result = await plan({
             shipments: passengers.map(passengerToShipment),
             vehicles: taxis.map(taxiToVehicle),
