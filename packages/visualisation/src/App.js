@@ -20,7 +20,7 @@ const App = () => {
   const [activeCar, setActiveCar] = useState(null)
   const [reset, setReset] = useState(false)
   const [speed, setSpeed] = useState(60)
-  const [time, setTime] = useState(Date.now())
+  const [time, setTime] = useState(-3600000) // 00:00
   const [carLayer, setCarLayer] = useState(true)
   const [busLayer, setBusLayer] = useState(true)
   const [taxiLayer, setTaxiLayer] = useState(true)
