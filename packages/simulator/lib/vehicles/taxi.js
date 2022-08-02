@@ -20,6 +20,7 @@ class Taxi extends Vehicle {
     this.capacity = 4
     this.booking = true
     this.vehicleType = 'taxi'
+    this.co2PerKmKg = 0.1201 // NOTE: From a quick google. Needs to be verified.
   }
   canPickupBooking() {
     true

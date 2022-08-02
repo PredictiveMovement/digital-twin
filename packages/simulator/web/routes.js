@@ -59,6 +59,7 @@ const cleanCars = ({
   capacity,
   queue,
   co2,
+  distance,
   lineNumber,
   vehicleType,
 }) => ({
@@ -70,6 +71,7 @@ const cleanCars = ({
   status,
   fleet: fleet?.name || 'Privat',
   co2,
+  distance,
   cargo: cargo.length,
   queue: queue.length,
   capacity,
@@ -129,7 +131,7 @@ function register(io) {
     )
 
     experiment.kommuner
-      .pipe(map(({ id, name, geometry }) => ({ id, name, geometry })))
+      .pipe(map(({ id, name, geometry, co2 }) => ({ id, name, geometry, co2 })))
       .subscribe((kommun) => socket.emit('kommun', kommun))
 
     experiment.dispatchedBookings
@@ -182,7 +184,7 @@ function register(io) {
 
   experiment.kommuner
     .pipe(
-      mergeMap(({ id, dispatchedBookings, name, cars }) => {
+      mergeMap(({ id, dispatchedBookings, name, cars, co2 }) => {
         const totalBookings = dispatchedBookings.pipe(
           scan((a) => a + 1, 0),
           startWith(0)
@@ -228,7 +230,7 @@ function register(io) {
             totalQueued,
             averageUtilization: totalCargo / totalCapacity,
             averageQueued: totalQueued / totalCapacity,
-            totalCo2,
+            totalCo2: co2,
           })),
           startWith({
             totalCargo: 0,

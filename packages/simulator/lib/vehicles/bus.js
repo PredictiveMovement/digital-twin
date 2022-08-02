@@ -21,6 +21,7 @@ class Bus extends Vehicle {
     this.lineNumber = lineNumber
     this.finalStop = finalStop
     this.vehicleType = 'bus'
+    this.co2PerKmKg = 1.3 // NOTE: From a quick google. Needs to be verified.
     // stops
     //   .pipe(toArray())
     //   .subscribe((stops) => console.log('init bus id', id, 'stops', stops))
