@@ -1,0 +1,20 @@
+{
+  "journeys": {
+    "mappings": {
+      "properties": {
+        "pickup_position": {
+          "type": "geo_point"
+        },
+        "destination_position": {
+          "type": "geo_point"
+        },
+        "finalDestination_position": {
+          "type": "geo_point"
+        },
+        "assignedDateTime": {
+          "type": "date"
+        }
+      }
+    }
+  }
+}
