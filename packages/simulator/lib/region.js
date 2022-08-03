@@ -1,5 +1,5 @@
-const { from, shareReplay, Subject, mergeMap } = require('rxjs')
-const { map, first, groupBy } = require('rxjs/operators')
+const { from, shareReplay, Subject, ReplaySubject, mergeMap } = require('rxjs')
+const { map, first, groupBy, toArray, count } = require('rxjs/operators')
 const Bus = require('./vehicles/bus')
 const { safeId } = require('./id')
 const { taxiDispatch } = require('./taxiDispatch')
@@ -23,34 +23,40 @@ class Region {
     this.passengers = passengers.pipe(shareReplay())
     this.lineShapes = lineShapes
 
-    this.buses = stopTimes.pipe(
-      groupBy(({ tripId }) => tripId),
-      mergeMap((stopTimesPerRoute) => {
-        const stops = stopTimesPerRoute.pipe(shareReplay())
-        return stops.pipe(
-          first(),
-          map((firstStopTime) => {
-            return new Bus({
-              id: firstStopTime.tripId,
-              finalStop: firstStopTime.finalStop,
-              lineNumber: firstStopTime.lineNumber,
-              position: firstStopTime.position,
-              stops,
-            })
-          })
-        )
-      }),
-      shareReplay()
-    )
+    this.buses = new ReplaySubject()
+    this.taxis = new ReplaySubject()
 
-    this.taxis = from([
-      new Taxi({ id: safeId(), position: { lon: 17.867348, lat: 66.065143 } }),
-    ]).pipe(shareReplay())
+    stopTimes
+      .pipe(
+        groupBy(({ tripId }) => tripId),
+        mergeMap((stopTimesPerRoute) => {
+          const stops = stopTimesPerRoute.pipe(shareReplay())
+          return stops.pipe(
+            first(),
+            map((firstStopTime) => {
+              this.taxis.next(createTaxi(firstStopTime))
+              this.buses.next(createBus(firstStopTime, stops))
+            })
+          )
+        })
+      )
+      .subscribe((_) => null)
 
     taxiDispatch(this.taxis, passengers).subscribe((e) => {
       e.map(({ taxi, steps }) => steps.map((step) => taxi.addInstruction(step)))
     })
   }
 }
+
+const createTaxi = ({ position }) => new Taxi({ id: safeId(), position })
+
+const createBus = ({ tripId, finalStop, lineNumber, position }, stops) =>
+  new Bus({
+    id: tripId,
+    finalStop,
+    lineNumber,
+    position,
+    stops,
+  })
 
 module.exports = Region

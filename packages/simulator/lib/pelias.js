@@ -11,7 +11,7 @@ module.exports = {
         return response.json()
       })
       .then((p) =>
-        p.features[0].geometry?.coordinates?.length
+        p.features[0]?.geometry?.coordinates?.length
           ? p
           : Promise.reject('No coordinates found')
       )
