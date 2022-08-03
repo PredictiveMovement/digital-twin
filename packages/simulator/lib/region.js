@@ -1,4 +1,4 @@
-const { from, shareReplay, Subject, mergeMap } = require('rxjs')
+const { from, shareReplay, Subject, ReplaySubject, mergeMap } = require('rxjs')
 const { map, first, groupBy, toArray, count } = require('rxjs/operators')
 const Bus = require('./vehicles/bus')
 const { safeId } = require('./id')
@@ -23,23 +23,24 @@ class Region {
     this.passengers = passengers.pipe(shareReplay())
     this.lineShapes = lineShapes
 
-    this.taxis = stopTimes.pipe(
-      groupBy(({ tripId }) => tripId),
-      mergeMap((stopTimesPerRoute) => {
-        const stops = stopTimesPerRoute.pipe(shareReplay())
-        return stops.pipe(
-          first(),
-          map((firstStopTime) => {
-            return createTaxi(firstStopTime)
-            // createBus(firstStopTime, stops)
-          })
-        )
-      }),
+    this.buses = new ReplaySubject()
+    this.taxis = new ReplaySubject()
 
-      shareReplay()
-    )
-
-    this.buses = from([]).pipe(shareReplay())
+    stopTimes
+      .pipe(
+        groupBy(({ tripId }) => tripId),
+        mergeMap((stopTimesPerRoute) => {
+          const stops = stopTimesPerRoute.pipe(shareReplay())
+          return stops.pipe(
+            first(),
+            map((firstStopTime) => {
+              this.taxis.next(createTaxi(firstStopTime))
+              this.buses.next(createBus(firstStopTime, stops))
+            })
+          )
+        })
+      )
+      .subscribe((_) => null)
 
     taxiDispatch(this.taxis, passengers).subscribe((e) => {
       e.map(({ taxi, steps }) => steps.map((step) => taxi.addInstruction(step)))
