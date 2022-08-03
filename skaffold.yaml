@@ -20,7 +20,7 @@ deploy:
 profiles:
 - name: prod
   activation:
-    - env: GITHUB_REF_SLUG=main
+    - env: GITHUB_REF_TYPE=tag
   deploy:
     kustomize:
       paths:
