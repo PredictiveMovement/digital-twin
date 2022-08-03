@@ -14,9 +14,6 @@ module.exports = {
         jobs,
         shipments,
         vehicles,
-        options: {
-          x: 1,
-        },
       }),
     }).then((res) => res.json())
     if (result.error) throw new Error(result.error)
