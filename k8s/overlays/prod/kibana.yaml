@@ -11,6 +11,10 @@ spec:
     - host: kibana.predictivemovement.se
       http:
         paths:
-          - backend:
-              serviceName: kibana
-              servicePort: 5601
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kibana
+                port:
+                  number: 5601
