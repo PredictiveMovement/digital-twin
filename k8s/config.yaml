@@ -14,4 +14,5 @@ preferences: {}
 users:
   - name: default
     user:
-      token: $KUBE_USER_TOKEN
+      client-certificate-data: $KUBE_CERTIFICATE_DATA
+      client-key-data: $KUBE_KEY_DATA
