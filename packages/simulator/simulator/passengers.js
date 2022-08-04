@@ -1,6 +1,7 @@
 const {
   takeUntil,
   tap,
+  take,
   filter,
   mergeMap,
   mergeAll,
@@ -50,7 +51,9 @@ const generatePassengers = (kommuner) =>
         filter((p) => p !== null)
       )
     ),
-    bufferTime(12000, 2500000)
+
+    take(100),
+    toArray()
   )
 
 const createPassengerFromAddress = ({ position }) =>
