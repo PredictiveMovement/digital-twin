@@ -35,12 +35,9 @@ jobs:
           mkdir ${HOME}/.kube
           cp k8s/config.yaml ${HOME}/.kube/config
           cd ${HOME}/.kube
-          sed -i 's;$KUBE_CLUSTER_NAME;${{ secrets.KUBE_CLUSTER_NAME }};g' config
           sed -i 's;$KUBE_CLUSTER_SERVER;${{ secrets.KUBE_CLUSTER_SERVER }};g' config
           sed -i 's;$KUBE_CLUSTER_CERTIFICATE;${{ secrets.KUBE_CLUSTER_CERTIFICATE }};g' config
-          sed -i 's;$KUBE_USER_NAME;${{ secrets.KUBE_USER_NAME }};g' config
           sed -i 's;$KUBE_USER_TOKEN;${{ secrets.KUBE_USER_TOKEN }};g' config
-          kubectl config use-context ${{ secrets.KUBE_CLUSTER_NAME }}
       - name: build-and-deploy
         env:
           REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}

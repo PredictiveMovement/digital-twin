@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: osrm
 spec:
-  replicas: 1
+  replicas: 5
   selector:
     matchLabels:
       app: osrm
@@ -14,7 +14,7 @@ spec:
         app: osrm
     spec:
       containers:
-        - image: osrm/osrm-backend:v5.22.0
+        - image: osrm/osrm-backend:v5.25.0
           name: osrm
           command: ["/bin/sh"]
           args:
