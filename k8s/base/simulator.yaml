@@ -48,17 +48,17 @@ kind: Ingress
 metadata:
   name: simulator-ingress
   annotations:
-    kubernetes.io/ingress.class: "public"
+    kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.org/websocket-services: "simulator"
 spec:
   tls:
     - hosts:
-        - rorla-stage.predictivemovement.se
+        - rorla-stage.iteam.services
       secretName: rorla-stage-tls
   rules:
-    - host: rorla-stage.predictivemovement.se
+    - host: rorla-stage.iteam.services
       http:
         paths:
           - path: /socket.io/.*

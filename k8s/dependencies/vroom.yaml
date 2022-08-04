@@ -50,15 +50,15 @@ kind: Ingress
 metadata:
   name: vroom-ingress
   annotations:
-    kubernetes.io/ingress.class: "public"
+    kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   tls:
     - hosts:
-        - vroom.predictivemovement.se
+        - vroom.iteam.services
       secretName: vroom-prod-tls
   rules:
-    - host: vroom.predictivemovement.se
+    - host: vroom.iteam.services
       http:
         paths:
           - path: /
