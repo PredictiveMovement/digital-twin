@@ -3,15 +3,15 @@ clusters:
   - cluster:
       certificate-authority-data: $KUBE_CLUSTER_CERTIFICATE
       server: $KUBE_CLUSTER_SERVER
-    name: $KUBE_CLUSTER_NAME
+    name: default
 contexts:
   - context:
-      cluster: $KUBE_CLUSTER_NAME
-      user: $KUBE_USER_NAME
-    name: $KUBE_CLUSTER_NAME
+      cluster: default
+      user: default
+    name: default
 kind: Config
 preferences: {}
 users:
-  - name: $KUBE_USER_NAME
+  - name: default
     user:
       token: $KUBE_USER_TOKEN
