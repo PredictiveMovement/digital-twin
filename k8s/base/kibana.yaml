@@ -42,15 +42,15 @@ kind: Ingress
 metadata:
   name: kibana-ingress
   annotations:
-    kubernetes.io/ingress.class: "public"
+    kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   tls:
     - hosts:
-        - kibana-stage.predictivemovement.se
+        - kibana-stage.iteam.services
       secretName: predictivemovement-kibana-prod-tls
   rules:
-    - host: kibana-stage.predictivemovement.se
+    - host: kibana-stage.iteam.services
       http:
         paths:
           - path: /

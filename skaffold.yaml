@@ -16,6 +16,7 @@ deploy:
   kustomize:
     paths:
       - k8s/base
+      - k8s/dependencies
   statusCheckDeadlineSeconds: 600
 profiles:
 - name: prod
