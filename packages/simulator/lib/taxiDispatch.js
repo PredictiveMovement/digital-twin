@@ -38,7 +38,9 @@ const taxiDispatch = (taxis, passengers) =>
           //   'PLAN PLEASE',
           //   JSON.stringify(passengers.map(passengerToShipment), null, 2)
           // )
-          console.log('calling vroom')
+          console.log(
+            `calling vroom with ${taxis.length} taxis and ${passengers.length}`
+          )
           const result = await plan({
             shipments: passengers.map(passengerToShipment),
             vehicles: taxis.map(taxiToVehicle),
