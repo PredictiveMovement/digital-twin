@@ -1,5 +1,5 @@
 const fetch = require('node-fetch')
-const vroomUrl = process.env.VROOM_URL || 'https://vroom.predictivemovement.se'
+const vroomUrl = process.env.VROOM_URL || 'https://vroom.iteam.services/'
 const { decodePolyline } = require('./osrm')
 
 module.exports = {
