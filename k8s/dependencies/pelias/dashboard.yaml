@@ -1,0 +1,51 @@
+---
+# Source: pelias/templates/dashboard-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: pelias-dashboard-service
+  namespace: pelias
+spec:
+  selector:
+    app: pelias-dashboard
+  ports:
+    - protocol: TCP
+      port: 3030
+  type: ClusterIP
+---
+# Source: pelias/templates/dashboard-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pelias-dashboard
+  namespace: pelias
+spec:
+  replicas: 1
+  minReadySeconds: 1
+  selector:
+    matchLabels:
+      app: pelias-dashboard
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: pelias-dashboard
+    spec:
+      containers:
+        - name: pelias-dashboard
+          image: pelias/dashboard:master
+          env:
+            - name: AUTH_TOKEN
+              value: "foo"
+            - name: ES_ENDPOINT
+              value: http://elasticsearch:9200/
+          resources:
+            limits:
+              memory: 0.2Gi
+              cpu: "0.25"
+            requests:
+              memory: 0.2Gi
+              cpu: "0.01"

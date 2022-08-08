@@ -6,6 +6,7 @@ kind: Kustomization
 resources:
   - osrm.yaml
   - vroom.yaml
+  - pelias/*.yaml
 
 # namespace to deploy all Resources to
-namespace: predictivemovement
+#namespace: predictivemovement

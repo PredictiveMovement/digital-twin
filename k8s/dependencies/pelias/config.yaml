@@ -1,0 +1,108 @@
+---
+# Source: pelias/templates/configmap.tpl
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pelias-json-configmap
+  namespace: pelias
+data:
+  pelias.json: |
+    {
+      "esclient": {
+        "hosts": [{
+          "host": "elasticsearch",
+          "port": 9200,
+          "protocol": "http"
+        }]
+      },
+      "elasticsearch": {
+        "settings": {
+          "index": {
+            "number_of_replicas": "0",
+            "number_of_shards": "12",
+            "refresh_interval": "1m"
+          }
+        }
+      },
+      "api": {
+        "accessLog": "common",
+        "autocomplete": {
+          "exclude_address_length": 0
+        },
+        "attributionURL": "http://api.yourpelias.com/attribution",
+        "indexName": "pelias",
+        "services": {
+
+          "placeholder": {
+            "url": "http://pelias-placeholder-service:3000/",
+            "retries": 1,
+            "timeout": 5000
+          },
+          "pip": {
+            "url": "http://pelias-pip-service:3102/",
+            "retries": 1,
+            "timeout": 5000
+          },
+          "libpostal": {
+            "url": "http://pelias-libpostal-service:4400/",
+            "retries": 1,
+            "timeout": 5000
+          }
+        },
+        "targets": {
+          "auto_discover": true
+        }
+      },
+      "acceptance-tests": {
+        "endpoints": {
+          "local": "http://pelias-api:3100/v1/"
+        }
+      },
+      "logger": {
+        "level": "info",
+        "json": true,
+        "timestamp": true
+      },
+      "imports": {
+        "adminLookup": {
+            "enabled": true,
+            "maxConcurrentReqs": 20
+        },
+        "services": {
+          "pip": {
+            "url": "http://pelias-pip-service:3102",
+            "timeout": 5000
+          }
+        },
+        "geonames": {
+          "datapath": "/data/geonames",
+          "countryCode": "ALL"
+        },
+        "openaddresses": {
+          "datapath": "/data/openaddresses",
+          "files": []
+        },
+        "openstreetmap": {
+          "download": [{
+              "sourceURL": "https://download.geofabrik.de/europe/sweden-latest.osm.pbf"
+          }],
+          "datapath": "/data/openstreetmap",
+          "import": [{
+            "filename": "sweden-latest.osm.pbf"
+          }]
+        },
+        "polyline": {
+          "datapath": "/data/polylines",
+          "files": ["extract.0sv"]
+        },
+        "whosonfirst": {
+          "countryCode": "SE",
+          "sqlite": false,
+          "importPostalcodes": true,
+          "datapath": "/data/whosonfirst"
+        },
+        "csv": {
+          "datapath": "/data/lantmateriet/csv/"
+        }
+      }
+    }

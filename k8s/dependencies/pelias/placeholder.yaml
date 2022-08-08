@@ -1,0 +1,83 @@
+---
+# Source: pelias/templates/placeholder-service.tpl
+apiVersion: v1
+kind: Service
+metadata:
+  name: pelias-placeholder-service
+  namespace: pelias
+spec:
+  selector:
+    app: pelias-placeholder
+  ports:
+    - protocol: TCP
+      port: 3000
+  type: ClusterIP
+---
+# Source: pelias/templates/placeholder-deployment.tpl
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pelias-placeholder
+  namespace: pelias
+spec:
+  replicas: 1
+  minReadySeconds: 5
+  selector:
+    matchLabels:
+      app: pelias-placeholder
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: pelias-placeholder
+    spec:
+      initContainers:
+        - name: download
+          image: pelias/placeholder:master
+          env:
+            - name: DOWNLOAD_URL
+              value: "https://s3.amazonaws.com/pelias-data.nextzen.org/portland-metro/placeholder/store.sqlite3.gz"
+          command:
+            [
+              "sh",
+              "-c",
+              "mkdir -p /data/placeholder/ && wget -O- \"$DOWNLOAD_URL\" | gunzip > /data/placeholder/store.sqlite3\n",
+            ]
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data
+          resources:
+            limits:
+              memory: 1Gi
+              cpu: "1.1"
+              ephemeral-storage: 5Gi
+            requests:
+              memory: 100Mi
+              cpu: "0.2"
+              ephemeral-storage: 5Gi
+      containers:
+        - name: pelias-placeholder
+          image: pelias/placeholder:master
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data
+          env:
+            - name: PLACEHOLDER_DATA
+              value: "/data/placeholder/"
+            - name: CPUS
+              value: "1"
+          resources:
+            limits:
+              memory: 1Gi
+              cpu: "2"
+              ephemeral-storage: 5Gi
+            requests:
+              memory: "512Mi"
+              cpu: "0.1"
+              ephemeral-storage: 5Gi
+      volumes:
+        - name: data-volume
+          emptyDir: {}

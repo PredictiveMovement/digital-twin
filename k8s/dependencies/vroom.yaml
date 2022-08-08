@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: vroom
+  namespace: vroom
 spec:
   ports:
     - port: 3000
@@ -13,6 +14,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: vroom
+  namespace: vroom
 spec:
   selector:
     matchLabels:
@@ -73,6 +75,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: vroom
+  namespace: vroom
 data:
   config.yml: |-
     cliArgs:
