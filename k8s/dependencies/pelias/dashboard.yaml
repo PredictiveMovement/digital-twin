@@ -43,9 +43,6 @@ spec:
             - name: ES_ENDPOINT
               value: http://elasticsearch:9200/
           resources:
-            limits:
-              memory: 0.2Gi
-              cpu: "0.25"
             requests:
               memory: 0.2Gi
               cpu: "0.01"

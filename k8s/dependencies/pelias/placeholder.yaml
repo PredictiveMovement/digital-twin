@@ -50,12 +50,8 @@ spec:
             - name: data-volume
               mountPath: /data
           resources:
-            limits:
-              memory: 1Gi
-              cpu: "1.1"
-              ephemeral-storage: 5Gi
             requests:
-              memory: 100Mi
+              memory: "100Mi"
               cpu: "0.2"
               ephemeral-storage: 5Gi
       containers:
@@ -70,10 +66,6 @@ spec:
             - name: CPUS
               value: "1"
           resources:
-            limits:
-              memory: 1Gi
-              cpu: "2"
-              ephemeral-storage: 5Gi
             requests:
               memory: "512Mi"
               cpu: "0.1"

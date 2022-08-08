@@ -29,7 +29,7 @@ data:
         "autocomplete": {
           "exclude_address_length": 0
         },
-        "attributionURL": "http://api.yourpelias.com/attribution",
+        "attributionURL": "https://predictivemovement.se",
         "indexName": "pelias",
         "services": {
 

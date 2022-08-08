@@ -40,9 +40,6 @@ spec:
             - name: PELIAS_CONFIG
               value: "/etc/config/pelias.json"
           resources:
-            limits:
-              memory: 0.5Gi
-              cpu: "1.5"
             requests:
               memory: "0.25Gi"
               cpu: "0.1"
@@ -73,6 +70,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: pelias-api-ingress
+  namespace: pelias
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"

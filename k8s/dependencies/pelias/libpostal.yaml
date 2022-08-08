@@ -40,9 +40,6 @@ spec:
         - name: pelias-libpostal
           image: pelias/libpostal-service:master
           resources:
-            limits:
-              memory: 2Gi
-              cpu: "1.5"
             requests:
               memory: "0.25Gi"
               cpu: "0.1"
