@@ -29,7 +29,11 @@ data:
         "autocomplete": {
           "exclude_address_length": 0
         },
+<<<<<<< HEAD
         "attributionURL": "https://predictivemovement.se",
+=======
+        "attributionURL": "http://api.yourpelias.com/attribution",
+>>>>>>> 8749782 (feat: add dependencies - osrm, vroom, pelias, to stack)
         "indexName": "pelias",
         "services": {
 

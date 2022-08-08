@@ -40,6 +40,12 @@ spec:
         - name: pelias-libpostal
           image: pelias/libpostal-service:master
           resources:
+<<<<<<< HEAD
+=======
+            limits:
+              memory: 2Gi
+              cpu: "1.5"
+>>>>>>> 8749782 (feat: add dependencies - osrm, vroom, pelias, to stack)
             requests:
               memory: "0.25Gi"
               cpu: "0.1"
