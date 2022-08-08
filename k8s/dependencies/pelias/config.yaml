@@ -50,7 +50,7 @@ data:
           }
         },
         "targets": {
-          "auto_discover": true
+          "csv": ["address"]
         }
       },
       "acceptance-tests": {
@@ -102,7 +102,7 @@ data:
           "datapath": "/data/whosonfirst"
         },
         "csv": {
-          "datapath": "/data/lantmateriet/csv/"
+          "datapath": "/data/lantmateriet/gotgatan/"
         }
       }
     }

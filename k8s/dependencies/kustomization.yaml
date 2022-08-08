@@ -8,15 +8,16 @@ resources:
   - vroom.yaml
   - pelias/api.yaml
   - pelias/config.yaml
-  - pelias/csv-importer.yaml
   - pelias/dashboard.yaml
   - pelias/elasticsearch.yaml
   - pelias/interpolation.yaml
   - pelias/kibana.yaml
   - pelias/libpostal.yaml
-  - pelias/osm-importer.yaml
   - pelias/pip.yaml
   - pelias/placeholder.yaml
+# uncomment these if you want to import new data
+#  - pelias/csv-importer.yaml
+#  - pelias/osm-importer.yaml
 
 # namespace to deploy all Resources to
 #namespace: predictivemovement
