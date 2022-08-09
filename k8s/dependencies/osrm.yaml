@@ -31,7 +31,13 @@ spec:
           env:
             - name: DOWNLOAD_URL
               value: https://download.geofabrik.de/europe/sweden-latest.osm.pbf
-
+          resources:
+            requests:
+              cpu: "0.3"
+              memory: "512Mi"
+            limits:
+              cpu: "1.5"
+              memory: "2Gi"
           ports:
             - containerPort: 5000
               protocol: TCP

@@ -29,7 +29,13 @@ spec:
           image: vroomvrp/vroom-docker:v1.11.0
           ports:
             - containerPort: 3000
-          resources: {}
+          resources:
+            requests:
+              cpu: "0.3"
+              memory: "512Mi"
+            limits:
+              cpu: "1.5"
+              memory: "2Gi"
           env:
             - name: VROOM_ROUTER
               value: osrm
