@@ -17,6 +17,7 @@ class Bus extends Vehicle {
     id,
     stops,
     finalStop,
+    kommun,
     ...vehicle
   }) {
     super({
@@ -30,6 +31,7 @@ class Bus extends Vehicle {
     this.finalStop = finalStop
     this.vehicleType = 'bus'
     this.heading = heading
+    this.kommun = kommun
     // stops
     //   .pipe(toArray())
     //   .subscribe((stops) => console.log('init bus id', id, 'stops', stops))

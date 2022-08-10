@@ -145,7 +145,7 @@ function register(io) {
         }
       })
     experiment.buses.pipe(map(cleanCars)).subscribe((e) => {
-      console.log(e)
+      // console.log(e)
       socket.emit('cars', [e])
     })
     experiment.passengers.subscribe((passengers) => {

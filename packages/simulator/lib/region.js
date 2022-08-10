@@ -6,13 +6,18 @@ const {
   tap,
   toArray,
   find,
+  take,
   count,
+  filter,
+  bufferCount,
 } = require('rxjs/operators')
 const Bus = require('./vehicles/bus')
 const { safeId } = require('./id')
+const { busDispatch } = require('./busDispatch')
 const { taxiDispatch } = require('./taxiDispatch')
 const Pelias = require('./pelias')
 const Taxi = require('./vehicles/taxi')
+const { isInsideCoordinates } = require('../lib/polygon')
 
 class Region {
   constructor({
@@ -43,28 +48,54 @@ class Region {
             .then((res) => res.position)
             .then((position) =>
               Array.from({ length: busCount }, () =>
-                this.buses.next(createBus({ position }, from([])))
+                this.buses.next(createBus({ position, kommun: name }, from([])))
               )
             )
         })
       )
       .subscribe((_) => null)
 
-    stopTimes
+    const busStartPositions = stopTimes.pipe(
+      tap(),
+      groupBy(({ tripId }) => tripId),
+      mergeMap((stopTimesPerRoute) => {
+        return stopTimesPerRoute.pipe(first())
+      }),
+      mergeMap((stop) =>
+        kommuner.pipe(
+          first((kommun) =>
+            isInsideCoordinates(stop.position, kommun.geometry.coordinates)
+          ),
+          map(({ name }) => ({
+            ...stop,
+            kommun: name,
+          }))
+        )
+      ),
+      shareReplay()
+    )
+
+    busStartPositions
       .pipe(
-        groupBy(({ tripId }) => tripId),
-        mergeMap((stopTimesPerRoute) => {
-          const stops = stopTimesPerRoute.pipe(shareReplay())
-          return stops.pipe(
-            first(),
-            map((firstStopTime) => {
-              // this.taxis.next(createTaxi(firstStopTime))
-              // this.buses.next(createBus(firstStopTime, stops))
-            })
+        groupBy(({ kommun }) => kommun),
+        mergeMap((busStartPositionsPerKommun) =>
+          this.buses.pipe(
+            take(1),
+            tap(console.log),
+            filter((bus) => bus.kommun === busStartPositionsPerKommun.key),
+            map((buses) => ({
+              buses,
+              stops: busStartPositionsPerKommun.pipe(toArray()),
+            })),
+            bufferCount(200, 1000)
           )
-        })
+        )
       )
-      .subscribe((_) => null)
+      .subscribe(({ buses, stops }) => {
+        busDispatch(buses, stops).subscribe(({ bus, stops }) => {
+          stops.map((stop) => bus.handledBooking(stop))
+        })
+      })
 
     taxiDispatch(this.taxis, passengers).subscribe((e) => {
       e.map(({ taxi, steps }) => steps.map((step) => taxi.addInstruction(step)))
@@ -74,7 +105,10 @@ class Region {
 
 const createTaxi = ({ position }) => new Taxi({ id: safeId(), position })
 
-const createBus = ({ tripId, finalStop, lineNumber, position }, stops) =>
+const createBus = (
+  { tripId, finalStop, lineNumber, position, kommun },
+  stops
+) =>
   new Bus({
     id: tripId,
     finalStop,
@@ -82,6 +116,7 @@ const createBus = ({ tripId, finalStop, lineNumber, position }, stops) =>
     position,
     stops,
     heading: position,
+    kommun,
   })
 
 module.exports = Region
