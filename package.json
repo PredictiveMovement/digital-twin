@@ -1,0 +1,19 @@
+{
+  "name": "digital-twin",
+  "version": "1.0.0",
+  "description": "## Background",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PredictiveMovement/digital-twin.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PredictiveMovement/digital-twin/issues"
+  },
+  "homepage": "https://github.com/PredictiveMovement/digital-twin#readme"
+}

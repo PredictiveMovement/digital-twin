@@ -1,0 +1,67 @@
+---
+# Source: pelias/templates/interpolation-deployment.tpl
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pelias-interpolation
+  namespace: pelias
+spec:
+  replicas: 1
+  minReadySeconds: 5
+  selector:
+    matchLabels:
+      app: pelias-interpolation
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: pelias-interpolation
+    spec:
+      initContainers:
+        - name: download
+          image: pelias/interpolation:master
+          env:
+            - name: DOWNLOAD_PATH
+              value: "https://s3.amazonaws.com/pelias-data.nextzen.org/portland-metro/interpolation"
+          command:
+            [
+              "sh",
+              "-c",
+              "mkdir -p /data/interpolation/ && wget -O - $DOWNLOAD_PATH/street.db.gz | gunzip > /data/interpolation/street.db & wget -O - $DOWNLOAD_PATH/address.db.gz | gunzip > /data/interpolation/address.db\n",
+            ]
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "0.1"
+              ephemeral-storage: 5Gi
+      containers:
+        - name: pelias-interpolation
+          image: pelias/interpolation:master
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data
+            - name: config-volume
+              mountPath: /etc/config
+          env:
+            - name: PELIAS_CONFIG
+              value: "/etc/config/pelias.json"
+          resources:
+            requests:
+              memory: "0.5Gi"
+              cpu: "0.1"
+              ephemeral-storage: 5Gi
+      volumes:
+        - name: data-volume
+          emptyDir: {}
+        - name: config-volume
+          configMap:
+            name: pelias-json-configmap
+            items:
+              - key: pelias.json
+                path: pelias.json

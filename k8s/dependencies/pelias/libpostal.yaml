@@ -1,0 +1,53 @@
+---
+# Source: pelias/templates/libpostal-service.tpl
+apiVersion: v1
+kind: Service
+metadata:
+  name: pelias-libpostal-service
+  namespace: pelias
+spec:
+  selector:
+    app: pelias-libpostal
+  ports:
+    - protocol: TCP
+      port: 4400
+  type: ClusterIP
+---
+# Source: pelias/templates/libpostal-deployment.tpl
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pelias-libpostal
+  namespace: pelias
+spec:
+  replicas: 1
+  minReadySeconds: 5
+  selector:
+    matchLabels:
+      app: pelias-libpostal
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: pelias-libpostal
+    spec:
+      nodeSelector:
+        highmem: "true"
+      containers:
+        - name: pelias-libpostal
+          image: pelias/libpostal-service:master
+          resources:
+            requests:
+              memory: "0.25Gi"
+              cpu: "0.1"
+          livenessProbe:
+            httpGet:
+              path: /parse?address=readiness
+              port: 4400
+          readinessProbe:
+            httpGet:
+              path: /parse?address=readiness
+              port: 4400
