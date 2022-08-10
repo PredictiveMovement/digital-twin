@@ -140,7 +140,7 @@ const Map = ({
       coordinates,
     },
     properties: {
-      name: `bus line ${lineNumber}`,
+      name: `Buss, linje #${lineNumber}`,
     },
   })
   const geoJsonFromBusLines = (lineShapes) => {
