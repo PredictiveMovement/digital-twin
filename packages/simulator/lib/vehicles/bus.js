@@ -10,7 +10,15 @@ const lanstrafiken = {
 }
 
 class Bus extends Vehicle {
-  constructor({ position, lineNumber, id, stops, finalStop, ...vehicle }) {
+  constructor({
+    position,
+    heading,
+    lineNumber,
+    id,
+    stops,
+    finalStop,
+    ...vehicle
+  }) {
     super({
       position,
       id,
@@ -21,6 +29,7 @@ class Bus extends Vehicle {
     this.lineNumber = lineNumber
     this.finalStop = finalStop
     this.vehicleType = 'bus'
+    this.heading = heading
     // stops
     //   .pipe(toArray())
     //   .subscribe((stops) => console.log('init bus id', id, 'stops', stops))

@@ -48,6 +48,7 @@ class Kommun {
     postombud,
     squares,
     fleets,
+    busCount,
   }) {
     this.squares = squares
     this.geometry = geometry
@@ -61,6 +62,7 @@ class Kommun {
     this.unhandledBookings = new Subject()
     this.population = this.squares.pipe(reduce((a, b) => a + b.population, 0))
     this.privateCars = new ReplaySubject()
+    this.busCount = busCount
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
 

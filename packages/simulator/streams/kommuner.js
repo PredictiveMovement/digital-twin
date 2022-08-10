@@ -68,6 +68,7 @@ function read() {
           postombud: getPostombud(namn),
           packageVolumes: packageVolumes.find((e) => namn.startsWith(e.name)),
           commercialAreas: getCommercialAreas(kod),
+          busCount: 5,
         })
     ),
     // ),

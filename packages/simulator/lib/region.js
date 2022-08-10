@@ -1,8 +1,17 @@
 const { from, shareReplay, Subject, ReplaySubject, mergeMap } = require('rxjs')
-const { map, first, groupBy, toArray, count } = require('rxjs/operators')
+const {
+  map,
+  first,
+  groupBy,
+  tap,
+  toArray,
+  find,
+  count,
+} = require('rxjs/operators')
 const Bus = require('./vehicles/bus')
 const { safeId } = require('./id')
 const { taxiDispatch } = require('./taxiDispatch')
+const Pelias = require('./pelias')
 const Taxi = require('./vehicles/taxi')
 
 class Region {
@@ -14,6 +23,7 @@ class Region {
     stopTimes,
     lineShapes,
     passengers,
+    kommuner,
   }) {
     this.geometry = geometry
     this.name = name
@@ -23,8 +33,22 @@ class Region {
     this.passengers = passengers.pipe(shareReplay())
     this.lineShapes = lineShapes
 
-    this.buses = new ReplaySubject()
+    // this.buses = new ReplaySubject()
     this.taxis = new ReplaySubject()
+    this.buses = new ReplaySubject()
+    kommuner
+      .pipe(
+        mergeMap(async ({ name, busCount }) => {
+          await Pelias.search(name)
+            .then((res) => res.position)
+            .then((position) =>
+              Array.from({ length: busCount }, () =>
+                this.buses.next(createBus({ position }, from([])))
+              )
+            )
+        })
+      )
+      .subscribe((_) => null)
 
     stopTimes
       .pipe(
@@ -34,8 +58,8 @@ class Region {
           return stops.pipe(
             first(),
             map((firstStopTime) => {
-              this.taxis.next(createTaxi(firstStopTime))
-              this.buses.next(createBus(firstStopTime, stops))
+              // this.taxis.next(createTaxi(firstStopTime))
+              // this.buses.next(createBus(firstStopTime, stops))
             })
           )
         })
@@ -57,6 +81,7 @@ const createBus = ({ tripId, finalStop, lineNumber, position }, stops) =>
     lineNumber,
     position,
     stops,
+    heading: position,
   })
 
 module.exports = Region

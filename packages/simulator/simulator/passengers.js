@@ -1,14 +1,4 @@
-const {
-  takeUntil,
-  tap,
-  take,
-  filter,
-  mergeMap,
-  mergeAll,
-  concatMap,
-  toArray,
-} = require('rxjs/operators')
-const { timer, bufferTime, windowTime } = require('rxjs')
+const { take, filter, mergeMap, concatMap, toArray } = require('rxjs/operators')
 const pelias = require('../lib/pelias')
 const { addMeters } = require('../lib/distance')
 const perlin = require('perlin-noise')

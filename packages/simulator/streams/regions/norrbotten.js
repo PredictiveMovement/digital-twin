@@ -11,6 +11,7 @@ const norrbotten = (kommuner) =>
     stopTimes: stopTimes.pipe(shareReplay()),
     passengers: generatePassengers(kommuner),
     lineShapes: lineShapes.pipe(shareReplay()),
+    kommuner,
   })
 
 module.exports = norrbotten
