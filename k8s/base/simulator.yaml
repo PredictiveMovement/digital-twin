@@ -34,6 +34,9 @@ spec:
               memory: "2Gi"
           ports:
             - containerPort: 4000
+          env:
+            - name: VROOM_URL
+              value: https://vroom.iteam.services
           volumeMounts:
             - name: cache
               mountPath: /app/.cache

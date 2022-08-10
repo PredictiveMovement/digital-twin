@@ -39,10 +39,22 @@ metadata:
 spec:
   tls:
     - hosts:
+        - rorla-stage.predictivemovement.se
         - rorla-stage.iteam.services
       secretName: rorla-stage-tls
   rules:
     - host: rorla-stage.iteam.services
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: visualisation
+                port:
+                  number: 80
+
+    - host: rorla-stage.predictivemovement.se
       http:
         paths:
           - path: /

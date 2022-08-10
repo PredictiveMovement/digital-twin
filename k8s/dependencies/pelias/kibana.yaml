@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: kibana
+  name: kibana
+  namespace: pelias
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kibana
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kibana
+    spec:
+      containers:
+        - env:
+            - name: ELASTICSEARCH_HOSTS
+              value: http://elasticsearch:9200
+          image: docker.elastic.co/kibana/kibana:7.5.1
+          imagePullPolicy: Always
+          name: kibana
+          ports:
+            - containerPort: 5601
+              name: http
+              protocol: TCP
+          resources: {}
