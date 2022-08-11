@@ -247,7 +247,7 @@ class Vehicle extends EventEmitter {
         booking.moved(
           this.position,
           metersMoved,
-          co2 / (this.cargo.length + 1),
+          co2 / (this.cargo.length + 1), // TODO: Why do we do +1 here?
           (h * this.costPerHour) / (this.cargo.length + 1)
         )
       })
