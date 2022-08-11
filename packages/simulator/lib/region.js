@@ -12,6 +12,7 @@ const {
   bufferCount,
 } = require('rxjs/operators')
 const Bus = require('./vehicles/bus')
+const Booking = require('./models/booking')
 const { safeId } = require('./id')
 const { busDispatch } = require('./busDispatch')
 const { taxiDispatch } = require('./taxiDispatch')
@@ -46,26 +47,31 @@ class Region {
         mergeMap(async ({ name, busCount }) => {
           await Pelias.search(name)
             .then((res) => res.position)
-            .then((position) =>
+            .then((position) => {
               Array.from({ length: busCount }, () =>
                 this.buses.next(createBus({ position, kommun: name }, from([])))
               )
-            )
+            })
+            .then((_) => null)
         })
       )
-      .subscribe((_) => null)
+      .toPromise()
+      .then((_) => this.buses.complete())
 
     const busStartPositions = stopTimes.pipe(
-      tap(),
       groupBy(({ tripId }) => tripId),
       mergeMap((stopTimesPerRoute) => {
         return stopTimesPerRoute.pipe(first())
       }),
+      // tap(console.log),
       mergeMap((stop) =>
         kommuner.pipe(
-          first((kommun) =>
-            isInsideCoordinates(stop.position, kommun.geometry.coordinates)
+          first(
+            (kommun) =>
+              isInsideCoordinates(stop.position, kommun.geometry.coordinates),
+            null
           ),
+          filter((e) => e),
           map(({ name }) => ({
             ...stop,
             kommun: name,
@@ -78,23 +84,38 @@ class Region {
     busStartPositions
       .pipe(
         groupBy(({ kommun }) => kommun),
-        mergeMap((busStartPositionsPerKommun) =>
-          this.buses.pipe(
-            take(1),
-            tap(console.log),
-            filter((bus) => bus.kommun === busStartPositionsPerKommun.key),
-            map((buses) => ({
-              buses,
-              stops: busStartPositionsPerKommun.pipe(toArray()),
-            })),
-            bufferCount(200, 1000)
+        map((busStartPositionsPerKommun) => ({
+          buses: this.buses.pipe(
+            filter((bus) => bus.kommun === busStartPositionsPerKommun.key)
+          ),
+          stops: busStartPositionsPerKommun,
+        }))
+      )
+      .subscribe(async ({ buses, stops }) => {
+        busDispatch(buses, stops).subscribe((resultBuses) =>
+          resultBuses.map(({ bus, steps }) =>
+            steps.map(({ arrival, location: [lon, lat] }) => {
+              return bus.handleBooking(
+                new Booking({
+                  pickup: {
+                    departureTime: arrival,
+                    position: {
+                      lon,
+                      lat,
+                    },
+                  },
+                  destination: {
+                    departureTime: arrival,
+                    position: {
+                      lon,
+                      lat,
+                    },
+                  },
+                })
+              )
+            })
           )
         )
-      )
-      .subscribe(({ buses, stops }) => {
-        busDispatch(buses, stops).subscribe(({ bus, stops }) => {
-          stops.map((stop) => bus.handledBooking(stop))
-        })
       })
 
     taxiDispatch(this.taxis, passengers).subscribe((e) => {

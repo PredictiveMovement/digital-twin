@@ -26,8 +26,8 @@ const stopToJob = (
   location: [position.lon, position.lat],
   time_windows: [
     [
-      moment(arrivalTime, 'HH:mm:ss').valueOf(),
-      moment(departureTime, 'HH:mm:ss').valueOf(),
+      moment(arrivalTime, 'HH:mm:ss').valueOf() / 1000,
+      moment(departureTime, 'HH:mm:ss').valueOf() / 1000 + 1,
     ],
   ],
 })
@@ -40,35 +40,43 @@ const busToVehicle = ({ id, position, capacity, heading }, i) => ({
   end: heading ? [heading.lat, heading.lon] : undefined,
 })
 
-const busDispatch = async (buses, stops) => {
+const busDispatch = (buses, stops) =>
   // console.log(
   //   'PLAN PLEASE',
   //   JSON.stringify(passengers.map(passengerToShipment), null, 2)
   // )
-  console.log(
-    'calling vroom with ',
-    buses.length,
-    ' buses ',
-    stops.length,
-    ' stops'
+  stops.pipe(
+    toArray(),
+    mergeMap((stops) =>
+      buses.pipe(
+        toArray(),
+        mergeMap(async (buses) => {
+          console.log(
+            'calling vroom with ',
+            buses.length,
+            ' buses ',
+            stops.length,
+            ' stops'
+          )
+          const result = await plan({
+            jobs: stops.map(stopToJob).slice(0, 100),
+            vehicles: buses.map(busToVehicle),
+          })
+
+          return result.routes.map((route, index) => ({
+            bus: buses[index],
+            steps: route.steps.map((step) => {
+              if (step.id !== undefined) {
+                step.stop = stops[step.id]
+                step.id = stops[step.id].id
+              }
+              return step
+            }),
+          }))
+        })
+      )
+    )
   )
-
-  const result = await plan({
-    shipments: stops.map(stopToJob),
-    vehicles: buses.map(busToVehicle),
-  })
-
-  return result.routes.map((route, index) => ({
-    taxi: taxis[index],
-    steps: route.steps.map((step) => {
-      if (step.id !== undefined) {
-        step.passenger = passengers[step.id]
-        step.id = passengers[step.id].id
-      }
-      return step
-    }),
-  }))
-}
 module.exports = {
   busDispatch,
 }
