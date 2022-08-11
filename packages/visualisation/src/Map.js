@@ -126,7 +126,7 @@ const Map = ({
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         type: 'busStop',
-        title: 'Busstopp ' + object.name,
+        title: 'Busshållplats ' + object.name,
         x,
         y,
       })
