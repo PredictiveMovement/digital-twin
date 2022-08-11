@@ -1,6 +1,6 @@
 const Booking = require('../models/booking')
 const Vehicle = require('./vehicle')
-const { take, pairwise, map, toArray } = require('rxjs/operators')
+const { pairwise, map } = require('rxjs/operators')
 const moment = require('moment')
 const { virtualTime } = require('../virtualTime')
 

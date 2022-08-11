@@ -42,6 +42,7 @@ class Region {
     // this.buses = new ReplaySubject()
     this.taxis = new ReplaySubject()
     this.buses = new ReplaySubject()
+
     kommuner
       .pipe(
         mergeMap(async ({ name, busCount }) => {
@@ -63,7 +64,6 @@ class Region {
       mergeMap((stopTimesPerRoute) => {
         return stopTimesPerRoute.pipe(first())
       }),
-      // tap(console.log),
       mergeMap((stop) =>
         kommuner.pipe(
           first(
@@ -94,26 +94,50 @@ class Region {
       .subscribe(async ({ buses, stops }) => {
         busDispatch(buses, stops).subscribe((resultBuses) =>
           resultBuses.map(({ bus, steps }) =>
-            steps.map(({ arrival, location: [lon, lat] }) => {
-              return bus.handleBooking(
-                new Booking({
-                  pickup: {
-                    departureTime: arrival,
-                    position: {
-                      lon,
-                      lat,
-                    },
+            steps
+              .reduce((acc, curr, i) => {
+                // Pairwise
+                if (i === 0) {
+                  acc[i] = [curr]
+                  return acc
+                } else {
+                  const prevPair = acc[i - 1]
+                  const prevValue = prevPair[prevPair.length - 1]
+                  acc[i] = [prevValue, curr]
+                  return acc
+                }
+              }, [])
+              .filter((e) => e.length == 2)
+              .map(
+                ([
+                  {
+                    arrival: pickupDepartureTime,
+                    location: [pickupLon, pickupLat],
                   },
-                  destination: {
-                    departureTime: arrival,
-                    position: {
-                      lon,
-                      lat,
-                    },
+                  {
+                    arrival: destinationDepartureTime,
+                    location: [destinationLon, destinationLat],
                   },
-                })
+                ]) =>
+                  bus.handleBooking(
+                    new Booking({
+                      pickup: {
+                        departureTime: pickupDepartureTime,
+                        position: {
+                          lon: pickupLon,
+                          lat: pickupLat,
+                        },
+                      },
+                      destination: {
+                        departureTime: destinationDepartureTime,
+                        position: {
+                          lon: destinationLon,
+                          lat: destinationLat,
+                        },
+                      },
+                    })
+                  )
               )
-            })
           )
         )
       })
