@@ -178,19 +178,12 @@ function register(io) {
           mergeMap((cars) => cars.pipe(last())) // take the last update in this window
         )
       ),
-      map(cleanCars)
+      map(cleanCars),
+      bufferTime(100, null, 100)
     )
-    .subscribe((car) => {
-      if (!car) return
-      if (car.vehicleType === 'bus') {
-        if (emitBusUpdates) io.emit('cars', [car])
-        return
-      } else if (car.vehicleType === 'taxi') {
-        if (emitTaxiUpdates) io.emit('cars', [car])
-        return
-      } else if (emitCars) {
-        return io.emit('cars', [car])
-      }
+    .subscribe((cars) => {
+      if (!cars.length) return
+      io.emit('cars', cars)
     })
 
   setInterval(() => {
