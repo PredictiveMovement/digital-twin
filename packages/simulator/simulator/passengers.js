@@ -15,11 +15,14 @@ const perlin = require('perlin-noise')
 
 const { safeId } = require('../lib/id')
 const Passenger = require('../lib/models/passenger')
+const personNames = require('../lib/personNames')
 
 const polarbrödÄlvsByn = {
   lat: 65.669641,
   lon: 20.975453,
 }
+
+const names = personNames.read()
 
 const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
 
@@ -56,14 +59,17 @@ const generatePassengers = (kommuner) =>
     toArray()
   )
 
-const createPassengerFromAddress = ({ position }) =>
-  new Passenger({
+const createPassengerFromAddress = async ({ position }) => {
+  const name = names[Math.floor(Math.random() * names.length)]
+  return new Passenger({
     pickup: position,
     id: safeId(),
     position: position,
     destination: polarbrödÄlvsByn,
-    name: 'Genomsnittlig snubbe',
+    name: name,
   })
+}
+
 
 module.exports = {
   generatePassengers,
