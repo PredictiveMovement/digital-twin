@@ -1,22 +1,30 @@
 const { toArray, map, filter, mergeMap, take } = require('rxjs/operators')
 const { plan } = require('./vroom')
 
-const passengerToShipment = (
-  { id, destination, pickup, position, arrivalTime, departureTime },
-  i
-) => ({
-  id: i,
-  description: id,
+const journeyToShipment = (id, journey, passengerIdx) => ({
+  id,
+  description: passengerIdx,
   amount: [1],
   delivery: {
-    id: i,
-    location: [destination.lon, destination.lat],
+    id,
+    location: [journey.destination.lon, journey.destination.lat],
   },
   pickup: {
-    id: i,
-    location: [pickup.lon, pickup.lat],
+    id,
+    location: [journey.pickup.lon, journey.pickup.lat],
   },
+  time_windows: journey.timeWindow,
 })
+
+const passengersToShipments = (passengers) => {
+  console.log("passengersToShipments")
+  let idCounter = 0
+  return passengers.flatMap((passenger, passengerIdx) =>
+    passenger.journeys.map((journey) =>
+      journeyToShipment(idCounter++, journey, passengerIdx)
+    )
+  )
+}
 
 const taxiToVehicle = ({ id, position, capacity, heading }, i) => ({
   id: i,
@@ -36,11 +44,11 @@ const taxiDispatch = (taxis, passengers) =>
         mergeMap(async (taxis) => {
           // console.log(
           //   'PLAN PLEASE',
-          //   JSON.stringify(passengers.map(passengerToShipment), null, 2)
+          //   JSON.stringify(passengersToShipments(passengers), null, 2)
           // )
           console.log('calling vroom')
           const result = await plan({
-            shipments: passengers.map(passengerToShipment),
+            shipments: passengersToShipments(passengers),
             vehicles: taxis.map(taxiToVehicle),
           })
           return {
@@ -56,8 +64,8 @@ const taxiDispatch = (taxis, passengers) =>
             taxi: taxis[index],
             steps: route.steps.map((step) => {
               if (step.id !== undefined) {
-                step.passenger = passengers[step.id]
-                step.id = passengers[step.id].id
+                step.passenger = passengers[step.description]
+                step.id = passengers[step.description].id
               }
               return step
             }),

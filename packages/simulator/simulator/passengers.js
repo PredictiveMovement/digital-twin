@@ -55,17 +55,26 @@ const generatePassengers = (kommuner) =>
       )
     ),
 
-    take(100),
+    take(50),
     toArray()
   )
 
 const createPassengerFromAddress = async ({ position }) => {
+  // Everyone goes to and from work, between 5am and 10am and returns between 3pm and 8pm.
+  // Also, everyone works at Polarbröd in Älvsbyn
+  const fiveAm  = moment().startOf('day').add(5, 'hours')
+  const tenAm   = moment().startOf('day').add(10, 'hours')
+  const threePm = moment().startOf('day').add(15, 'hours')
+  const eightPm = moment().startOf('day').add(20, 'hours')
   const name = names[Math.floor(Math.random() * names.length)]
+
   return new Passenger({
-    pickup: position,
+    journeys: [
+      { pickup: position, destination: polarbrödÄlvsByn, timeWindow: [fiveAm, tenAm] },
+      { pickup: polarbrödÄlvsByn, destination: position, timeWindow: [threePm, eightPm] },
+    ],
     id: safeId(),
     position: position,
-    destination: polarbrödÄlvsByn,
     name: name,
   })
 }
