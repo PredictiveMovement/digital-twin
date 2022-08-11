@@ -11,25 +11,46 @@ const {
 const moment = require('moment')
 const { plan } = require('./vroom')
 
-const stopToJob = (
+const stopToShipment = (
   {
-    tripId, //: '252500000000000101',
-    arrivalTime, //: '17:33:49',
-    departureTime, //: '17:33:49',
-    position,
+    first: {
+      tripId, //: '252500000000000101',
+      arrivalTime: pickupArrivalTime, //: '17:33:49',
+      departureTime: pickupDepartureTime, //: '17:33:49',
+      position: pickupPosition,
+    },
+    last: {
+      arrivalTime: deliveryArrivalTime, //: '17:33:49',
+      departureTime: deliveryDepartureTime, //: '17:33:49',
+      position: deliveryPosition,
+    },
   },
   i
 ) => ({
   id: i,
   description: tripId,
   amount: [1],
-  location: [position.lon, position.lat],
-  time_windows: [
-    [
-      moment(arrivalTime, 'HH:mm:ss').valueOf() / 1000,
-      moment(departureTime, 'HH:mm:ss').valueOf() / 1000 + 1,
+  pickup: {
+    time_windows: [
+      [
+        moment(pickupArrivalTime, 'HH:mm:ss').valueOf() / 1000,
+        moment(pickupDepartureTime, 'HH:mm:ss').valueOf() / 1000 + 1,
+      ],
     ],
-  ],
+    id: i,
+
+    location: [pickupPosition.lon, pickupPosition.lat],
+  },
+  delivery: {
+    id: i,
+    location: [deliveryPosition.lon, deliveryPosition.lat],
+    time_windows: [
+      [
+        moment(deliveryArrivalTime, 'HH:mm:ss').valueOf() / 1000,
+        moment(deliveryDepartureTime, 'HH:mm:ss').valueOf() / 1000 + 1,
+      ],
+    ],
+  },
 })
 
 const busToVehicle = ({ id, position, capacity, heading }, i) => ({
@@ -59,7 +80,7 @@ const busDispatch = (buses, stops) =>
             ' stops'
           )
           const result = await plan({
-            jobs: stops.map(stopToJob).slice(0, 100),
+            shipments: stops.map(stopToShipment).slice(0, 100),
             vehicles: buses.map(busToVehicle),
           })
 

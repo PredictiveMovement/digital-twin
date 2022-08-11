@@ -1,8 +1,12 @@
 const { from, shareReplay, Subject, ReplaySubject, mergeMap } = require('rxjs')
 const {
   map,
+  merge,
+  last,
   first,
+  concat,
   groupBy,
+  startWith,
   tap,
   toArray,
   find,
@@ -61,19 +65,29 @@ class Region {
 
     const busStartPositions = stopTimes.pipe(
       groupBy(({ tripId }) => tripId),
-      mergeMap((stopTimesPerRoute) => {
-        return stopTimesPerRoute.pipe(first())
-      }),
-      mergeMap((stop) =>
+      mergeMap((stopTimesPerRoute) =>
+        stopTimesPerRoute.pipe(
+          first(),
+          mergeMap((first) =>
+            stopTimesPerRoute.pipe(last(), take(1), startWith(first))
+          ),
+          toArray()
+        )
+      ),
+      mergeMap(([firstStop, lastStop]) =>
         kommuner.pipe(
           first(
             (kommun) =>
-              isInsideCoordinates(stop.position, kommun.geometry.coordinates),
+              isInsideCoordinates(
+                firstStop.position,
+                kommun.geometry.coordinates
+              ),
             null
           ),
           filter((e) => e),
           map(({ name }) => ({
-            ...stop,
+            first: firstStop,
+            last: lastStop,
             kommun: name,
           }))
         )
@@ -92,6 +106,7 @@ class Region {
         }))
       )
       .subscribe(async ({ buses, stops }) => {
+        console.log(buses, stops)
         busDispatch(buses, stops).subscribe((resultBuses) =>
           resultBuses.map(({ bus, steps }) =>
             steps
