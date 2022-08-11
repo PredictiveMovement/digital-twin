@@ -7,22 +7,29 @@ const Wrapper = styled.div`
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 3;
   position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `
 
 const Text = styled.p`
   font-size: 30px;
   color: white;
   z-index: 3;
-  position: absolute;
-  opacity: unset;
-  top: 50%;
-  right: 50%;
+`
+
+const SubText = styled.p`
+  font-size: 20px;
+  color: white;
+  z-index: 3;
 `
 
 const Loading = () => {
   return (
     <Wrapper>
       <Text>Laddar...</Text>
+      <SubText>Detta tar cirka 25 sekunder</SubText>
     </Wrapper>
   )
 }

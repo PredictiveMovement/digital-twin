@@ -1,0 +1,119 @@
+---
+# Source: pelias/templates/pip-pvc.yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pip-pvc
+  namespace: pelias
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+---
+# Source: pelias/templates/pip-service.tpl
+apiVersion: v1
+kind: Service
+metadata:
+  name: pelias-pip-service
+  namespace: pelias
+spec:
+  selector:
+    app: pelias-pip
+  ports:
+    - protocol: TCP
+      port: 3102
+  type: ClusterIP
+---
+# Source: pelias/templates/pip-deployment.tpl
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pelias-pip
+  namespace: pelias
+spec:
+  replicas: 1
+  minReadySeconds: 5
+  selector:
+    matchLabels:
+      app: pelias-pip
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: pelias-pip
+    spec:
+      initContainers:
+        # NOTE:
+        # This is to create the directory needed by the download as the root user
+        # The download runs as non root user so it cannot create the directory
+        - name: make-directory
+          image: busybox
+          command:
+            - mkdir
+            - -p
+            - /data/whosonfirst/sqlite
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data
+        # NOTE:
+        # This is to fix the permission on the download directory for the pelias user
+        - name: fix-the-volume-permission
+          image: busybox
+          command:
+            - sh
+            - -c
+            - chown -R 1000:1000 /data/whosonfirst/sqlite
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data
+        # NOTE:
+        # The download checks the presence of the file before running the download script
+        # The reason for it is that it takes a long time since it is a lot of data
+        - name: download
+          image: pelias/pip-service:master
+          command:
+            - sh
+            - -c
+            - ./bin/download --admin-only
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: data-volume
+              mountPath: /data
+          env:
+            - name: PELIAS_CONFIG
+              value: "/etc/config/pelias.json"
+      containers:
+        - name: pelias-pip
+          image: pelias/pip-service:master
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: data-volume
+              mountPath: /data
+          env:
+            - name: PELIAS_CONFIG
+              value: "/etc/config/pelias.json"
+          readinessProbe:
+            httpGet:
+              path: /12/12
+              port: 3102
+      volumes:
+        - name: config-volume
+          configMap:
+            name: pelias-json-configmap
+            items:
+              - key: pelias.json
+                path: pelias.json
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: pip-pvc

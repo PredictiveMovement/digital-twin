@@ -1,41 +1,76 @@
-const { from } = require('rxjs')
+const {
+  takeUntil,
+  tap,
+  take,
+  filter,
+  mergeMap,
+  mergeAll,
+  concatMap,
+  toArray,
+} = require('rxjs/operators')
+const { timer, bufferTime, windowTime } = require('rxjs')
+const pelias = require('../lib/pelias')
+const { addMeters } = require('../lib/distance')
+const perlin = require('perlin-noise')
 
 const { safeId } = require('../lib/id')
 const Passenger = require('../lib/models/passenger')
+const personNames = require('../lib/personNames')
 
 const polarbrödÄlvsByn = {
   lat: 65.669641,
   lon: 20.975453,
 }
 
-const elsewhere = {
-  lat: 66.051716,
-  lon: 18.020213,
-}
+const names = personNames.read()
 
-const arjeplog = {
-  lat: 66.050503,
-  lon: 17.88777,
-}
+const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
 
-function generatePassengers() {
-  const passenger = {
+// generate a pattern of random positions so we can take x out of these and get a natural pattern of these positions
+const randomPositions = perlin
+  .generatePerlinNoise(100, 100)
+  .map((probability, i) => ({
+    x: xy(i).x * 10,
+    y: xy(i).y * 10,
+    probability,
+  }))
+  .sort((a, b) => b.probability - a.probability) // sort them so we can just pick how many we want
+
+const generatePassengers = (kommuner) =>
+  kommuner.pipe(
+    mergeMap(({ squares }) =>
+      squares.pipe(
+        mergeMap(({ population, position }) =>
+          randomPositions
+            .slice(0, population)
+            .map(({ x, y }) => addMeters(position, { x, y }))
+        ),
+        concatMap((position) =>
+          pelias
+            .nearest(position)
+            .then(createPassengerFromAddress)
+            .catch((_) => null)
+        ),
+        filter((p) => p !== null)
+      )
+    ),
+
+    take(100),
+    toArray()
+  )
+
+const createPassengerFromAddress = async ({ position }) => {
+  const name = names[Math.floor(Math.random() * names.length)]
+  return new Passenger({
+    pickup: position,
     id: safeId(),
-    pickup: arjeplog,
+    position: position,
     destination: polarbrödÄlvsByn,
-    position: arjeplog,
-    name: 'average joe',
-  }
-  const passenger2 = {
-    id: safeId(),
-    pickup: polarbrödÄlvsByn,
-    destination: arjeplog,
-    position: polarbrödÄlvsByn,
-    name: 'average elsewhere',
-  }
-  passengers = [new Passenger(passenger), new Passenger(passenger2)]
-  return from(passengers)
+    name: name,
+  })
 }
+
+
 module.exports = {
   generatePassengers,
 }

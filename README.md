@@ -40,9 +40,9 @@ Add .env with the mapbox token `REACT_APP_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>` - we
 
     npm start
 
-### Branch Strategy
-- `main` — is CI/CD to production cluster
-- `develop` — is where all PRs target and which runs CI/CD to staging cluster
+### Branch and release strategy
+- `main` — is a protected branch and requires PR:s to be changed, this is automatically synced with CI environment.
+- `Releases` - To push a new release - create a new Release in the Github UI and when published, a new build will automatically be pushed to prod.
 
 ## License
 
