@@ -9,6 +9,9 @@ class Passenger extends EventEmitter {
     this.name = name
     this.position = position
     this.inCar = false
+    this.distance = 0
+    this.co2 = 0
+    this.cost = 0
   }
 
   moved(position, metersMoved, co2, cost) {

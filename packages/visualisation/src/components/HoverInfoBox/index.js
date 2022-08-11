@@ -72,6 +72,7 @@ const PassengerInfo = ({ data }) => {
     <Wrapper left={data.x} top={data.y}>
       <Paragraph>Passagerare {data.id}</Paragraph>
       <Paragraph>Namn: {data.name}</Paragraph>
+      <Paragraph>Distans: {Math.ceil(data.distance) / 1000 || 0} km</Paragraph>
     </Wrapper>
   )
 }
