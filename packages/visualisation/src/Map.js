@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { StaticMap } from 'react-map-gl'
+import maplibregl from 'maplibre-gl'
 import DeckGL, {
   PolygonLayer,
   ScatterplotLayer,
@@ -523,7 +524,8 @@ const Map = ({
 
   return (
     <DeckGL
-      mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+      mapLib={maplibregl}
+      // mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
       // initialViewState={mapState.viewport}
       viewState={mapState}
       // onLoad={rotateCamera}
@@ -585,7 +587,9 @@ const Map = ({
       <StaticMap
         reuseMaps
         preventStyleDiffing={true}
-        mapStyle="mapbox://styles/mapbox/dark-v10"
+        mapLib={maplibregl}
+        mapStyle="https://maptiler.iteam.services/styles/basic-preview/style.json"
+        //        mapStyle="https://maptiler.iteam.services/styles/mapbox/dark-v10"
       />
       {hoverInfo && mapState.zoom > 6 && <HoverInfoBox data={hoverInfo} />}
       <TimeProgressBar time={time} />
