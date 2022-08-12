@@ -11,6 +11,8 @@ const {
 const moment = require('moment')
 const { plan } = require('./vroom')
 
+const correctTime = (time) => time.replace(/^24:/, '00:')
+
 const stopToShipment = (
   {
     first: {
@@ -33,8 +35,9 @@ const stopToShipment = (
   pickup: {
     time_windows: [
       [
-        moment(pickupArrivalTime, 'HH:mm:ss').valueOf() / 1000,
-        moment(pickupDepartureTime, 'HH:mm:ss').valueOf() / 1000 + 1,
+        moment(correctTime(pickupArrivalTime), 'HH:mm:ss').valueOf() / 1000,
+        moment(correctTime(pickupDepartureTime), 'HH:mm:ss').valueOf() / 1000 +
+          1,
       ],
     ],
     id: i,
@@ -46,8 +49,10 @@ const stopToShipment = (
     location: [deliveryPosition.lon, deliveryPosition.lat],
     time_windows: [
       [
-        moment(deliveryArrivalTime, 'HH:mm:ss').valueOf() / 1000,
-        moment(deliveryDepartureTime, 'HH:mm:ss').valueOf() / 1000 + 1,
+        moment(correctTime(deliveryArrivalTime), 'HH:mm:ss').valueOf() / 1000,
+        moment(correctTime(deliveryDepartureTime), 'HH:mm:ss').valueOf() /
+          1000 +
+          1,
       ],
     ],
   },
@@ -73,11 +78,11 @@ const busDispatch = (buses, stops) =>
         toArray(),
         mergeMap(async (buses) => {
           console.log(
-            'calling vroom with ',
+            'calling vroom with',
             buses.length,
-            ' buses ',
+            'buses',
             stops.length,
-            ' stops'
+            'stops'
           )
           const result = await plan({
             shipments: stops.map(stopToShipment).slice(0, 100),

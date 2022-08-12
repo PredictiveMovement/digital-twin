@@ -106,7 +106,6 @@ class Region {
         }))
       )
       .subscribe(async ({ buses, stops }) => {
-        console.log(buses, stops)
         busDispatch(buses, stops).subscribe((resultBuses) =>
           resultBuses.map(({ bus, steps }) =>
             steps
