@@ -50,6 +50,7 @@ const engine = {
       mergeMap((passenger) =>
         merge(
           of(passenger),
+          fromEvent(passenger, 'moved'),
           fromEvent(passenger, 'pickedup'),
           fromEvent(passenger, 'delivered')
         )

@@ -7,19 +7,23 @@ const {
   mergeAll,
   concatMap,
   toArray,
+  shareReplay,
 } = require('rxjs/operators')
 const { timer, bufferTime, windowTime } = require('rxjs')
-const pelias = require('../lib/pelias')
-const { addMeters } = require('../lib/distance')
+const moment = require('moment')
 const perlin = require('perlin-noise')
 
+const pelias = require('../lib/pelias')
+const { addMeters } = require('../lib/distance')
 const { safeId } = require('../lib/id')
 const Passenger = require('../lib/models/passenger')
 const personNames = require('../lib/personNames')
+const { virtualTime } = require('./../lib/virtualTime')
 
 const polarbrödÄlvsByn = {
   lat: 65.669641,
   lon: 20.975453,
+  name: 'Polarbröd Älvsbyn',
 }
 
 const names = personNames.read()
@@ -55,23 +59,25 @@ const generatePassengers = (kommuner) =>
       )
     ),
 
-    take(50),
+    take(100),
+    shareReplay(), // ShareReplay needed to keep ID's and names consistent between console and visualisation
     toArray()
   )
-
 const createPassengerFromAddress = async ({ position }) => {
+  const hemma = { name: 'Hemma', ...position}
   // Everyone goes to and from work, between 5am and 10am and returns between 3pm and 8pm.
-  // Also, everyone works at Polarbröd in Älvsbyn
-  const fiveAm  = moment().startOf('day').add(5, 'hours')
-  const tenAm   = moment().startOf('day').add(10, 'hours')
-  const threePm = moment().startOf('day').add(15, 'hours')
-  const eightPm = moment().startOf('day').add(20, 'hours')
+  // TODO: Also, everyone works at Polarbröd in Älvsbyn
+  const offset = virtualTime.offset // Sim starts at an offset from midnight, so we need to subctract that offset from the time
+  const fiveAm  = (5 * 60 * 60) - offset
+  const tenAm   = (10 * 60 * 60) - offset
+  const threePm = (15 * 60 * 60) - offset
+  const eightPm = (20 * 60 * 60) - offset
   const name = names[Math.floor(Math.random() * names.length)]
 
   return new Passenger({
     journeys: [
-      { pickup: position, destination: polarbrödÄlvsByn, timeWindow: [fiveAm, tenAm] },
-      { pickup: polarbrödÄlvsByn, destination: position, timeWindow: [threePm, eightPm] },
+      { id: safeId(), pickup: hemma, destination: polarbrödÄlvsByn, timeWindow: [[fiveAm, tenAm]], status: 'Väntar' },
+      { id: safeId(), pickup: polarbrödÄlvsByn, destination: hemma, timeWindow: [[threePm, eightPm]], status: 'Väntar' },
     ],
     id: safeId(),
     position: position,

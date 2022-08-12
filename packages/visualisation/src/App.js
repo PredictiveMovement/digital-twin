@@ -214,15 +214,16 @@ const App = () => {
     setNewParameters(currentParameters)
   })
   const [passengers, setPassengers] = React.useState([])
-  useSocket('passenger', ({ name, position, id, inCar }) => {
+  useSocket('passenger', ({ name, position, id, inVehicle, journeys }) => {
     setPassengers((currentPassengers) =>
       upsert(
         currentPassengers,
         {
           id,
+          journeys,
           name,
           position: [position.lon, position.lat].map((s) => parseFloat(s)),
-          inCar,
+          inVehicle,
         },
         'id'
       )
