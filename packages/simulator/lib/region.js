@@ -24,6 +24,24 @@ const Pelias = require('./pelias')
 const Taxi = require('./vehicles/taxi')
 const { isInsideCoordinates } = require('../lib/polygon')
 
+const populateBusesStream = (kommuner) => {
+  const buses = new ReplaySubject()
+  kommuner
+    .pipe(
+      mergeMap(({ name, busCount }) =>
+        Pelias.search(name)
+          .then((res) => res.position)
+          .then((position) => {
+            Array.from({ length: busCount }, () =>
+              buses.next(createBus({ position, kommun: name }, from([])))
+            )
+          })
+      )
+    )
+    .toPromise()
+    .then((_) => buses.complete())
+  return buses
+}
 class Region {
   constructor({
     geometry,
@@ -45,23 +63,7 @@ class Region {
 
     // this.buses = new ReplaySubject()
     this.taxis = new ReplaySubject()
-    this.buses = new ReplaySubject()
-
-    kommuner
-      .pipe(
-        mergeMap(async ({ name, busCount }) => {
-          await Pelias.search(name)
-            .then((res) => res.position)
-            .then((position) => {
-              Array.from({ length: busCount }, () =>
-                this.buses.next(createBus({ position, kommun: name }, from([])))
-              )
-            })
-            .then((_) => null)
-        })
-      )
-      .toPromise()
-      .then((_) => this.buses.complete())
+    this.buses = populateBusesStream(kommuner)
 
     const busStartPositions = stopTimes.pipe(
       groupBy(({ tripId }) => tripId),
@@ -107,52 +109,39 @@ class Region {
       )
       .subscribe(async ({ buses, stops }) => {
         busDispatch(buses, stops).subscribe((resultBuses) =>
-          resultBuses.map(({ bus, steps }) =>
-            steps
-              .reduce((acc, curr, i) => {
-                // Pairwise
-                if (i === 0) {
-                  acc[i] = [curr]
-                  return acc
-                } else {
-                  const prevPair = acc[i - 1]
-                  const prevValue = prevPair[prevPair.length - 1]
-                  acc[i] = [prevValue, curr]
-                  return acc
-                }
-              }, [])
-              .filter((e) => e.length == 2)
-              .map(
-                ([
-                  {
-                    arrival: pickupDepartureTime,
-                    location: [pickupLon, pickupLat],
-                  },
-                  {
-                    arrival: destinationDepartureTime,
-                    location: [destinationLon, destinationLat],
-                  },
-                ]) =>
-                  bus.handleBooking(
-                    new Booking({
-                      pickup: {
-                        departureTime: pickupDepartureTime,
-                        position: {
-                          lon: pickupLon,
-                          lat: pickupLat,
-                        },
+          resultBuses.map(({ bus, steps }) => {
+            pairwise(steps).map(
+              ([
+                {
+                  arrival: pickupDepartureTime,
+                  location: [pickupLon, pickupLat],
+                },
+                {
+                  arrival: destinationDepartureTime,
+                  location: [destinationLon, destinationLat],
+                },
+              ]) => {
+                return bus.handleBooking(
+                  new Booking({
+                    pickup: {
+                      departureTime: pickupDepartureTime,
+                      position: {
+                        lon: pickupLon,
+                        lat: pickupLat,
                       },
-                      destination: {
-                        departureTime: destinationDepartureTime,
-                        position: {
-                          lon: destinationLon,
-                          lat: destinationLat,
-                        },
+                    },
+                    destination: {
+                      departureTime: destinationDepartureTime,
+                      position: {
+                        lon: destinationLon,
+                        lat: destinationLat,
                       },
-                    })
-                  )
-              )
-          )
+                    },
+                  })
+                )
+              }
+            )
+          })
         )
       })
 
@@ -162,6 +151,21 @@ class Region {
   }
 }
 
+const pairwise = (arr) =>
+  arr
+    .reduce((acc, curr, i) => {
+      // Pairwise
+      if (i === 0) {
+        acc[i] = [curr]
+        return acc
+      } else {
+        const prevPair = acc[i - 1]
+        const prevValue = prevPair[prevPair.length - 1]
+        acc[i] = [prevValue, curr]
+        return acc
+      }
+    }, [])
+    .filter((e) => e.length == 2)
 const createTaxi = ({ position }) => new Taxi({ id: safeId(), position })
 
 const createBus = (
