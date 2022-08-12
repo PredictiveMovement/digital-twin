@@ -1,4 +1,11 @@
-const { from, shareReplay, Subject, ReplaySubject, mergeMap } = require('rxjs')
+const {
+  pipe,
+  from,
+  shareReplay,
+  Subject,
+  ReplaySubject,
+  mergeMap,
+} = require('rxjs')
 const {
   map,
   merge,
@@ -42,6 +49,36 @@ const populateBusesStream = (kommuner) => {
     .then((_) => buses.complete())
   return buses
 }
+
+const mergeFirstAndLastStopInTripWithKommunName = (kommuner) =>
+  pipe(
+    mergeMap((stopTimesPerRoute) =>
+      stopTimesPerRoute.pipe(
+        first(),
+        mergeMap((first) => stopTimesPerRoute.pipe(last(), startWith(first))),
+        toArray()
+      )
+    ),
+    mergeMap(([firstStop, lastStop]) =>
+      kommuner.pipe(
+        first(
+          (kommun) =>
+            isInsideCoordinates(
+              firstStop.position,
+              kommun.geometry.coordinates
+            ),
+          null
+        ),
+        filter((e) => e),
+        map(({ name }) => ({
+          first: firstStop,
+          last: lastStop,
+          kommun: name,
+        }))
+      )
+    )
+  )
+const filterBusesInKommun = (bus, kommun) => bus.kommun === kommun
 class Region {
   constructor({
     geometry,
@@ -61,95 +98,50 @@ class Region {
     this.passengers = passengers.pipe(shareReplay())
     this.lineShapes = lineShapes
 
-    // this.buses = new ReplaySubject()
     this.taxis = new ReplaySubject()
     this.buses = populateBusesStream(kommuner)
 
-    const busStartPositions = stopTimes.pipe(
-      groupBy(({ tripId }) => tripId),
-      mergeMap((stopTimesPerRoute) =>
-        stopTimesPerRoute.pipe(
-          first(),
-          mergeMap((first) =>
-            stopTimesPerRoute.pipe(last(), take(1), startWith(first))
-          ),
-          toArray()
-        )
-      ),
-      mergeMap(([firstStop, lastStop]) =>
-        kommuner.pipe(
-          first(
-            (kommun) =>
-              isInsideCoordinates(
-                firstStop.position,
-                kommun.geometry.coordinates
-              ),
-            null
-          ),
-          filter((e) => e),
-          map(({ name }) => ({
-            first: firstStop,
-            last: lastStop,
-            kommun: name,
-          }))
-        )
-      ),
-      shareReplay()
-    )
-
-    busStartPositions
+    stopTimes
       .pipe(
+        groupBy(({ tripId }) => tripId),
+        mergeFirstAndLastStopInTripWithKommunName(kommuner),
         groupBy(({ kommun }) => kommun),
-        map((busStartPositionsPerKommun) => ({
-          buses: this.buses.pipe(
-            filter((bus) => bus.kommun === busStartPositionsPerKommun.key)
-          ),
-          stops: busStartPositionsPerKommun,
-        }))
+        map((firstLastStop) => {
+          const kommunName = firstLastStop.key
+          return {
+            buses: this.buses.pipe(filter((bus) => bus.kommun === kommunName)),
+            stops: firstLastStop,
+          }
+        })
       )
-      .subscribe(async ({ buses, stops }) => {
+      .subscribe(({ buses, stops }) =>
         busDispatch(buses, stops).subscribe((resultBuses) =>
-          resultBuses.map(({ bus, steps }) => {
-            pairwise(steps).map(
-              ([
-                {
-                  arrival: pickupDepartureTime,
-                  location: [pickupLon, pickupLat],
-                },
-                {
-                  arrival: destinationDepartureTime,
-                  location: [destinationLon, destinationLat],
-                },
-              ]) => {
-                return bus.handleBooking(
-                  new Booking({
-                    pickup: {
-                      departureTime: pickupDepartureTime,
-                      position: {
-                        lon: pickupLon,
-                        lat: pickupLat,
-                      },
-                    },
-                    destination: {
-                      departureTime: destinationDepartureTime,
-                      position: {
-                        lon: destinationLon,
-                        lat: destinationLat,
-                      },
-                    },
-                  })
-                )
-              }
-            )
-          })
+          resultBuses.map(({ bus, steps }) =>
+            pairwise(steps)
+              .map(stepsToBooking)
+              .map((booking) => bus.handleBooking(booking))
+          )
         )
-      })
+      )
 
     taxiDispatch(this.taxis, passengers).subscribe((e) => {
       e.map(({ taxi, steps }) => steps.map((step) => taxi.addInstruction(step)))
     })
   }
 }
+const stepsToBooking = ([first, last]) =>
+  new Booking({
+    pickup: stepToBookingEntity(first),
+    destination: stepToBookingEntity(last),
+  })
+
+const stepToBookingEntity = ({
+  arrival: departureTime,
+  location: [lon, lat],
+}) => ({
+  departureTime,
+  position: { lat, lon },
+})
 
 const pairwise = (arr) =>
   arr
