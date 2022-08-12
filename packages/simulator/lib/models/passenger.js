@@ -28,7 +28,6 @@ class Passenger extends EventEmitter {
   }
 
   moved(position, metersMoved, co2, cost) {
-    console.log(`passenger ${this.name}: moved ${metersMoved} meters`)
     this.position = position
     this.distance += metersMoved
     this.cost += cost
