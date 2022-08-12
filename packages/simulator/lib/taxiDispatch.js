@@ -23,7 +23,7 @@ const taxiToVehicle = ({ id, position, capacity, heading }, i) => ({
   description: id,
   capacity: [capacity],
   start: [position.lon, position.lat],
-  end: heading ? [heading.lat, heading.lon] : undefined,
+  end: heading ? [heading.lon, heading.lat] : undefined,
 })
 
 const taxiDispatch = (taxis, passengers) =>
