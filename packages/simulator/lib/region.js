@@ -50,35 +50,33 @@ const populateBusesStream = (kommuner) => {
   return buses
 }
 
-const mergeFirstAndLastStopInTripWithKommunName = (kommuner) =>
+const getFirstAndLastStopTimeInTrip = () =>
   pipe(
-    mergeMap((stopTimesPerRoute) =>
-      stopTimesPerRoute.pipe(
+    mergeMap((stopTimes) =>
+      stopTimes.pipe(
         first(),
-        mergeMap((first) => stopTimesPerRoute.pipe(last(), startWith(first))),
+        mergeMap((first) => stopTimes.pipe(last(), startWith(first))),
         toArray()
       )
-    ),
+    )
+  )
+const groupFirstLastStopsByKommun = (kommuner) =>
+  pipe(
     mergeMap(([firstStop, lastStop]) =>
       kommuner.pipe(
-        first(
-          (kommun) =>
-            isInsideCoordinates(
-              firstStop.position,
-              kommun.geometry.coordinates
-            ),
-          null
+        filter(({ geometry }) =>
+          isInsideCoordinates(firstStop.position, geometry.coordinates)
         ),
-        filter((e) => e),
         map(({ name }) => ({
           first: firstStop,
           last: lastStop,
           kommun: name,
         }))
       )
-    )
+    ),
+    groupBy(({ kommun }) => kommun)
   )
-const filterBusesInKommun = (bus, kommun) => bus.kommun === kommun
+
 class Region {
   constructor({
     geometry,
@@ -104,8 +102,8 @@ class Region {
     stopTimes
       .pipe(
         groupBy(({ tripId }) => tripId),
-        mergeFirstAndLastStopInTripWithKommunName(kommuner),
-        groupBy(({ kommun }) => kommun),
+        getFirstAndLastStopTimeInTrip(),
+        groupFirstLastStopsByKommun(kommuner),
         map((firstLastStop) => {
           const kommunName = firstLastStop.key
           return {
