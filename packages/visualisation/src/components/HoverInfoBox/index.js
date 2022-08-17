@@ -78,6 +78,8 @@ const PassengerInfo = ({ data }) => {
         CO<sub>2</sub>: {Math.ceil(10 * data.co2) / 10 || 0} kg
       </Paragraph>
       <Paragraph>Distans: {Math.ceil(data.distance) / 1000 || 0} km</Paragraph>
+      <Paragraph>Restid: {data.moveTime} min</Paragraph>
+      <Paragraph>Väntetid: {data.waitTime} min</Paragraph>
     </Wrapper>
   )
 }

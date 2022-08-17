@@ -213,6 +213,8 @@ class Vehicle extends EventEmitter {
 
   async updatePosition(position, date = this.time()) {
     const lastPosition = this.position || position
+    const timeDiff = date - this.lastPositionUpdate
+
     const metersMoved =
       (this.route &&
         this.lastPositionUpdate &&
@@ -248,7 +250,8 @@ class Vehicle extends EventEmitter {
           this.position,
           metersMoved,
           co2 / (this.cargo.length + 1), // TODO: Why do we do +1 here?
-          (h * this.costPerHour) / (this.cargo.length + 1)
+          (h * this.costPerHour) / (this.cargo.length + 1),
+          timeDiff
         )
       })
     }
