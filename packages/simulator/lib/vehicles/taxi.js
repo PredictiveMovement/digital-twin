@@ -57,13 +57,13 @@ class Taxi extends Vehicle {
     if (this.instruction.passenger && this.instruction.type === 'pickup') {
       const passenger = this.instruction.passenger
       passenger.pickedUp(this.instruction.journeyId)
-      console.log(`taxi ${this.id}: picked up passenger ${passenger.id} ${passenger.name}`)
+      // console.log(`taxi ${this.id}: picked up passenger ${passenger.id} ${passenger.name}`)
       this.cargo.push(passenger)
     }
     if (this.instruction.passenger && this.instruction.type === 'delivery') {
       const passenger = this.instruction.passenger
       passenger.delivered(this.instruction.journeyId)
-      console.log(`taxi ${this.id}: delivered passenger ${passenger.id} ${passenger.name}`)
+      // console.log(`taxi ${this.id}: delivered passenger ${passenger.id} ${passenger.name}`)
       this.cargo = this.cargo.filter((passenger) => passenger !== passenger)
     }
     this.instruction = this.instructions.shift()
@@ -71,7 +71,7 @@ class Taxi extends Vehicle {
       if(this.instruction.waiting_time > 0) {
         this.simulate(false)
         const waitTime = virtualTime.timeInSeconds(this.instruction.waiting_time)
-        console.log(`taxi ${this.id}: waiting until ${waitTime}`)
+        // console.log(`taxi ${this.id}: waiting until ${waitTime}`)
         await virtualTime.waitUntil(waitTime.valueOf())
       }
       return this.navigateNextJob()
