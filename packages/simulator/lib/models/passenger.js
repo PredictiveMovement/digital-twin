@@ -14,8 +14,8 @@ class Passenger extends EventEmitter {
     this.co2 = 0
     this.cost = 0
     this.distance = 0
-    this.moveTime = 0
-    this.waitTime = 0
+    this.moveTime = 0 // Time on a vehicle.
+    this.waitTime = 0 // Time waiting for a vehicle.
   }
 
   moved(position, metersMoved, co2, cost, moveTime) {
