@@ -50,6 +50,7 @@ const engine = {
       mergeMap((passenger) =>
         merge(
           of(passenger),
+          // fromEvent(passenger, 'moved'), // TODO: If we want this performance will suffer!
           fromEvent(passenger, 'pickedup'),
           fromEvent(passenger, 'delivered')
         )

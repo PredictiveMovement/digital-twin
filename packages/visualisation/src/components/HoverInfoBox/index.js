@@ -74,6 +74,13 @@ const PassengerInfo = ({ data }) => {
     <Wrapper left={data.x} top={data.y}>
       <Paragraph>Passagerare {data.id}</Paragraph>
       <Paragraph>Namn: {data.name}</Paragraph>
+      <Paragraph>Resor:</Paragraph>
+      {data.journeys &&
+        data.journeys.map((j) => (
+          <Paragraph>
+            - {j.pickup.name} &gt; {j.destination.name} - {j.status}
+          </Paragraph>
+        ))}
       <Paragraph>
         CO<sub>2</sub>: {Math.ceil(10 * data.co2) / 10 || 0} kg
       </Paragraph>

@@ -62,15 +62,15 @@ const App = () => {
 
   useEffect(() => {
     socket.emit('carLayer', activeLayers.carLayer)
-  }, [activeLayers.carLayer])
+  }, [activeLayers.carLayer, socket])
 
   useEffect(() => {
     socket.emit('taxiUpdatesToggle', activeLayers.taxiLayer)
-  }, [activeLayers.taxiLayer])
+  }, [activeLayers.taxiLayer, socket])
 
   useEffect(() => {
     socket.emit('busUpdatesToggle', activeLayers.busLayer)
-  }, [activeLayers.busLayer])
+  }, [activeLayers.busLayer, socket])
 
   useSocket('reset', () => {
     console.log('received reset')
@@ -220,7 +220,17 @@ const App = () => {
   const [passengers, setPassengers] = React.useState([])
   useSocket(
     'passenger',
-    ({ id, co2, distance, inCar, moveTime, name, position, waitTime }) => {
+    ({
+      id,
+      co2,
+      distance,
+      inVehicle,
+      journeys,
+      moveTime,
+      name,
+      position,
+      waitTime,
+    }) => {
       setPassengers((currentPassengers) =>
         upsert(
           currentPassengers,
@@ -228,7 +238,8 @@ const App = () => {
             id,
             co2,
             distance,
-            inCar,
+            inVehicle,
+            journeys,
             moveTime,
             name,
             position: [position.lon, position.lat].map((s) => parseFloat(s)),
