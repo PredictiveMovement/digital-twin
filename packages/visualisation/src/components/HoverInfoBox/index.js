@@ -70,7 +70,6 @@ const CarInfo = ({ data }) => {
 }
 
 const PassengerInfo = ({ data }) => {
-  console.log('Passenger Info', data)
   return (
     <Wrapper left={data.x} top={data.y}>
       <Paragraph>Passagerare {data.id}</Paragraph>
@@ -83,11 +82,15 @@ const PassengerInfo = ({ data }) => {
           </Paragraph>
         ))}
       <Paragraph>
-        CO<sub>2</sub>: {Math.ceil(10 * data.co2) / 10 || 0} kg
+        CO<sub>2</sub>: {Math.ceil(10 * data.co2 / 10) || 0} kg
       </Paragraph>
-      <Paragraph>Distans: {Math.ceil(data.distance) / 1000 || 0} km</Paragraph>
-      <Paragraph>Restid: {data.moveTime} min</Paragraph>
-      <Paragraph>Väntetid: {data.waitTime} min</Paragraph>
+      <Paragraph>Distans: {Math.ceil(data.distance / 1000) || 0} km</Paragraph>
+      <Paragraph>
+        Restid: {Math.ceil(data.moveTime / 60 / 1000) || 0} min
+      </Paragraph>
+      <Paragraph>
+        Väntetid: {Math.ceil(data.waitTime / 60 / 1000) || 0} min
+      </Paragraph>
     </Wrapper>
   )
 }

@@ -178,9 +178,7 @@ function register(io) {
     })
   })
   experiment.passengerUpdates.subscribe((passenger) => {
-    console.log('PAX', passenger)
     if (passenger.position) {
-      console.log('passengerupdate', passenger)
       io.emit('passenger', passenger)
     }
   })

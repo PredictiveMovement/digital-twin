@@ -231,17 +231,6 @@ const App = () => {
       position,
       waitTime,
     }) => {
-      console.log('Passengers from socket', {
-        id,
-        co2,
-        distance,
-        inVehicle,
-        journeys,
-        moveTime,
-        name,
-        position,
-        waitTime,
-      })
       setPassengers((currentPassengers) =>
         upsert(
           currentPassengers,

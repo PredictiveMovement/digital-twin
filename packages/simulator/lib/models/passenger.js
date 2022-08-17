@@ -48,8 +48,6 @@ class Passenger extends EventEmitter {
     this.distance += metersMoved
     this.moveTime += moveTime
 
-    console.log('Passenger moved', this.name, metersMoved)
-
     this.emit('moved', this.toObject())
   }
 
