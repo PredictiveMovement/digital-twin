@@ -37,6 +37,10 @@ class VirtualTime extends EventEmitter {
     })
   }
 
+  timeInSeconds(seconds) {
+    return moment(this.time()).add(seconds, 'seconds')
+  }
+
   // Set the speed in which time should advance
   setTimeMultiplier(timeMultiplier) {
     this.offset = this.time() - Date.now() // save the current offset before reseting the time multiplier
