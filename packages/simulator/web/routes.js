@@ -170,7 +170,7 @@ function register(io) {
     })
   experiment.carUpdates
     .pipe(
-      windowTime(500), // start a window every x ms
+      windowTime(100), // start a window every x ms
       mergeMap((win) =>
         win.pipe(
           groupBy((car) => car.id), // create a stream for each car in this window
