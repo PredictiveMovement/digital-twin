@@ -8,30 +8,46 @@ class Passenger extends EventEmitter {
     this.name = name
     this.position = position
     this.inVehicle = false
+
+    // Aggregated values
+    this.co2 = 0
+    this.cost = 0
+    this.distance = 0
+    this.moveTime = 0 // Time on a vehicle.
+    this.waitTime = 0 // Time waiting for a vehicle.
   }
 
   toObject() {
     return {
+      co2: this.co2,
+      cost: this.cost,
+      distance: this.distance,
       id: this.id,
+      inVehicle: this.inVehicle,
       journeys: this.journeys,
+      moveTime: this.moveTime,
       name: this.name,
       position: this.position,
-      inVehicle: this.inVehicle,
+      waitTime: this.waitTime,
     }
   }
 
   updateJourney(journeyId, status) {
-    const journeyToUpdate = this.journeys.find((journey) => (
-      journey.id === journeyId
-    ))
+    const journeyToUpdate = this.journeys.find(
+      (journey) => journey.id === journeyId
+    )
     journeyToUpdate.status = status
   }
 
-  moved(position, metersMoved, co2, cost) {
+  moved(position, metersMoved, co2, cost, moveTime) {
     this.position = position
-    this.distance += metersMoved
-    this.cost += cost
+
+    // Aggregate values
     this.co2 += co2
+    this.cost += cost
+    this.distance += metersMoved
+    this.moveTime += moveTime
+
     this.emit('moved', this.toObject())
   }
 

@@ -148,21 +148,19 @@ function register(io) {
       })
     experiment.passengers.subscribe((passengers) => {
       console.log('sending', passengers.length, 'passengers')
-      return passengers.map(({ id, position, name, inVehicle, journeys }) =>
-        socket.emit('passenger', { id, position, name, inVehicle, journeys })
+      return passengers.map((passenger) =>
+          socket.emit('passenger', passenger)
       )
     })
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
       socket.emit('taxi', { id, position: [lon, lat] })
     })
   })
-  experiment.passengerUpdates.subscribe(
-    ({ position, id, name, inVehicle, journeys }) => {
-      if (position) {
-        io.emit('passenger', { id, position, name, inVehicle, journeys })
-      }
+  experiment.passengerUpdates.subscribe((passenger) => {
+    if (passenger.position) {
+      io.emit('passenger', passenger)
     }
-  )
+  })
   experiment.bookingUpdates
     .pipe(cleanBookings(), bufferTime(100, null, 1000))
     .subscribe((bookings) => {
@@ -179,19 +177,12 @@ function register(io) {
           mergeMap((cars) => cars.pipe(last())) // take the last update in this window
         )
       ),
-      map(cleanCars)
+      map(cleanCars),
+      bufferTime(100, null, 100)
     )
-    .subscribe((car) => {
-      if (!car) return
-      if (car.vehicleType === 'bus') {
-        if (emitBusUpdates) io.emit('cars', [car])
-        return
-      } else if (car.vehicleType === 'taxi') {
-        if (emitTaxiUpdates) io.emit('cars', [car])
-        return
-      } else if (emitCars) {
-        return io.emit('cars', [car])
-      }
+    .subscribe((cars) => {
+      if (!cars.length) return
+      io.emit('cars', cars)
     })
 
   setInterval(() => {
