@@ -19,11 +19,16 @@ class Passenger extends EventEmitter {
 
   toObject() {
     return {
+      co2: this.co2,
+      cost: this.cost,
+      distance: this.distance,
       id: this.id,
+      inVehicle: this.inVehicle,
       journeys: this.journeys,
+      moveTime: this.moveTime,
       name: this.name,
       position: this.position,
-      inVehicle: this.inVehicle,
+      waitTime: this.waitTime,
     }
   }
 
@@ -42,6 +47,8 @@ class Passenger extends EventEmitter {
     this.cost += cost
     this.distance += metersMoved
     this.moveTime += moveTime
+
+    console.log('Passenger moved', this.name, metersMoved)
 
     this.emit('moved', this.toObject())
   }

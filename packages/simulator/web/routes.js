@@ -177,33 +177,13 @@ function register(io) {
       socket.emit('taxi', { id, position: [lon, lat] })
     })
   })
-  experiment.passengerUpdates.subscribe(
-    ({
-      id,
-      co2,
-      distance,
-      inVehicle,
-      journeys,
-      moveTime,
-      name,
-      position,
-      waitTime,
-    }) => {
-      if (position) {
-        io.emit('passenger', {
-          id,
-          co2,
-          distance,
-          inVehicle,
-          journeys,
-          moveTime,
-          name,
-          position,
-          waitTime,
-        })
-      }
+  experiment.passengerUpdates.subscribe((passenger) => {
+    console.log('PAX', passenger)
+    if (passenger.position) {
+      console.log('passengerupdate', passenger)
+      io.emit('passenger', passenger)
     }
-  )
+  })
   experiment.bookingUpdates
     .pipe(cleanBookings(), bufferTime(100, null, 1000))
     .subscribe((bookings) => {
@@ -213,7 +193,7 @@ function register(io) {
     })
   experiment.carUpdates
     .pipe(
-      windowTime(100), // start a window every x ms
+      windowTime(500), // start a window every x ms
       mergeMap((win) =>
         win.pipe(
           groupBy((car) => car.id), // create a stream for each car in this window

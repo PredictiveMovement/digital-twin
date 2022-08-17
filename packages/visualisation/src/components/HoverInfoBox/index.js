@@ -70,6 +70,7 @@ const CarInfo = ({ data }) => {
 }
 
 const PassengerInfo = ({ data }) => {
+  console.log('Passenger Info', data)
   return (
     <Wrapper left={data.x} top={data.y}>
       <Paragraph>Passagerare {data.id}</Paragraph>

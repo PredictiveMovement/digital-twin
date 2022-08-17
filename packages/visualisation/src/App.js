@@ -231,6 +231,17 @@ const App = () => {
       position,
       waitTime,
     }) => {
+      console.log('Passengers from socket', {
+        id,
+        co2,
+        distance,
+        inVehicle,
+        journeys,
+        moveTime,
+        name,
+        position,
+        waitTime,
+      })
       setPassengers((currentPassengers) =>
         upsert(
           currentPassengers,
@@ -252,7 +263,6 @@ const App = () => {
   )
   const [taxis, setTaxis] = React.useState([])
   useSocket('taxi', ({ name, position, id }) => {
-    console.log({ name, position, id })
     setTaxis((currenttaxis) =>
       upsert(
         currenttaxis,
