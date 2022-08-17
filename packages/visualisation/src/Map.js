@@ -357,11 +357,11 @@ const Map = ({
     filled: true,
     radiusScale: 6,
     radiusUnits: 'pixels',
-    getPosition: (c) => {
-      return c.position
+    getPosition: ({position}) => {
+      return position
     },
     //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
-    getFillColor: ({ inCar }) => (inCar ? [0, 0, 0, 0] : [0, 128, 255, 170]),
+    getFillColor: ({ inVehicle }) => (inVehicle ? [0, 0, 0, 0] : [0, 128, 255, 170]),
 
     pickable: true,
     onHover: ({ object, x, y }) => {

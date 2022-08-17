@@ -1,22 +1,36 @@
 const { toArray, map, filter, mergeMap, take } = require('rxjs/operators')
 const { plan } = require('./vroom')
 
-const passengerToShipment = (
-  { id, destination, pickup, position, arrivalTime, departureTime },
-  i
-) => ({
-  id: i,
-  description: id,
+const journeyToShipment = (id, journey) => ({
+  id,
+  description: journey.description,
   amount: [1],
   delivery: {
-    id: i,
-    location: [destination.lon, destination.lat],
+    id,
+    location: [journey.destination.lon, journey.destination.lat],
+    time_windows: journey.timeWindow,
   },
   pickup: {
-    id: i,
-    location: [pickup.lon, pickup.lat],
+    id,
+    location: [journey.pickup.lon, journey.pickup.lat],
+    time_windows: journey.timeWindow,
   },
 })
+
+const passengersToShipments = (passengers) => {
+  const jobMap = {}
+  console.log("passengersToShipments")
+  let journeyIndex = 0
+  const shipments = [...passengers].flatMap((passenger, passengerIndex) =>
+    passenger.journeys.map((journey) => {
+      const shipment = journeyToShipment(journeyIndex, journey)
+      jobMap[journeyIndex] = { passengerIndex, journeyId: journey.id }
+      journeyIndex++
+      return shipment
+    })
+  )
+  return [shipments, jobMap]
+}
 
 const taxiToVehicle = ({ id, position, capacity, heading }, i) => ({
   id: i,
@@ -36,28 +50,33 @@ const taxiDispatch = (taxis, passengers) =>
         mergeMap(async (taxis) => {
           // console.log(
           //   'PLAN PLEASE',
-          //   JSON.stringify(passengers.map(passengerToShipment), null, 2)
+          //   JSON.stringify(passengersToShipments(passengers), null, 2)
           // )
+          const [shipments, jobMap] = passengersToShipments(passengers)
           console.log('calling vroom')
           const result = await plan({
-            shipments: passengers.map(passengerToShipment),
+            shipments: shipments,
             vehicles: taxis.map(taxiToVehicle),
           })
           return {
             taxis,
             routes: result.routes,
+            jobMap,
           }
         }),
         // tap((res) =>
         //   console.log('vroom result: ', JSON.stringify(res, null, 2))
         // ),
-        map(({ taxis, routes = [] }) => {
+        map(({ taxis, routes = [], jobMap }) => {
           return routes.map((route, index) => ({
             taxi: taxis[index],
             steps: route.steps.map((step) => {
               if (step.id !== undefined) {
-                step.passenger = passengers[step.id]
-                step.id = passengers[step.id].id
+                const passengerIndex = jobMap[step.id].passengerIndex
+                const journeyId = jobMap[step.id].journeyId
+                step.passenger = passengers[passengerIndex]
+                step.id = passengers[passengerIndex].id
+                step.journeyId = journeyId
               }
               return step
             }),
