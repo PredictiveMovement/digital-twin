@@ -15,19 +15,12 @@ spec:
         app: osrm
     spec:
       containers:
-        - image: osrm/osrm-backend:v5.25.0
+        - image: iteam1337/osrm-sweden:latest
           name: osrm
           command: ["/bin/sh"]
           args:
             - -c
-            - |
-              apt-get update && apt-get install -y --no-install-recommends wget tar && \
-              wget --no-check-certificate --debug "${DOWNLOAD_URL}" -O /data/sweden-latest.osm.pbf && \
-              rm -rf /var/lib/apt/lists/* && \
-              osrm-extract -p /opt/car.lua /data/sweden-latest.osm.pbf && \
-              osrm-partition /data/sweden-latest.osrm && \
-              osrm-customize /data/sweden-latest.osrm && \
-              osrm-routed --algorithm mld --max-table-size 10000 /data/sweden-latest.osrm
+            - osrm-routed --algorithm mld --max-table-size 10000 /data/sweden-latest.osrm
           env:
             - name: DOWNLOAD_URL
               value: https://download.geofabrik.de/europe/sweden-latest.osm.pbf
@@ -38,11 +31,7 @@ spec:
           ports:
             - containerPort: 5000
               protocol: TCP
-          volumeMounts:
-            - name: osrm-data
-              mountPath: "/data"
           livenessProbe:
-            initialDelaySeconds: 500
             httpGet:
               path: /nearest/v1/driving/21.033499654770427,64.74958466530941
               port: 5000
@@ -51,15 +40,6 @@ spec:
             httpGet:
               path: /nearest/v1/driving/21.033499654770427,64.74958466530941
               port: 5000
-  volumeClaimTemplates:
-    - metadata:
-        name: osrm-data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: "10Gi"
 ---
 apiVersion: v1
 kind: Service
