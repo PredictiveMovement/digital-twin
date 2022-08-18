@@ -1,4 +1,4 @@
-const { from, share, merge, fromEvent, of } = require('rxjs')
+const { from, filter, share, merge, fromEvent, of, concatMap } = require('rxjs')
 const { mergeMap } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
@@ -8,12 +8,11 @@ const kommuner = require('./streams/kommuner')
 const regions = require('./streams/regions')(kommuner)
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
+const statistics = require('./lib/statistics')
+const elastic = require('./lib/elastic')
+elastic.createIndices()
 
-const { save } = require('./lib/elastic')
-const statsCollector = require('./lib/statistics')
-from(
-  [statsCollector.exampleJourney] // TODO: Hook into stream
-).subscribe(statsCollector.collectJourney)
+
 
 const engine = {
   experiments: [],
@@ -26,6 +25,7 @@ const engine = {
       startDate: new Date(),
       fixedRoute: savedParams.fixedRoute || 100,
     }
+    statistics.collectExperimentMetadata(parameters)
 
     const experiment = {
       virtualTime, // TODO: move this from being a static property to being a property of the experiment
@@ -40,6 +40,22 @@ const engine = {
       passengers: regions.pipe(mergeMap((region) => region.passengers)),
       taxis: regions.pipe(mergeMap((region) => region.taxis)),
     }
+
+    experiment.passengers.pipe(
+      mergeMap((passenger) => passenger),
+      concatMap(({journeys}) => from(journeys)),
+      mergeMap((journey) =>
+        fromEvent(journey, 'status')
+      ),
+      share(),
+    ).subscribe((journey) => {
+      statistics.collectJourney({
+        experimentSettings: parameters,
+        ...journey
+      })
+    })
+
+
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(
       mergeMap((booking) =>
         merge(

@@ -27,22 +27,22 @@ class Region {
     this.taxis = new ReplaySubject()
 
     stopTimes
-      .pipe(
-        groupBy(({ tripId }) => tripId),
-        mergeMap((stopTimesPerRoute) => {
-          const stops = stopTimesPerRoute.pipe(shareReplay())
-          return stops.pipe(
-            first(),
-            map((firstStopTime) => {
-              this.taxis.next(createTaxi(firstStopTime))
-              this.buses.next(createBus(firstStopTime, stops))
-            })
+    .pipe(
+      groupBy(({ tripId }) => tripId),
+      mergeMap((stopTimesPerRoute) => {
+        const stops = stopTimesPerRoute.pipe(shareReplay())
+        return stops.pipe(
+          first(),
+          map((firstStopTime) => {
+            this.taxis.next(createTaxi(firstStopTime))
+            this.buses.next(createBus(firstStopTime, stops))
+          })
           )
         })
-      )
-      .subscribe((_) => null)
+        )
+        .subscribe((_) => null)
 
-    taxiDispatch(this.taxis, passengers).subscribe((e) => {
+        taxiDispatch(this.taxis, passengers).subscribe((e) => {
       e.map(({ taxi, steps }) => steps.map((step) => taxi.addInstruction(step)))
     })
   }

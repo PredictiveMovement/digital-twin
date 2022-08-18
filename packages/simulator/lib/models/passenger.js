@@ -1,12 +1,18 @@
 const EventEmitter = require('events')
 
+const { safeId } = require('./../id')
+const Journey = require('./journey')
+
 class Passenger extends EventEmitter {
-  constructor({ id, name, journeys, position }) {
+  constructor({ name, journeys, position }) {
     super()
-    this.id = id
-    this.journeys = journeys
+    this.id = safeId()
+    this.journeys = journeys?.map((journey) => new Journey({ ...journey, passenger: this}) ) || []
     this.name = name
     this.position = position
+    this.distance = 0
+    this.cost = 0
+    this.co2 = 0
     this.inVehicle = false
 
     // Aggregated values
@@ -17,8 +23,8 @@ class Passenger extends EventEmitter {
     this.waitTime = 0 // Time waiting for a vehicle.
   }
 
-  toObject() {
-    return {
+  toObject(includeJourneys = true) {
+    const obj = {
       co2: this.co2,
       cost: this.cost,
       distance: this.distance,
@@ -30,13 +36,17 @@ class Passenger extends EventEmitter {
       position: this.position,
       waitTime: this.waitTime,
     }
+    if(includeJourneys) {
+      obj.journeys = this.journeys.map((journey) => journey.toObject())
+    }
+    return obj
   }
 
   updateJourney(journeyId, status) {
-    const journeyToUpdate = this.journeys.find(
-      (journey) => journey.id === journeyId
-    )
-    journeyToUpdate.status = status
+    const journeyToUpdate = this.journeys.find((journey) => (
+      journey.id === journeyId
+    ))
+    journeyToUpdate.setStatus(status)
   }
 
   moved(position, metersMoved, co2, cost, moveTime) {
@@ -56,6 +66,7 @@ class Passenger extends EventEmitter {
     this.updateJourney(journeyId, 'Pågående')
     this.emit('pickedup', this.toObject())
   }
+
   delivered(journeyId) {
     this.inVehicle = false
     this.updateJourney(journeyId, 'Avklarad')
