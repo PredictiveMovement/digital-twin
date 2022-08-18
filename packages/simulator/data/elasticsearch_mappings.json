@@ -1,5 +1,5 @@
 {
-  "journeys3": {
+  "journeys": {
     "mappings": {
       "properties": {
         "pickup_position": {
