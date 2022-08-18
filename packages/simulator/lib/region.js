@@ -6,6 +6,7 @@ const {
   ReplaySubject,
   mergeMap,
 } = require('rxjs')
+const moment = require('moment')
 const {
   map,
   merge,
@@ -113,13 +114,14 @@ class Region {
         })
       )
       .subscribe(({ buses, stops }) =>
-        busDispatch(buses, stops).subscribe((resultBuses) =>
-          resultBuses.map(({ bus, steps }) =>
-            pairwise(steps)
-              .map(stepsToBooking)
-              .map((booking) => bus.handleBooking(booking))
-          )
-        )
+        busDispatch(buses, stops).subscribe((resultBuses) => {
+          return resultBuses.map(({ bus, steps }) => {
+            const bookings = pairwise(steps).map(stepsToBooking)
+            return bookings.map((booking) => {
+              return bus.handleBooking(booking)
+            })
+          })
+        })
       )
 
     taxiDispatch(this.taxis, passengers).subscribe((e) => {
@@ -127,17 +129,24 @@ class Region {
     })
   }
 }
-const stepsToBooking = ([first, last]) =>
-  new Booking({
+const stepsToBooking = ([first, last]) => {
+  return new Booking({
     pickup: stepToBookingEntity(first),
     destination: stepToBookingEntity(last),
+    lineNumber: first.stop?.first.lineNumber
+      ? first.stop.first.lineNumber
+      : last.stop?.last.lineNumber,
   })
+}
 
 const stepToBookingEntity = ({
+  waiting_time,
   arrival: departureTime,
   location: [lon, lat],
 }) => ({
-  departureTime,
+  departureTime: moment((departureTime + waiting_time) * 1000).format(
+    'HH:mm:ss'
+  ),
   position: { lat, lon },
 })
 

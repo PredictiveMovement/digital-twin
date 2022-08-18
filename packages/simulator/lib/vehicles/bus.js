@@ -51,6 +51,22 @@ class Bus extends Vehicle {
       .subscribe(() => {})
   }
 
+  handleBooking(booking) {
+    if (!this.busy) {
+      this.busy = true
+      this.emit('busy', this)
+      this.booking = booking
+      booking.assigned(this)
+      this.status = 'Pickup'
+      console.log('navigating to', booking.pickup.position)
+      this.navigateTo(booking.destination.position)
+    } else {
+      this.queue.push(booking)
+      booking.queued(this)
+    }
+    return booking
+  }
+
   // This is called when the bus arrives at each stop. Let's check if the departure time
   // is in the future. If it is, we wait until the departure time.
   async pickup() {
@@ -60,6 +76,9 @@ class Bus extends Vehicle {
       return
     }
 
+    this.lineNumber = this.booking.lineNumber
+      ? this.booking.lineNumber
+      : this.lineNumber
     this.booking.pickedUp(this.position)
     this.cargo.push(this.booking)
 
