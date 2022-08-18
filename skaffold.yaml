@@ -4,6 +4,8 @@ metadata:
   name: pm-digital-twin
 build:
   artifacts:
+    - image: iteam1337/opentripplanner-sweden
+      context: k8s/dependencies/opentripplanner
     - image: iteam1337/osrm-sweden
       context: k8s/dependencies/osrm
     - image: iteam1337/pm-digital-twin-simulation-engine
@@ -20,6 +22,7 @@ deploy:
       - k8s/dependencies/pelias/*.yaml
       - k8s/dependencies/osrm/*.yaml
       - k8s/dependencies/vroom/*.yaml
+      - k8s/dependencies/opentripplanner/*.yaml
   kustomize:
     paths:
       - k8s/base
