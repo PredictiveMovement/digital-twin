@@ -52,18 +52,28 @@ const generatePassengers = (kommuner) =>
             .slice(0, population)
             .map(({ x, y }) => addMeters(position, { x, y }))
         ),
-        mergeMap((homePosition) => {
+        mergeMap( (homePosition) => {
           return postombud.pipe(
             toArray(),
-            map((all_postombud) => {
-              const randomPostombud = all_postombud[Math.floor(Math.random() * all_postombud.length)]
-              return { homePosition, workPosition: randomPostombud.position }
+            mergeMap(async (all_postombud) => {
+              const randomPostombud =
+                all_postombud[Math.floor(Math.random() * all_postombud.length)]
+              const workPosition = await randomize(randomPostombud.position)
+              return { homePosition, workPosition }
             })
           )
-        }),
+        }, 20),
         concatMap(async ({ homePosition, workPosition }) => {
           try {
             const home = await pelias.nearest(homePosition)
+            return { home, workPosition }
+          } catch (e) {
+            return null
+          }
+        }),
+        filter((p) => p),
+        concatMap(async ({ home, workPosition }) => {
+          try {
             const work = await pelias.nearest(workPosition)
             return { home, work }
           } catch (e) {
@@ -71,7 +81,7 @@ const generatePassengers = (kommuner) =>
           }
         }),
         filter((p) => p),
-        map(createPassengerFromAddress),
+        map(createPassengerFromAddress)
       )
     }),
     take(100),
