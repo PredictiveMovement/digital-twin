@@ -10,7 +10,7 @@ if (!host) {
   }
   module.exports = {
     save: noOp('save'),
-    connect: noOp('connect'),
+    createIndices: noOp('createIndices'),
   }
   return
 } else {
@@ -18,7 +18,8 @@ if (!host) {
 }
 
 const client = new elastic.Client({ node: host, log: 'error' })
-const connect = Promise.all(
+
+const createIndices = () => Promise.all(
   Object.keys(mappings).map((index) =>
     client.indices
       .create({
@@ -26,7 +27,7 @@ const connect = Promise.all(
         body: mappings[index],
       })
       .catch((err) => {
-        if (err.meta.body.error.type === 'resource_already_exists_exception') {
+        if (JSON.parse(err.response)?.error?.type === 'resource_already_exists_exception') {
           console.log(`
             Index ${index} already mapped.
             If you want to re-map it:
@@ -34,26 +35,24 @@ const connect = Promise.all(
             - Re-run this script
             - Recreate "index pattern" in kibana.`)
         } else {
-          console.error(err)
+          console.error("OTHER ERRROR", JSON.stringify(err))
         }
       })
   )
 )
 
 const save = (booking, indexName) => {
-  return connect.then(() =>
-    client
-      .index({
-        index: indexName,
-        id: booking.id,
-        body: booking,
-      })
-      .then((_) => console.log('Saved!'))
-      .catch(console.error)
-      .finally(() => process.exit())
-  )
+  return client
+    .index({
+      index: indexName,
+      id: booking.id,
+      body: booking,
+    })
+    .then((_) => console.log('Saved!'))
+    .catch(console.error)
 }
 
 module.exports = {
   save,
+  createIndices,
 }

@@ -15,7 +15,6 @@ const perlin = require('perlin-noise')
 
 const pelias = require('../lib/pelias')
 const { addMeters } = require('../lib/distance')
-const { safeId } = require('../lib/id')
 const Passenger = require('../lib/models/passenger')
 const personNames = require('../lib/personNames')
 const { virtualTime } = require('./../lib/virtualTime')
@@ -76,10 +75,9 @@ const createPassengerFromAddress = async ({ position }) => {
 
   return new Passenger({
     journeys: [
-      { id: safeId(), pickup: hemma, destination: polarbrödÄlvsByn, timeWindow: [[fiveAm, tenAm]], status: 'Väntar' },
-      { id: safeId(), pickup: polarbrödÄlvsByn, destination: hemma, timeWindow: [[threePm, eightPm]], status: 'Väntar' },
+      { pickup: hemma, destination: polarbrödÄlvsByn, timeWindow: [[fiveAm, tenAm]]},
+      { pickup: polarbrödÄlvsByn, destination: hemma, timeWindow: [[threePm, eightPm]]},
     ],
-    id: safeId(),
     position: position,
     name: name,
   })
