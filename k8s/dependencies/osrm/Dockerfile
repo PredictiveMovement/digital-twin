@@ -6,5 +6,4 @@ RUN   apt-get update && apt-get install -y --no-install-recommends wget tar && \
   rm -rf /var/lib/apt/lists/* && \
   osrm-extract -p /opt/car.lua /data/sweden-latest.osm.pbf && \
   osrm-partition /data/sweden-latest.osrm && \
-  osrm-customize /data/sweden-latest.osrm && \
-  osrm-routed --algorithm mld --max-table-size 10000 /data/sweden-latest.osrm
+  osrm-customize /data/sweden-latest.osrm 
