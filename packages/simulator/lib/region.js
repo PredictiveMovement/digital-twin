@@ -32,24 +32,34 @@ const { taxiDispatch } = require('./taxiDispatch')
 const Pelias = require('./pelias')
 const Taxi = require('./vehicles/taxi')
 const { isInsideCoordinates } = require('../lib/polygon')
+const dynamicRatio = 0.5
 
-const populateBusesStream = (kommuner) => {
+const populateTaxisBusesStreams = (kommuner) => {
   const buses = new ReplaySubject()
+  const taxis = new ReplaySubject()
   kommuner
     .pipe(
       mergeMap(({ name, busCount }) =>
         Pelias.search(name)
           .then((res) => res.position)
           .then((position) => {
-            Array.from({ length: busCount }, () =>
+            const nrOfTaxis = Math.floor(dynamicRatio * busCount)
+            const nrOfBuses = busCount - nrOfTaxis
+            Array.from({ length: nrOfBuses }, () =>
               buses.next(createBus({ position, kommun: name }, from([])))
+            )
+            Array.from({ length: nrOfTaxis }, () =>
+              taxis.next(createTaxi({ position }, from([])))
             )
           })
       )
     )
     .toPromise()
-    .then((_) => buses.complete())
-  return buses
+    .then((_) => {
+      buses.complete()
+      taxis.complete()
+    })
+  return { buses, taxis }
 }
 
 const groupStopsByKommun = (kommuner) =>
@@ -93,8 +103,10 @@ class Region {
     this.passengers = passengers.pipe(shareReplay())
     this.lineShapes = lineShapes
 
-    this.taxis = new ReplaySubject()
-    this.buses = populateBusesStream(kommuner)
+    const { buses, taxis } = populateTaxisBusesStreams(kommuner)
+
+    this.taxis = taxis
+    this.buses = buses
 
     stopTimes
       .pipe(

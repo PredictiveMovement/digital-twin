@@ -87,7 +87,7 @@ const busDispatch = (buses, stops) =>
             buses.length,
             'buses',
             firstAndLasts.length,
-            'stops'
+            'trips'
           )
 
           const result = await plan({

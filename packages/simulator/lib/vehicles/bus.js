@@ -59,7 +59,6 @@ class Bus extends Vehicle {
       this.booking = booking
       booking.assigned(this)
       this.status = 'Pickup'
-      console.log('navigating to', booking.pickup.position)
       this.navigateTo(booking.destination.position)
     } else {
       this.queue.push(booking)

@@ -44,7 +44,6 @@ const taxiDispatch = (taxis, passengers) =>
   passengers.pipe(
     mergeMap((passengers) =>
       taxis.pipe(
-        take(200),
         toArray(),
         filter((taxis) => taxis.length > 0),
         mergeMap(async (taxis) => {
