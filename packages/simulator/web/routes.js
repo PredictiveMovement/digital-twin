@@ -84,7 +84,7 @@ function register(io) {
 
   let emitCars = true
   let emitTaxiUpdates = true
-  let emitBusUpdates = true
+  let emitBusUpdates = false
 
   io.on('connection', function (socket) {
     socket.emit('reset')
@@ -172,7 +172,8 @@ function register(io) {
         io.emit('bookings', bookings)
       }
     })
-  experiment.carUpdates
+
+  const emitOnlyCars = experiment.carUpdates
     .pipe(
       windowTime(100), // start a window every x ms
       mergeMap((win) =>
@@ -181,6 +182,13 @@ function register(io) {
           mergeMap((cars) => cars.pipe(last())) // take the last update in this window
         )
       ),
+      filter((car) => {
+        if (!car) return false
+        if (car.vehicleType === 'bus' && !emitBusUpdates) return false
+        if (car.vehicleType === 'taxi' && !emitTaxiUpdates) return false
+        if (car.vehicleType === 'car' && !emitCars) return false
+        return true
+      }),
       map(cleanCars),
       bufferTime(100, null, 100)
     )

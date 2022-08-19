@@ -19,7 +19,6 @@ const journeyToShipment = (id, journey) => ({
 
 const passengersToShipments = (passengers) => {
   const jobMap = {}
-  console.log('passengersToShipments')
   let journeyIndex = 0
   const shipments = [...passengers].flatMap((passenger, passengerIndex) =>
     passenger.journeys.map((journey) => {
