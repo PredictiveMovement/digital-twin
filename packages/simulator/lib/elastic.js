@@ -33,7 +33,8 @@ const createIndices = () => Promise.all(
             If you want to re-map it:
             - Delete it in Elasticsearch
             - Re-run this script
-            - Recreate "index pattern" in kibana.`)
+            - Recreate "index pattern" in kibana.
+          `)
         } else {
           console.error("OTHER ERRROR", JSON.stringify(err))
         }

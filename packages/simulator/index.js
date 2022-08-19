@@ -1,4 +1,4 @@
-const { from, filter, share, merge, fromEvent, of, concatMap } = require('rxjs')
+const { from, filter, share, merge, fromEvent, of, concatMap, shareReplay } = require('rxjs')
 const { mergeMap } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
@@ -47,8 +47,9 @@ const engine = {
       mergeMap((journey) =>
         fromEvent(journey, 'status')
       ),
-      share(),
+      shareReplay(),
     ).subscribe((journey) => {
+      delete(journey.passenger.journeys) // Avoid circular reference in serialization
       statistics.collectJourney({
         experimentSettings: parameters,
         ...journey

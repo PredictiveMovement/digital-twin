@@ -5,7 +5,14 @@ const collectExperimentMetadata = (experiment) => {
 }
 
 const collectJourney = (journey) => {
-  return save(journey, 'journeys')
+  return save({  ...journey, timestamp: new Date(),
+    passenger: {
+      ...journey.passenger,
+      distance: journey.passenger.distance / 1000,
+      moveTime: journey.passenger.moveTime / 1000 / 60,
+      waitTime: journey.passenger.waitTime / 1000 / 60,
+    }
+  }, 'journeys')
 }
 
 module.exports = {
