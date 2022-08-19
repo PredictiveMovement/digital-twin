@@ -46,7 +46,12 @@ const CarInfo = ({ data }) => {
         <Paragraph>
           Köat: {data.queue || 0} {label}
         </Paragraph>
-        <Paragraph>Co2: {data.co2 || 0} kg</Paragraph>
+        <Paragraph>
+          CO<sub>2</sub>: {Math.ceil(10 * data.co2) / 10 || 0} kg
+        </Paragraph>
+        <Paragraph>
+          Körsträcka: {Math.ceil(10 * data.distance) / 10 || 0} km
+        </Paragraph>
         <Paragraph>
           Lastat: {data.cargo} {label}
         </Paragraph>
@@ -69,6 +74,23 @@ const PassengerInfo = ({ data }) => {
     <Wrapper left={data.x} top={data.y}>
       <Paragraph>Passagerare {data.id}</Paragraph>
       <Paragraph>Namn: {data.name}</Paragraph>
+      <Paragraph>Resor:</Paragraph>
+      {data.journeys &&
+        data.journeys.map((j) => (
+          <Paragraph>
+            - {j.pickup.name} &gt; {j.destination.name} - {j.status}
+          </Paragraph>
+        ))}
+      <Paragraph>
+        CO<sub>2</sub>: {Math.ceil(10 * data.co2 / 10) || 0} kg
+      </Paragraph>
+      <Paragraph>Distans: {Math.ceil(data.distance / 1000) || 0} km</Paragraph>
+      <Paragraph>
+        Restid: {Math.ceil(data.moveTime / 60 / 1000) || 0} min
+      </Paragraph>
+      <Paragraph>
+        Väntetid: {Math.ceil(data.waitTime / 60 / 1000) || 0} min
+      </Paragraph>
     </Wrapper>
   )
 }
@@ -84,7 +106,9 @@ const GenericInfo = ({ data }) => {
         </Paragraph>
       ) : null}
       {data.co2 ? (
-        <Paragraph>CO2: {Math.ceil(10 * data.co2) / 10} kg</Paragraph>
+        <Paragraph>
+          CO<sub>2</sub>: {Math.ceil(10 * data.co2) / 10} kg
+        </Paragraph>
       ) : null}
       {data.cost ? (
         <Paragraph>

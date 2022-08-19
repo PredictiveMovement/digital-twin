@@ -1,17 +1,19 @@
 apiVersion: v1
 clusters:
-  - cluster:
-      certificate-authority-data: $KUBE_CLUSTER_CERTIFICATE
-      server: $KUBE_CLUSTER_SERVER
-    name: $KUBE_CLUSTER_NAME
+- cluster:
+    certificate-authority-data: $KUBE_CLUSTER_CERTIFICATE
+    server: $KUBE_CLUSTER_SERVER
+  name: default
 contexts:
-  - context:
-      cluster: $KUBE_CLUSTER_NAME
-      user: $KUBE_USER_NAME
-    name: $KUBE_CLUSTER_NAME
+- context:
+    cluster: default
+    user: default
+  name: default
+current-context: default
 kind: Config
 preferences: {}
 users:
-  - name: $KUBE_USER_NAME
-    user:
-      token: $KUBE_USER_TOKEN
+- name: default
+  user:
+    client-certificate-data: $KUBE_CERTIFICATE_DATA
+    client-key-data: $KUBE_KEY_DATA

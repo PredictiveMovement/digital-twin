@@ -1,35 +1,65 @@
 const EventEmitter = require('events')
 
 class Passenger extends EventEmitter {
-  constructor({ id, pickup, destination, name, position }) {
+  constructor({ id, name, journeys, position }) {
     super()
     this.id = id
-    this.pickup = pickup
-    this.destination = destination
+    this.journeys = journeys
     this.name = name
     this.position = position
-    this.inCar = false
+    this.inVehicle = false
+
+    // Aggregated values
+    this.co2 = 0
+    this.cost = 0
+    this.distance = 0
+    this.moveTime = 0 // Time on a vehicle.
+    this.waitTime = 0 // Time waiting for a vehicle.
   }
 
-  moved(position, metersMoved, co2, cost) {
-    this.position = position
-    this.distance += metersMoved
-    this.cost += cost
-    this.co2 += co2
-    this.emit('moved', this)
-  }
-
-  pickedUp() {
-    this.inCar = true
-    this.emit('pickedup', { id: this.id, position: this.position, inCar: true })
-  }
-  delivered() {
-    this.inCar = false
-    this.emit('delivered', {
+  toObject() {
+    return {
+      co2: this.co2,
+      cost: this.cost,
+      distance: this.distance,
       id: this.id,
+      inVehicle: this.inVehicle,
+      journeys: this.journeys,
+      moveTime: this.moveTime,
+      name: this.name,
       position: this.position,
-      inCar: false,
-    })
+      waitTime: this.waitTime,
+    }
+  }
+
+  updateJourney(journeyId, status) {
+    const journeyToUpdate = this.journeys.find(
+      (journey) => journey.id === journeyId
+    )
+    journeyToUpdate.status = status
+  }
+
+  moved(position, metersMoved, co2, cost, moveTime) {
+    this.position = position
+
+    // Aggregate values
+    this.co2 += co2
+    this.cost += cost
+    this.distance += metersMoved
+    this.moveTime += moveTime
+
+    this.emit('moved', this.toObject())
+  }
+
+  pickedUp(journeyId) {
+    this.inVehicle = true
+    this.updateJourney(journeyId, 'Pågående')
+    this.emit('pickedup', this.toObject())
+  }
+  delivered(journeyId) {
+    this.inVehicle = false
+    this.updateJourney(journeyId, 'Avklarad')
+    this.emit('delivered', this.toObject())
   }
 }
 

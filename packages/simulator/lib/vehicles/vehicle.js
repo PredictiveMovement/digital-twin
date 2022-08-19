@@ -17,6 +17,15 @@ class Vehicle extends EventEmitter {
     capacity = 250,
     weight = 10000,
     fleet,
+
+    /*
+     * CO2
+     *
+     * https://www.naturvardsverket.se/data-och-statistik/klimat/vaxthusgaser-utslapp-fran-inrikes-transporter/
+     * https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
+     *
+     * TODO: Move the co2 things to its own file.
+     */
     co2PerKmKg = 0.013 / 1000,
   } = {}) {
     super()
@@ -31,6 +40,7 @@ class Vehicle extends EventEmitter {
     this.weight = weight // http://www.lastbilsteori.se/lastvikt.html
     this.costPerHour = 3000 / 12 // ?
     this.co2 = 0
+    this.distance = 0
     this.status = status
     this.lastPositions = []
     this.fleet = fleet
@@ -150,7 +160,6 @@ class Vehicle extends EventEmitter {
   }
 
   dropOff() {
-    //finfo(`Dropoff ${this.booking.id}`)
     if (this.booking) {
       this.busy = false
       // delete this.cargo[this.cargo.findIndex(b => b.id === this.booking.id)]
@@ -204,6 +213,8 @@ class Vehicle extends EventEmitter {
 
   async updatePosition(position, date = this.time()) {
     const lastPosition = this.position || position
+    const timeDiff = date - this.lastPositionUpdate
+
     const metersMoved =
       (this.route &&
         this.lastPositionUpdate &&
@@ -214,10 +225,16 @@ class Vehicle extends EventEmitter {
       metersMoved / 1000,
       (date - this.lastPositionUpdate) / 1000 / 60 / 60,
     ]
-    // https://www.naturvardsverket.se/data-och-statistik/klimat/vaxthusgaser-utslapp-fran-inrikes-transporter/
-    // https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
-    const co2 = (this.weight + this.cargoWeight()) * km * this.co2PerKmKg
-    this.co2 += co2
+
+    const co2 = this.updateCarbonDioxide(km)
+
+    // TODO: Find which kommun the vehicle is moving in now and add the co2 for this position change to that kommun
+
+    /*
+     * Distance traveled.
+     */
+    this.distance += km
+
     this.speed = Math.round(km / h || 0)
     this.position = position
     this.lastPositionUpdate = date
@@ -227,12 +244,14 @@ class Vehicle extends EventEmitter {
       this.lastPositions.push({ ...position, date })
       this.emit('moved', this)
 
+      // NOTE: cargo is passengers or packages.
       this.cargo.map((booking) => {
         booking.moved(
           this.position,
           metersMoved,
-          co2 / (this.cargo.length + 1),
-          (h * this.costPerHour) / (this.cargo.length + 1)
+          co2 / (this.cargo.length + 1), // TODO: Why do we do +1 here?
+          (h * this.costPerHour) / (this.cargo.length + 1),
+          timeDiff
         )
       })
     }
@@ -244,6 +263,28 @@ class Vehicle extends EventEmitter {
         if (this.status === 'Delivery') this.dropOff()
       }
     }
+  }
+
+  /**
+   * Add carbon dioxide emissions to this vehicle according to the distance traveled.
+   * @param {number} Distance The distance traveled in km
+   * @returns {number} The amount of carbon dioxide emitted
+   */
+  updateCarbonDioxide(distance) {
+    let co2
+
+    switch (this.vehicleType) {
+      case 'bus':
+      case 'car':
+      case 'taxi':
+        co2 = distance * this.co2PerKmKg
+        break
+      default:
+        co2 = (this.weight + this.cargoWeight()) * distance * this.co2PerKmKg
+    }
+
+    this.co2 += co2
+    return co2
   }
 }
 

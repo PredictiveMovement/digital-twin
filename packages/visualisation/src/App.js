@@ -62,15 +62,15 @@ const App = () => {
 
   useEffect(() => {
     socket.emit('carLayer', activeLayers.carLayer)
-  }, [activeLayers.carLayer])
+  }, [activeLayers.carLayer, socket])
 
   useEffect(() => {
     socket.emit('taxiUpdatesToggle', activeLayers.taxiLayer)
-  }, [activeLayers.taxiLayer])
+  }, [activeLayers.taxiLayer, socket])
 
   useEffect(() => {
     socket.emit('busUpdatesToggle', activeLayers.busLayer)
-  }, [activeLayers.busLayer])
+  }, [activeLayers.busLayer, socket])
 
   useSocket('reset', () => {
     console.log('received reset')
@@ -107,6 +107,8 @@ const App = () => {
       ...newCars.map(
         ({
           id,
+          co2,
+          distance,
           heading,
           bearing,
           position,
@@ -118,6 +120,8 @@ const App = () => {
           vehicleType,
         }) => ({
           id,
+          co2,
+          distance,
           heading,
           bearing,
           position,
@@ -214,23 +218,40 @@ const App = () => {
     setNewParameters(currentParameters)
   })
   const [passengers, setPassengers] = React.useState([])
-  useSocket('passenger', ({ name, position, id, inCar }) => {
-    setPassengers((currentPassengers) =>
-      upsert(
-        currentPassengers,
-        {
-          id,
-          name,
-          position: [position.lon, position.lat].map((s) => parseFloat(s)),
-          inCar,
-        },
-        'id'
+  useSocket(
+    'passenger',
+    ({
+      id,
+      co2,
+      distance,
+      inVehicle,
+      journeys,
+      moveTime,
+      name,
+      position,
+      waitTime,
+    }) => {
+      setPassengers((currentPassengers) =>
+        upsert(
+          currentPassengers,
+          {
+            id,
+            co2,
+            distance,
+            inVehicle,
+            journeys,
+            moveTime,
+            name,
+            position: [position.lon, position.lat].map((s) => parseFloat(s)),
+            waitTime,
+          },
+          'id'
+        )
       )
-    )
-  })
+    }
+  )
   const [taxis, setTaxis] = React.useState([])
   useSocket('taxi', ({ name, position, id }) => {
-    console.log({ name, position, id })
     setTaxis((currenttaxis) =>
       upsert(
         currenttaxis,

@@ -59,6 +59,7 @@ const cleanCars = ({
   capacity,
   queue,
   co2,
+  distance,
   lineNumber,
   vehicleType,
 }) => ({
@@ -70,6 +71,7 @@ const cleanCars = ({
   status,
   fleet: fleet?.name || 'Privat',
   co2,
+  distance,
   cargo: cargo.length,
   queue: queue.length,
   capacity,
@@ -134,7 +136,7 @@ function register(io) {
     )
 
     experiment.kommuner
-      .pipe(map(({ id, name, geometry }) => ({ id, name, geometry })))
+      .pipe(map(({ id, name, geometry, co2 }) => ({ id, name, geometry, co2 })))
       .subscribe((kommun) => socket.emit('kommun', kommun))
 
     experiment.dispatchedBookings
@@ -150,19 +152,17 @@ function register(io) {
     })
     experiment.passengers.subscribe((passengers) => {
       console.log('sending', passengers.length, 'passengers')
-      return passengers.map(({ id, position, name }) =>
-        socket.emit('passenger', { id, position, name })
+      return passengers.map((passenger) =>
+          socket.emit('passenger', passenger)
       )
     })
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
-      // console.log({ lat, lon }, 'position for', id)
       socket.emit('taxi', { id, position: [lon, lat] })
     })
   })
-  experiment.passengerUpdates.subscribe(({ position, id, name }) => {
-    if (position) {
-      console.log({ id, position })
-      io.emit('passenger', { id, position, name })
+  experiment.passengerUpdates.subscribe((passenger) => {
+    if (passenger.position) {
+      io.emit('passenger', passenger)
     }
   })
   experiment.bookingUpdates
@@ -181,19 +181,12 @@ function register(io) {
           mergeMap((cars) => cars.pipe(last())) // take the last update in this window
         )
       ),
-      map(cleanCars)
+      map(cleanCars),
+      bufferTime(100, null, 100)
     )
-    .subscribe((car) => {
-      if (!car) return
-      if (car.vehicleType === 'bus') {
-        if (emitBusUpdates) io.emit('cars', [car])
-        return
-      } else if (car.vehicleType === 'taxi') {
-        if (emitTaxiUpdates) io.emit('cars', [car])
-        return
-      } else if (emitCars) {
-        return io.emit('cars', [car])
-      }
+    .subscribe((cars) => {
+      if (!cars.length) return
+      io.emit('cars', cars)
     })
 
   setInterval(() => {
@@ -202,7 +195,7 @@ function register(io) {
 
   experiment.kommuner
     .pipe(
-      mergeMap(({ id, dispatchedBookings, name, cars }) => {
+      mergeMap(({ id, dispatchedBookings, name, cars, co2 }) => {
         const totalBookings = dispatchedBookings.pipe(
           scan((a) => a + 1, 0),
           startWith(0)
@@ -248,7 +241,7 @@ function register(io) {
             totalQueued,
             averageUtilization: totalCargo / totalCapacity,
             averageQueued: totalQueued / totalCapacity,
-            totalCo2,
+            totalCo2: co2,
           })),
           startWith({
             totalCargo: 0,

@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: vroom
+  namespace: vroom
 spec:
   ports:
     - port: 3000
@@ -13,6 +14,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: vroom
+  namespace: vroom
 spec:
   selector:
     matchLabels:
@@ -27,7 +29,13 @@ spec:
           image: vroomvrp/vroom-docker:v1.11.0
           ports:
             - containerPort: 3000
-          resources: {}
+          resources:
+            requests:
+              cpu: "0.3"
+              memory: "512Mi"
+            limits:
+              cpu: "1.5"
+              memory: "2Gi"
           env:
             - name: VROOM_ROUTER
               value: osrm
@@ -49,16 +57,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: vroom-ingress
+  namespace: vroom
   annotations:
-    kubernetes.io/ingress.class: "public"
+    kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   tls:
     - hosts:
-        - vroom.predictivemovement.se
+        - vroom.iteam.services
       secretName: vroom-prod-tls
   rules:
-    - host: vroom.predictivemovement.se
+    - host: vroom.iteam.services
       http:
         paths:
           - path: /
@@ -73,6 +82,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: vroom
+  namespace: vroom
 data:
   config.yml: |-
     cliArgs:
@@ -94,14 +104,14 @@ data:
     routingServers:
       osrm:
         car:
-          host: 'osrm'
-          port: '80'
+          host: 'osrm.osrm.svc.cluster.local'
+          port: '5000'
         bike:
-          host: 'osrm'
-          port: '80'
+          host: 'osrm.osrm.svc.cluster.local'
+          port: '5000'
         foot:
-          host: 'osrm'
-          port: '80'
+          host: 'osrm.osrm.svc.cluster.local'
+          port: '5000'
       ors:
         driving-car:
           host: '0.0.0.0'

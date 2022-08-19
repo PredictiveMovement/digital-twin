@@ -64,6 +64,8 @@ class Kommun {
     this.privateCars = new ReplaySubject()
     this.busCount = busCount
 
+    this.co2 = 0
+
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
 
     this.cars = merge(

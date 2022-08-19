@@ -1,7 +1,9 @@
 const fetch = require('node-fetch')
 const polyline = require('polyline')
 const osrmUrl =
-  process.env.OSRM_URL || 'https://osrm.iteamdev.io' || 'http://localhost:5000'
+  process.env.OSRM_URL ||
+  'https://osrm.iteam.services' ||
+  'http://localhost:5000'
 
 const decodePolyline = function (geometry) {
   return polyline.decode(geometry).map((point) => ({
