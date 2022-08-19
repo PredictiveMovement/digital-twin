@@ -3,6 +3,7 @@ const {
   tap,
   take,
   filter,
+  map,
   mergeMap,
   mergeAll,
   concatMap,
@@ -19,6 +20,8 @@ const { safeId } = require('../lib/id')
 const Passenger = require('../lib/models/passenger')
 const personNames = require('../lib/personNames')
 const { virtualTime } = require('./../lib/virtualTime')
+const { post } = require('request')
+const { randomize } = require('./address')
 
 const polarbrödÄlvsByn = {
   lat: 65.669641,
@@ -42,31 +45,54 @@ const randomPositions = perlin
 
 const generatePassengers = (kommuner) =>
   kommuner.pipe(
-    mergeMap(({ squares }) =>
-      squares.pipe(
+    mergeMap(({ squares, postombud, name }) => {
+      return squares.pipe(
         mergeMap(({ population, position }) =>
           randomPositions
             .slice(0, population)
             .map(({ x, y }) => addMeters(position, { x, y }))
         ),
-        concatMap((position) =>
-          pelias
-            .nearest(position)
-            .then(createPassengerFromAddress)
-            .catch((_) => null)
-        ),
-        filter((p) => p !== null)
+        mergeMap( (homePosition) => {
+          return postombud.pipe(
+            toArray(),
+            mergeMap(async (all_postombud) => {
+              const randomPostombud =
+                all_postombud[Math.floor(Math.random() * all_postombud.length)]
+              const workPosition = await randomize(randomPostombud.position)
+              return { homePosition, workPosition }
+            })
+          )
+        }, 20),
+        concatMap(async ({ homePosition, workPosition }) => {
+          try {
+            const home = await pelias.nearest(homePosition)
+            return { home, workPosition }
+          } catch (e) {
+            return null
+          }
+        }),
+        filter((p) => p),
+        concatMap(async ({ home, workPosition }) => {
+          try {
+            const work = await pelias.nearest(workPosition)
+            return { home, work }
+          } catch (e) {
+            return null
+          }
+        }),
+        filter((p) => p),
+        map(createPassengerFromAddress)
       )
-    ),
-
+    }),
     take(100),
     shareReplay(), // ShareReplay needed to keep ID's and names consistent between console and visualisation
     toArray()
   )
-const createPassengerFromAddress = async ({ position }) => {
-  const hemma = { name: 'Hemma', ...position}
-  // Everyone goes to and from work, between 5am and 10am and returns between 3pm and 8pm.
-  // TODO: Also, everyone works at Polarbröd in Älvsbyn
+const createPassengerFromAddress = ({ home, work }) => {
+  console.log("createPassengerFromAddress")
+  const residence = { name: `${home.name}, ${home.localadmin}`, ...home.position}
+  const workplace = { name: `${work.name}, ${work.localadmin}`, ...work.position}
+
   const offset = virtualTime.offset // Sim starts at an offset from midnight, so we need to subctract that offset from the time
   const fiveAm  = (5 * 60 * 60) - offset
   const tenAm   = (10 * 60 * 60) - offset
@@ -76,11 +102,11 @@ const createPassengerFromAddress = async ({ position }) => {
 
   return new Passenger({
     journeys: [
-      { id: safeId(), pickup: hemma, destination: polarbrödÄlvsByn, timeWindow: [[fiveAm, tenAm]], status: 'Väntar' },
-      { id: safeId(), pickup: polarbrödÄlvsByn, destination: hemma, timeWindow: [[threePm, eightPm]], status: 'Väntar' },
+      { id: safeId(), pickup: residence, destination: workplace, timeWindow: [[fiveAm, tenAm]], status: 'Väntar' },
+      { id: safeId(), pickup: workplace, destination: residence, timeWindow: [[threePm, eightPm]], status: 'Väntar' },
     ],
     id: safeId(),
-    position: position,
+    position: home.position,
     name: name,
   })
 }
