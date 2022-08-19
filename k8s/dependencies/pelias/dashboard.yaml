@@ -43,12 +43,6 @@ spec:
             - name: ES_ENDPOINT
               value: http://elasticsearch:9200/
           resources:
-<<<<<<< HEAD
-=======
-            limits:
-              memory: 0.2Gi
-              cpu: "0.25"
->>>>>>> 8749782 (feat: add dependencies - osrm, vroom, pelias, to stack)
             requests:
               memory: 0.2Gi
               cpu: "0.01"

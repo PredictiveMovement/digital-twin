@@ -50,17 +50,8 @@ spec:
             - name: data-volume
               mountPath: /data
           resources:
-<<<<<<< HEAD
             requests:
               memory: "100Mi"
-=======
-            limits:
-              memory: 1Gi
-              cpu: "1.1"
-              ephemeral-storage: 5Gi
-            requests:
-              memory: 100Mi
->>>>>>> 8749782 (feat: add dependencies - osrm, vroom, pelias, to stack)
               cpu: "0.2"
               ephemeral-storage: 5Gi
       containers:
@@ -75,13 +66,6 @@ spec:
             - name: CPUS
               value: "1"
           resources:
-<<<<<<< HEAD
-=======
-            limits:
-              memory: 1Gi
-              cpu: "2"
-              ephemeral-storage: 5Gi
->>>>>>> 8749782 (feat: add dependencies - osrm, vroom, pelias, to stack)
             requests:
               memory: "512Mi"
               cpu: "0.1"

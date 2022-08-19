@@ -36,17 +36,12 @@ spec:
             - name: data-volume
               mountPath: /data
           resources:
-<<<<<<< HEAD
-            requests:
-              memory: "512Mi"
-=======
             limits:
               memory: 3Gi
               cpu: "2"
               ephemeral-storage: 5Gi
             requests:
               memory: 512Mi
->>>>>>> 8749782 (feat: add dependencies - osrm, vroom, pelias, to stack)
               cpu: "0.1"
               ephemeral-storage: 5Gi
       containers:
@@ -61,13 +56,6 @@ spec:
             - name: PELIAS_CONFIG
               value: "/etc/config/pelias.json"
           resources:
-<<<<<<< HEAD
-=======
-            limits:
-              memory: 2Gi
-              cpu: "1"
-              ephemeral-storage: 5Gi
->>>>>>> 8749782 (feat: add dependencies - osrm, vroom, pelias, to stack)
             requests:
               memory: "0.5Gi"
               cpu: "0.1"
