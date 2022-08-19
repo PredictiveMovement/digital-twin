@@ -1,4 +1,4 @@
-const elastic = require('elasticsearch')
+const elastic = require('@elastic/elasticsearch')
 const mappings = require('../data/elasticsearch_mappings.json')
 
 const host = process.env.ELASTICSEARCH
