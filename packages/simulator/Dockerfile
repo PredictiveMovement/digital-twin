@@ -7,6 +7,6 @@ RUN npm ci
 COPY . .
 
 ENV ELASTICSEARCH $ELASTICSEARCH
-
+RUN npm run preboot
 EXPOSE 4000
 CMD npm start

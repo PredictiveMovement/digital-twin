@@ -20,14 +20,20 @@ if (!host) {
 const client = new elastic.Client({ node: host, log: 'error' })
 
 const createIndices = () => Promise.all(
-  Object.keys(mappings).map((index) =>
-    client.indices
+  Object.keys(mappings).map((index) => {
+    return client.indices
       .create({
         index,
         body: mappings[index],
       })
       .catch((err) => {
-        if (JSON.parse(err.response)?.error?.type === 'resource_already_exists_exception') {
+        let errorType
+        try {
+          errorType = JSON.parse(err.response)?.error?.type
+        } catch (e) {
+          console.error(">>>= Cannot create indices, Malformed Elasticsearch Error", e, err)
+        }
+        if (errorType === 'resource_already_exists_exception') {
           console.log(`
             Index ${index} already mapped.
             If you want to re-map it:
@@ -36,10 +42,13 @@ const createIndices = () => Promise.all(
             - Recreate "index pattern" in kibana.
           `)
         } else {
-          console.error("OTHER ERRROR", JSON.stringify(err))
+          console.error(
+            '>>>= Cannot create indices, Unkown Elasticsearch Error',
+            err
+          )
         }
       })
-  )
+    })
 )
 
 const save = (booking, indexName) => {

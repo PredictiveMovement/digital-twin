@@ -9,10 +9,6 @@ const regions = require('./streams/regions')(kommuner)
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
 const statistics = require('./lib/statistics')
-const elastic = require('./lib/elastic')
-elastic.createIndices()
-
-
 
 const engine = {
   experiments: [],
