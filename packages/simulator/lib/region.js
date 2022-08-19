@@ -21,6 +21,7 @@ const {
   take,
   count,
   filter,
+  switchMap,
   bufferCount,
 } = require('rxjs/operators')
 const Bus = require('./vehicles/bus')
@@ -51,30 +52,25 @@ const populateBusesStream = (kommuner) => {
   return buses
 }
 
-const getFirstAndLastStopTimeInTrip = () =>
+const groupStopsByKommun = (kommuner) =>
   pipe(
-    mergeMap((stopTimes) =>
-      stopTimes.pipe(
+    mergeMap((stopsInTrip) => {
+      const s = stopsInTrip.pipe(shareReplay())
+      return s.pipe(
         first(),
-        mergeMap((first) => stopTimes.pipe(last(), startWith(first))),
-        toArray()
+        mergeMap((firstStop) =>
+          kommuner.pipe(
+            filter(({ geometry }) =>
+              isInsideCoordinates(firstStop.position, geometry.coordinates)
+            ),
+            map(({ name }) => ({
+              stops: s.pipe(tap()),
+              kommun: name,
+            }))
+          )
+        )
       )
-    )
-  )
-const groupFirstLastStopsByKommun = (kommuner) =>
-  pipe(
-    mergeMap(([firstStop, lastStop]) =>
-      kommuner.pipe(
-        filter(({ geometry }) =>
-          isInsideCoordinates(firstStop.position, geometry.coordinates)
-        ),
-        map(({ name }) => ({
-          first: firstStop,
-          last: lastStop,
-          kommun: name,
-        }))
-      )
-    ),
+    }),
     groupBy(({ kommun }) => kommun)
   )
 
@@ -103,25 +99,25 @@ class Region {
     stopTimes
       .pipe(
         groupBy(({ tripId }) => tripId),
-        getFirstAndLastStopTimeInTrip(),
-        groupFirstLastStopsByKommun(kommuner),
-        map((firstLastStop) => {
-          const kommunName = firstLastStop.key
+        groupStopsByKommun(kommuner),
+        map((stopsTimes) => {
+          const kommunName = stopsTimes.key
           return {
             buses: this.buses.pipe(filter((bus) => bus.kommun === kommunName)),
-            stops: firstLastStop,
+            firstLastStop: stopsTimes.pipe(
+              mergeMap(({ stops }) => stops.pipe(toArray()))
+            ),
           }
         })
       )
-      .subscribe(({ buses, stops }) =>
-        busDispatch(buses, stops).subscribe((resultBuses) => {
-          return resultBuses.map(({ bus, steps }) => {
-            const bookings = pairwise(steps).map(stepsToBooking)
-            return bookings.map((booking) => {
-              return bus.handleBooking(booking)
-            })
-          })
-        })
+      .subscribe(({ buses, firstLastStop }) =>
+        busDispatch(buses, firstLastStop).subscribe((resultBuses) =>
+          resultBuses.map(({ bus, steps }) =>
+            pairwise(steps)
+              .map(stepsToBooking)
+              .map((booking) => bus.handleBooking(booking))
+          )
+        )
       )
 
     taxiDispatch(this.taxis, passengers).subscribe((e) => {
@@ -129,31 +125,16 @@ class Region {
     })
   }
 }
-const stepsToBooking = ([first, last]) => {
-  return new Booking({
-    pickup: stepToBookingEntity(first),
-    destination: stepToBookingEntity(last),
-    lineNumber: first.stop?.first.lineNumber
-      ? first.stop.first.lineNumber
-      : last.stop?.last.lineNumber,
+const stepsToBooking = ([pickup, dropoff]) =>
+  new Booking({
+    pickup: pickup,
+    destination: dropoff,
+    lineNumber: pickup.lineNumber ? pickup.lineNumber : dropoff.lineNumber,
   })
-}
-
-const stepToBookingEntity = ({
-  waiting_time,
-  arrival: departureTime,
-  location: [lon, lat],
-}) => ({
-  departureTime: moment((departureTime + waiting_time) * 1000).format(
-    'HH:mm:ss'
-  ),
-  position: { lat, lon },
-})
 
 const pairwise = (arr) =>
   arr
     .reduce((acc, curr, i) => {
-      // Pairwise
       if (i === 0) {
         acc[i] = [curr]
         return acc
@@ -165,6 +146,7 @@ const pairwise = (arr) =>
       }
     }, [])
     .filter((e) => e.length == 2)
+
 const createTaxi = ({ position }) => new Taxi({ id: safeId(), position })
 
 const createBus = (

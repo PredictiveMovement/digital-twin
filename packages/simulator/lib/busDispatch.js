@@ -14,19 +14,19 @@ const { plan } = require('./vroom')
 const correctTime = (time) => time.replace(/^24:/, '00:')
 
 const stopToShipment = (
-  {
-    first: {
+  [
+    {
       tripId, //: '252500000000000101',
       arrivalTime: pickupArrivalTime, //: '17:33:49',
       departureTime: pickupDepartureTime, //: '17:33:49',
       position: pickupPosition,
     },
-    last: {
+    {
       arrivalTime: deliveryArrivalTime, //: '17:33:49',
       departureTime: deliveryDepartureTime, //: '17:33:49',
       position: deliveryPosition,
     },
-  },
+  ],
   i
 ) => ({
   id: i,
@@ -67,42 +67,71 @@ const busToVehicle = ({ id, position, capacity, heading }, i) => ({
 })
 
 const busDispatch = (buses, stops) =>
-  // console.log(
-  //   'PLAN PLEASE',
-  //   JSON.stringify(passengers.map(passengerToShipment), null, 2)
-  // )
   stops.pipe(
     toArray(),
-    mergeMap((stops) =>
+    mergeMap((stopsArray) =>
       buses.pipe(
         toArray(),
         mergeMap(async (buses) => {
+          const firstAndLasts = stopsArray.map((trip) => [
+            trip[0],
+            trip[trip.length - 1],
+          ])
+          const stopsByTripMap = stopsArray.reduce((acc, curr) => {
+            acc[curr[0].tripId] = curr
+            return acc
+          }, {})
+
           console.log(
             'calling vroom with',
             buses.length,
             'buses',
-            stops.length,
+            firstAndLasts.length,
             'stops'
           )
+
           const result = await plan({
-            shipments: stops.map(stopToShipment).slice(0, 100),
+            shipments: firstAndLasts.map(stopToShipment).slice(0, 100),
             vehicles: buses.map(busToVehicle),
           })
 
-          return result.routes.map((route, index) => ({
-            bus: buses[index],
-            steps: route.steps.map((step) => {
-              if (step.id !== undefined) {
-                step.stop = stops[step.id]
-                step.id = stops[step.id].id
-              }
-              return step
-            }),
-          }))
+          return result.routes.map((route, index) => {
+            const toFirstStop = stepToBookingEntity(route.steps[0])
+            const toHub = stepToBookingEntity(
+              route.steps[route.steps.length - 1]
+            )
+
+            let tripIds = route.steps
+              .map((step) => {
+                if (step.id !== undefined) {
+                  return stopsArray[step.id][0].tripId
+                }
+              })
+              .filter((e) => e)
+            tripIds = [...new Set(tripIds)]
+            return {
+              bus: buses[index],
+              steps: [toFirstStop].concat(
+                tripIds.flatMap((tripId) => stopsByTripMap[tripId]),
+                [toHub]
+              ),
+            }
+          })
         })
       )
     )
   )
+const stepToBookingEntity = ({
+  waiting_time,
+  arrival: departureTime,
+  location: [lon, lat],
+}) => ({
+  departureTime: moment((departureTime + waiting_time) * 1000).format(
+    'HH:mm:ss'
+  ),
+  arrivalTime: moment((departureTime + waiting_time) * 1000).format('HH:mm:ss'),
+  position: { lat, lon },
+})
 module.exports = {
   busDispatch,
 }
