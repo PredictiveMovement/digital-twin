@@ -17,10 +17,11 @@ build:
       docker:
         buildArgs:
           REACT_APP_MAPBOX_ACCESS_TOKEN: "{{.REACT_APP_MAPBOX_ACCESS_TOKEN}}" # these needs to be set at build time
-          REACT_APP_SIMULATOR_URL: "/" 
+          REACT_APP_SIMULATOR_URL: "/"
 deploy:
   kubectl:
     manifests:
+      - k8s/dependencies/kibana/*.yaml
       - k8s/dependencies/pelias/*.yaml
       - k8s/dependencies/osrm/*.yaml
       - k8s/dependencies/vroom/*.yaml
