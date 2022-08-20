@@ -1,27 +1,35 @@
-# A Digital Twin for transport systems in Sweden
+# A Digital Twin for transport systems
 
 ## Background
 
-This system is trying to replicate the transport system in Sweden with as much accuracy as possible without revealing any personal or commercial data. By taking publicly available datapoints regarding amount of packet deliveries, population within 1km2 square areas together with guestimates on market shares for transport actors we can create synthetic data streams which we than can visualize on a map.
+This is a digital twin (agent based model) to both visualise transport data and generate new synthetic data which can be used to perform virtual experiments on transport optimizations such as systems level optimisation, drone deliveries, dynamic routes in public transport, co2 calculations, electric car adaption scenario planning etc.
 
-The main reason for doing this research is to limit the risk when experimenting with optimization on a systems level. For example
+## Goals
 
-- in Predictive Movement we believe we can reduce the energy consumption and limit the stress on the roads dramatically by optimizing the utilization on a systems level within a area/municipality(kommun). By first simulating the current state and the applying these optimizations we can measure the difference and see how much impact we can have.
+These are the goals for the project:
 
-## Current state / limitations
+1. Increase mobility in rural areas
+2. Decrease the energy consumption in transport systems
+3. Lower the cost for experimenting with new innovations
+4. Reduce the dependencies on foreign and properiatary infrastructure
+5. Privacy - by keeping all data locally and limit the amount of personal data stored
 
-This is currently an early version of the simulation. There are quite a few areas of improvement and hopefully we or someone else can contribute to applying all of these areas:
+## Stack and dependencies
 
-- [ ] Multiple handovers - a packet will arrive to Sweden from the borders and then be delivered within certain internal processes within each fleet. This can be visualized. Right now they just "appear" magically in the kommun.
-- [ ] Home delivery - We haven't implemented private citizen cars yet. This can be done but needs a bit of performance analysis to not exhaust our servers capacity. We think we can generate these cars dynamically when you zoom above a certain level.
-- [ ] Individual booking statistics - We believe we can show statistics for each packet/booking to visualize bottlenecks that can be optimized from a bookings perspective
-- [ ] Fleet intelligence - we are right now dispatching bookings with a very unsmart algorighm - always take the closest available car - this is not matching reality in each case. We want to tweak these more - but not too much - we know there are room for improvement even for fleets. Especially smaller fleets.
-- [ ] More data points - we know there are datasets available that can improve our estimates. For example from Trafikverket.
-- [ ] Machine Learning - we believe we can improve our current hard coded estimates on volumes, traffic, amount of cars etc based on real world data. To exchange these values on certain dates/times we can improve our model significantly. 
+This project relies heavily on a set of open source softwares to solve particular problems. Included in the `skaffold.yaml` you will find all of these dependencies set up for you. To use the stack you need a  Kubernetes cluster and run `skaffold run` which will install all dependencies for you.
+
+1. Pelias - a geocoder/reverse geocoder software based on Elasticsearch. Used for getting proper addresses. Imports data from Lantmäteriet, this can be changed to any csv format.
+2. OSRM - a routing software to find best routes and drive duration on the road network between two geopoints. Imports sweden data.
+3. Vroom - a vehicle routing engine. By using OSRM as underlying routing engine and optimize a set of vehicles and shipments we can pick the plan that is most optimized for either duration or distance.
+4. Open Trip Planner - Finding the fastest route between two points in the public transport network. Imports GTFS data from 
+5. Elasticsearch / Kibana - This is used to gather realtime statistics.
+6. Opentiles - Self hosted tiles server to provide 3d vector maps.
+
+/ TODO: Merge all Elasticsearch instances to one and also all OSM data to one source /
 
 ## How to contribute
 
-This code is released as open source - which means you can create your own copy of this to use within your own fleet if you want to. You can also contribute by sending Pull Requests or issues to us and we will review them and merge them. If you want to receive a closed source license, please contact Christian Landgren at Iteam.
+This code is released as open source - which means you can create your own copy of this to use within your own fleet if you want to. You can also contribute by sending Pull Requests or issues to us and we will review and merge them. If you want to receive a closed source license, please contact Christian Landgren at Iteam.
 
 ### How to run
 
