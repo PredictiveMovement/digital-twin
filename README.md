@@ -4,6 +4,11 @@
 
 This is a digital twin (agent based model) to both visualise transport data and generate new synthetic data which can be used to perform virtual experiments on transport optimizations such as systems level optimisation, drone deliveries, dynamic routes in public transport, co2 calculations, electric car adaption scenario planning etc.
 
+## Screenshot
+
+<img width="1198" alt="image" src="https://user-images.githubusercontent.com/395843/185745414-f05228a5-d03c-4745-9281-de0fdee414c2.png">
+
+
 ## Goals
 
 These are the goals for the project:
