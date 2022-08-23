@@ -23,7 +23,7 @@ const Bus = require('./vehicles/bus')
 const Taxi = require('./vehicles/taxi')
 const { randomize } = require('../simulator/address')
 const { safeId } = require('./id')
-const dynamicRatio = 0.5
+const dynamicRatio = 0.2
 // expand fleets so that a fleet with marketshare 12% has 12 cars to choose from
 const expandFleets = () => (fleets) =>
   fleets.pipe(
