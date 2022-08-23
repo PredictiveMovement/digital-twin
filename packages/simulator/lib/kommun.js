@@ -22,6 +22,7 @@ const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
 const Taxi = require('./vehicles/taxi')
 const { randomize } = require('../simulator/address')
+const { safeId } = require('./id')
 const dynamicRatio = 0.5
 // expand fleets so that a fleet with marketshare 12% has 12 cars to choose from
 const expandFleets = () => (fleets) =>
@@ -80,7 +81,9 @@ class Kommun {
     this.taxis = range(0, nrOfTaxis).pipe(
       mergeMap(() => Promise.all([randomize(center), randomize(center)]), 5),
       // wander around until a booking comes along
-      map(([position, heading]) => new Taxi({ position, heading }))
+      map(
+        ([position, heading]) => new Taxi({ id: safeId(), position, heading })
+      )
     )
 
     this.buses = range(0, busCount - nrOfTaxis).pipe(

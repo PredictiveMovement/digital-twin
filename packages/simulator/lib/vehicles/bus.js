@@ -52,14 +52,15 @@ class Bus extends Vehicle {
       .subscribe(() => {})
   }
 
-  handleBooking(booking) {
+  async handleBooking(booking) {
     if (!this.busy) {
       this.busy = true
       this.emit('busy', this)
       this.booking = booking
       booking.assigned(this)
       this.status = 'Pickup'
-      this.navigateTo(booking.destination.position)
+      await this.navigateTo(booking.destination.position)
+      this.emit('moved', this)
     } else {
       this.queue.push(booking)
       booking.queued(this)

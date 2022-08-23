@@ -1,4 +1,11 @@
-const { pipe, from, shareReplay, Subject, mergeMap } = require('rxjs')
+const {
+  pipe,
+  from,
+  shareReplay,
+  Subject,
+  mergeMap,
+  ReplaySubject,
+} = require('rxjs')
 const {
   map,
   last,
@@ -8,6 +15,9 @@ const {
   filter,
   pairwise,
   mergeAll,
+  share,
+  toArray,
+  bufferCount,
 } = require('rxjs/operators')
 const Booking = require('./models/booking')
 const { busDispatch } = require('./busDispatch')
@@ -17,33 +27,23 @@ const { isInsideCoordinates } = require('../lib/polygon')
 const getTripsPerKommun = (kommuner) => (stopTimes) =>
   stopTimes.pipe(
     groupBy(({ tripId }) => tripId),
-    mergeMap((group) => {
-      return group.pipe(
-        shareReplay(),
-        first(null, null), // get the first stop in the trip and return null if there are no stops in this kommun
-        filter((d) => d), // filter out all empty trips directly
-        mergeMap((firstStop) =>
-          kommuner.pipe(
-            filter(({ geometry }) =>
-              isInsideCoordinates(firstStop.position, geometry.coordinates)
-            ),
-            map(({ name }) => ({
-              tripId: firstStop?.tripId,
-              stops: group,
-              firstStop,
-              kommun: name,
-            })),
-            mergeMap((trip) =>
-              group.pipe(
-                last(null, null),
-                map((lastStop) => ({ ...trip, lastStop }))
-              )
-            )
-          )
-        )
+    mergeMap((s) => s.pipe(toArray())),
+    mergeMap((stops) => {
+      const firstStop = stops[0]
+      const lastStop = stops[stops.length - 1]
+      return kommuner.pipe(
+        filter(({ geometry }) =>
+          isInsideCoordinates(firstStop.position, geometry.coordinates)
+        ),
+        map(({ name }) => ({
+          tripId: firstStop.tripId,
+          stops,
+          firstStop,
+          lastStop,
+          kommun: name,
+        }))
       )
     }),
-    filter(({ firstStop, lastStop }) => firstStop && lastStop), // remove all kommuns without stops
     groupBy(({ kommun }) => kommun),
     map((trips) => ({
       kommunName: trips.key,
@@ -88,20 +88,20 @@ class Region {
         buses: this.buses.pipe(filter((bus) => bus.kommun === kommunName)),
         trips,
       })),
-      filter(({ buses, trips }) => buses.length && trips.length),
       mergeMap(({ buses, trips }) => busDispatch(buses, trips)),
       mergeMap(({ bus, trips }) =>
         from(trips).pipe(
-          mergeMap((trip) => trip.stops),
+          mergeMap((trip) => from(trip.stops)),
           pairwise(),
           map(stopsToBooking),
           map((booking) => ({ bus, booking }))
         )
-      ),
-      mergeAll()
+      )
     )
 
-    stopAssignments.subscribe(({ bus, booking }) => bus.handleBooking(booking))
+    stopAssignments
+      .pipe(mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5))
+      .subscribe(() => console.log('bus assigned to booking'))
 
     taxiDispatch(this.taxis, passengers).subscribe((e) => {
       e.map(({ taxi, steps }) => steps.map((step) => taxi.addInstruction(step)))
