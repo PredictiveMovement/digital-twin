@@ -42,11 +42,13 @@ function interpolatePositionFromRoute(route, time) {
   return interpolatedPosition
 }
 
+const speedFactor = 1.2 // apply this to all speeds
+
 function extractPoints(route) {
   const annotation = route.legs
     .map((leg) => leg.annotation)
     .reduce((a, b) => ({
-      duration: a.duration.concat(b.duration),
+      duration: a.duration.concat(b.duration) / speedFactor,
       distance: b.distance.concat(b.distance),
     }))
   // destination is the last step, will not have an annotation

@@ -36,6 +36,7 @@ const busToVehicle = ({ id, position, capacity, heading }, i) => ({
   description: id,
   capacity: [capacity],
   start: [position.lon, position.lat],
+  speed_factor: 1.2,
   end: heading ? [heading.lon, heading.lat] : undefined,
 })
 
