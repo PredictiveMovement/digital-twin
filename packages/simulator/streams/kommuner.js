@@ -76,8 +76,9 @@ function read() {
         kod,
         pickupPositions,
         fleets,
-      }) =>
-        new Kommun({
+      }) => {
+        const squares = getPopulationSquares({ geometry })
+        return new Kommun({
           geometry,
           name: namn,
           id: kod,
@@ -87,12 +88,15 @@ function read() {
           fleets: fleets || [],
           center: await Pelias.search(namn).then((res) => res.position),
           pickupPositions: pickupPositions || [],
-          squares: getPopulationSquares({ geometry }),
+          squares,
           postombud: getPostombud(namn),
+          population: await squares
+            .pipe(reduce((a, b) => a + b.population, 0))
+            .toPromise(),
           packageVolumes: packageVolumes.find((e) => namn.startsWith(e.name)),
           commercialAreas: getCommercialAreas(kod),
-          busCount: 25,
         })
+      }
     ),
 
     shareReplay()

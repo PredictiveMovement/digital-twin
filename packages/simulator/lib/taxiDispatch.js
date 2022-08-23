@@ -51,7 +51,7 @@ const taxiDispatch = (taxis, passengers) =>
           //   JSON.stringify(passengersToShipments(passengers), null, 2)
           // )
           const [shipments, jobMap] = passengersToShipments(passengers)
-          console.log('calling vroom')
+          console.log('calling vroom for taxi')
           const result = await plan({
             shipments: shipments,
             vehicles: taxis.map(taxiToVehicle),

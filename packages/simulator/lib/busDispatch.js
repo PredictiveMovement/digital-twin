@@ -4,9 +4,12 @@ const {
   groupBy,
   mergeAll,
   filter,
+  take,
+  takeLast,
 } = require('rxjs/operators')
 const moment = require('moment')
 const { plan } = require('./vroom')
+const { from } = require('rxjs')
 
 const correctTime = (time) => time.replace(/^24:/, '00:')
 const unix = (str) => moment(correctTime(str), 'HH:mm:ss').unix()
@@ -51,44 +54,32 @@ const busToVehicle = ({ id, position, capacity, heading }, i) => ({
  * @returns { assigned, unassigned}
  */
 
-const busDispatch = (buses, trips) =>
-  trips.pipe(
-    toArray(),
-    filter((trips) => trips.length),
-    mergeMap((trips) =>
-      buses.pipe(
-        toArray(),
-        mergeMap(async (buses) => {
-          const shipments = trips.map(tripToShipment)
+const busDispatch = async (buses, trips) => {
+  const shipments = trips.map(tripToShipment)
 
-          console.log(
-            'calling vroom with',
-            buses.length,
-            'buses',
-            shipments.length,
-            'trips'
-          )
-
-          const result = await plan({
-            shipments: shipments,
-            vehicles: buses.map(busToVehicle),
-          })
-
-          return result.routes.map((route) => ({
-            bus: buses.find(({ id }) => id === route.description),
-            trips: route.steps
-              .filter((s) => s.type === 'pickup')
-              .map((step) => trips[step.id]),
-          }))
-
-          const unassigned = result.unassigned
-            .filter((s) => s.type === 'pickup')
-            .map((step) => trips[step.id])
-        })
-      )
-    ),
-    mergeAll()
+  console.log(
+    'calling vroom with',
+    buses.length,
+    'buses',
+    shipments.length,
+    'trips'
   )
+
+  const result = await plan({
+    shipments: shipments,
+    vehicles: buses.map(busToVehicle),
+  })
+
+  return result.routes.map((route) => ({
+    bus: buses.find(({ id }) => id === route.description),
+    trips: route.steps
+      .filter((s) => s.type === 'pickup')
+      .map((step) => trips[step.id]),
+  }))
+  const unassigned = result.unassigned
+    .filter((s) => s.type === 'pickup')
+    .map((step) => trips[step.id])
+}
 
 module.exports = {
   busDispatch,

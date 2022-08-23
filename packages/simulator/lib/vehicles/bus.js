@@ -77,9 +77,13 @@ class Bus extends Vehicle {
       return
     }
 
+    this.lineNumber = this.booking.lineNumber
+      ? this.booking.lineNumber
+      : this.lineNumber
+
     console.log(
       'bus',
-      this.id,
+      this.lineNumber,
       'at stop.',
       'time:',
       moment(virtualTime.time()).format('HH:mm'),
@@ -91,9 +95,6 @@ class Bus extends Vehicle {
       'stops left'
     )
 
-    this.lineNumber = this.booking.lineNumber
-      ? this.booking.lineNumber
-      : this.lineNumber
     this.booking.pickedUp(this.position)
     this.cargo.push(this.booking)
 

@@ -48,6 +48,8 @@ class Kommun {
     center,
     telephone,
     postombud,
+    population,
+    busesPerCapita,
     squares,
     fleets,
     busCount,
@@ -63,9 +65,10 @@ class Kommun {
     this.postombud = postombud
     this.packageVolumes = packageVolumes
     this.unhandledBookings = new Subject()
-    this.population = this.squares.pipe(reduce((a, b) => a + b.population, 0))
+    this.busesPerCapita = busesPerCapita || 50 / 80_000
+    this.population = population
     this.privateCars = new ReplaySubject()
-    this.busCount = busCount
+    this.busCount = Math.round(this.population * this.busesPerCapita)
 
     this.co2 = 0
 
@@ -76,7 +79,7 @@ class Kommun {
       this.fleets.pipe(mergeMap((fleet) => fleet.cars))
     ).pipe(shareReplay())
 
-    const nrOfTaxis = Math.floor(dynamicRatio * busCount)
+    const nrOfTaxis = Math.floor(dynamicRatio * this.busCount)
 
     this.taxis = range(0, nrOfTaxis).pipe(
       mergeMap(() => Promise.all([randomize(center), randomize(center)]), 5),
@@ -86,7 +89,7 @@ class Kommun {
       )
     )
 
-    this.buses = range(0, busCount - nrOfTaxis).pipe(
+    this.buses = range(0, this.busCount - nrOfTaxis).pipe(
       mergeMap(() => randomize(center), 10), // TODO: make bus depos to a fixed position in each kommun
       map((position) => ({
         position,

@@ -88,8 +88,26 @@ class Region {
         buses: this.buses.pipe(filter((bus) => bus.kommun === kommunName)),
         trips,
       })),
-      mergeMap(({ buses, trips }) => busDispatch(buses, trips), 1), // try to find optimal plan x kommun at a time
-      //       mergeMap(({ assigned, unassigned }) => from(assigned)), // TODO: What to do with the unassigned trips? Retry? https://www.learnrxjs.io/learn-rxjs/operators/error_handling/retry
+      mergeMap(({ buses, trips }) =>
+        buses.pipe(
+          toArray(),
+          map((buses) => ({
+            buses,
+            trips,
+          }))
+        )
+      ),
+      mergeMap(({ buses, trips }) =>
+        trips.pipe(
+          toArray(),
+          map((trips) => ({
+            buses,
+            trips,
+          }))
+        )
+      ),
+      mergeMap(({ buses, trips }) => busDispatch(buses, trips), 3), // try to find optimal plan x kommun at a time
+      mergeAll(),
       mergeMap(({ bus, trips }) =>
         from(trips).pipe(
           mergeMap((trip) => from(trip.stops)),
@@ -102,7 +120,7 @@ class Region {
 
     stopAssignments
       .pipe(mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5))
-      .subscribe()
+      .subscribe(() => {})
 
     taxiDispatch(this.taxis, passengers).subscribe((e) => {
       e.map(({ taxi, steps }) => steps.map((step) => taxi.addInstruction(step)))

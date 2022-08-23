@@ -15,8 +15,9 @@ module.exports = {
         shipments,
         vehicles,
       }),
-    }).then((res) => res.json())
-    if (result.error) throw new Error(result.error)
+    })
+      .then((res) => (!res.ok ? Promise.reject(res.text()) : res))
+      .then((res) => res.json())
     console.log(
       'Results from vroom, computing_times:',
       result.summary.computing_times,
