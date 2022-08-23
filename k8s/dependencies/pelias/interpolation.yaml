@@ -36,8 +36,12 @@ spec:
             - name: data-volume
               mountPath: /data
           resources:
+            limits:
+              memory: 3Gi
+              cpu: "2"
+              ephemeral-storage: 5Gi
             requests:
-              memory: "512Mi"
+              memory: 512Mi
               cpu: "0.1"
               ephemeral-storage: 5Gi
       containers:
