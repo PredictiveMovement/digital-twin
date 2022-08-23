@@ -5,9 +5,14 @@ const moment = require('moment')
 class VirtualTime extends EventEmitter {
   constructor(timeMultiplier = 1, startHour = 4) {
     super()
-    this.startDate = Date.now()
+    this.startHour = startHour
     this.setTimeMultiplier(timeMultiplier)
-    this.offset = moment().startOf('day').add(startHour, 'hours').diff()
+    this.reset()
+  }
+
+  reset() {
+    this.startDate = Date.now()
+    this.offset = moment().startOf('day').add(this.startHour, 'hours').diff()
   }
 
   time() {

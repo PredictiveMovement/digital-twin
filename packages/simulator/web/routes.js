@@ -80,7 +80,7 @@ const cleanCars = ({
 })
 
 function register(io) {
-  const experiment = engine.createExperiment() // move this to a start event
+  let experiment = engine.createExperiment() // move this to a start event
 
   let emitCars = true
   let emitTaxiUpdates = true
@@ -91,7 +91,8 @@ function register(io) {
     socket.emit('parameters', experiment.parameters)
 
     socket.on('reset', () => {
-      process.kill(process.pid, 'SIGUSR2')
+      experiment = engine.createExperiment()
+      virtualTime.reset()
     })
 
     socket.on('play', () => {
