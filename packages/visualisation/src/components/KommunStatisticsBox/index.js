@@ -41,7 +41,9 @@ const KommunStatisticsBox = ({ name, co2 }) => {
           <Paragraph black>xxxx personer</Paragraph>
         </Grid>
         <Grid>
-          <ParagraphBold black>CO2</ParagraphBold>
+          <ParagraphBold black>
+            CO<sub>2</sub>
+          </ParagraphBold>
           <Paragraph black>{co2} kg</Paragraph>
         </Grid>
         <Grid>

@@ -4,6 +4,12 @@ metadata:
   name: pm-digital-twin
 build:
   artifacts:
+    - image: iteam1337/otp-sweden
+      context: k8s/dependencies/opentripplanner
+      docker:
+        buildArgs:
+          apikey: "{{.TRAFIKLAB_KEY}}"
+          operator: norrbotten
     - image: iteam1337/pm-digital-twin-simulation-engine
       context: packages/simulator
     - image: iteam1337/pm-digital-twin-visualisation
@@ -11,13 +17,15 @@ build:
       docker:
         buildArgs:
           REACT_APP_MAPBOX_ACCESS_TOKEN: "{{.REACT_APP_MAPBOX_ACCESS_TOKEN}}" # these needs to be set at build time
-          REACT_APP_SIMULATOR_URL: "/" 
+          REACT_APP_SIMULATOR_URL: "/"
 deploy:
   kubectl:
     manifests:
+      - k8s/dependencies/kibana/*.yaml
       - k8s/dependencies/pelias/*.yaml
       - k8s/dependencies/osrm/*.yaml
       - k8s/dependencies/vroom/*.yaml
+      - k8s/dependencies/opentripplanner/*.yaml
   kustomize:
     paths:
       - k8s/base

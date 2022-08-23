@@ -84,7 +84,7 @@ function register(io) {
 
   let emitCars = true
   let emitTaxiUpdates = true
-  let emitBusUpdates = true
+  let emitBusUpdates = false
 
   io.on('connection', function (socket) {
     socket.emit('reset')
@@ -128,9 +128,11 @@ function register(io) {
     experiment.postombud.pipe(toArray()).subscribe((postombud) => {
       socket.emit('postombud', postombud)
     })
+
     experiment.busStops.subscribe((busStops) =>
       socket.emit('busStops', busStops)
     )
+
     experiment.lineShapes.subscribe((lineShapes) =>
       socket.emit('lineShapes', lineShapes)
     )
@@ -148,21 +150,21 @@ function register(io) {
       })
     experiment.passengers.subscribe((passengers) => {
       console.log('sending', passengers.length, 'passengers')
-      return passengers.map(({ id, position, name, inVehicle, journeys }) =>
-        socket.emit('passenger', { id, position, name, inVehicle, journeys })
-      )
+      return passengers.map((passenger) => {
+        socket.emit('passenger', passenger.toObject())
+      })
     })
+
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
       socket.emit('taxi', { id, position: [lon, lat] })
     })
   })
-  experiment.passengerUpdates.subscribe(
-    ({ position, id, name, inVehicle, journeys }) => {
-      if (position) {
-        io.emit('passenger', { id, position, name, inVehicle, journeys })
-      }
+
+  experiment.passengerUpdates.subscribe((passenger) => {
+    if (passenger.position) {
+      io.emit('passenger', passenger)
     }
-  )
+  })
   experiment.bookingUpdates
     .pipe(cleanBookings(), bufferTime(100, null, 1000))
     .subscribe((bookings) => {
@@ -170,7 +172,8 @@ function register(io) {
         io.emit('bookings', bookings)
       }
     })
-  experiment.carUpdates
+
+  const emitOnlyCars = experiment.carUpdates
     .pipe(
       windowTime(100), // start a window every x ms
       mergeMap((win) =>
@@ -179,19 +182,19 @@ function register(io) {
           mergeMap((cars) => cars.pipe(last())) // take the last update in this window
         )
       ),
-      map(cleanCars)
+      filter((car) => {
+        if (!car) return false
+        if (car.vehicleType === 'bus' && !emitBusUpdates) return false
+        if (car.vehicleType === 'taxi' && !emitTaxiUpdates) return false
+        if (car.vehicleType === 'car' && !emitCars) return false
+        return true
+      }),
+      map(cleanCars),
+      bufferTime(100, null, 100)
     )
-    .subscribe((car) => {
-      if (!car) return
-      if (car.vehicleType === 'bus') {
-        if (emitBusUpdates) io.emit('cars', [car])
-        return
-      } else if (car.vehicleType === 'taxi') {
-        if (emitTaxiUpdates) io.emit('cars', [car])
-        return
-      } else if (emitCars) {
-        return io.emit('cars', [car])
-      }
+    .subscribe((cars) => {
+      if (!cars.length) return
+      io.emit('cars', cars)
     })
 
   setInterval(() => {
