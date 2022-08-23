@@ -1,4 +1,13 @@
-const { from, filter, share, merge, fromEvent, of, concatMap, shareReplay } = require('rxjs')
+const {
+  from,
+  filter,
+  share,
+  merge,
+  fromEvent,
+  of,
+  concatMap,
+  shareReplay,
+} = require('rxjs')
 const { mergeMap } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
@@ -9,6 +18,11 @@ const regions = require('./streams/regions')(kommuner)
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
 const statistics = require('./lib/statistics')
+
+const static = {
+  busStops: regions.pipe(mergeMap((region) => region.stops)),
+  lineShapes: regions.pipe(mergeMap((region) => region.lineShapes)),
+}
 
 const engine = {
   experiments: [],
@@ -23,35 +37,37 @@ const engine = {
     }
     statistics.collectExperimentMetadata(parameters)
 
-    const experiment = {
-      virtualTime, // TODO: move this from being a static property to being a property of the experiment
-      cars: kommuner.pipe(mergeMap((kommun) => kommun.cars)),
-      dispatchedBookings: kommuner.pipe(mergeMap((k) => k.dispatchedBookings)),
-      buses: regions.pipe(mergeMap((region) => region.buses)),
-      busStops: regions.pipe(mergeMap((region) => region.stops)),
-      lineShapes: regions.pipe(mergeMap((region) => region.lineShapes)),
-      postombud,
-      kommuner,
-      parameters,
-      passengers: regions.pipe(mergeMap((region) => region.passengers)),
-      taxis: regions.pipe(mergeMap((region) => region.taxis)),
-    }
+    const experiment = Object.assign(
+      {
+        virtualTime, // TODO: move this from being a static property to being a property of the experiment
+        cars: kommuner.pipe(mergeMap((kommun) => kommun.cars)),
+        dispatchedBookings: kommuner.pipe(
+          mergeMap((k) => k.dispatchedBookings)
+        ),
+        buses: regions.pipe(mergeMap((region) => region.buses)),
+        postombud,
+        kommuner,
+        parameters,
+        passengers: regions.pipe(mergeMap((region) => region.passengers)),
+        taxis: regions.pipe(mergeMap((region) => region.taxis)),
+      },
+      static
+    )
 
-    experiment.passengers.pipe(
-      mergeMap((passenger) => passenger),
-      concatMap(({journeys}) => from(journeys)),
-      mergeMap((journey) =>
-        fromEvent(journey, 'status')
-      ),
-      shareReplay(),
-    ).subscribe((journey) => {
-      delete(journey.passenger.journeys) // Avoid circular reference in serialization
-      statistics.collectJourney({
-        experimentSettings: parameters,
-        ...journey
+    experiment.passengers
+      .pipe(
+        mergeMap((passenger) => passenger),
+        concatMap(({ journeys }) => from(journeys)),
+        mergeMap((journey) => fromEvent(journey, 'status')),
+        shareReplay()
+      )
+      .subscribe((journey) => {
+        delete journey.passenger.journeys // Avoid circular reference in serialization
+        statistics.collectJourney({
+          experimentSettings: parameters,
+          ...journey,
+        })
       })
-    })
-
 
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(
       mergeMap((booking) =>
