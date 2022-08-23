@@ -88,7 +88,12 @@ class Kommun {
 
     this.buses = range(0, busCount - nrOfTaxis).pipe(
       mergeMap(() => randomize(center), 10), // TODO: make bus depos to a fixed position in each kommun
-      map((position) => ({ position, kommun: name, stops: from([]) })),
+      map((position) => ({
+        position,
+        heading: position,
+        kommun: name,
+        stops: from([]),
+      })),
       map((props) => new Bus(props))
     )
 

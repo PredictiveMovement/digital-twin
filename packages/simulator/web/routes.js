@@ -84,7 +84,7 @@ function register(io) {
 
   let emitCars = true
   let emitTaxiUpdates = true
-  let emitBusUpdates = false
+  let emitBusUpdates = true
 
   io.on('connection', function (socket) {
     socket.emit('reset')

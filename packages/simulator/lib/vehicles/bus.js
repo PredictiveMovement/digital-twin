@@ -77,6 +77,16 @@ class Bus extends Vehicle {
       return
     }
 
+    console.log(
+      'bus',
+      this.id,
+      'at stop.',
+      this.cargo.length,
+      'stops finished,',
+      this.queue.length,
+      'stops left'
+    )
+
     this.lineNumber = this.booking.lineNumber
       ? this.booking.lineNumber
       : this.lineNumber
@@ -84,6 +94,7 @@ class Bus extends Vehicle {
     this.cargo.push(this.booking)
 
     this.emit('cargo', this)
+    this.emit('moved', this)
     const departure = moment(
       this.booking.pickup.departureTime,
       'hh:mm:ss'

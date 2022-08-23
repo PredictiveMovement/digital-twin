@@ -19,7 +19,9 @@ module.exports = {
     if (result.error) throw new Error(result.error)
     console.log(
       'Results from vroom, computing_times:',
-      result.summary.computing_times
+      result.summary.computing_times,
+      'unassigned:',
+      result.unassigned
     )
     return result
   },

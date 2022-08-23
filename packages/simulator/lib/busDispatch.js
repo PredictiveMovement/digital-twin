@@ -1,4 +1,10 @@
-const { toArray, mergeMap, groupBy, mergeAll } = require('rxjs/operators')
+const {
+  toArray,
+  mergeMap,
+  groupBy,
+  mergeAll,
+  filter,
+} = require('rxjs/operators')
 const moment = require('moment')
 const { plan } = require('./vroom')
 
@@ -33,9 +39,21 @@ const busToVehicle = ({ id, position, capacity, heading }, i) => ({
   end: heading ? [heading.lon, heading.lat] : undefined,
 })
 
+/**
+ * Take two streams- buses and trips
+ * Pass them to VROOM and get back assignments:
+ *   Array of:
+ *     bus: Object(Bus)
+ *     trips: Array of trips including each stop
+ * @param {*} buses
+ * @param {*} trips
+ * @returns { assigned, unassigned}
+ */
+
 const busDispatch = (buses, trips) =>
   trips.pipe(
     toArray(),
+    filter((trips) => trips.length),
     mergeMap((trips) =>
       buses.pipe(
         toArray(),
@@ -61,6 +79,10 @@ const busDispatch = (buses, trips) =>
               .filter((s) => s.type === 'pickup')
               .map((step) => trips[step.id]),
           }))
+
+          const unassigned = result.unassigned
+            .filter((s) => s.type === 'pickup')
+            .map((step) => trips[step.id])
         })
       )
     ),
