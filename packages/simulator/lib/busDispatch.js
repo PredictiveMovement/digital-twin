@@ -1,137 +1,73 @@
-const {
-  bufferCount,
-  toArray,
-  map,
-  filter,
-  tap,
-  mergeMap,
-  take,
-  groupBy,
-} = require('rxjs/operators')
+const { toArray, mergeMap, groupBy, mergeAll } = require('rxjs/operators')
 const moment = require('moment')
 const { plan } = require('./vroom')
 
 const correctTime = (time) => time.replace(/^24:/, '00:')
+const unix = (str) => moment(correctTime(str), 'HH:mm:ss').unix()
 
-const stopToShipment = (
-  [
-    {
-      tripId, //: '252500000000000101',
-      arrivalTime: pickupArrivalTime, //: '17:33:49',
-      departureTime: pickupDepartureTime, //: '17:33:49',
-      position: pickupPosition,
-    },
-    {
-      arrivalTime: deliveryArrivalTime, //: '17:33:49',
-      departureTime: deliveryDepartureTime, //: '17:33:49',
-      position: deliveryPosition,
-    },
-  ],
-  i
-) => ({
+const tripToShipment = ({ tripId, firstStop, lastStop }, i) => ({
   id: i,
   description: tripId,
   amount: [1],
   pickup: {
     time_windows: [
-      [
-        moment(correctTime(pickupArrivalTime), 'HH:mm:ss').valueOf() / 1000,
-        moment(correctTime(pickupDepartureTime), 'HH:mm:ss').valueOf() / 1000 +
-          1,
-      ],
+      [unix(firstStop.arrivalTime), unix(firstStop.departureTime) + 1],
     ],
     id: i,
-
-    location: [pickupPosition.lon, pickupPosition.lat],
+    location: [firstStop.position.lon, firstStop.position.lat],
   },
   delivery: {
     id: i,
-    location: [deliveryPosition.lon, deliveryPosition.lat],
+    location: [lastStop.position.lon, lastStop.position.lat],
     time_windows: [
-      [
-        moment(correctTime(deliveryArrivalTime), 'HH:mm:ss').valueOf() / 1000,
-        moment(correctTime(deliveryDepartureTime), 'HH:mm:ss').valueOf() /
-          1000 +
-          1,
-      ],
+      [unix(lastStop.arrivalTime), unix(lastStop.departureTime) + 1],
     ],
   },
 })
 
-const busToVehicle = ({ id, position, capacity, heading }, i) => ({
+const busToVehicle = ({ id, position, capacity, heading, stops }, i) => ({
   id: i,
   description: id,
   capacity: [capacity],
   start: [position.lon, position.lat],
   end: heading ? [heading.lon, heading.lat] : undefined,
+  stops,
 })
 
-const busDispatch = (buses, stops) =>
-  stops.pipe(
+const busDispatch = (buses, trips) =>
+  trips.pipe(
     toArray(),
-    mergeMap((stopsArray) =>
+    mergeMap((trips) =>
       buses.pipe(
         toArray(),
         mergeMap(async (buses) => {
-          const firstAndLasts = stopsArray.map((trip) => [
-            trip[0],
-            trip[trip.length - 1],
-          ])
-          const stopsByTripMap = stopsArray.reduce((acc, curr) => {
-            acc[curr[0].tripId] = curr
-            return acc
-          }, {})
+          const shipments = trips.map(tripToShipment)
 
           console.log(
             'calling vroom with',
             buses.length,
             'buses',
-            firstAndLasts.length,
+            shipments.length,
             'trips'
           )
 
           const result = await plan({
-            shipments: firstAndLasts.map(stopToShipment).slice(0, 100),
+            shipments: shipments,
             vehicles: buses.map(busToVehicle),
           })
 
-          return result.routes.map((route, index) => {
-            const toFirstStop = stepToBookingEntity(route.steps[0])
-            const toHub = stepToBookingEntity(
-              route.steps[route.steps.length - 1]
-            )
-
-            let tripIds = route.steps
-              .map((step) => {
-                if (step.id !== undefined) {
-                  return stopsArray[step.id][0].tripId
-                }
-              })
-              .filter((e) => e)
-            tripIds = [...new Set(tripIds)]
-            return {
-              bus: buses[index],
-              steps: [toFirstStop].concat(
-                tripIds.flatMap((tripId) => stopsByTripMap[tripId]),
-                [toHub]
-              ),
-            }
-          })
+          return result.routes.map((route) => ({
+            bus: buses.find(({ id }) => id === route.description),
+            trips: route.steps
+              .filter((s) => s.type === 'pickup')
+              .map((step) => trips[step.id]),
+          }))
         })
       )
-    )
+    ),
+    mergeAll()
   )
-const stepToBookingEntity = ({
-  waiting_time,
-  arrival: departureTime,
-  location: [lon, lat],
-}) => ({
-  departureTime: moment((departureTime + waiting_time) * 1000).format(
-    'HH:mm:ss'
-  ),
-  arrivalTime: moment((departureTime + waiting_time) * 1000).format('HH:mm:ss'),
-  position: { lat, lon },
-})
+
 module.exports = {
   busDispatch,
 }

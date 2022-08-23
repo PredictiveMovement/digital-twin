@@ -64,7 +64,7 @@ const cleanCars = ({
   vehicleType,
 }) => ({
   id,
-  heading: [heading.lon, heading.lat], // contains route to plot or interpolate on client side.
+  heading: (heading && [heading.lon, heading.lat]) || null, // contains route to plot or interpolate on client side.
   speed,
   bearing,
   position: [lon, lat, altitude || 0],
@@ -128,9 +128,11 @@ function register(io) {
     experiment.postombud.pipe(toArray()).subscribe((postombud) => {
       socket.emit('postombud', postombud)
     })
+
     experiment.busStops.subscribe((busStops) =>
       socket.emit('busStops', busStops)
     )
+
     experiment.lineShapes.subscribe((lineShapes) =>
       socket.emit('lineShapes', lineShapes)
     )
@@ -152,14 +154,16 @@ function register(io) {
     })
     experiment.passengers.subscribe((passengers) => {
       console.log('sending', passengers.length, 'passengers')
-      return passengers.map((passenger) =>
-          socket.emit('passenger', passenger)
-      )
+      return passengers.map((passenger) => {
+        socket.emit('passenger', passenger.toObject())
+      })
     })
+
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
       socket.emit('taxi', { id, position: [lon, lat] })
     })
   })
+
   experiment.passengerUpdates.subscribe((passenger) => {
     if (passenger.position) {
       io.emit('passenger', passenger)

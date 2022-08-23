@@ -4,8 +4,9 @@ kind: Kustomization
 
 # list of Resource Config to be Applied
 resources:
-  - simulator.yaml
-  - visualisation.yaml
+  - osrm.yaml
+  - vroom.yaml
+  - pelias/*.yaml
 
 # namespace to deploy all Resources to
-namespace: rorla-stage
+#namespace: predictivemovement

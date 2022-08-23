@@ -10,24 +10,14 @@ const {
   toArray,
   shareReplay,
 } = require('rxjs/operators')
-const { timer, bufferTime, windowTime } = require('rxjs')
-const moment = require('moment')
 const perlin = require('perlin-noise')
 
 const pelias = require('../lib/pelias')
 const { addMeters } = require('../lib/distance')
-const { safeId } = require('../lib/id')
 const Passenger = require('../lib/models/passenger')
 const personNames = require('../lib/personNames')
 const { virtualTime } = require('./../lib/virtualTime')
-const { post } = require('request')
 const { randomize } = require('./address')
-
-const polarbrödÄlvsByn = {
-  lat: 65.669641,
-  lon: 20.975453,
-  name: 'Polarbröd Älvsbyn',
-}
 
 const names = personNames.read()
 
@@ -89,7 +79,6 @@ const generatePassengers = (kommuner) =>
     toArray()
   )
 const createPassengerFromAddress = ({ home, work }) => {
-  console.log('createPassengerFromAddress')
   const residence = {
     name: `${home.name}, ${home.localadmin}`,
     ...home.position,
@@ -109,21 +98,16 @@ const createPassengerFromAddress = ({ home, work }) => {
   return new Passenger({
     journeys: [
       {
-        id: safeId(),
         pickup: residence,
         destination: workplace,
         timeWindow: [[fiveAm, tenAm]],
-        status: 'Väntar',
       },
       {
-        id: safeId(),
         pickup: workplace,
         destination: residence,
         timeWindow: [[threePm, eightPm]],
-        status: 'Väntar',
       },
     ],
-    id: safeId(),
     position: home.position,
     name: name,
   })

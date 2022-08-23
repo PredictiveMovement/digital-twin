@@ -11,18 +11,18 @@ const {
 } = require('rxjs')
 const {
   map,
-  tap,
-  filter,
   catchError,
   toArray,
-  first,
   reduce,
   mapTo,
   groupBy,
 } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
-
+const Bus = require('./vehicles/bus')
+const Taxi = require('./vehicles/taxi')
+const { randomize } = require('../simulator/address')
+const dynamicRatio = 0.5
 // expand fleets so that a fleet with marketshare 12% has 12 cars to choose from
 const expandFleets = () => (fleets) =>
   fleets.pipe(
@@ -44,6 +44,7 @@ class Kommun {
     packageVolumes,
     email,
     zip,
+    center,
     telephone,
     postombud,
     squares,
@@ -56,6 +57,7 @@ class Kommun {
     this.id = id
     this.email = email
     this.zip = zip
+    this.center = center
     this.telephone = telephone
     this.postombud = postombud
     this.packageVolumes = packageVolumes
@@ -72,6 +74,20 @@ class Kommun {
       this.privateCars,
       this.fleets.pipe(mergeMap((fleet) => fleet.cars))
     ).pipe(shareReplay())
+
+    const nrOfTaxis = Math.floor(dynamicRatio * busCount)
+
+    this.taxis = range(0, nrOfTaxis).pipe(
+      mergeMap(() => Promise.all([randomize(center), randomize(center)]), 5),
+      // wander around until a booking comes along
+      map(([position, heading]) => new Taxi({ position, heading }))
+    )
+
+    this.buses = range(0, busCount - nrOfTaxis).pipe(
+      mergeMap(() => randomize(center), 10), // TODO: make bus depos to a fixed position in each kommun
+      map((position) => ({ position, kommun: name, stops: from([]) })),
+      map((props) => new Bus(props))
+    )
 
     this.dispatchedBookings = this.fleets.pipe(
       mergeMap((fleet) => fleet.dispatchedBookings),
