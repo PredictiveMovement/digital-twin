@@ -72,7 +72,7 @@ const ProgressBar = ({ time }) => {
   const totalMinutes =
     new Date(time).getHours() * 60 + new Date(time).getMinutes()
 
-  const completed = (totalMinutes / 1440) * 100
+  const completed = ((totalMinutes - 5 * 60) / 1440) * 100
 
   return (
     <Wrapper completed={completed}>

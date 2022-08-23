@@ -33,8 +33,8 @@ const Wrapper = styled.div`
 const CarInfo = ({ data }) => {
   const label =
     data.vehicleType === 'taxi' || data.vehicleType === 'bus'
-      ? 'Passagerare'
-      : 'Paket'
+      ? 'passagerare'
+      : 'paket'
   return (
     <Wrapper left={data.x - 8} top={data.y - 80}>
       <div>
@@ -82,7 +82,7 @@ const PassengerInfo = ({ data }) => {
           </Paragraph>
         ))}
       <Paragraph>
-        CO<sub>2</sub>: {Math.ceil(10 * data.co2 / 10) || 0} kg
+        CO<sub>2</sub>: {Math.ceil((10 * data.co2) / 10) || 0} kg
       </Paragraph>
       <Paragraph>Distans: {Math.ceil(data.distance / 1000) || 0} km</Paragraph>
       <Paragraph>
