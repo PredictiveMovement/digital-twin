@@ -70,7 +70,7 @@ class Vehicle extends EventEmitter {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
       const newPosition = interpolate.route(route, this.time()) ?? this.heading
       this.updatePosition(newPosition)
-    }, Math.random() * 200)
+    }, 200)
   }
 
   navigateTo(position) {
