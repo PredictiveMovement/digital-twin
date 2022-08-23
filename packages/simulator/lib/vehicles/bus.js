@@ -81,6 +81,10 @@ class Bus extends Vehicle {
       'bus',
       this.id,
       'at stop.',
+      'time:',
+      moment(virtualTime.time()).format('HH:mm'),
+      'should be:',
+      this.booking.pickup.arrivalTime,
       this.cargo.length,
       'stops finished,',
       this.queue.length,
@@ -94,7 +98,6 @@ class Bus extends Vehicle {
     this.cargo.push(this.booking)
 
     this.emit('cargo', this)
-    this.emit('moved', this)
     const departure = moment(
       this.booking.pickup.departureTime,
       'hh:mm:ss'
