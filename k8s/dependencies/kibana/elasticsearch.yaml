@@ -120,10 +120,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - kibana-es-stage.iteam.services
+        - kibana-es-stage.predictivemovement.se
       secretName: predictivemovement-kibana-es-prod-tls
   rules:
-    - host: kibana-es-stage.iteam.services
+    - host: kibana-es-stage.predictivemovement.se
       http:
         paths:
           - path: /
