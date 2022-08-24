@@ -10,7 +10,6 @@ import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
 import { ParagraphLarge } from './components/Typography'
 
-import CommercialAreas from './data/commercial_areas.json'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 import TimeProgressBar from './components/TimeProgressBar'
 import Button from './components/Button'
@@ -21,17 +20,6 @@ import HoverInfoBox from './components/HoverInfoBox'
 mapboxgl.workerClass =
   // eslint-disable-next-line import/no-webpack-loader-syntax
   require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default
-
-const commercialAreasLayer = new GeoJsonLayer({
-  id: 'commercial-areas',
-  data: CommercialAreas,
-  stroked: true,
-  filled: false,
-  extruded: false,
-  wireframe: false,
-  lineJointRounded: true,
-  getLineColor: [0, 128, 255],
-})
 
 const transitionInterpolator = new LinearInterpolator(['bearing'])
 
@@ -357,11 +345,12 @@ const Map = ({
     filled: true,
     radiusScale: 6,
     radiusUnits: 'pixels',
-    getPosition: ({position}) => {
+    getPosition: ({ position }) => {
       return position
     },
     //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
-    getFillColor: ({ inVehicle }) => (inVehicle ? [0, 0, 0, 0] : [0, 128, 255, 170]),
+    getFillColor: ({ inVehicle }) =>
+      inVehicle ? [0, 0, 0, 0] : [0, 128, 255, 170],
 
     pickable: true,
     onHover: ({ object, x, y }) => {
@@ -541,7 +530,6 @@ const Map = ({
       layers={[
         // The order of these layers matter, roughly equal to increasing z-index by 1
         activeLayers.kommunLayer && kommunLayer, // TODO: This hides some items behind it, sort of
-        activeLayers.commercialAreasLayer && commercialAreasLayer,
         activeLayers.postombudLayer && hubLayer,
         bookingLayer,
         showArcLayer && arcLayer,
