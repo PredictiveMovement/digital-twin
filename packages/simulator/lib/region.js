@@ -109,9 +109,8 @@ class Region {
       filter(({ buses, trips }) => buses.length && trips.length),
       mergeMap(({ buses, trips }) => busDispatch(buses, trips), 3), // try to find optimal plan x kommun at a time
       mergeAll(),
-      mergeMap(({ bus, trips }) =>
-        from(trips).pipe(
-          mergeMap((trip) => from(trip.stops)),
+      mergeMap(({ bus, stops }) =>
+        from(stops).pipe(
           pairwise(),
           map(stopsToBooking),
           map((booking) => ({ bus, booking }))

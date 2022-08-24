@@ -71,16 +71,36 @@ const busDispatch = async (buses, trips) => {
     vehicles: vehicles,
   })
 
-  return result.routes.map((route) => ({
-    bus: buses.find(({ id }) => id === route.description),
-    trips: route.steps
-      .filter((s) => s.type === 'pickup')
-      .map((step) => trips[step.id]),
-  }))
+  return result.routes.map((route) => {
+    const toFirstStop = stepToBookingEntity(route.steps[0])
+    const toHub = stepToBookingEntity(route.steps[route.steps.length - 1])
+
+    return {
+      bus: buses.find(({ id }) => id === route.description),
+      stops: [toFirstStop].concat(
+        route.steps
+          .filter((s) => s.type === 'pickup')
+          .flatMap((step) => trips[step.id].stops),
+        [toHub]
+      ),
+    }
+  })
   const unassigned = result.unassigned
     .filter((s) => s.type === 'pickup')
     .map((step) => trips[step.id])
 }
+
+const stepToBookingEntity = ({
+  waiting_time,
+  arrival: departureTime,
+  location: [lon, lat],
+}) => ({
+  departureTime: moment((departureTime + waiting_time) * 1000).format(
+    'HH:mm:ss'
+  ),
+  arrivalTime: moment((departureTime + waiting_time) * 1000).format('HH:mm:ss'),
+  position: { lat, lon },
+})
 
 module.exports = {
   busDispatch,
