@@ -37,6 +37,8 @@ spec:
           env:
             - name: VROOM_URL
               value: https://vroom.predictivemovement.se
+            - name: ELASTICSEARCH_URL
+              value: http://elasticsearch:9200
           volumeMounts:
             - name: cache
               mountPath: /app/.cache

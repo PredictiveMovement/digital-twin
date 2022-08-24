@@ -1,7 +1,7 @@
 const elastic = require('@elastic/elasticsearch')
 const mappings = require('../data/elasticsearch_mappings.json')
 
-const host = process.env.ELASTICSEARCH
+const host = process.env.ELASTICSEARCH_URL || 'http://localhost:9200'
 
 if (!host) {
   console.log('No elasticsearch url provided, skipping statistics collection')
