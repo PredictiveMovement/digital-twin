@@ -11,18 +11,19 @@ const {
 } = require('rxjs')
 const {
   map,
-  tap,
-  filter,
   catchError,
   toArray,
-  first,
   reduce,
   mapTo,
   groupBy,
 } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
-
+const Bus = require('./vehicles/bus')
+const Taxi = require('./vehicles/taxi')
+const { randomize } = require('../simulator/address')
+const { safeId } = require('./id')
+const dynamicRatio = 0.2
 // expand fleets so that a fleet with marketshare 12% has 12 cars to choose from
 const expandFleets = () => (fleets) =>
   fleets.pipe(
@@ -44,10 +45,14 @@ class Kommun {
     packageVolumes,
     email,
     zip,
+    center,
     telephone,
     postombud,
+    population,
+    busesPerCapita,
     squares,
     fleets,
+    busCount,
   }) {
     this.squares = squares
     this.geometry = geometry
@@ -55,12 +60,16 @@ class Kommun {
     this.id = id
     this.email = email
     this.zip = zip
+    this.center = center
     this.telephone = telephone
     this.postombud = postombud
     this.packageVolumes = packageVolumes
     this.unhandledBookings = new Subject()
-    this.population = this.squares.pipe(reduce((a, b) => a + b.population, 0))
+    this.busesPerCapita = 100 / 80_000
+    this.population = population
     this.privateCars = new ReplaySubject()
+    this.busCount =
+      busCount || Math.max(5, Math.round(this.population * this.busesPerCapita))
 
     this.co2 = 0
 
@@ -70,6 +79,26 @@ class Kommun {
       this.privateCars,
       this.fleets.pipe(mergeMap((fleet) => fleet.cars))
     ).pipe(shareReplay())
+
+    const nrOfTaxis = Math.floor(dynamicRatio * this.busCount)
+
+    this.taxis = range(0, nrOfTaxis).pipe(
+      mergeMap(() => Promise.all([randomize(center), randomize(center)]), 5),
+      // wander around until a booking comes along
+      map(
+        ([position, heading]) => new Taxi({ id: safeId(), position, heading })
+      )
+    )
+
+    this.buses = range(0, this.busCount - nrOfTaxis).pipe(
+      map(() => ({
+        position: center,
+        heading: center,
+        kommun: name,
+        stops: from([]),
+      })),
+      map((props) => new Bus(props))
+    )
 
     this.dispatchedBookings = this.fleets.pipe(
       mergeMap((fleet) => fleet.dispatchedBookings),
