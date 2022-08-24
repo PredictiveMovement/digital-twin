@@ -106,6 +106,7 @@ class Region {
           }))
         )
       ),
+      filter(({ buses, trips }) => buses.length && trips.length),
       mergeMap(({ buses, trips }) => busDispatch(buses, trips), 3), // try to find optimal plan x kommun at a time
       mergeAll(),
       mergeMap(({ bus, trips }) =>
