@@ -4,7 +4,7 @@ metadata:
   name: osrm
   namespace: osrm
 spec:
-  replicas: 3
+  replicas: 5
   selector:
     matchLabels:
       app: osrm
@@ -15,31 +15,39 @@ spec:
         app: osrm
     spec:
       containers:
-        - image: iteam1337/osrm-sweden:latest
+        - image: osrm/osrm-backend:v5.25.0
           name: osrm
           command: ["/bin/sh"]
           args:
             - -c
-            - osrm-routed --algorithm mld --max-table-size 10000 /data/sweden-latest.osrm
+            - |
+              apt-get update && apt-get install -y --no-install-recommends wget tar && \
+              wget --no-check-certificate --debug "${DOWNLOAD_URL}" -O /data/sweden-latest.osm.pbf && \
+              rm -rf /var/lib/apt/lists/* && \
+              osrm-extract -p /opt/car.lua /data/sweden-latest.osm.pbf && \
+              osrm-partition /data/sweden-latest.osrm && \
+              osrm-customize /data/sweden-latest.osrm && \
+              osrm-routed --algorithm mld --max-table-size 10000 /data/sweden-latest.osrm
           env:
             - name: DOWNLOAD_URL
               value: https://download.geofabrik.de/europe/sweden-latest.osm.pbf
-          resources:
-            requests:
-              cpu: "0.3"
-              memory: "512Mi"
+
           ports:
             - containerPort: 5000
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /nearest/v1/driving/21.033499654770427,64.74958466530941
-              port: 5000
-          readinessProbe:
-            initialDelaySeconds: 100
-            httpGet:
-              path: /nearest/v1/driving/21.033499654770427,64.74958466530941
-              port: 5000
+          volumeMounts:
+            - name: osrm-data
+              mountPath: "/data"
+  volumeClaimTemplates:
+    - metadata:
+        name: osrm-data
+      spec:
+        storageClassName: local-path
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: "10Gi"
 ---
 apiVersion: v1
 kind: Service
