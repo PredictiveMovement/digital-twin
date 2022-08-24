@@ -21,10 +21,10 @@ build:
 deploy:
   kubectl:
     manifests:
-      - k8s/dependencies/kibana/*.yaml
-      - k8s/dependencies/pelias/*.yaml
-      - k8s/dependencies/osrm/*.yaml
-      - k8s/dependencies/vroom/*.yaml
+      # - k8s/dependencies/kibana/*.yaml
+      # - k8s/dependencies/pelias/*.yaml
+      # - k8s/dependencies/osrm/*.yaml
+      # - k8s/dependencies/vroom/*.yaml
       # - k8s/dependencies/opentripplanner/*.yaml
   kustomize:
     paths:
