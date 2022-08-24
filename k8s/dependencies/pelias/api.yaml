@@ -78,10 +78,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - pelias.iteam.services
+        - pelias.predictivemovement.se
       secretName: pelias-prod-tls
   rules:
-    - host: pelias.iteam.services
+    - host: pelias.predictivemovement.se
       http:
         paths:
           - path: /

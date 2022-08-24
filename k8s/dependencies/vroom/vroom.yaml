@@ -64,10 +64,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - vroom.iteam.services
+        - vroom.predictivemovement.se
       secretName: vroom-prod-tls
   rules:
-    - host: vroom.iteam.services
+    - host: vroom.predictivemovement.se
       http:
         paths:
           - path: /

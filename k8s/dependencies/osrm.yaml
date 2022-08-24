@@ -76,10 +76,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - osrm.iteam.services
+        - osrm.predictivemovement.se
       secretName: osrm-prod-tls
   rules:
-    - host: osrm.iteam.services
+    - host: osrm.predictivemovement.se
       http:
         paths:
           - path: /
