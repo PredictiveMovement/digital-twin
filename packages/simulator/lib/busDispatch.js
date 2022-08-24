@@ -57,9 +57,11 @@ const busToVehicle = ({ id, position, capacity, heading }, i) => ({
 const busDispatch = async (buses, trips) => {
   const shipments = trips.map(tripToShipment)
   const vehicles = buses.map(busToVehicle)
-
+  const kommunName = trips[0].kommun
   console.log(
-    'calling vroom with',
+    'calling vroom for',
+    kommunName,
+    'with',
     vehicles.length,
     'buses',
     shipments.length,
@@ -71,6 +73,10 @@ const busDispatch = async (buses, trips) => {
     vehicles: vehicles,
   })
 
+  const unassigned = result.unassigned
+    .filter((s) => s.type === 'pickup')
+    .map((step) => trips[step.id].tripId)
+  console.log('Unassigned in', kommunName, ':', unassigned.length)
   return result.routes.map((route) => {
     const toFirstStop = stepToBookingEntity(route.steps[0])
     const toHub = stepToBookingEntity(route.steps[route.steps.length - 1])
@@ -85,9 +91,6 @@ const busDispatch = async (buses, trips) => {
       ),
     }
   })
-  const unassigned = result.unassigned
-    .filter((s) => s.type === 'pickup')
-    .map((step) => trips[step.id])
 }
 
 const stepToBookingEntity = ({

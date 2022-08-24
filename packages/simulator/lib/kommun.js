@@ -65,7 +65,7 @@ class Kommun {
     this.postombud = postombud
     this.packageVolumes = packageVolumes
     this.unhandledBookings = new Subject()
-    this.busesPerCapita = 60 / 80_000
+    this.busesPerCapita = 100 / 80_000
     this.population = population
     this.privateCars = new ReplaySubject()
     this.busCount =

@@ -20,9 +20,7 @@ module.exports = {
       .then((res) => res.json())
     console.log(
       'Results from vroom, computing_times:',
-      result.summary.computing_times,
-      'unassigned:',
-      result.unassigned
+      result.summary.computing_times
     )
     return result
   },
