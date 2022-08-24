@@ -1,14 +1,14 @@
 FROM ibmjava:jre-alpine
 
-ARG operator=norrbotten
-# replace with your own key from trafiklab.se
+# Which operator should we download data for? ( we use norrbotten)
+ARG operator
 
+# replace with your own key from trafiklab.se
 ARG apikey
 
-# fetch API key from Trafiklab
 ADD https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${apikey} /otp/input/gtfs.zip
 
-# Add this line to also include road network in the suggested plan. 
+# Add this line to also include road network in the suggested plan.
 # This will take a lot more memory, add at least 8GB to the java parameters below
 # ADD https://download.geofabrik.de/europe/sweden-latest.osm.pbf /otp/input/sweden-latest.osm.pbf
 
