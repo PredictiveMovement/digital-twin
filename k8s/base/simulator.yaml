@@ -58,10 +58,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - rorla-stage.iteam.services
+        - rorla-stage.predictivemovement.se
       secretName: rorla-stage-tls
   rules:
-    - host: rorla-stage.iteam.services
+    - host: rorla-stage.predictivemovement.se
       http:
         paths:
           - path: /socket.io/.*
