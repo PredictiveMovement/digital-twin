@@ -6,7 +6,7 @@ COPY ./package-lock.json .
 RUN npm ci
 COPY . .
 
-ENV ELASTICSEARCH $ELASTICSEARCH
+ENV ELASTICSEARCH_URL $ELASTICSEARCH_URL
 RUN npm run preboot
 EXPOSE 4000
 CMD npm start
