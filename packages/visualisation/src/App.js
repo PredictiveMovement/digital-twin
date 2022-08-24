@@ -118,6 +118,7 @@ const App = () => {
           lineNumber,
           queue,
           vehicleType,
+          speed,
         }) => ({
           id,
           co2,
@@ -131,6 +132,7 @@ const App = () => {
           lineNumber,
           queue,
           vehicleType,
+          speed,
         })
       ),
     ])

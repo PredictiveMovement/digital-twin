@@ -42,6 +42,7 @@ const CarInfo = ({ data }) => {
         {data.lineNumber !== undefined && (
           <Paragraph>Linje: {data.lineNumber}</Paragraph>
         )}
+        <Paragraph>Hastighet {data.speed}</Paragraph>
         <Paragraph>Kör för {data.fleet}</Paragraph>
         <Paragraph>
           Köat: {data.queue || 0} {label}
@@ -82,7 +83,7 @@ const PassengerInfo = ({ data }) => {
           </Paragraph>
         ))}
       <Paragraph>
-        CO<sub>2</sub>: {Math.ceil(10 * data.co2 / 10) || 0} kg
+        CO<sub>2</sub>: {Math.ceil((10 * data.co2) / 10) || 0} kg
       </Paragraph>
       <Paragraph>Distans: {Math.ceil(data.distance / 1000) || 0} km</Paragraph>
       <Paragraph>

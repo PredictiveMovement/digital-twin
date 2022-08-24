@@ -51,7 +51,7 @@ spec:
               mountPath: /data
           resources:
             requests:
-              memory: "100Mi"
+              memory: 100Mi
               cpu: "0.2"
               ephemeral-storage: 5Gi
       containers:

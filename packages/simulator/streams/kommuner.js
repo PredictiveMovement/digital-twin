@@ -1,8 +1,16 @@
 /**
  * TODO: Describe the stream that this file exports and what its data means
  */
-const { from, shareReplay, withLatestFrom, merge } = require('rxjs')
-const { map, tap, filter, reduce, finalize, share } = require('rxjs/operators')
+const { from, shareReplay, withLatestFrom, merge, range } = require('rxjs')
+const {
+  map,
+  tap,
+  filter,
+  reduce,
+  finalize,
+  share,
+  mergeMap,
+} = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
 const population = require('./population')
@@ -12,6 +20,7 @@ const inside = require('point-in-polygon')
 const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const { generateBookingsInKommun } = require('../simulator/bookings')
 const bookingsCache = require('../streams/cacheBookingStream')
+const Pelias = require('../lib/pelias')
 
 function getPopulationSquares({ geometry: { coordinates } }) {
   return population.pipe(
@@ -55,12 +64,10 @@ function read() {
         'Älvsbyn',
         'Överkalix',
         'Övertorneå',
-      ].some((name) =>
-        namn.startsWith(name)
-      )
+      ].some((name) => namn.startsWith(name))
     ),
-    map(
-      ({
+    mergeMap(
+      async ({
         geometry,
         namn,
         epost,
@@ -69,8 +76,9 @@ function read() {
         kod,
         pickupPositions,
         fleets,
-      }) =>
-        new Kommun({
+      }) => {
+        const squares = getPopulationSquares({ geometry })
+        return new Kommun({
           geometry,
           name: namn,
           id: kod,
@@ -78,33 +86,21 @@ function read() {
           zip: postnummer,
           telephone: telefon,
           fleets: fleets || [],
+          center: await Pelias.search(namn).then((res) => res.position),
           pickupPositions: pickupPositions || [],
-          squares: getPopulationSquares({ geometry }),
+          squares,
           postombud: getPostombud(namn),
+          population: await squares
+            .pipe(reduce((a, b) => a + b.population, 0))
+            .toPromise(),
           packageVolumes: packageVolumes.find((e) => namn.startsWith(e.name)),
           commercialAreas: getCommercialAreas(kod),
         })
+      }
     ),
-    // ),
-    // map((kommun) => {
-    //   kommun.bookings = merge(
-    //     bookingsCache.read(__dirname + `/.cache/pm_bookings_${kommun.id}.json`),
-    //     generateBookingsInKommun(kommun),
-    //     share()
-    //   )
-    //   kommun.bookings.pipe(
-    //     bookingsCache.write(__dirname + `/.cache/pm_bookings_${kommun.id}.json`)
-    //   )
-    //   return kommun
-    // }),
 
     shareReplay()
   )
 }
 
 const kommuner = (module.exports = read())
-
-// kommuner.pipe(filter((k) => k.name === 'Arjeplogs kommun')).subscribe((kommun) => console.dir(kommun, { depth: null }))
-//population.pipe(take(50)).subscribe(p => console.dir(p,  { depth: null }))
-
-//console.log('inside?', inside([17.1181455372, 58.6721047703], kommun))
