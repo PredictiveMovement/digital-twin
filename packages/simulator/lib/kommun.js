@@ -65,10 +65,11 @@ class Kommun {
     this.postombud = postombud
     this.packageVolumes = packageVolumes
     this.unhandledBookings = new Subject()
-    this.busesPerCapita = busesPerCapita || 50 / 80_000
+    this.busesPerCapita = 60 / 80_000
     this.population = population
     this.privateCars = new ReplaySubject()
-    this.busCount = Math.round(this.population * this.busesPerCapita)
+    this.busCount =
+      busCount || Math.max(5, Math.round(this.population * this.busesPerCapita))
 
     this.co2 = 0
 
@@ -90,10 +91,9 @@ class Kommun {
     )
 
     this.buses = range(0, this.busCount - nrOfTaxis).pipe(
-      mergeMap(() => randomize(center), 10), // TODO: make bus depos to a fixed position in each kommun
-      map((position) => ({
-        position,
-        heading: position,
+      map(() => ({
+        position: center,
+        heading: center,
         kommun: name,
         stops: from([]),
       })),

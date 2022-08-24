@@ -61,9 +61,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    nginx.org/proxy-connect-timeout: "3600"
-    nginx.org/proxy-read-timeout: "3600"
-    nginx.org/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "360"
 spec:
   tls:
     - hosts:

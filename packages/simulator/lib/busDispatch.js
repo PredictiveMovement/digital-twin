@@ -56,10 +56,11 @@ const busToVehicle = ({ id, position, capacity, heading }, i) => ({
 
 const busDispatch = async (buses, trips) => {
   const shipments = trips.map(tripToShipment)
+  const vehicles = buses.map(busToVehicle)
 
   console.log(
     'calling vroom with',
-    buses.length,
+    vehicles.length,
     'buses',
     shipments.length,
     'trips'
@@ -67,7 +68,7 @@ const busDispatch = async (buses, trips) => {
 
   const result = await plan({
     shipments: shipments,
-    vehicles: buses.map(busToVehicle),
+    vehicles: vehicles,
   })
 
   return result.routes.map((route) => ({
