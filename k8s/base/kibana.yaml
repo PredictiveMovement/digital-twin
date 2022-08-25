@@ -15,7 +15,6 @@ metadata:
   labels:
     app: kibana
   name: kibana
-
 spec:
   replicas: 1
   selector:

@@ -62,7 +62,10 @@ spec:
           volumeMounts:
             - name: elasticsearch-data
               mountPath: /data
-          resources: {}
+          resources:
+            requests:
+              cpu: "0.5"
+              memory: "2G"
           env:
             - name: path.data
               value: /data/elasticsearch
