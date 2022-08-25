@@ -6,6 +6,8 @@ kind: Kustomization
 resources:
   - simulator.yaml
   - visualisation.yaml
+  - kibana.yaml
+  - elasticsearch.yaml
 
 # namespace to deploy all Resources to
 namespace: rorla-stage
