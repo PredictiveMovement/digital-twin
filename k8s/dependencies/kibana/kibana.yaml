@@ -35,6 +35,10 @@ spec:
               value: elasticsearch:9200
           image: docker.elastic.co/kibana/kibana:7.5.1
           imagePullPolicy: Always
+          resources: 
+            requests:
+              cpu: "0.5"
+              memory: "2Gi"
           name: kibana
           ports:
             - containerPort: 5601
