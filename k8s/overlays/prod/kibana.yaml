@@ -6,7 +6,7 @@ spec:
   tls:
     - hosts:
         - kibana.predictivemovement.se
-      secretName: rorla-prod-tls
+      secretName: kibana-prod-tls
   rules:
     - host: kibana.predictivemovement.se
       http:
