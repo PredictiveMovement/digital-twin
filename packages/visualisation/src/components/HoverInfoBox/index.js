@@ -36,7 +36,7 @@ const CarInfo = ({ data }) => {
       ? 'Passagerare'
       : 'Paket'
   return (
-    <Wrapper left={data.x - 8} top={data.y - 80}>
+    <Wrapper left={data.x - 8} top={data.y - 120}>
       <div>
         <Paragraph>{`Fordon ${data.id}`}</Paragraph>
         {data.lineNumber !== undefined && (
@@ -72,7 +72,7 @@ const CarInfo = ({ data }) => {
 
 const PassengerInfo = ({ data }) => {
   return (
-    <Wrapper left={data.x} top={data.y}>
+    <Wrapper left={data.x - 25} top={data.y - 65}>
       <Paragraph>Passagerare {data.id}</Paragraph>
       <Paragraph>Namn: {data.name}</Paragraph>
       <Paragraph>Resor:</Paragraph>
