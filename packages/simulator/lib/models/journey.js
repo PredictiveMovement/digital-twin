@@ -1,3 +1,6 @@
+const EventEmitter = require('events')
+const { virtualTime } = require('../virtualTime')
+
 const { safeId } = require('./../id')
 const { ReplaySubject } = require('rxjs')
 
@@ -9,6 +12,7 @@ class Journey {
     this.destination = destination
     this.timeWindow = timeWindow
     this.passenger = passenger
+    this.created = virtualTime.time()
 
     this.statusEvents = new ReplaySubject()
     this.statusEvents.next(this)
@@ -19,16 +23,14 @@ class Journey {
     this.statusEvents.next(this)
   }
 
-  toObject(includePassenger = false) {
+  toObject() {
     const obj = {
       id: this.id,
+      created: this.created,
       status: this.status,
       pickup: this.pickup,
       destination: this.destination,
       timeWindow: this.timeWindow,
-    }
-    if (includePassenger) {
-      obj.passenger = this.passenger.toObject(false)
     }
     return obj
   }

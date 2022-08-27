@@ -35,19 +35,21 @@ const randomPositions = perlin
 
 const generatePassengers = (kommuner) =>
   kommuner.pipe(
-    mergeMap(({ squares, postombud, name }) => {
-      return squares.pipe(
+    mergeMap((kommun) => {
+      return kommun.squares.pipe(
         mergeMap(({ population, position }) =>
           randomPositions
             .slice(0, population)
             .map(({ x, y }) => addMeters(position, { x, y }))
         ),
         mergeMap((homePosition) => {
-          return postombud.pipe(
+          return kommun.postombud.pipe(
             toArray(),
-            mergeMap(async (all_postombud) => {
+            mergeMap(async (postombudInKommun) => {
               const randomPostombud =
-                all_postombud[Math.floor(Math.random() * all_postombud.length)]
+                postombudInKommun[
+                  Math.floor(Math.random() * postombudInKommun.length)
+                ]
               const workPosition = await randomize(randomPostombud.position)
               return { homePosition, workPosition }
             })
@@ -65,7 +67,7 @@ const generatePassengers = (kommuner) =>
         concatMap(async ({ home, workPosition }) => {
           try {
             const work = await pelias.nearest(workPosition)
-            return { home, work }
+            return { home, work, kommun }
           } catch (e) {
             return null
           }
@@ -77,7 +79,7 @@ const generatePassengers = (kommuner) =>
     take(100),
     shareReplay() // ShareReplay needed to keep ID's and names consistent between console and visualisation
   )
-const createPassengerFromAddress = ({ home, work }) => {
+const createPassengerFromAddress = ({ home, work, kommun }) => {
   const residence = {
     name: `${home.name}, ${home.localadmin}`,
     ...home.position,
@@ -87,28 +89,14 @@ const createPassengerFromAddress = ({ home, work }) => {
     ...work.position,
   }
 
-  const offset = virtualTime.offset // Sim starts at an offset from midnight, so we need to subctract that offset from the time
-  const fiveAm = 5 * 60 * 60 - offset
-  const tenAm = 10 * 60 * 60 - offset
-  const threePm = 15 * 60 * 60 - offset
-  const eightPm = 20 * 60 * 60 - offset
   const name = names[Math.floor(Math.random() * names.length)]
 
   return new Passenger({
-    journeys: [
-      {
-        pickup: residence,
-        destination: workplace,
-        timeWindow: [[fiveAm, tenAm]],
-      },
-      {
-        pickup: workplace,
-        destination: residence,
-        timeWindow: [[threePm, eightPm]],
-      },
-    ],
     position: home.position,
     startPosition: home.position,
+    workplace: workplace,
+    kommun: kommun,
+    home: residence,
     name: name,
   })
 }

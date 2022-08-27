@@ -1,14 +1,23 @@
-const { ReplaySubject } = require('rxjs')
+const EventEmitter = require('events')
+const {
+  interval,
+  map,
+  filter,
+  shareReplay,
+  distinctUntilChanged,
+  mergeMap,
+} = require('rxjs')
+const { randomize } = require('../../simulator/address')
+const { virtualTime } = require('../virtualTime')
+
 const { safeId } = require('./../id')
 const Journey = require('./journey')
 
 class Passenger {
-  constructor({ name, journeys, position, startPosition }) {
+  constructor({ name, position, workplace, home, startPosition }) {
     this.id = safeId()
-    this.journeys =
-      journeys?.map(
-        (journey) => new Journey({ ...journey, passenger: this })
-      ) || []
+    this.workPlace = workplace
+    this.home = home
     this.name = name
     this.position = position
     this.startPosition = startPosition
@@ -23,6 +32,92 @@ class Passenger {
     this.distance = 0
     this.moveTime = 0 // Time on a vehicle.
     this.waitTime = 0 // Time waiting for a vehicle.
+
+    this.intents = interval(1000).pipe(
+      map(() => ({
+        hour: moment(virtualTime.time()).hour(),
+        weekDay: moment(virtualTime.time()).isoWeekday(),
+      })),
+      filter(() => Math.random() > 0.9),
+      map(({ hour }) => {
+        if (hour < 6 || hour > 22) return 'sleep'
+        if (hour >= 12 || hour <= 16) return 'lunch'
+        if (hour >= 6 || hour < 10) return 'goToWork'
+        if (hour >= 16 || hour <= 18) return 'goHome'
+        // pickup kids
+        // go to gym
+        // go to school etc
+        return 'idle'
+      }),
+      shareReplay()
+    )
+
+    this.journeys = this.intents.pipe(
+      distinctUntilChanged(),
+      filter((intent) => intent !== 'idle' && intent !== 'sleep'),
+      mergeMap((intent) => {
+        switch (intent) {
+          case 'goToWork':
+            return new Journey({
+              pickup: this.position,
+              destination: this.workPlace.position,
+              intent,
+              timeWindow: [
+                virtualTime.time(),
+                virtualTime.time() + 60 * 60 * 1000,
+              ],
+              id: safeId(),
+              passenger: this,
+            })
+          case 'goHome':
+            return new Journey({
+              pickup: this.position,
+              destination: this.home.position,
+              intent,
+              timeWindow: [
+                virtualTime.time(),
+                virtualTime.time() + 60 * 60 * 1000,
+              ],
+              id: safeId(),
+              passenger: this,
+            })
+          case 'lunch':
+            return randomize(this.workPlace.position).pipe(
+              mergeMap((destination) =>
+                from([
+                  new Journey({
+                    // Pickup to lunch
+                    pickup: this.position,
+                    destination: this.home.position,
+                    intent,
+                    timeWindow: [
+                      virtualTime.time(),
+                      virtualTime.time() + 60 * 60 * 1000,
+                    ],
+                    id: safeId(),
+                    passenger: this,
+                  }),
+                  new Journey({
+                    // Go back from lunch to work
+                    pickup: destination,
+                    destination: this.workPlace.position,
+                    intent,
+                    timeWindow: [
+                      virtualTime.time() + 60 * 60 * 1000,
+                      virtualTime.time() + 80 * 60 * 1000,
+                    ],
+                    id: safeId(),
+                    passenger: this,
+                  }),
+                ])
+              )
+            )
+          default:
+            return this.idle()
+        }
+      }),
+      shareReplay()
+    )
     this.pickedUpEvents = new ReplaySubject()
     this.deliveredEvents = new ReplaySubject()
   }
@@ -32,7 +127,7 @@ class Passenger {
     this.inVehicle = false
   }
 
-  toObject(includeJourneys = true) {
+  toObject() {
     const obj = {
       co2: this.co2,
       cost: this.cost,
@@ -44,9 +139,6 @@ class Passenger {
       name: this.name,
       position: this.position,
       waitTime: this.waitTime,
-    }
-    if (includeJourneys) {
-      obj.journeys = this.journeys.map((journey) => journey.toObject())
     }
     return obj
   }
