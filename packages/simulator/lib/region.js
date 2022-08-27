@@ -133,38 +133,21 @@ class Region {
           .subscribe(() => {})
       )
 
-    Promise.all(
-      [
-        lastValueFrom(
-          this.taxis.pipe(
-            toArray(),
-            map((taxis) =>
-              taxis.map((taxi) => {
-                taxi.reset()
-              })
-            )
-          )
-        ),
-      ],
-      [
-        lastValueFrom(
-          this.passengers.pipe(
-            toArray(),
-            map((passengers) =>
-              passengers.map((passenger) => {
-                passenger.reset()
-              })
-            )
-          )
-        ),
-      ]
-    ).then(
-      taxiDispatch(this.taxis, this.passengers).subscribe((e) => {
-        e.map(({ taxi, steps }) =>
-          steps.map((step) => taxi.addInstruction(step))
-        )
+    this.passengers
+      .pipe(mergeMap((passenger) => passenger.journeys))
+      .subscribe((booking) => {
+        this.unhandledBookings.next(booking)
       })
-    )
+    
+    this.unhandledBookings.pipe(
+      mergeMap((booking) => taxiDispatch(this.taxis, booking)),
+      mergeAll()
+    ).subscribe(() => {})
+  }
+
+    /*    taxiDispatch(this.taxis, this.passengers).subscribe((e) => {
+      e.map(({ taxi, steps }) => steps.map((step) => taxi.addInstruction(step)))
+    }) */
   }
 }
 const stopsToBooking = ([pickup, destination]) =>
