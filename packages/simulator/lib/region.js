@@ -83,30 +83,27 @@ class Region {
       shareReplay()
     )
 
-    this.stopAssignments = stopTimes.pipe(
+    const flattenProperty = (property) => (stream) =>
+      stream.pipe(
+        mergeMap((object) =>
+          object[property].pipe(
+            toArray(),
+            map((arr) => ({
+              ...object,
+              [property]: arr,
+            }))
+          )
+        )
+      )
+
+    const stopAssignments = stopTimes.pipe(
       getTripsPerKommun(kommuner),
       map(({ kommunName, trips }) => ({
         buses: this.buses.pipe(filter((bus) => bus.kommun === kommunName)),
         trips,
       })),
-      mergeMap(({ buses, trips }) =>
-        buses.pipe(
-          toArray(),
-          map((buses) => ({
-            buses,
-            trips,
-          }))
-        )
-      ),
-      mergeMap(({ buses, trips }) =>
-        trips.pipe(
-          toArray(),
-          map((trips) => ({
-            buses,
-            trips,
-          }))
-        )
-      ),
+      flattenProperty('buses'),
+      flattenProperty('trips'),
       filter(({ buses, trips }) => buses.length && trips.length),
       mergeMap(({ buses, trips }) => busDispatch(buses, trips), 3), // try to find optimal plan x kommun at a time
       mergeAll(),

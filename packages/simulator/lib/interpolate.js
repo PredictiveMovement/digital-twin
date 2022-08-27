@@ -52,7 +52,7 @@ function interpolatePositionFromRoute(route, time) {
   return interpolatedPosition
 }
 
-const speedFactor = 1.2 // apply this to all speeds
+const speedFactor = 1.4 // apply this to all speeds
 
 function extractPoints(route) {
   const annotation = route.legs
