@@ -1,6 +1,15 @@
-const { timer } = require('rxjs')
-const { toArray, map, filter, takeUntil, mergeMap } = require('rxjs/operators')
-const { haversine } = require('./distance')
+const { mergeAll, timer, of } = require('rxjs')
+const {
+  toArray,
+  map,
+  tap,
+  filter,
+  takeUntil,
+  delay,
+  mergeMap,
+  catchError,
+} = require('rxjs/operators')
+const { haversine } = require('../distance')
 
 const dispatch = (cars, bookings) => {
   return bookings.pipe(

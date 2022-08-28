@@ -10,7 +10,7 @@ const {
   windowTime,
   shareReplay,
 } = require('rxjs/operators')
-const { dispatch } = require('../../lib/dispatchCentral')
+const { dispatch } = require('../../lib/disptach/dispatchCentral')
 const Car = require('../../lib/car')
 const Booking = require('../../lib/booking')
 const { virtualTime } = require('../../lib/virtualTime')
