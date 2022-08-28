@@ -186,11 +186,12 @@ function register(io) {
           io.socket('bookings', bookings)
         }
       })
-    experiment.passengers.pipe(toArray()).subscribe((passengers) => {
-      info(`Sending ${passengers.length} passengers`)
-      return passengers.map((passenger) => {
-        socket.emit('passenger', passenger.toObject())
-      })
+    experiment.buses.pipe(map(cleanCars)).subscribe((e) => {
+      // console.log(e)
+      socket.emit('cars', [e])
+    })
+    experiment.passengers.subscribe((passenger) => {
+      socket.emit('passenger', passenger.toObject())
     })
 
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {

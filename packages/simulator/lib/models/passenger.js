@@ -6,17 +6,19 @@ const {
   shareReplay,
   distinctUntilChanged,
   mergeMap,
+  of,
 } = require('rxjs')
 const { randomize } = require('../../simulator/address')
 const { virtualTime } = require('../virtualTime')
 
 const { safeId } = require('./../id')
 const Journey = require('./journey')
+const moment = require('moment')
 
 class Passenger {
   constructor({ name, position, workplace, home, startPosition }) {
     this.id = safeId()
-    this.workPlace = workplace
+    this.workplace = workplace
     this.home = home
     this.name = name
     this.position = position
@@ -52,44 +54,45 @@ class Passenger {
       shareReplay()
     )
 
-    this.journeys = this.intents.pipe(
+    this.bookings = this.intents.pipe(
       distinctUntilChanged(),
       filter((intent) => intent !== 'idle' && intent !== 'sleep'),
       mergeMap((intent) => {
         switch (intent) {
           case 'goToWork':
-            return new Journey({
-              pickup: this.position,
-              destination: this.workPlace.position,
-              intent,
-              timeWindow: [
-                virtualTime.time(),
-                virtualTime.time() + 60 * 60 * 1000,
-              ],
-              id: safeId(),
-              passenger: this,
-            })
+            return of(
+              new Booking({
+                pickup: this.position,
+                destination: this.workplace,
+                timeWindow: [
+                  virtualTime.time(),
+                  virtualTime.time() + 60 * 60 * 1000,
+                ],
+                id: safeId(),
+                passenger: this,
+              })
+            )
           case 'goHome':
-            return new Journey({
-              pickup: this.position,
-              destination: this.home.position,
-              intent,
-              timeWindow: [
-                virtualTime.time(),
-                virtualTime.time() + 60 * 60 * 1000,
-              ],
-              id: safeId(),
-              passenger: this,
-            })
+            return of(
+              new Booking({
+                pickup: this.position,
+                destination: this.home.position,
+                timeWindow: [
+                  virtualTime.time(),
+                  virtualTime.time() + 60 * 60 * 1000,
+                ],
+                id: safeId(),
+                passenger: this,
+              })
+            )
           case 'lunch':
-            return randomize(this.workPlace.position).pipe(
+            return randomize(this.workplace.position).pipe(
               mergeMap((destination) =>
                 from([
-                  new Journey({
+                  new Booking({
                     // Pickup to lunch
                     pickup: this.position,
                     destination: this.home.position,
-                    intent,
                     timeWindow: [
                       virtualTime.time(),
                       virtualTime.time() + 60 * 60 * 1000,
@@ -97,11 +100,10 @@ class Passenger {
                     id: safeId(),
                     passenger: this,
                   }),
-                  new Journey({
+                  new Booking({
                     // Go back from lunch to work
                     pickup: destination,
-                    destination: this.workPlace.position,
-                    intent,
+                    destination: this.workplace.position,
                     timeWindow: [
                       virtualTime.time() + 60 * 60 * 1000,
                       virtualTime.time() + 80 * 60 * 1000,
@@ -112,10 +114,10 @@ class Passenger {
                 ])
               )
             )
-          default:
-            return this.idle()
         }
+        return of(null)
       }),
+      filter((f) => f !== null),
       shareReplay()
     )
     this.pickedUpEvents = new ReplaySubject()
@@ -143,13 +145,6 @@ class Passenger {
     return obj
   }
 
-  updateJourney(journeyId, status) {
-    const journeyToUpdate = this.journeys.find(
-      (journey) => journey.id === journeyId
-    )
-    journeyToUpdate.setStatus(status)
-  }
-
   moved(position, metersMoved, co2, cost, moveTime) {
     this.position = position
 
@@ -158,18 +153,6 @@ class Passenger {
     this.cost += cost
     this.distance += metersMoved
     this.moveTime += moveTime
-  }
-
-  pickedUp(journeyId) {
-    this.inVehicle = true
-    this.updateJourney(journeyId, 'Pågående')
-    this.pickedUpEvents.next(this.toObject())
-  }
-
-  delivered(journeyId) {
-    this.inVehicle = false
-    this.updateJourney(journeyId, 'Avklarad')
-    this.deliveredEvents.next(this.toObject())
   }
 }
 

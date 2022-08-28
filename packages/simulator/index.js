@@ -56,8 +56,8 @@ const engine = {
 
     experiment.passengers
       .pipe(
-        switchMap(({ journeys }) => journeys),
-        mergeMap((journey) => journey.statusEvents),
+        switchMap(({ bookings }) => bookings),
+        mergeMap((booking) => booking.statusEvents),
         shareReplay()
       )
       .subscribe((journey) => {

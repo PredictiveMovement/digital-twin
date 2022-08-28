@@ -5,6 +5,7 @@ const {
   Subject,
   mergeMap,
   ReplaySubject,
+  merge,
   lastValueFrom,
 } = require('rxjs')
 const {
@@ -21,8 +22,7 @@ const {
   bufferCount,
 } = require('rxjs/operators')
 const Booking = require('./models/booking')
-const { busDispatch } = require('./busDispatch')
-const { taxiDispatch } = require('./taxiDispatch')
+const { busDispatch } = require('./dispatch/busDispatch')
 const { isInsideCoordinates } = require('../lib/polygon')
 
 const getTripsPerKommun = (kommuner) => (stopTimes) =>
@@ -68,7 +68,7 @@ class Region {
     this.id = id
     this.unhandledBookings = new Subject()
     this.stops = stops
-    this.passengers = passengers
+    this.passengers = passengers.pipe(mergeAll())
     this.lineShapes = lineShapes
 
     this.taxis = kommuner.pipe(
@@ -134,16 +134,18 @@ class Region {
       )
 
     this.passengers
-      .pipe(mergeMap((passenger) => passenger.journeys))
+      .pipe(mergeMap((passenger) => passenger.bookings))
       .subscribe((booking) => {
         this.unhandledBookings.next(booking)
       })
-    
-    this.unhandledBookings.pipe(
+
+    // Move this to passenger instead
+    /*this.unhandledBookings.pipe(
       mergeMap((booking) => taxiDispatch(this.taxis, booking)),
       mergeAll()
-    ).subscribe(() => {})
-  }
+    ).subscribe(() => {
+
+    })*/
 
     /*    taxiDispatch(this.taxis, this.passengers).subscribe((e) => {
       e.map(({ taxi, steps }) => steps.map((step) => taxi.addInstruction(step)))
