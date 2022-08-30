@@ -1,46 +1,22 @@
-const {
-  from,
-  repeat,
-  groupBy,
-  mergeAll,
-  mergeMap,
-  toArray,
-  map,
-  merge,
-  count,
-  range,
-  mapTo,
-  shareReplay,
-  combineLatest,
-  withLatestFrom,
-  zip,
-} = require('rxjs')
+const { from, repeat, map, zip, take, filter } = require('rxjs')
 const fornamn = require('../data/svenska_tilltalsnamn_2021.json').data
 const efternamn = require('../data/svenska_efternamn_2021.json').data
 
-const sampleDistribution = (nrOfGroups) => (distribution) =>
+/**
+ * Takes a list of names sorted on frequency of use
+ * and returns a stream of names according to the distribution
+ * - meaning that the first name is more likely to be used than the second
+ *
+ * @returns stream of names
+ */
+const weightedRandom = () => (distribution) =>
   from(distribution).pipe(
     map((name, i) => ({
       name,
-      frequency: Math.ceil(nrOfGroups / (i + 1)),
+      frequency: 3 / (i + 1), // Zipf distribution
     })),
-    groupBy(({ frequency }) => frequency),
-    mergeMap((group) =>
-      group.pipe(
-        toArray(),
-        map((arr) => arr.sort((a) => Math.random() - 0.5)),
-        mergeMap((arr) => range(0, group.key).pipe(mapTo(arr))), // repeat x times
-        mergeAll(),
-        map(({ name }) => name)
-      )
-    )
-  )
-
-const sortRandom = () => (stream) =>
-  stream.pipe(
-    toArray(),
-    map((arr) => arr.sort((a, b) => Math.random() - 0.5)),
-    mergeAll()
+    filter(({ frequency }) => frequency > Math.random() / 2),
+    map(({ name }) => name)
   )
 
 const toToTitleCase = (str) =>
@@ -49,24 +25,21 @@ const toToTitleCase = (str) =>
     .map((word) => word.charAt(0).toUpperCase() + word.substr(1).toLowerCase())
     .join(' ')
 
-const randomFornamn = () =>
-  from(fornamn).pipe(sampleDistribution(200), sortRandom())
+const randomFirstName = () => from(fornamn).pipe(weightedRandom())
 
-const randomEfternamn = () =>
+const randomLastName = () =>
   from(efternamn).pipe(
-    map((name) => toToTitleCase(name)),
-    sampleDistribution(200),
-    sortRandom()
+    weightedRandom(),
+    map((name) => toToTitleCase(name))
   )
 
 const generateNames = () =>
-  zip(randomFornamn(), randomEfternamn()).pipe(
+  zip(randomFirstName(), randomLastName()).pipe(
     map(([firstName, lastName]) => ({
       firstName,
       lastName,
       name: `${firstName} ${lastName}`,
-    })),
-    repeat()
+    }))
   )
 
 module.exports = {

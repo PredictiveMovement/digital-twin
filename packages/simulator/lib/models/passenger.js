@@ -64,7 +64,7 @@ class Passenger {
             return of(
               new Booking({
                 pickup: this.position,
-                destination: this.workplace,
+                destination: this.workplace.position,
                 timeWindow: [
                   virtualTime.time(),
                   virtualTime.time() + 60 * 60 * 1000,
@@ -77,7 +77,7 @@ class Passenger {
             return of(
               new Booking({
                 pickup: this.position,
-                destination: this.home,
+                destination: this.home.position,
                 timeWindow: [
                   virtualTime.time(),
                   virtualTime.time() + 60 * 60 * 1000,
@@ -87,7 +87,7 @@ class Passenger {
               })
             )
           case 'lunch':
-            return from(randomize(this.workplace)).pipe(
+            return from(randomize(this.workplace.position)).pipe(
               mergeMap((destination) =>
                 from([
                   new Booking({
@@ -104,7 +104,7 @@ class Passenger {
                   new Booking({
                     // Go back from lunch to work
                     pickup: destination,
-                    destination: this.workplace,
+                    destination: this.workplace.position,
                     timeWindow: [
                       virtualTime.time() + 60 * 60 * 1000,
                       virtualTime.time() + 80 * 60 * 1000,
