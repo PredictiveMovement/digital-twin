@@ -7,6 +7,7 @@ const {
   distinctUntilChanged,
   mergeMap,
   of,
+  from,
 } = require('rxjs')
 const { randomize } = require('../../simulator/address')
 const { virtualTime } = require('../virtualTime')
@@ -14,6 +15,7 @@ const { virtualTime } = require('../virtualTime')
 const { safeId } = require('./../id')
 const Journey = require('./journey')
 const moment = require('moment')
+const Booking = require('./booking')
 
 class Passenger {
   constructor({ name, position, workplace, home, startPosition }) {
@@ -40,7 +42,7 @@ class Passenger {
         hour: moment(virtualTime.time()).hour(),
         weekDay: moment(virtualTime.time()).isoWeekday(),
       })),
-      filter(() => Math.random() > 0.9),
+      filter(() => Math.random() > 0.5),
       map(({ hour }) => {
         if (hour < 6 || hour > 22) return 'sleep'
         if (hour >= 12 || hour <= 16) return 'lunch'
@@ -50,8 +52,7 @@ class Passenger {
         // go to gym
         // go to school etc
         return 'idle'
-      }),
-      shareReplay()
+      })
     )
 
     this.bookings = this.intents.pipe(
@@ -76,7 +77,7 @@ class Passenger {
             return of(
               new Booking({
                 pickup: this.position,
-                destination: this.home.position,
+                destination: this.home,
                 timeWindow: [
                   virtualTime.time(),
                   virtualTime.time() + 60 * 60 * 1000,
@@ -86,7 +87,7 @@ class Passenger {
               })
             )
           case 'lunch':
-            return randomize(this.workplace.position).pipe(
+            return from(randomize(this.workplace)).pipe(
               mergeMap((destination) =>
                 from([
                   new Booking({
@@ -103,7 +104,7 @@ class Passenger {
                   new Booking({
                     // Go back from lunch to work
                     pickup: destination,
-                    destination: this.workplace.position,
+                    destination: this.workplace,
                     timeWindow: [
                       virtualTime.time() + 60 * 60 * 1000,
                       virtualTime.time() + 80 * 60 * 1000,
