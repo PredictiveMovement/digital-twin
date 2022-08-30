@@ -9,17 +9,18 @@ const {
   concatMap,
   toArray,
   shareReplay,
+  mergeWith,
+  zipWith,
+  withLatestFrom,
 } = require('rxjs/operators')
 const perlin = require('perlin-noise')
 
 const pelias = require('../lib/pelias')
 const { addMeters } = require('../lib/distance')
 const Passenger = require('../lib/models/passenger')
-const personNames = require('../lib/personNames')
+const { generateNames } = require('../lib/personNames')
 const { virtualTime } = require('./../lib/virtualTime')
 const { randomize } = require('./address')
-
-const names = personNames.read()
 
 const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
 
@@ -73,23 +74,24 @@ const generatePassengers = (kommuner) =>
           }
         }),
         filter((p) => p),
-        map(createPassengerFromAddress)
+        zipWith(generateNames()),
+        map(([props, name]) =>
+          createPassengerFromAddress({ ...props, ...name })
+        )
       )
     }),
     take(100),
     shareReplay() // ShareReplay needed to keep ID's and names consistent between console and visualisation
   )
-const createPassengerFromAddress = ({ home, work, kommun }) => {
+const createPassengerFromAddress = ({ home, work, kommun, name }) => {
   const residence = {
     name: `${home.name}, ${home.localadmin}`,
-    ...home.position,
+    ...home,
   }
   const workplace = {
     name: `${work.name}, ${work.localadmin}`,
-    ...work.position,
+    ...work,
   }
-
-  const name = names[Math.floor(Math.random() * names.length)]
 
   return new Passenger({
     position: home.position,

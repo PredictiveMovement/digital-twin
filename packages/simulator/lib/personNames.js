@@ -11,6 +11,9 @@ const {
   range,
   mapTo,
   shareReplay,
+  combineLatest,
+  withLatestFrom,
+  zip,
 } = require('rxjs')
 const fornamn = require('../data/svenska_tilltalsnamn_2021.json').data
 const efternamn = require('../data/svenska_efternamn_2021.json').data
@@ -40,19 +43,30 @@ const sortRandom = () => (stream) =>
     mergeAll()
   )
 
+const toToTitleCase = (str) =>
+  str
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.substr(1).toLowerCase())
+    .join(' ')
+
 const randomFornamn = () =>
-  from(fornamn).pipe(sampleDistribution(200), sortRandom(), repeat())
+  from(fornamn).pipe(sampleDistribution(200), sortRandom())
 
 const randomEfternamn = () =>
-  from(efternamn).pipe(sampleDistribution(200), sortRandom(), repeat())
+  from(efternamn).pipe(
+    map((name) => toToTitleCase(name)),
+    sampleDistribution(200),
+    sortRandom()
+  )
 
 const generateNames = () =>
-  merge(randomFornamn(), randomEfternamn()).pipe(
-    map(([fornamn, efternamn]) => ({
-      fornamn,
-      efternamn,
-      name: `${fornamn} ${efternamn}`,
-    }))
+  zip(randomFornamn(), randomEfternamn()).pipe(
+    map(([firstName, lastName]) => ({
+      firstName,
+      lastName,
+      name: `${firstName} ${lastName}`,
+    })),
+    repeat()
   )
 
 module.exports = {
