@@ -64,7 +64,7 @@ const cleanCars = ({
   vehicleType,
 }) => ({
   id,
-  heading: [heading.lon, heading.lat], // contains route to plot or interpolate on client side.
+  heading: (heading && [heading.lon, heading.lat]) || null, // contains route to plot or interpolate on client side.
   speed,
   bearing,
   position: [lon, lat, altitude || 0],
@@ -84,7 +84,7 @@ function register(io) {
 
   let emitCars = true
   let emitTaxiUpdates = true
-  let emitBusUpdates = false
+  let emitBusUpdates = true
 
   io.on('connection', function (socket) {
     socket.emit('reset')
@@ -148,6 +148,10 @@ function register(io) {
           socket.emit('bookings', bookings)
         }
       })
+    experiment.buses.pipe(map(cleanCars)).subscribe((e) => {
+      // console.log(e)
+      socket.emit('cars', [e])
+    })
     experiment.passengers.subscribe((passengers) => {
       console.log('sending', passengers.length, 'passengers')
       return passengers.map((passenger) => {

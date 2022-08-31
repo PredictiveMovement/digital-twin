@@ -42,7 +42,7 @@ const generatePassengers = (kommuner) =>
             .slice(0, population)
             .map(({ x, y }) => addMeters(position, { x, y }))
         ),
-        mergeMap( (homePosition) => {
+        mergeMap((homePosition) => {
           return postombud.pipe(
             toArray(),
             mergeMap(async (all_postombud) => {
@@ -79,26 +79,39 @@ const generatePassengers = (kommuner) =>
     toArray()
   )
 const createPassengerFromAddress = ({ home, work }) => {
-  const residence = { name: `${home.name}, ${home.localadmin}`, ...home.position}
-  const workplace = { name: `${work.name}, ${work.localadmin}`, ...work.position}
+  const residence = {
+    name: `${home.name}, ${home.localadmin}`,
+    ...home.position,
+  }
+  const workplace = {
+    name: `${work.name}, ${work.localadmin}`,
+    ...work.position,
+  }
 
   const offset = virtualTime.offset // Sim starts at an offset from midnight, so we need to subctract that offset from the time
-  const fiveAm  = (5 * 60 * 60) - offset
-  const tenAm   = (10 * 60 * 60) - offset
-  const threePm = (15 * 60 * 60) - offset
-  const eightPm = (20 * 60 * 60) - offset
+  const fiveAm = 5 * 60 * 60 - offset
+  const tenAm = 10 * 60 * 60 - offset
+  const threePm = 15 * 60 * 60 - offset
+  const eightPm = 20 * 60 * 60 - offset
   const name = names[Math.floor(Math.random() * names.length)]
 
   return new Passenger({
     journeys: [
-      { pickup: residence, destination: workplace, timeWindow: [[fiveAm, tenAm]]},
-      { pickup: workplace, destination: residence, timeWindow: [[threePm, eightPm]]},
+      {
+        pickup: residence,
+        destination: workplace,
+        timeWindow: [[fiveAm, tenAm]],
+      },
+      {
+        pickup: workplace,
+        destination: residence,
+        timeWindow: [[threePm, eightPm]],
+      },
     ],
     position: home.position,
     name: name,
   })
 }
-
 
 module.exports = {
   generatePassengers,

@@ -60,9 +60,23 @@ metadata:
 spec:
   tls:
     - hosts:
+<<<<<<< HEAD
+=======
+        - rorla-stage.iteam.services
+>>>>>>> main
         - rorla-stage.predictivemovement.se
       secretName: rorla-stage-tls
   rules:
+    - host: rorla-stage.predictivemovement.se
+      http:
+        paths:
+          - path: /socket.io/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: simulator
+                port:
+                  number: 4000
     - host: rorla-stage.predictivemovement.se
       http:
         paths:
