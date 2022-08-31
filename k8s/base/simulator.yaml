@@ -60,10 +60,7 @@ metadata:
 spec:
   tls:
     - hosts:
-<<<<<<< HEAD
-=======
         - rorla-stage.iteam.services
->>>>>>> main
         - rorla-stage.predictivemovement.se
       secretName: rorla-stage-tls
   rules:
