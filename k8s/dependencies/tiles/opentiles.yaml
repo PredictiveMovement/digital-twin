@@ -92,9 +92,20 @@ metadata:
 spec:
   tls:
     - hosts:
+        - opentiles.iteam.services
         - opentiles.predictivemovement.se
       secretName: opentiles-prod-tls
   rules:
+    - host: opentiles.iteam.services
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: opentiles
+                port:
+                  number: 80
     - host: opentiles.predictivemovement.se
       http:
         paths:

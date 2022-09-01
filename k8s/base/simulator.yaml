@@ -64,7 +64,7 @@ spec:
         - rorla-stage.predictivemovement.se
       secretName: rorla-stage-tls
   rules:
-    - host: rorla-stage.predictivemovement.se
+    - host: rorla-stage.iteam.services
       http:
         paths:
           - path: /socket.io/.*

@@ -67,9 +67,20 @@ metadata:
 spec:
   tls:
     - hosts:
+        - vroom.iteam.services
         - vroom.predictivemovement.se
       secretName: vroom-prod-tls
   rules:
+    - host: vroom.iteam.services
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: 
+                name: vroom
+                port:
+                  number: 3000
     - host: vroom.predictivemovement.se
       http:
         paths:
