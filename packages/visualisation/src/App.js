@@ -248,7 +248,7 @@ const App = () => {
             co2,
             distance,
             inVehicle,
-            journeys,
+            bookings,
             moveTime,
             name,
             position: [position.lon, position.lat].map((s) => parseFloat(s)),

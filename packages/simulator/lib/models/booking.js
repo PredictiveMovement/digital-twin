@@ -6,9 +6,11 @@ class Booking {
   position
 
   constructor(booking) {
-    this.id = safeId()
+    super()
+    this.id = 'b-' + safeId()
     this.status = 'New'
     this.co2 = 0 //TODO: initialvärde?
+    this.type = booking.passenger ? 'passenger' : 'package'
     this.cost = 0 // startkostnad?
     this.distance = 0 //TODO: räkna med sträcka innan?
     this.weight = Math.random() * 10 // kg TODO: find reference kg
@@ -26,8 +28,8 @@ class Booking {
     this.queuedEvents.next(this)
   }
 
-  assigned(car) {
-    this.assignedDateTime = this.assignedDateTime || virtualTime.time()
+  assign(car) {
+    this.assigned = this.assigned || virtualTime.time()
     this.car = car
     this.status = 'Assigned'
     this.assignedEvents.next(this)
@@ -50,10 +52,29 @@ class Booking {
   delivered(position, date = virtualTime.time()) {
     this.deliveredDateTime = date
     this.deliveredPosition = position
-    this.deliveryTime =
-      (date - (this.assignedDateTime || this.queuedDateTime)) / 1000
+    this.deliveryTime = (date - (this.assigned || this.queued)) / 1000
     this.status = 'Delivered'
     this.deliveredEvents.next(this)
+  }
+
+  toObject() {
+    return {
+      id: this.id,
+      status: this.status,
+      type: this.type,
+      co2: this.co2,
+      cost: this.cost,
+      distance: this.distance,
+      weight: this.weight,
+      position: this.position,
+      pickupPosition: this.pickupPosition,
+      deliveredPosition: this.deliveredPosition,
+      pickupDateTime: this.pickupDateTime,
+      deliveredDateTime: this.deliveredDateTime,
+      deliveryTime: this.deliveryTime,
+      queued: this.queued,
+      assigned: this.assigned,
+    }
   }
 }
 

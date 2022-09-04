@@ -19,7 +19,7 @@ const Booking = require('./booking')
 
 class Passenger {
   constructor({ name, position, workplace, home, startPosition }) {
-    this.id = safeId()
+    this.id = 'p-' + safeId()
     this.workplace = workplace
     this.home = home
     this.name = name
@@ -42,11 +42,11 @@ class Passenger {
         hour: moment(virtualTime.time()).hour(),
         weekDay: moment(virtualTime.time()).isoWeekday(),
       })),
-      filter(() => Math.random() > 0.5),
+      //filter(() => Math.random() > 0.5),
       map(({ hour }) => {
-        if (hour < 6 || hour > 22) return 'sleep'
+        if (hour < 4 || hour > 22) return 'sleep'
         if (hour >= 12 || hour <= 16) return 'lunch'
-        if (hour >= 6 || hour < 10) return 'goToWork'
+        if (hour >= 4 || hour < 10) return 'goToWork'
         if (hour >= 16 || hour <= 18) return 'goHome'
         // pickup kids
         // go to gym
@@ -63,53 +63,66 @@ class Passenger {
           case 'goToWork':
             return of(
               new Booking({
-                pickup: this.position,
-                destination: this.workplace.position,
-                timeWindow: [
-                  virtualTime.time(),
-                  virtualTime.time() + 60 * 60 * 1000,
-                ],
-                id: safeId(),
+                type: 'passenger',
+                pickup: {
+                  position: this.position,
+                },
+                destination: {
+                  ...this.workplace,
+                  timeWindow: [
+                    virtualTime.time(),
+                    virtualTime.time() + 60 * 60 * 1000,
+                  ],
+                },
                 passenger: this,
               })
             )
           case 'goHome':
             return of(
               new Booking({
-                pickup: this.position,
-                destination: this.home.position,
-                timeWindow: [
-                  virtualTime.time(),
-                  virtualTime.time() + 60 * 60 * 1000,
-                ],
-                id: safeId(),
+                type: 'passenger',
+                pickup: {
+                  position: this.position,
+                  timeWindow: [
+                    virtualTime.time(),
+                    virtualTime.time() + 60 * 60 * 1000,
+                  ],
+                },
+                destination: this.home,
                 passenger: this,
               })
             )
           case 'lunch':
             return from(randomize(this.workplace.position)).pipe(
-              mergeMap((destination) =>
+              map((position) => ({
+                position,
+              })),
+              mergeMap((lunchPlace) =>
                 from([
                   new Booking({
-                    // Pickup to lunch
-                    pickup: this.position,
-                    destination: this.home.position,
-                    timeWindow: [
-                      virtualTime.time(),
-                      virtualTime.time() + 60 * 60 * 1000,
-                    ],
-                    id: safeId(),
+                    type: 'passenger',
+                    // Pickup to go to lunch
+                    pickup: {
+                      position: this.position,
+                      timeWindow: [
+                        virtualTime.time(),
+                        virtualTime.time() + 60 * 60 * 1000,
+                      ],
+                    },
+                    destination: lunchPlace,
                     passenger: this,
                   }),
                   new Booking({
                     // Go back from lunch to work
-                    pickup: destination,
-                    destination: this.workplace.position,
-                    timeWindow: [
-                      virtualTime.time() + 60 * 60 * 1000,
-                      virtualTime.time() + 80 * 60 * 1000,
-                    ],
-                    id: safeId(),
+                    type: 'passenger',
+                    pickup: lunchPlace,
+                    destination: {
+                      ...this.workplace,
+                      timeWindow: [
+                        virtualTime.time() + 60 * 60 * 1000,
+                        virtualTime.time() + 80 * 60 * 1000,
+                      ],
+                    },
                     passenger: this,
                   }),
                 ])
@@ -137,7 +150,6 @@ class Passenger {
       distance: this.distance,
       id: this.id,
       inVehicle: this.inVehicle,
-      journeys: this.journeys,
       moveTime: this.moveTime,
       name: this.name,
       position: this.position,

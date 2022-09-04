@@ -77,8 +77,8 @@ const PassengerInfo = ({ data }) => {
       <Paragraph>Passagerare {data.id}</Paragraph>
       <Paragraph>Namn: {data.name}</Paragraph>
       <Paragraph>Resor:</Paragraph>
-      {data.journeys &&
-        data.journeys.map((j) => (
+      {data.bookings &&
+        data.bookings.map((j) => (
           <Paragraph>
             - {j.pickup.name} &gt; {j.destination.name} - {j.status}
           </Paragraph>
