@@ -5,8 +5,10 @@ const peliasUrl =
 
 info('Pelias URL', peliasUrl)
 module.exports = {
-  nearest(position) {
-    const url = `${peliasUrl}/v1/reverse?point.lat=${position.lat}&point.lon=${position.lon}&size=1&layers=address,venue`
+  nearest(position, layers = 'address,venue') {
+    const { lon, lat } = position
+
+    const url = `${peliasUrl}/v1/reverse?point.lat=${lat}&point.lon=${lon}&size=1&layers=${layers}`
     const promise = fetch(url)
       .then((response) => {
         if (!response.ok) throw 'pelias error: ' + response.statusText
