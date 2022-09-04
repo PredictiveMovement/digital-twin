@@ -1,4 +1,4 @@
-const { combineLatest } = require('rxjs')
+const { fromEvent, combineLatest, pipe } = require('rxjs')
 const {
   map,
   toArray,
@@ -11,6 +11,7 @@ const {
   windowTime,
   groupBy,
   last,
+  bufferCount,
 } = require('rxjs/operators')
 
 const engine = require('../index')
@@ -18,8 +19,8 @@ const { virtualTime } = require('../lib/virtualTime')
 const { saveParameters } = require('../lib/fileUtils')
 const { info } = require('../lib/log')
 
-const cleanBookings = () => (bookings) =>
-  bookings.pipe(
+const cleanBookings = () =>
+  pipe(
     map(
       ({
         pickup: { position: pickup },
@@ -180,16 +181,18 @@ function register(io) {
       .pipe(map(({ id, name, geometry, co2 }) => ({ id, name, geometry, co2 })))
       .subscribe((kommun) => socket.emit('kommun', kommun))
     experiment.dispatchedBookings
-      .pipe(bufferTime(100, null, 1000))
+      .pipe(cleanBookings(), bufferTime(100, null, 1000))
       .subscribe((bookings) => {
         if (bookings.length) {
           io.socket('bookings', bookings)
         }
       })
-    experiment.buses.pipe(map(cleanCars)).subscribe((e) => {
-      // console.log(e)
-      socket.emit('cars', [e])
-    })
+    experiment.buses
+      .pipe(map(cleanCars), bufferCount(100))
+      .subscribe((cars) => {
+        // console.log(e)
+        socket.emit('cars', cars)
+      })
     experiment.passengers.subscribe((passenger) => {
       socket.emit('passenger', passenger.toObject())
     })

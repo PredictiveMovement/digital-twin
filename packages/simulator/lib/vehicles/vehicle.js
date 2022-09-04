@@ -11,7 +11,7 @@ const { throws } = require('assert')
 const { ReplaySubject } = require('rxjs')
 class Vehicle {
   constructor({
-    id = safeId(),
+    id = 'v-' + safeId(),
     position,
     status = 'Ready',
     capacity = 250,
@@ -31,7 +31,6 @@ class Vehicle {
     this.id = id
     this.position = position
     this.origin = position
-    this.history = []
     this.queue = []
     this.cargo = []
     this.delivered = []
@@ -99,21 +98,17 @@ class Vehicle {
 
   handleBooking(booking) {
     assert(booking instanceof Booking, 'Booking needs to be of type Booking')
-    this.history.push({
-      status: 'received_booking',
-      date: this.time(),
-      booking,
-    })
+
     if (!this.busy) {
       this.busy = true
       this.booking = booking
-      booking.assigned(this)
+      booking.assign(this)
       this.status = 'Pickup'
       this.navigateTo(booking.pickup.position)
     } else {
       // TODO: switch places with current booking if it makes more sense to pick this package up before picking up current
       this.queue.push(booking)
-      booking.queued(this)
+      booking.queue(this)
     }
     return booking
   }

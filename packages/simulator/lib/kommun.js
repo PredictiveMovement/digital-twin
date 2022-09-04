@@ -68,21 +68,21 @@ class Kommun {
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
 
-    this.cars = merge(
-      this.privateCars,
-      this.fleets.pipe(mergeMap((fleet) => fleet.cars))
-    ).pipe(shareReplay())
-
     const nrOfTaxis = Math.floor(dynamicRatio * this.busCount)
-
     this.taxis = range(0, nrOfTaxis).pipe(
       mergeMap(() => Promise.all([randomize(center), randomize(center)]), 5),
       // wander around until a booking comes along
       map(
         ([position, heading]) =>
-          new Taxi({ id: safeId(), position, startPosition: position, heading })
+          new Taxi({ position, startPosition: position, heading })
       )
     )
+
+    this.cars = merge(
+      this.privateCars,
+      this.taxis,
+      this.fleets.pipe(mergeMap((fleet) => fleet.cars))
+    ).pipe(shareReplay())
 
     this.buses = range(0, this.busCount - nrOfTaxis).pipe(
       map(() => ({

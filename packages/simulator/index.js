@@ -37,22 +37,22 @@ const engine = {
     }
     statistics.collectExperimentMetadata(parameters)
 
-    const experiment = Object.assign(
-      {
-        virtualTime, // TODO: move this from being a static property to being a property of the experiment
-        cars: kommuner.pipe(mergeMap((kommun) => kommun.cars)),
-        dispatchedBookings: kommuner.pipe(
-          mergeMap((k) => k.dispatchedBookings)
-        ),
-        buses: regions.pipe(mergeMap((region) => region.buses)),
-        postombud,
-        kommuner,
-        parameters,
-        passengers: regions.pipe(mergeMap((region) => region.passengers)),
-        taxis: regions.pipe(mergeMap((region) => region.taxis)),
-      },
-      static
-    )
+    const experiment = {
+      virtualTime, // TODO: move this from being a static property to being a property of the experiment
+      cars: kommuner.pipe(mergeMap((kommun) => kommun.cars)),
+      dispatchedBookings: merge(
+        regions.pipe(mergeMap((r) => r.dispatchedBookings)),
+        kommuner.pipe(mergeMap((k) => k.dispatchedBookings))
+      ),
+      buses: regions.pipe(mergeMap((region) => region.buses)),
+      busStops: regions.pipe(mergeMap((region) => region.stops)),
+      lineShapes: regions.pipe(mergeMap((region) => region.lineShapes)),
+      postombud,
+      kommuner,
+      parameters,
+      passengers: regions.pipe(mergeMap((region) => region.passengers)),
+      taxis: regions.pipe(mergeMap((region) => region.taxis)),
+    }
 
     experiment.passengers
       .pipe(
@@ -97,7 +97,9 @@ const engine = {
     )
 
     experiment.dispatchedBookings.subscribe((booking) =>
-      info(`Booking ${booking?.id} dispatched to fleet ${booking?.fleet?.name}`)
+      console.log(
+        `Booking ${booking?.id} dispatched to fleet ${booking?.fleet?.name}`
+      )
     )
     engine.experiments.push(experiment)
 
