@@ -1,25 +1,19 @@
 const {
-  takeUntil,
-  tap,
   take,
   filter,
   map,
   mergeMap,
-  mergeAll,
   concatMap,
   toArray,
   shareReplay,
-  mergeWith,
   zipWith,
-  withLatestFrom,
 } = require('rxjs/operators')
 const perlin = require('perlin-noise')
 
 const pelias = require('../lib/pelias')
 const { addMeters } = require('../lib/distance')
 const Passenger = require('../lib/models/passenger')
-const { generateNames } = require('../lib/personNames')
-const { virtualTime } = require('./../lib/virtualTime')
+const { randomNames } = require('../lib/personNames')
 const { randomize } = require('./address')
 
 const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
@@ -58,7 +52,7 @@ const generatePassengers = (kommuner) =>
         }, 20),
         concatMap(async ({ homePosition, workPosition }) => {
           try {
-            const home = await pelias.nearest(homePosition)
+            const home = await pelias.nearest(homePosition, 'address')
             return { home, workPosition }
           } catch (e) {
             return null
@@ -74,7 +68,7 @@ const generatePassengers = (kommuner) =>
           }
         }),
         filter((p) => p),
-        zipWith(generateNames()),
+        zipWith(randomNames.pipe(take(1))),
         map(([props, name]) =>
           createPassengerFromAddress({ ...props, ...name })
         )
