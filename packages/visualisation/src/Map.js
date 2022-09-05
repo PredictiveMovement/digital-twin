@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { StaticMap } from 'react-map-gl'
-import DeckGL, { PolygonLayer, ScatterplotLayer, ArcLayer, IconLayer, LinearInterpolator } from 'deck.gl'
+import DeckGL, {
+  PolygonLayer,
+  ScatterplotLayer,
+  ArcLayer,
+  IconLayer,
+  LinearInterpolator,
+} from 'deck.gl'
 //import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
 
@@ -16,7 +22,6 @@ mapboxgl.workerClass =
   // eslint-disable-next-line import/no-webpack-loader-syntax
   require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default
 
-
 /*
 
 const commercialAreasLayer = new GeoJsonLayer({
@@ -31,10 +36,17 @@ const commercialAreasLayer = new GeoJsonLayer({
 })
 */
 
-const transitionInterpolator = new LinearInterpolator(['bearing']);
+const transitionInterpolator = new LinearInterpolator(['bearing'])
 
-
-const Map = ({ vehicles, bookings, hubs, kommuner, activeCar, setActiveCar, time }) => {
+const Map = ({
+  vehicles,
+  bookings,
+  hubs,
+  kommuner,
+  activeCar,
+  setActiveCar,
+  time,
+}) => {
   const [mapState, setMapState] = useState({
     latitude: 65.0964472642777,
     longitude: 17.112050188704504,
@@ -44,15 +56,14 @@ const Map = ({ vehicles, bookings, hubs, kommuner, activeCar, setActiveCar, time
   })
 
   const rotateCamera = useCallback(() => {
-    setMapState(mapState => ({
+    setMapState((mapState) => ({
       ...mapState,
       bearing: mapState.bearing + 1,
       transitionDuration: 1000,
       transitionInterpolator,
-      onTransitionEnd: rotateCamera
+      onTransitionEnd: rotateCamera,
     }))
-  }, []);
-
+  }, [])
 
   const [hoverInfo, setHoverInfo] = useState(null)
   const [kommunInfo, setKommunInfo] = useState(null)
@@ -107,8 +118,8 @@ const Map = ({ vehicles, bookings, hubs, kommuner, activeCar, setActiveCar, time
         return [57, 123, 184]
       case 'röd':
         return [252, 3, 3]
-      case 'drönarleverans ab':
-          return [0, 255, 255]
+      case 'morgondagens brevduvor':
+        return [0, 255, 255]
       case 'privat':
         return [170, 255, 187]
       default:
@@ -116,7 +127,7 @@ const Map = ({ vehicles, bookings, hubs, kommuner, activeCar, setActiveCar, time
     }
   }
 
-  const getStatusLabel = status => {
+  const getStatusLabel = (status) => {
     switch (status.toLowerCase()) {
       case 'assigned':
         return 'Tilldelad'
@@ -174,7 +185,7 @@ const Map = ({ vehicles, bookings, hubs, kommuner, activeCar, setActiveCar, time
     getPosition: (c) => {
       return c.position
     },
-    getRadius: (c) => c.fleet === 'Privat' ? 4 : 8,
+    getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
     getFillColor: getColorBasedOnFleet,
     pickable: true,
     onHover: ({ object, x, y }) => {
@@ -210,7 +221,12 @@ const Map = ({ vehicles, bookings, hubs, kommuner, activeCar, setActiveCar, time
     },
     getRadius: () => 4,
     // #fab
-    getFillColor: ({ status }) => status === 'Delivered' ? [170, 255, 187] : status === 'Picked up' ? [170, 187, 255, 55] : [255, 170, 187, 55],
+    getFillColor: ({ status }) =>
+      status === 'Delivered'
+        ? [170, 255, 187]
+        : status === 'Picked up'
+        ? [170, 187, 255, 55]
+        : [255, 170, 187, 55],
     pickable: true,
     onHover: ({ object, x, y }) => {
       // console.log('booking', object)
@@ -254,48 +270,52 @@ const Map = ({ vehicles, bookings, hubs, kommuner, activeCar, setActiveCar, time
     },
   })
 
-
   const [showQueuedBookings, setShowQueuedBookings] = useState(false)
 
-  const arcDataWithQueuedBookings = showQueuedBookings && bookings
-    //.filter((booking) => booking.status === 'Queued')
-    .map((booking) => {
-      if (!vehicles) return null
-      const car = vehicles.find((car) => car.id === booking.carId)
-      if (car === undefined) return null
+  const arcDataWithQueuedBookings =
+    showQueuedBookings &&
+    bookings
+      //.filter((booking) => booking.status === 'Queued')
+      .map((booking) => {
+        if (!vehicles) return null
+        const car = vehicles.find((car) => car.id === booking.carId)
+        if (car === undefined) return null
 
+        switch (booking.status) {
+          case 'Picked up':
+            return {
+              inbound: getColorBasedOnFleet(car),
+              outbound: getColorBasedOnFleet(car),
+              from: car.position,
+              to: booking.destination,
+            }
+          case 'Queued':
+            return {
+              inbound: [178, 169, 2, 20],
+              outbound: [178, 169, 2, 20],
+              from: car.position,
+              to: booking.pickup,
+            }
+          case 'Delivered':
+            return null
 
-      switch (booking.status) {
-        case 'Picked up': return {
-          inbound: getColorBasedOnFleet(car),
-          outbound: getColorBasedOnFleet(car),
-          from: car.position,
-          to: booking.destination
+          default:
+            return {
+              inbound: [237, 178, 169, 20],
+              outbound: [237, 178, 169, 100],
+              from: booking.pickup,
+              to: booking.destination,
+            }
         }
-        case 'Queued': return {
-          inbound: [178, 169, 2, 20],
-          outbound: [178, 169, 2, 20],
-          from: car.position,
-          to: booking.pickup,
-        }
-        case 'Delivered': return null
-
-        default: return {
-          inbound: [237, 178, 169, 20],
-          outbound: [237, 178, 169, 100],
-          from: booking.pickup,
-          to: booking.destination
-        }
-      }
-    })
-    .filter(b => b) // remove null values
+      })
+      .filter((b) => b) // remove null values
 
   const arcData = vehicles.map((car) => {
     return {
       inbound: [167, 55, 255],
       outbound: [167, 55, 255],
       from: car.position,
-      to: car.heading
+      to: car.heading,
     }
   })
   const [showArcLayer, setShowArcLayer] = useState(false)
@@ -305,24 +325,22 @@ const Map = ({ vehicles, bookings, hubs, kommuner, activeCar, setActiveCar, time
     data: showArcLayer && arcData,
     pickable: true,
     getWidth: 1,
-    getSourcePosition: d => d.from,
-    getTargetPosition: d => d.to,
-    getSourceColor: d => d.inbound,
-    getTargetColor: d => d.outbound,
+    getSourcePosition: (d) => d.from,
+    getTargetPosition: (d) => d.to,
+    getSourceColor: (d) => d.inbound,
+    getTargetColor: (d) => d.outbound,
   })
-
 
   const arcLayerQueuedBookings = new ArcLayer({
     id: 'arc-layer-queued-bookings',
     data: arcDataWithQueuedBookings,
     pickable: true,
     getWidth: 1,
-    getSourcePosition: d => d.from,
-    getTargetPosition: d => d.to,
-    getSourceColor: d => d.inbound,
-    getTargetColor: d => d.outbound,
+    getSourcePosition: (d) => d.from,
+    getTargetPosition: (d) => d.to,
+    getSourceColor: (d) => d.inbound,
+    getTargetColor: (d) => d.outbound,
   })
-
 
   useEffect(() => {
     if (!vehicles.length) return
@@ -335,7 +353,6 @@ const Map = ({ vehicles, bookings, hubs, kommuner, activeCar, setActiveCar, time
       latitude: car.position[1],
     }))
   }, [activeCar, vehicles])
-
 
   return (
     <DeckGL
@@ -361,35 +378,48 @@ const Map = ({ vehicles, bookings, hubs, kommuner, activeCar, setActiveCar, time
         bookingLayer,
         carLayer,
         showArcLayer && arcLayer,
-        showQueuedBookings && arcLayerQueuedBookings
+        showQueuedBookings && arcLayerQueuedBookings,
       ]}
     >
-      <div style={{
-        right: '40px',
-        top: '20px',
-        position: 'absolute',
-        color: 'rgba(255,255,255,0.5)'
-      }}>{new Date(time).toLocaleTimeString()}</div>
-      <div style={{
-        bottom: '150px',
-        right: '200px',
-        position: 'absolute'
-      }}>
-        <Button text="Upphämtning / Avlämning" onClick={() => {
-
-          setShowArcLayer(false)
-          setShowQueuedBookings(current => !current)
-        }} />
+      <div
+        style={{
+          right: '40px',
+          top: '20px',
+          position: 'absolute',
+          color: 'rgba(255,255,255,0.5)',
+        }}
+      >
+        {new Date(time).toLocaleTimeString()}
       </div>
-      <div style={{
-        bottom: '80px',
-        right: '200px',
-        position: 'absolute'
-      }}>
-        <Button text={'Nästa stopp'} onClick={() => {
-          setShowQueuedBookings(false)
-          setShowArcLayer(current => !current)
-        }} />
+      <div
+        style={{
+          bottom: '150px',
+          right: '200px',
+          position: 'absolute',
+        }}
+      >
+        <Button
+          text="Upphämtning / Avlämning"
+          onClick={() => {
+            setShowArcLayer(false)
+            setShowQueuedBookings((current) => !current)
+          }}
+        />
+      </div>
+      <div
+        style={{
+          bottom: '80px',
+          right: '200px',
+          position: 'absolute',
+        }}
+      >
+        <Button
+          text={'Nästa stopp'}
+          onClick={() => {
+            setShowQueuedBookings(false)
+            setShowArcLayer((current) => !current)
+          }}
+        />
       </div>
       <StaticMap
         reuseMaps

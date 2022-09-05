@@ -1,16 +1,17 @@
 const Vehicle = require('./vehicle')
 const { virtualTime } = require('../virtualTime')
 const interpolate = require('../interpolate')
-const { haversine } = require("../distance")
+const { haversine } = require('../distance')
 
 class Drone extends Vehicle {
-  constructor({maxSpeed = 50, position, ...vehicle}) {
+  constructor({ maxSpeed = 50, position, ...vehicle }) {
     super(vehicle)
-    this.maxSpeed = maxSpeed // km/h
+    this.maxSpeed = 95 // km/h
     this.position = this.origin = position
-    this.co2PerKmKg = 0.001
+    this.co2PerKmKg = 0.0001
+    this.weight = 7.5 // kg
     this.maximumWeight = 10 // kg
-    this.range = 25_000 // meters
+    this.range = 120_000 // meters
     this.altitude = 0
     this.maximumAltitude = 800
     this.dropoffTime = 600 // seconds
@@ -19,7 +20,8 @@ class Drone extends Vehicle {
   simulate(route) {
     clearInterval(this._interval)
     if (!route) return
-    if (virtualTime.timeMultiplier === Infinity) return this.updatePosition(route) // teleport mode
+    if (virtualTime.timeMultiplier === Infinity)
+      return this.updatePosition(route) // teleport mode
     this._interval = setInterval(() => {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
       const newPosition = interpolate.route(route, this.time()) ?? this.heading
@@ -31,12 +33,14 @@ class Drone extends Vehicle {
 
   canPickupBooking(booking) {
     const pickupDistance = haversine(this.position, booking.pickup.position)
-    const deliveryDistance = haversine(booking.pickup.position, booking.destination.position)
+    const deliveryDistance = haversine(
+      booking.pickup.position,
+      booking.destination.position
+    )
     if (this.weight + booking.weight > this.maximumWeight) return false
     if (pickupDistance + deliveryDistance > this.range) return false
-    return this.capacity > (this.queue.length + this.cargo.length)
+    return this.capacity > this.queue.length + this.cargo.length
   }
-
 
   navigateTo(position) {
     this.startingFrom = this.position
@@ -44,21 +48,23 @@ class Drone extends Vehicle {
     if (!position) debugger
     const distance = haversine(this.position, position) // meters
     const km = distance / 1000
-    const h = ((km) / (this.maxSpeed))
+    const h = km / this.maxSpeed
     const duration = h * 60 * 60
     this.route = {
       started: this.time(),
       distance,
       duration,
       geometry: {
-        coordinates: [this.position, position, position] // add one more so the interpolation routine works
+        coordinates: [this.position, position, position], // add one more so the interpolation routine works
       },
-      legs: [{
-        annotation: {
-          distance: [distance, 0],
-          duration: [duration, this.dropoffTime],
-        }
-      }]
+      legs: [
+        {
+          annotation: {
+            distance: [distance, 0],
+            duration: [duration, this.dropoffTime],
+          },
+        },
+      ],
     }
     this.simulate(this.route)
 
