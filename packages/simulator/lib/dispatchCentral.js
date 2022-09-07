@@ -8,6 +8,8 @@ const {
   delay,
   mergeMap,
   catchError,
+  shareReplay,
+  repeat,
 } = require('rxjs/operators')
 const { haversine } = require('./distance')
 
@@ -34,7 +36,7 @@ const dispatch = (vehicles, bookings) => {
           // naive dispatch, just pick the first car that is closest to the pickup
           map(
             (vehicles) =>
-              vehicles.sort((a, b) => a.weight - b.weight).shift()?.car
+              vehicles.sort((a, b) => a.distance - b.distance).shift()?.car
           ),
           filter((car) => car),
           map((car) => ({ car, booking: car.handleBooking(booking) })),

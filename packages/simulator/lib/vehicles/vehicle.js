@@ -10,7 +10,15 @@ const { virtualTime } = require('../virtualTime')
 const { throws } = require('assert')
 
 class Vehicle extends EventEmitter {
-  constructor({ id = safeId(), position, status = 'Ready', capacity = 250, weight = 10000, fleet, co2PerKmKg = 0.013 / 1000} = {}) {
+  constructor({
+    id = safeId(),
+    position,
+    status = 'Ready',
+    capacity = 250,
+    weight = 10000,
+    fleet,
+    co2PerKmKg = 0.013 / 1000,
+  } = {}) {
     super()
     this.id = id
     this.position = position
@@ -45,7 +53,8 @@ class Vehicle extends EventEmitter {
   simulate(route) {
     clearInterval(this._interval)
     if (!route) return
-    if (virtualTime.timeMultiplier === Infinity) return this.updatePosition(route) // teleport mode
+    if (virtualTime.timeMultiplier === Infinity)
+      return this.updatePosition(route) // teleport mode
     this._interval = setInterval(() => {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
       const newPosition = interpolate.route(route, this.time()) ?? this.heading
@@ -61,16 +70,25 @@ class Vehicle extends EventEmitter {
         route.started = this.time()
         this.route = route
         //info(`Car ${this.id} navigates to`, position)
-        if (!route.legs) throw new Error(`Route not found from: ${JSON.stringify(this.position)} to: ${JSON.stringify(this.heading)}`)
+        if (!route.legs)
+          throw new Error(
+            `Route not found from: ${JSON.stringify(
+              this.position
+            )} to: ${JSON.stringify(this.heading)}`
+          )
         this.simulate(this.route)
         return this.heading
       })
-      .catch(err => error('Route error', err))
+      .catch((err) => error('Route error', err))
   }
 
   handleBooking(booking) {
     assert(booking instanceof Booking, 'Booking needs to be of type Booking')
-    this.history.push({ status: 'received_booking', date: this.time(), booking })
+    this.history.push({
+      status: 'received_booking',
+      date: this.time(),
+      booking,
+    })
     if (!this.busy) {
       this.busy = true
       this.emit('busy', this)
@@ -91,12 +109,20 @@ class Vehicle extends EventEmitter {
 
     this.emit('pickup', this.id)
     //console.log('PICKUP', this.queue)
-    this.queue.sort((a, b) => haversine(this.position, a.pickup.position) - haversine(this.position, b.pickup.position))
+    this.queue.sort(
+      (a, b) =>
+        haversine(this.position, a.pickup.position) -
+        haversine(this.position, b.pickup.position)
+    )
 
     // wait one tick so the pickup event can be parsed before changing status
     setImmediate(() => {
       // see if we have more packages to pickup from this position
-      while ((this.queue.length < this.capacity) && this.queue.length && haversine(this.position, this.queue[0].pickup.position) < 100) {
+      while (
+        this.queue.length < this.capacity &&
+        this.queue.length &&
+        haversine(this.position, this.queue[0].pickup.position) < 100
+      ) {
         const booking = this.queue.shift()
         booking.pickedUp(this.position)
         this.cargo.push(booking)
@@ -107,7 +133,12 @@ class Vehicle extends EventEmitter {
         this.status = 'Delivery'
 
         // should we first pickup more bookings before going to the destination?
-        if ((this.queue.length < this.capacity) && this.queue.length && haversine(this.queue[0].pickup.position, this.position) < haversine(this.booking.destination.position, this.position)) {
+        if (
+          this.queue.length < this.capacity &&
+          this.queue.length &&
+          haversine(this.queue[0].pickup.position, this.position) <
+            haversine(this.booking.destination.position, this.position)
+        ) {
           this.navigateTo(this.queue[0].pickup.position)
         } else {
           this.navigateTo(this.booking.destination.position)
@@ -132,7 +163,11 @@ class Vehicle extends EventEmitter {
       this.navigateTo(this.booking.destination.position)
     } else {
       // If we have no more packages to deliver in cargo, go to the nearest booking in the queue or back to origin
-      this.queue.sort((a, b) => haversine(this.position, a.destination.position) - haversine(this.position, b.destination.position))
+      this.queue.sort(
+        (a, b) =>
+          haversine(this.position, a.destination.position) -
+          haversine(this.position, b.destination.position)
+      )
 
       const nextBooking = this.queue.shift()
       if (nextBooking) {
@@ -146,30 +181,41 @@ class Vehicle extends EventEmitter {
 
   pickNextFromCargo() {
     // pick next from cargo
-    this.cargo.sort((a, b) => haversine(this.position, a.destination.position) - haversine(this.position, b.destination.position))
+    this.cargo.sort(
+      (a, b) =>
+        haversine(this.position, a.destination.position) -
+        haversine(this.position, b.destination.position)
+    )
     const booking = this.cargo.shift()
     this.emit('cargo', this)
     return booking
   }
 
-  cargoWeight(){
+  cargoWeight() {
     return this.cargo.reduce((total, booking) => total + booking.weight, 0)
   }
 
   canPickupBooking(booking) {
-    return this.capacity > (this.queue.length + this.cargo.length)
+    return this.capacity > this.queue.length + this.cargo.length
   }
-
 
   async updatePosition(position, date = this.time()) {
     const lastPosition = this.position || position
-    const metersMoved = this.route && this.lastPositionUpdate && interpolate.getDiff(this.route, this.lastPositionUpdate, date).distance || haversine(lastPosition, position)
-    const [km, h] = [(metersMoved / 1000), ((date - this.lastPositionUpdate) / 1000 / 60 / 60)]
+    const metersMoved =
+      (this.route &&
+        this.lastPositionUpdate &&
+        interpolate.getDiff(this.route, this.lastPositionUpdate, date)
+          .distance) ||
+      haversine(lastPosition, position)
+    const [km, h] = [
+      metersMoved / 1000,
+      (date - this.lastPositionUpdate) / 1000 / 60 / 60,
+    ]
     // https://www.naturvardsverket.se/data-och-statistik/klimat/vaxthusgaser-utslapp-fran-inrikes-transporter/
     // https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
-    const co2 = ((this.weight + this.cargoWeight()) * km) * this.co2PerKmKg
+    const co2 = (this.weight + this.cargoWeight()) * km * this.co2PerKmKg
     this.co2 += co2
-    this.speed = Math.round((km / h) || 0)
+    this.speed = Math.round(km / h || 0)
     this.position = position
     this.lastPositionUpdate = date
     this.ema = haversine(this.heading, this.position)
@@ -179,9 +225,16 @@ class Vehicle extends EventEmitter {
       this.emit('moved', this)
     }
 
-    this.cargo.map(booking => {
-      booking.moved(this.position, metersMoved, co2 / (this.cargo.length + 1), h * this.costPerHour / (this.cargo.length + 1))
-    })
+    ;[...this.cargo, this.booking]
+      .filter((b) => b)
+      .map((booking) => {
+        booking.moved(
+          this.position,
+          metersMoved,
+          co2 / (this.cargo.length + 1),
+          (h * this.costPerHour) / (this.cargo.length + 1)
+        )
+      })
 
     if (!position.next) {
       this.emit('stopped', this)

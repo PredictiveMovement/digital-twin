@@ -31,6 +31,8 @@ const KommunStatisticsBox = ({
   totalCargo,
   totalQueued,
   averageQueued,
+  totalCost,
+  averageCost,
 }) => {
   return !totalVehicles ? null : (
     <Wrapper>
@@ -51,12 +53,14 @@ const KommunStatisticsBox = ({
           Medel leveranstid: {secondsToHm(averageDeliveryTime)}{' '}
         </Paragraph>
 
+        <Paragraph>Genomsnittskostnad: {averageCost}kr </Paragraph>
+        <Paragraph>Totalkostnad: {totalCost}kr </Paragraph>
+
         {/* <Paragraph>Total cargo: {totalCargo}</Paragraph> */}
         {/* <Paragraph>Co2: XXX</Paragraph> */}
         {/* <Paragraph>Antal kollin upphämtade från avlastningscentralen: {bookingsFromHub} st</Paragraph> */}
       </div>
       {/* <div> */}
-      <Paragraph thin>Medelfyllnadsgrad per bil:</Paragraph>
       {<ProgressBar completed={Math.round(averageUtilization * 100)} />}
       {/* </div> */}
     </Wrapper>

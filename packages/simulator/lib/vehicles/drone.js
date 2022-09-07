@@ -8,13 +8,15 @@ class Drone extends Vehicle {
     super(vehicle)
     this.maxSpeed = 95 // km/h
     this.position = this.origin = position
+    this.capacity = 1
     this.co2PerKmKg = 0.0001
-    this.weight = 7.5 // kg
-    this.maximumWeight = 10 // kg
+    this.weight = 2.5 // kg
+    this.maximumWeight = 30 // kg
     this.range = 120_000 // meters
     this.altitude = 0
     this.maximumAltitude = 800
-    this.dropoffTime = 600 // seconds
+    this.costPerHour = 500_000 / 36 / 20 / 4 // 500k sek investment, 36 months, 20 days per month, 2 shifts per day = 4 hours
+    this.dropoffTime = 300 // seconds
   }
 
   simulate(route) {

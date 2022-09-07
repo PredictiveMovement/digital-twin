@@ -157,6 +157,23 @@ function register(io) {
           }))
         )
 
+        const averageCost = dispatchedBookings.pipe(
+          mergeMap((booking) => fromEvent(booking, 'delivered')),
+          scan(
+            ({ total, totalCost }, { cost }) => ({
+              total: total + 1,
+              totalCost: totalCost + (cost || 0),
+            }),
+            { total: 0, totalCost: 0 }
+          ),
+          startWith({ total: 0, totalCost: 0 }),
+          map(({ total, totalCost }) => ({
+            totalDelivered: total,
+            totalCost: Math.round(totalCost),
+            averageCost: Math.round(totalCost / total),
+          }))
+        )
+
         const averageUtilization = vehicles.pipe(
           mergeMap((car) => fromEvent(car, 'cargo')),
           scan((acc, car) => ({ ...acc, [car.id]: car }), {}),
@@ -209,6 +226,7 @@ function register(io) {
           totalVehicles,
           averageUtilization,
           averageDeliveryTime,
+          averageCost,
           totalCapacity,
         ]).pipe(
           map(
@@ -223,6 +241,7 @@ function register(io) {
                 averageUtilization,
               },
               { totalDelivered, averageDeliveryTime },
+              { totalCost, averageCost },
               totalCapacity,
             ]) => ({
               id,
@@ -237,6 +256,8 @@ function register(io) {
               totalQueued,
               averageQueued,
               averageUtilization,
+              totalCost,
+              averageCost,
             })
           ),
           // Do not emit more than 1 event per kommun per second
