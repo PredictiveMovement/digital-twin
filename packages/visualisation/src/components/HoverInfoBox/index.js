@@ -6,7 +6,7 @@ import { Paragraph } from '../Typography'
 const Wrapper = styled.div`
   position: absolute;
   left: ${(props) => props.left - 50}px;
-  top: ${(props) => props.top - 115}px;
+  bottom: ${(props) => props.top}px;
   background-color: #10c57b;
   min-width: 200px;
   min-height: 60px;
@@ -36,7 +36,7 @@ const CarInfo = ({ data }) => {
       ? 'Passagerare'
       : 'Paket'
   return (
-    <Wrapper left={data.x - 8} top={data.y - 120}>
+    <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <div>
         <Paragraph>{`Fordon ${data.id}`}</Paragraph>
         {data.lineNumber !== undefined && (
@@ -72,7 +72,7 @@ const CarInfo = ({ data }) => {
 
 const PassengerInfo = ({ data }) => {
   return (
-    <Wrapper left={data.x - 25} top={data.y - 65}>
+    <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <Paragraph>Passagerare {data.id}</Paragraph>
       <Paragraph>Namn: {data.name}</Paragraph>
       <Paragraph>Resor:</Paragraph>
@@ -98,7 +98,7 @@ const PassengerInfo = ({ data }) => {
 
 const GenericInfo = ({ data }) => {
   return (
-    <Wrapper left={data.x} top={data.y - 40}>
+    <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <Paragraph>{data.title}</Paragraph>
       <Paragraph>{data.subTitle}</Paragraph>
       {data.deliveryTime ? (
