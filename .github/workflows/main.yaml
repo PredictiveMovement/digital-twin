@@ -45,5 +45,5 @@ jobs:
           TRAFIKLAB_KEY: ${{ secrets.TRAFIKLAB_KEY }}
         run: |
           docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
-          skaffold run -p prod
+          skaffold run
           docker logout
