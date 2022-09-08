@@ -1,5 +1,6 @@
 const fetch = require('node-fetch')
-const peliasUrl = process.env.PELIAS_URL || 'https://pelias.iteamdev.io'
+const peliasUrl =
+  process.env.PELIAS_URL || 'https://pelias.predictivemovement.se'
 
 console.log('Pelias URL', peliasUrl)
 module.exports = {

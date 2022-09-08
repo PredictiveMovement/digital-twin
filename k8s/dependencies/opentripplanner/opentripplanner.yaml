@@ -62,9 +62,20 @@ metadata:
 spec:
   tls:
     - hosts:
+        - otp.iteam.services
         - otp.predictivemovement.se
       secretName: otp-prod-tls
   rules:
+    - host: otp.iteam.services
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: otp
+                port:
+                  number: 8080
     - host: otp.predictivemovement.se
       http:
         paths:

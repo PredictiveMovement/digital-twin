@@ -5,9 +5,20 @@ metadata:
 spec:
   tls:
     - hosts:
+        - kibana.iteam.services
         - kibana.predictivemovement.se
       secretName: kibana-prod-tls
   rules:
+    - host: kibana.iteam.services
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kibana
+                port:
+                  number: 5601
     - host: kibana.predictivemovement.se
       http:
         paths:
