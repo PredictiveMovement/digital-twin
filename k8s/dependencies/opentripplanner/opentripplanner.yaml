@@ -62,10 +62,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - otp.iteam.services
+        - otp.predictivemovement.se
       secretName: otp-prod-tls
   rules:
-    - host: otp.iteam.services
+    - host: otp.predictivemovement.se
       http:
         paths:
           - path: /
