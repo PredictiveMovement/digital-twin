@@ -110,13 +110,14 @@ const Map = ({
     getRadius: () => 4,
     getFillColor: [255, 255, 255, 80],
     pickable: true,
-    onHover: ({ object, x, y }) => {
+    onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         type: 'busStop',
         title: 'Busshållplats ' + object.name,
         x,
         y,
+        viewport,
       })
     },
   })
@@ -139,13 +140,14 @@ const Map = ({
   const busLineLayer = new GeoJsonLayer({
     id: 'busLineLayer',
     data: geoJsonFromBusLines(lineShapes),
-    onHover: ({ object, x, y }) => {
+    onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         type: 'busLine',
         title: object.properties.name,
         x,
         y,
+        viewport,
       })
     },
     pickable: true,
@@ -184,6 +186,7 @@ const Map = ({
       case 'privat':
         return [34, 166, 179, opacity]
       case 'taxi':
+      case 'anropsstyrd kollektivtrafik':
         return [255, 255, 0, opacity]
       default:
         return [254, 254, 254, opacity]
@@ -217,13 +220,14 @@ const Map = ({
       return c.position
     },
     pickable: true,
-    onHover: ({ object, x, y }) => {
+    onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         ...object,
         type: 'car',
         x,
         y,
+        viewport,
       })
     },
     onClick: ({ object }) => {
@@ -251,13 +255,14 @@ const Map = ({
     //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
     getFillColor: getColorBasedOnFleet,
     pickable: true,
-    onHover: ({ object, x, y }) => {
+    onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         ...object,
         type: 'car',
         x,
         y,
+        viewport
       })
     },
     onClick: ({ object }) => {
@@ -285,13 +290,14 @@ const Map = ({
     //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
     getFillColor: getColorBasedOnFleet,
     pickable: true,
-    onHover: ({ object, x, y }) => {
+    onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         ...object,
         type: 'car',
         x,
         y,
+        viewport,
       })
     },
     onClick: ({ object }) => {
@@ -317,13 +323,14 @@ const Map = ({
     },
     getFillColor: getColorBasedOnFleet,
     pickable: true,
-    onHover: ({ object, x, y }) => {
+    onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         ...object,
         type: 'car',
         x,
         y,
+        viewport,
       })
     },
     onClick: ({ object }) => {
@@ -353,13 +360,14 @@ const Map = ({
       inVehicle ? [0, 0, 0, 0] : [0, 128, 255, 170],
 
     pickable: true,
-    onHover: ({ object, x, y }) => {
+    onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         ...object,
         type: 'passenger',
         x,
         y,
+        viewport,
       })
     },
   })
@@ -384,7 +392,7 @@ const Map = ({
         ? [170, 187, 255, 55]
         : [255, 170, 187, 55],
     pickable: true,
-    onHover: ({ object, x, y }) => {
+    onHover: ({ object, x, y, viewport }) => {
       // console.log('booking', object)
       if (!object) return setHoverInfo(null)
       setHoverInfo({
@@ -396,6 +404,7 @@ const Map = ({
           : ' Status: ' + getStatusLabel(object.status),
         x,
         y,
+        viewport,
       })
     },
   })
@@ -416,13 +425,14 @@ const Map = ({
     // #127DBD
     getFillColor: [0, 255, 128, 120],
     pickable: true,
-    onHover: ({ object, x, y }) => {
+    onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         type: 'hub',
         title: 'Paketombud för ' + object.operator,
         x,
         y,
+        viewport,
       })
     },
   })
