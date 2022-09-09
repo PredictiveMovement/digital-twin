@@ -10,7 +10,7 @@ data:
     {
       "esclient": {
         "hosts": [{
-          "host": "elasticsearch",
+          "host": "elasticsearch.elasticsearch",
           "port": 9200,
           "protocol": "http"
         }]

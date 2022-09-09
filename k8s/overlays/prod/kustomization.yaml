@@ -7,7 +7,6 @@ namespace: rorla
 patchesStrategicMerge:
   - visualisation.yaml
   - simulator.yaml
-  - kibana.yaml
 
 resources:
   - ../../base
