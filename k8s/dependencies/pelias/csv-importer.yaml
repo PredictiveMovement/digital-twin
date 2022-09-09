@@ -16,7 +16,7 @@ spec:
         - name: config-volume
           mountPath: /etc/config
         - name: lantmateriet
-          mountPath: /data/lantmateriet
+          mountPath: /data
       env:
         - name: PELIAS_CONFIG
           value: "/etc/config/pelias.json"
@@ -43,3 +43,4 @@ spec:
   resources:
     requests:
       storage: 1Gi
+
