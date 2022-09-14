@@ -55,12 +55,11 @@ class Bus extends Vehicle {
   async handleBooking(booking) {
     if (!this.busy) {
       this.busy = true
-      this.emit('busy', this)
       this.booking = booking
       booking.assigned(this)
       this.status = 'Pickup'
       await this.navigateTo(booking.destination.position)
-      this.emit('moved', this)
+      this.movedEvents.next(this)
     } else {
       this.queue.push(booking)
       booking.queued(this)
@@ -81,24 +80,23 @@ class Bus extends Vehicle {
       ? this.booking.lineNumber
       : this.lineNumber
 
-    console.log(
-      'bus',
-      this.lineNumber,
-      'at stop.',
-      'time:',
-      moment(virtualTime.time()).format('HH:mm'),
-      'should be:',
-      this.booking.pickup.arrivalTime,
-      this.cargo.length,
-      'stops finished,',
-      this.queue.length,
-      'stops left'
-    )
+    // console.log(
+    //   'bus',
+    //   this.lineNumber,
+    //   'at stop.',
+    //   'time:',
+    //   moment(virtualTime.time()).format('HH:mm'),
+    //   'should be:',
+    //   this.booking.pickup.arrivalTime,
+    //   this.cargo.length,
+    //   'stops finished,',
+    //   this.queue.length,
+    //   'stops left'
+    // )
 
     this.booking.pickedUp(this.position)
     this.cargo.push(this.booking)
 
-    this.emit('cargo', this)
     const departure = moment(
       this.booking.pickup.departureTime,
       'hh:mm:ss'

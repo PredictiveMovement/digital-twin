@@ -5,7 +5,6 @@ const fleet = {
   name: 'taxi',
 }
 
-
 class Taxi extends Vehicle {
   id
   position
@@ -28,9 +27,9 @@ class Taxi extends Vehicle {
     true
   }
 
-  navigateNextJob () {
+  navigateNextJob() {
     const passenger = this.instruction?.passenger
-    console.log(`taxi ${this.id}: navigating to ${this.instruction?.type} ${passenger?.id} ${passenger?.name}`)
+    // console.log(`taxi ${this.id}: navigating to ${this.instruction?.type} ${passenger?.id} ${passenger?.name}`)
     const location = this.instruction.location
     return this.navigateTo({
       lat: location[1],
@@ -68,9 +67,11 @@ class Taxi extends Vehicle {
     }
     this.instruction = this.instructions.shift()
     if (this.instruction) {
-      if(this.instruction.waiting_time > 0) {
+      if (this.instruction.waiting_time > 0) {
         this.simulate(false)
-        const waitTime = virtualTime.timeInSeconds(this.instruction.waiting_time)
+        const waitTime = virtualTime.timeInSeconds(
+          this.instruction.waiting_time
+        )
         // console.log(`taxi ${this.id}: waiting until ${waitTime}`)
         await virtualTime.waitUntil(waitTime.valueOf())
       }

@@ -2,6 +2,7 @@ const {
   from,
   filter,
   share,
+  tap,
   merge,
   fromEvent,
   of,
@@ -99,7 +100,7 @@ const engine = {
       experiment.buses,
       experiment.taxis
     ).pipe(
-      mergeMap((car) => fromEvent(car, 'moved')),
+      mergeMap((car) => car.movedEvents),
       share()
     )
 

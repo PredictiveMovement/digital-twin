@@ -198,6 +198,7 @@ function register(io) {
       bufferTime(100, null, 100)
     )
     .subscribe((cars) => {
+      // console.log(cars)
       if (!cars.length) return
       io.emit('cars', cars)
     })
@@ -231,7 +232,7 @@ function register(io) {
         )
 
         const averageUtilization = cars.pipe(
-          mergeMap((car) => fromEvent(car, 'cargo')),
+          mergeMap((car) => car.cargoEvents),
           scan((acc, car) => ({ ...acc, [car.id]: car }), {}),
           map((cars) => {
             const result = {
