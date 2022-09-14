@@ -149,7 +149,7 @@ const ExperimentSection = ({ activeLayers, currentParameters }) => {
           </FlexSpaceBetween>
         </div>
         <CheckItem
-          text="Taxi"
+          text="Anropsstyrd Kollektivtrafik"
           setLayer={activeLayers.setTaxiLayer}
           checked={activeLayers.taxiLayer}
           color="#FBFF33AA"
