@@ -1,4 +1,4 @@
-const { fromEvent, combineLatest, pipe } = require('rxjs')
+const { fromEvent, combineLatest, pipe, merge, of } = require('rxjs')
 const {
   map,
   toArray,
@@ -23,8 +23,8 @@ const cleanBookings = () =>
   pipe(
     map(
       ({
-        pickup: { position: pickup },
-        destination: { position: destination, name },
+        pickup,
+        destination,
         id,
         status,
         isCommercial,
@@ -34,9 +34,8 @@ const cleanBookings = () =>
         car,
       }) => ({
         id,
-        pickup,
-        destination,
-        name,
+        pickup: pickup.position,
+        destination: destination.position,
         status,
         isCommercial,
         deliveryTime,
@@ -193,8 +192,8 @@ function register(io) {
         // console.log(e)
         socket.emit('cars', cars)
       })
-    experiment.passengers.subscribe((passenger) => {
-      socket.emit('passenger', passenger.toObject())
+    experiment.passengerBookingUpdates.subscribe((passenger) => {
+      socket.emit('passenger', passenger)
     })
 
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
@@ -287,7 +286,7 @@ function register(io) {
             totalQueued,
             averageUtilization: totalCargo / totalCapacity,
             averageQueued: totalQueued / totalCapacity,
-            totalCo2: co2,
+            totalCo2: totalCo2,
           })),
           startWith({
             totalCargo: 0,

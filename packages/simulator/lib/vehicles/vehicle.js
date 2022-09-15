@@ -40,7 +40,6 @@ class Vehicle {
     this.co2 = 0
     this.distance = 0
     this.status = status
-    this.lastPositions = []
     this.fleet = fleet
     this.created = this.time()
     this.co2PerKmKg = co2PerKmKg
@@ -128,7 +127,7 @@ class Vehicle {
       while (
         this.queue.length < this.capacity &&
         this.queue.length &&
-        haversine(this.position, this.queue[0].pickup.position) < 100
+        haversine(this.position, this.queue[0].pickup.position) < 200
       ) {
         const booking = this.queue.shift()
         booking.pickedUp(this.position)
@@ -233,7 +232,6 @@ class Vehicle {
     this.ema = haversine(this.heading, this.position)
     if (metersMoved > 0) {
       this.bearing = bearing(lastPosition, position) || 0
-      this.lastPositions.push({ ...position, date })
       this.movedEvents.next(this)
 
       // NOTE: cargo is passengers or packages.
@@ -241,7 +239,7 @@ class Vehicle {
         booking.moved(
           this.position,
           metersMoved,
-          co2 / (this.cargo.length + 1), // TODO: Why do we do +1 here?
+          co2 / (this.cargo.length + 1), // TODO: Why do we do +1 here? Because we have one active booking + cargo
           (h * this.costPerHour) / (this.cargo.length + 1),
           timeDiff
         )

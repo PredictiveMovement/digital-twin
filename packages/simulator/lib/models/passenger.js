@@ -64,9 +64,7 @@ class Passenger {
             return of(
               new Booking({
                 type: 'passenger',
-                pickup: {
-                  position: this.position,
-                },
+                pickup: this.home,
                 destination: {
                   ...this.workplace,
                   timeWindow: [
@@ -82,7 +80,7 @@ class Passenger {
               new Booking({
                 type: 'passenger',
                 pickup: {
-                  position: this.position,
+                  ...this.workplace,
                   timeWindow: [
                     virtualTime.time(),
                     virtualTime.time() + 60 * 60 * 1000,
@@ -103,7 +101,7 @@ class Passenger {
                     type: 'passenger',
                     // Pickup to go to lunch
                     pickup: {
-                      position: this.position,
+                      ...this.workplace,
                       timeWindow: [
                         virtualTime.time(),
                         virtualTime.time() + 60 * 60 * 1000,

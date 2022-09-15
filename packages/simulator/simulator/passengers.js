@@ -61,41 +61,31 @@ const generatePassengers = (kommuner) =>
         filter((p) => p),
         concatMap(async ({ home, workPosition }) => {
           try {
-            const work = await pelias.nearest(workPosition)
-            return { home, work, kommun }
+            const workplace = await pelias.nearest(workPosition)
+            return { home, workplace, kommun }
           } catch (e) {
             return null
           }
         }),
         filter((p) => p),
         zipWith(randomNames.pipe(take(1))),
-        map(([props, name]) =>
-          createPassengerFromAddress({ ...props, ...name })
+        map(
+          ([{ home, workplace, kommun }, { name, firstName, lastName }]) =>
+            new Passenger({
+              position: home.position,
+              workplace,
+              kommun: kommun,
+              home,
+              name,
+              firstName,
+              lastName,
+            })
         )
       )
     }),
     take(100),
     shareReplay() // ShareReplay needed to keep ID's and names consistent between console and visualisation
   )
-const createPassengerFromAddress = ({ home, work, kommun, name }) => {
-  const residence = {
-    name: `${home.name}, ${home.localadmin}`,
-    ...home,
-  }
-  const workplace = {
-    name: `${work.name}, ${work.localadmin}`,
-    ...work,
-  }
-
-  return new Passenger({
-    position: home.position,
-    startPosition: home.position,
-    workplace: workplace,
-    kommun: kommun,
-    home: residence,
-    name: name,
-  })
-}
 
 module.exports = {
   generatePassengers,

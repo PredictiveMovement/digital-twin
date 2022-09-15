@@ -1,5 +1,14 @@
-const { map, share, merge, switchMap, shareReplay } = require('rxjs')
-const { mergeMap } = require('rxjs/operators')
+const {
+  from,
+  filter,
+  share,
+  merge,
+  fromEvent,
+  of,
+  concatMap,
+  shareReplay,
+} = require('rxjs')
+const { mergeMap, map, scan } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
 

@@ -19,13 +19,22 @@ module.exports = {
           ? p
           : Promise.reject('No coordinates found')
       )
-      .then(({ features: [{ geometry, properties } = {}] = [] }) => ({
-        ...properties,
-        position: {
-          lon: geometry.coordinates[0],
-          lat: geometry.coordinates[1],
-        },
-      }))
+      .then(
+        ({
+          features: [
+            { geometry, properties: { name, street, houseNumber, label } } = {},
+          ] = [],
+        }) => ({
+          name,
+          street,
+          houseNumber,
+          label,
+          position: {
+            lon: geometry.coordinates[0],
+            lat: geometry.coordinates[1],
+          },
+        })
+      )
 
     return promise
   },

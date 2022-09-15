@@ -234,7 +234,7 @@ const App = () => {
       co2,
       distance,
       inVehicle,
-      journeys,
+      bookings,
       moveTime,
       name,
       position,

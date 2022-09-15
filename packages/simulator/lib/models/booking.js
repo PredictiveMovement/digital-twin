@@ -67,6 +67,8 @@ class Booking {
       distance: this.distance,
       weight: this.weight,
       position: this.position,
+      pickup: this.pickup,
+      destination: this.destination,
       pickupPosition: this.pickupPosition,
       deliveredPosition: this.deliveredPosition,
       pickupDateTime: this.pickupDateTime,

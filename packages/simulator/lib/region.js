@@ -173,6 +173,7 @@ class Region {
                 queue.length + cargo.length < capacity
             ), // TODO: filter out all cars that are fully booked
             takeNearest(center, 10),
+            filter((taxis) => taxis.length),
             mergeMap((taxis) => taxiDispatch(taxis, bookings))
           )
         ),
