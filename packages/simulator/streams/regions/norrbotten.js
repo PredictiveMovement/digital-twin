@@ -1,5 +1,5 @@
 const { stops, stopTimes, lineShapes } = require('../publicTransport')
-const { generatePassengers } = require('../../simulator/passengers')
+const { passengersFromNeeds } = require('../../simulator/passengers')
 const Region = require('../../lib/region')
 const { shareReplay, mergeMap } = require('rxjs')
 
