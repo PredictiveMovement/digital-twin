@@ -1,10 +1,7 @@
-const { throws } = require('assert')
-const EventEmitter = require('events')
 const moment = require('moment')
 
-class VirtualTime extends EventEmitter {
+class VirtualTime {
   constructor(timeMultiplier = 1, startHour = 4) {
-    super()
     this.startHour = startHour
     this.setTimeMultiplier(timeMultiplier)
     this.reset()
@@ -22,13 +19,11 @@ class VirtualTime extends EventEmitter {
 
   play() {
     this.setTimeMultiplier(this.oldTimeMultiplier + 1)
-    this.emit('play')
   }
 
   pause() {
     this.oldTimeMultiplier = this.timeMultiplier
     this.setTimeMultiplier(0)
-    this.emit('pause')
   }
 
   async waitUntil(time, checkInterval = 100) {

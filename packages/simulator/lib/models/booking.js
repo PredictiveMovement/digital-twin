@@ -1,13 +1,11 @@
-const EventEmitter = require('events')
-const { random } = require('nanoid')
 const { virtualTime } = require('../virtualTime')
 const { safeId } = require('../id')
 
-class Booking extends EventEmitter {
+const { ReplaySubject } = require('rxjs')
+class Booking {
   position
 
   constructor(booking) {
-    super()
     this.id = safeId()
     this.status = 'New'
     this.co2 = 0 //TODO: initialvärde?
@@ -16,14 +14,16 @@ class Booking extends EventEmitter {
     this.weight = Math.random() * 10 // kg TODO: find reference kg
     Object.assign(this, booking)
     this.position = this.pickup?.position
-    this.on('error', (err) => console.error('booking error', err))
+    this.queuedEvents = new ReplaySubject()
+    this.pickedUpEvents = new ReplaySubject()
+    this.assignedEvents = new ReplaySubject()
+    this.deliveredEvents = new ReplaySubject()
   }
-
   queued(car) {
     this.queuedDateTime = virtualTime.time()
     this.status = 'Queued'
     this.car = car
-    this.emit('queued', this)
+    this.queuedEvents.next(this)
     //console.log(`*** booking queued ${this.id}: ${this.status} with ${this.car.id}`)
   }
 
@@ -31,7 +31,7 @@ class Booking extends EventEmitter {
     this.assignedDateTime = this.assignedDateTime || virtualTime.time()
     this.car = car
     this.status = 'Assigned'
-    this.emit('assigned', this)
+    this.assignedEvents.next(this)
     //console.log(`*** booking ${this.id}: ${this.status}`)
   }
 
@@ -40,14 +40,13 @@ class Booking extends EventEmitter {
     this.distance += metersMoved
     this.cost += cost
     this.co2 += co2
-    this.emit('moved', this)
   }
 
   pickedUp(position, date = virtualTime.time()) {
     this.pickupDateTime = date
     this.pickupPosition = position
     this.status = 'Picked up'
-    this.emit('pickedup', this)
+    this.pickedUpEvents.next(this)
     //console.log(`*** booking ${this.id}: ${this.status}`)
   }
 
@@ -57,7 +56,7 @@ class Booking extends EventEmitter {
     this.deliveryTime =
       (date - (this.assignedDateTime || this.queuedDateTime)) / 1000
     this.status = 'Delivered'
-    this.emit('delivered', this)
+    this.deliveredEvents.next(this)
     // console.log(`*** booking ${this.id}: ${this.status}`)
   }
 }

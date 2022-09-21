@@ -1,13 +1,14 @@
-const EventEmitter = require('events')
-
+const { ReplaySubject } = require('rxjs')
 const { safeId } = require('./../id')
 const Journey = require('./journey')
 
-class Passenger extends EventEmitter {
+class Passenger {
   constructor({ name, journeys, position }) {
-    super()
     this.id = safeId()
-    this.journeys = journeys?.map((journey) => new Journey({ ...journey, passenger: this}) ) || []
+    this.journeys =
+      journeys?.map(
+        (journey) => new Journey({ ...journey, passenger: this })
+      ) || []
     this.name = name
     this.position = position
     this.distance = 0
@@ -21,6 +22,8 @@ class Passenger extends EventEmitter {
     this.distance = 0
     this.moveTime = 0 // Time on a vehicle.
     this.waitTime = 0 // Time waiting for a vehicle.
+    this.pickedUpEvents = new ReplaySubject()
+    this.deliveredEvents = new ReplaySubject()
   }
 
   toObject(includeJourneys = true) {
@@ -36,16 +39,16 @@ class Passenger extends EventEmitter {
       position: this.position,
       waitTime: this.waitTime,
     }
-    if(includeJourneys) {
+    if (includeJourneys) {
       obj.journeys = this.journeys.map((journey) => journey.toObject())
     }
     return obj
   }
 
   updateJourney(journeyId, status) {
-    const journeyToUpdate = this.journeys.find((journey) => (
-      journey.id === journeyId
-    ))
+    const journeyToUpdate = this.journeys.find(
+      (journey) => journey.id === journeyId
+    )
     journeyToUpdate.setStatus(status)
   }
 
@@ -57,20 +60,18 @@ class Passenger extends EventEmitter {
     this.cost += cost
     this.distance += metersMoved
     this.moveTime += moveTime
-
-    this.emit('moved', this.toObject())
   }
 
   pickedUp(journeyId) {
     this.inVehicle = true
     this.updateJourney(journeyId, 'Pågående')
-    this.emit('pickedup', this.toObject())
+    this.pickedUpEvents.next(this.toObject())
   }
 
   delivered(journeyId) {
     this.inVehicle = false
     this.updateJourney(journeyId, 'Avklarad')
-    this.emit('delivered', this.toObject())
+    this.deliveredEvents.next(this)
   }
 }
 
