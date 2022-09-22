@@ -48,21 +48,14 @@ module.exports = {
         })
     )
   },
-  nearest(position) {
+  async nearest(position) {
     const coordinates = [position.lon, position.lat].join(',')
     const url = `${osrmUrl}/nearest/v1/driving/${coordinates}`
-    const promise = fetch(url)
-      .then(
-        (response) => {
-          return response.json()
-        },
-        (err) => {
-          console.log('OSRM fetch err', err)
-        }
-      )
-      .then((pos) => new Position(pos))
-
-    return promise
+    try {
+      return await fetch(url).then((res) => res.json())
+    } catch (err) {
+      console.log('OSRM fetch err', err)
+    }
   },
   match(positions) {
     const coordinates = positions

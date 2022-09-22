@@ -30,10 +30,10 @@ module.exports = {
           street,
           houseNumber,
           label,
-          position: {
+          position: new Position({
             lon: geometry.coordinates[0],
             lat: geometry.coordinates[1],
-          },
+          }),
         })
       )
 

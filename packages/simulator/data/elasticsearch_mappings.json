@@ -3,7 +3,7 @@
     "mappings": {
       "properties": {
         "assigned": {
-          "type": "long"
+          "type": "date"
         },
         "co2": {
           "type": "long"
@@ -12,7 +12,7 @@
           "type": "long"
         },
         "deliveredDateTime": {
-          "type": "long"
+          "type": "date"
         },
         "deliveredPosition": {
           "properties": {
@@ -198,7 +198,7 @@
           }
         },
         "pickupDateTime": {
-          "type": "long"
+          "type": "date"
         },
         "pickupPosition": {
           "type": "geo_point"

@@ -14,7 +14,7 @@ class Booking {
     this.type = booking.type || booking.passenger ? 'passenger' : 'package'
     this.cost = 0 // startkostnad?
     this.distance = 0 //TODO: räkna med sträcka innan?
-    this.weight = Math.random() * 10 // kg TODO: find reference kg
+    this.weight = Math.random() * 10 // kg TODO: find reference kg // TODO: passagerare väger mer..
     this.passenger = booking.passenger
     this.position = this.pickup?.position
     this.queuedEvents = new ReplaySubject()
@@ -67,11 +67,11 @@ class Booking {
       cost: this.cost,
       distance: this.distance,
       weight: this.weight,
-      position: this.position,
+      position: this.position?.toObject(),
       pickup: this.pickup,
       destination: this.destination,
-      pickupPosition: this.pickupPosition,
-      deliveredPosition: this.deliveredPosition,
+      pickupPosition: this.pickupPosition?.toObject(),
+      deliveredPosition: this.deliveredPosition?.toObject(),
       pickupDateTime: this.pickupDateTime,
       deliveredDateTime: this.deliveredDateTime,
       deliveryTime: this.deliveryTime,

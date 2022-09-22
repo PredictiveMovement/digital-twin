@@ -1,5 +1,6 @@
 const osrm = require('../lib/osrm')
 const assert = require('assert')
+const Position = require('../lib/models/position')
 
 function randomize(center, retry = 20, radius = 500) {
   assert(center, 'Center is required')
@@ -26,8 +27,7 @@ function nearest(position) {
 
     const nearest = data.waypoints[0]
     const [lon, lat] = nearest.location
-    const name = nearest.name
-    return { lon, lat, name }
+    return new Position({ lon, lat })
   })
 }
 

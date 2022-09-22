@@ -1,10 +1,9 @@
 const { haversine } = require('../distance')
 
 class Position {
-  constructor({ lon, lat, name }) {
+  constructor({ lon, lat }) {
     this.lon = lon
     this.lat = lat
-    this.name = name
   }
   distanceTo(position) {
     return haversine(this, position)
