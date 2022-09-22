@@ -3,7 +3,7 @@ const { safeId } = require('./../id')
 const Journey = require('./journey')
 
 class Passenger {
-  constructor({ name, journeys, position }) {
+  constructor({ name, journeys, position, startPosition }) {
     this.id = safeId()
     this.journeys =
       journeys?.map(
@@ -11,6 +11,7 @@ class Passenger {
       ) || []
     this.name = name
     this.position = position
+    this.startPosition = startPosition
     this.distance = 0
     this.cost = 0
     this.co2 = 0
@@ -24,6 +25,11 @@ class Passenger {
     this.waitTime = 0 // Time waiting for a vehicle.
     this.pickedUpEvents = new ReplaySubject()
     this.deliveredEvents = new ReplaySubject()
+  }
+
+  reset() {
+    this.position = this.startPosition
+    this.inVehicle = false
   }
 
   toObject(includeJourneys = true) {

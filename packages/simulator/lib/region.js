@@ -5,6 +5,7 @@ const {
   Subject,
   mergeMap,
   ReplaySubject,
+  lastValueFrom,
 } = require('rxjs')
 const {
   map,
@@ -67,7 +68,7 @@ class Region {
     this.id = id
     this.unhandledBookings = new Subject()
     this.stops = stops
-    this.passengers = passengers.pipe(shareReplay())
+    this.passengers = passengers
     this.lineShapes = lineShapes
 
     this.taxis = kommuner.pipe(
@@ -135,22 +136,38 @@ class Region {
           .subscribe(() => {})
       )
 
-    this.taxis
-      .pipe(
-        toArray(),
-        map((taxis) =>
-          taxis.map((taxi) => {
-            taxi.reset()
-          })
-        )
-      )
-      .subscribe(() =>
-        taxiDispatch(this.taxis, this.passengers).subscribe((e) => {
-          e.map(({ taxi, steps }) =>
-            steps.map((step) => taxi.addInstruction(step))
+    Promise.all(
+      [
+        lastValueFrom(
+          this.taxis.pipe(
+            toArray(),
+            map((taxis) =>
+              taxis.map((taxi) => {
+                taxi.reset()
+              })
+            )
           )
-        })
-      )
+        ),
+      ],
+      [
+        lastValueFrom(
+          this.passengers.pipe(
+            toArray(),
+            map((passengers) =>
+              passengers.map((passenger) => {
+                passenger.reset()
+              })
+            )
+          )
+        ),
+      ]
+    ).then(
+      taxiDispatch(this.taxis, this.passengers).subscribe((e) => {
+        e.map(({ taxi, steps }) =>
+          steps.map((step) => taxi.addInstruction(step))
+        )
+      })
+    )
   }
 }
 const stopsToBooking = ([pickup, destination]) =>

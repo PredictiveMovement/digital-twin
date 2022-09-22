@@ -29,6 +29,7 @@ class Taxi extends Vehicle {
   }
 
   navigateNextJob() {
+    if (!this.instruction) return
     const passenger = this.instruction?.passenger
     // console.log(`taxi ${this.id}: navigating to ${this.instruction?.type} ${passenger?.id} ${passenger?.name}`)
     const location = this.instruction.location
@@ -41,6 +42,7 @@ class Taxi extends Vehicle {
     this.instructions = []
     this.busy = false
     this.position = this.startPosition
+    this.cargo = []
   }
 
   addInstruction(instruction) {

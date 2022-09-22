@@ -108,6 +108,7 @@ const createPassengerFromAddress = ({ home, work }) => {
       },
     ],
     position: home.position,
+    startPosition: home.position,
     name: name,
   })
 }
