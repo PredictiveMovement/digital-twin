@@ -1,11 +1,11 @@
 {
-  "journeys": {
+  "bookings": {
     "mappings": {
       "properties": {
-        "pickup_position": {
+        "pickup.position": {
           "type": "geo_point"
         },
-        "destination_position": {
+        "destination.position": {
           "type": "geo_point"
         },
         "timestamp": {

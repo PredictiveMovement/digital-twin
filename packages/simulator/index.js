@@ -69,11 +69,10 @@ const engine = {
         mergeMap((booking) => booking.statusEvents),
         shareReplay()
       )
-      .subscribe((journey) => {
-        // delete journey.passenger.journeys // Avoid circular reference in serialization
-        statistics.collectJourney({
+      .subscribe((booking) => {
+        statistics.collectBooking({
           experimentSettings: parameters,
-          ...journey,
+          ...booking,
         })
       })
 

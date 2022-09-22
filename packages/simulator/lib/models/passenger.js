@@ -13,7 +13,6 @@ const { randomize } = require('../../simulator/address')
 const { virtualTime } = require('../virtualTime')
 
 const { safeId } = require('./../id')
-const Journey = require('./journey')
 const moment = require('moment')
 const Booking = require('./booking')
 

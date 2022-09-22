@@ -7,14 +7,15 @@ class Booking {
 
   constructor(booking) {
     super()
+    Object.assign(this, booking)
     this.id = 'b-' + safeId()
     this.status = 'New'
     this.co2 = 0 //TODO: initialvärde?
-    this.type = booking.passenger ? 'passenger' : 'package'
+    this.type = booking.type || booking.passenger ? 'passenger' : 'package'
     this.cost = 0 // startkostnad?
     this.distance = 0 //TODO: räkna med sträcka innan?
     this.weight = Math.random() * 10 // kg TODO: find reference kg
-    Object.assign(this, booking)
+    this.passenger = booking.passenger
     this.position = this.pickup?.position
     this.queuedEvents = new ReplaySubject()
     this.pickedUpEvents = new ReplaySubject()
