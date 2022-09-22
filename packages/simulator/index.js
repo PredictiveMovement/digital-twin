@@ -70,10 +70,7 @@ const engine = {
         shareReplay()
       )
       .subscribe((booking) => {
-        statistics.collectBooking({
-          experimentSettings: parameters,
-          ...booking,
-        })
+        statistics.collectBooking(booking, parameters)
       })
 
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(

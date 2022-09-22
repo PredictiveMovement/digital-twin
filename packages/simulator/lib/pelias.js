@@ -1,5 +1,6 @@
 const fetch = require('node-fetch')
 const { info } = require('./log')
+const Position = require('./models/position')
 const peliasUrl =
   process.env.PELIAS_URL || 'https://pelias.predictivemovement.se'
 
@@ -52,10 +53,10 @@ module.exports = {
       )
       .then(({ features: [{ geometry, properties } = {}] = [] }) => ({
         ...properties,
-        position: {
+        position: new Position({
           lon: geometry.coordinates[0],
           lat: geometry.coordinates[1],
-        },
+        }),
       }))
   },
 }

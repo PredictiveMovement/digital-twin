@@ -7,6 +7,7 @@ const { assert } = require('console')
 const { error, info } = require('../log')
 const { virtualTime } = require('../virtualTime')
 const { throws } = require('assert')
+const Position = require('../models/position')
 
 const { ReplaySubject } = require('rxjs')
 class Vehicle {
@@ -65,7 +66,9 @@ class Vehicle {
       return this.updatePosition(route) // teleport mode
     this._interval = setInterval(() => {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
-      const newPosition = interpolate.route(route, this.time()) ?? this.heading
+      const newPosition = new Position(
+        interpolate.route(route, this.time()) ?? this.heading
+      )
       if (route.started > this.time()) {
         clearInterval(this._interval)
         return

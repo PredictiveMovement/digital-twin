@@ -4,12 +4,13 @@ const collectExperimentMetadata = (experiment) => {
   return save(experiment, 'experiments')
 }
 
-const collectBooking = (booking) => {
+const collectBooking = (booking, experimentSettings) => {
   return save(
     {
-      ...booking,
+      ...booking.toObject(),
       timestamp: new Date(),
-      passenger: booking.passenger.toObject(),
+      experimentSettings,
+      passenger: booking.passenger?.toObject(),
     },
     'bookings'
   )

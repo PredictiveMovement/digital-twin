@@ -2,14 +2,236 @@
   "bookings": {
     "mappings": {
       "properties": {
-        "pickup.position": {
+        "assigned": {
+          "type": "long"
+        },
+        "co2": {
+          "type": "long"
+        },
+        "cost": {
+          "type": "long"
+        },
+        "deliveredDateTime": {
+          "type": "long"
+        },
+        "deliveredPosition": {
+          "properties": {
+            "instruction": {
+              "properties": {
+                "distance": {
+                  "type": "float"
+                },
+                "duration": {
+                  "type": "long"
+                },
+                "meters": {
+                  "type": "long"
+                },
+                "passed": {
+                  "type": "float"
+                },
+                "position": {
+                  "type": "geo_point"
+                }
+              }
+            },
+            "lat": {
+              "type": "float"
+            },
+            "lon": {
+              "type": "float"
+            },
+            "speed": {
+              "type": "long"
+            }
+          }
+        },
+        "deliveryTime": {
+          "type": "float"
+        },
+        "destination": {
+          "properties": {
+            "label": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "name": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "position": {
+              "type": "geo_point"
+            },
+            "street": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "timeWindow": {
+              "type": "long"
+            }
+          }
+        },
+        "distance": {
+          "type": "long"
+        },
+        "experimentSettings": {
+          "properties": {
+            "fixedRoute": {
+              "type": "long"
+            },
+            "id": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "startDate": {
+              "type": "date"
+            }
+          }
+        },
+        "id": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "passenger": {
+          "properties": {
+            "co2": {
+              "type": "long"
+            },
+            "cost": {
+              "type": "long"
+            },
+            "distance": {
+              "type": "long"
+            },
+            "id": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "inVehicle": {
+              "type": "boolean"
+            },
+            "moveTime": {
+              "type": "long"
+            },
+            "name": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "position": {
+              "type": "geo_point"
+            },
+            "waitTime": {
+              "type": "long"
+            }
+          }
+        },
+        "pickup": {
+          "properties": {
+            "label": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "name": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "position": {
+              "type": "geo_point"
+            },
+            "street": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "timeWindow": {
+              "type": "long"
+            }
+          }
+        },
+        "pickupDateTime": {
+          "type": "long"
+        },
+        "pickupPosition": {
           "type": "geo_point"
         },
-        "destination.position": {
+        "position": {
           "type": "geo_point"
+        },
+        "queued": {
+          "type": "long"
+        },
+        "status": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
         },
         "timestamp": {
           "type": "date"
+        },
+        "type": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "weight": {
+          "type": "float"
         }
       }
     }
