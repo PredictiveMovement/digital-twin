@@ -11,6 +11,7 @@ const lanstrafiken = {
 
 class Bus extends Vehicle {
   constructor({
+    startPosition,
     position,
     heading,
     lineNumber,
@@ -32,6 +33,7 @@ class Bus extends Vehicle {
     this.vehicleType = 'bus'
     this.heading = heading
     this.kommun = kommun
+    this.startPosition = startPosition
     this.co2PerKmKg = 1.3 // NOTE: From a quick google. Needs to be verified.
     // stops
     //   .pipe(toArray())
@@ -65,6 +67,12 @@ class Bus extends Vehicle {
       booking.queued(this)
     }
     return booking
+  }
+
+  resetBus() {
+    this.queue = []
+    this.busy = false
+    this.position = this.startPosition
   }
 
   // This is called when the bus arrives at each stop. Let's check if the departure time

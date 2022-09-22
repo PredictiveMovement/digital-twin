@@ -68,6 +68,10 @@ class Vehicle {
     this._interval = setInterval(() => {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
       const newPosition = interpolate.route(route, this.time()) ?? this.heading
+      if (route.started > this.time()) {
+        clearInterval(this._interval)
+        return
+      }
       this.updatePosition(newPosition)
     }, 200)
   }

@@ -222,6 +222,7 @@ const App = () => {
   })
 
   useSocket('parameters', (currentParameters) => {
+    console.log('new experimentId', currentParameters.id)
     setCurrentParameters(currentParameters)
     setNewParameters(currentParameters)
   })

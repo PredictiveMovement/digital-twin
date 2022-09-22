@@ -92,6 +92,7 @@ class Kommun {
 
     this.buses = range(0, this.busCount - nrOfTaxis).pipe(
       map(() => ({
+        startPosition: center,
         position: center,
         heading: center,
         kommun: name,

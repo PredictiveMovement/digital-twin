@@ -82,7 +82,7 @@ class Region {
       shareReplay()
     )
 
-    const stopAssignments = stopTimes.pipe(
+    this.stopAssignments = stopTimes.pipe(
       getTripsPerKommun(kommuner),
       map(({ kommunName, trips }) => ({
         buses: this.buses.pipe(filter((bus) => bus.kommun === kommunName)),
@@ -117,12 +117,25 @@ class Region {
         )
       )
     )
+  }
 
-    stopAssignments
-      .pipe(mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5))
-      .subscribe(() => {})
+  distributeInstructions() {
+    this.buses
+      .pipe(
+        toArray(),
+        map((buses) =>
+          buses.map((bus) => {
+            bus.resetBus()
+          })
+        )
+      )
+      .subscribe(() =>
+        this.stopAssignments
+          .pipe(mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5))
+          .subscribe(() => {})
+      )
 
-    taxiDispatch(this.taxis, passengers).subscribe((e) => {
+    taxiDispatch(this.taxis, this.passengers).subscribe((e) => {
       e.map(({ taxi, steps }) => steps.map((step) => taxi.addInstruction(step)))
     })
   }

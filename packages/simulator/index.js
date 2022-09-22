@@ -32,6 +32,13 @@ const engine = {
   createExperiment: ({ id = safeId() } = {}) => {
     const savedParams = readParameters()
     console.log('Starting experiment with params:', savedParams)
+    regions
+      .pipe(
+        map((region) => {
+          region.distributeInstructions()
+        })
+      )
+      .subscribe(() => null)
 
     const parameters = {
       id,
