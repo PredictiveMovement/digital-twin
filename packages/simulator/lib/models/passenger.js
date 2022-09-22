@@ -71,7 +71,7 @@ class Passenger {
   delivered(journeyId) {
     this.inVehicle = false
     this.updateJourney(journeyId, 'Avklarad')
-    this.deliveredEvents.next(this)
+    this.deliveredEvents.next(this.toObject())
   }
 }
 

@@ -20,7 +20,7 @@ const journeyToShipment = (id, journey) => ({
 const passengersToShipments = (passengers) => {
   const jobMap = {}
   let journeyIndex = 0
-  const shipments = [...passengers].flatMap((passenger, passengerIndex) =>
+  const shipments = passengers.flatMap((passenger, passengerIndex) =>
     passenger.journeys.map((journey) => {
       const shipment = journeyToShipment(journeyIndex, journey)
       jobMap[journeyIndex] = { passengerIndex, journeyId: journey.id }
@@ -41,6 +41,7 @@ const taxiToVehicle = ({ id, position, capacity, heading }, i) => ({
 
 const taxiDispatch = (taxis, passengers) =>
   passengers.pipe(
+    toArray(),
     mergeMap((passengers) =>
       taxis.pipe(
         toArray(),

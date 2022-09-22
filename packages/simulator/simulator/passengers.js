@@ -75,8 +75,7 @@ const generatePassengers = (kommuner) =>
       )
     }),
     take(100),
-    shareReplay(), // ShareReplay needed to keep ID's and names consistent between console and visualisation
-    toArray()
+    shareReplay() // ShareReplay needed to keep ID's and names consistent between console and visualisation
   )
 const createPassengerFromAddress = ({ home, work }) => {
   const residence = {

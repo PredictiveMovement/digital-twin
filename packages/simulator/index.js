@@ -1,12 +1,14 @@
 const {
+  map,
   from,
-  filter,
+  flatMap,
+  take,
   share,
   tap,
   merge,
-  fromEvent,
   of,
   concatMap,
+  switchMap,
   shareReplay,
 } = require('rxjs')
 const { mergeMap } = require('rxjs/operators')
@@ -57,13 +59,12 @@ const engine = {
 
     experiment.passengers
       .pipe(
-        mergeMap((passenger) => passenger),
-        concatMap(({ journeys }) => from(journeys)),
-        mergeMap((journey) => fromEvent(journey, 'status')),
+        switchMap(({ journeys }) => journeys),
+        mergeMap((journey) => journey.statusEvents),
         shareReplay()
       )
       .subscribe((journey) => {
-        delete journey.passenger.journeys // Avoid circular reference in serialization
+        // delete journey.passenger.journeys // Avoid circular reference in serialization
         statistics.collectJourney({
           experimentSettings: parameters,
           ...journey,
@@ -73,23 +74,17 @@ const engine = {
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(
       mergeMap((booking) =>
         merge(
-          of(booking),
-          fromEvent(booking, 'queued'),
-          fromEvent(booking, 'pickedup'),
-          fromEvent(booking, 'assigned'),
-          fromEvent(booking, 'delivered')
+          booking.queuedEvents,
+          booking.pickedUpEvents,
+          booking.assignedEvents,
+          booking.deliveredEvents
         )
       ),
       share()
     )
     experiment.passengerUpdates = experiment.passengers.pipe(
       mergeMap((passenger) =>
-        merge(
-          of(passenger),
-          // fromEvent(passenger, 'moved'), // TODO: If we want this performance will suffer!
-          fromEvent(passenger, 'pickedup'),
-          fromEvent(passenger, 'delivered')
-        )
+        merge(passenger.deliveredEvents, passenger.pickedUpEvents)
       ),
       share()
     )
