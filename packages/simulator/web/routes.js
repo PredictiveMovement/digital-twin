@@ -1,6 +1,8 @@
-const { fromEvent, combineLatest } = require('rxjs')
+const { combineLatest, from } = require('rxjs')
 const {
   map,
+
+  take,
   toArray,
   mergeMap,
   bufferTime,
@@ -80,18 +82,55 @@ const cleanCars = ({
 })
 
 function register(io) {
-  const experiment = engine.createExperiment() // move this to a start event
-
   let emitCars = true
   let emitTaxiUpdates = true
   let emitBusUpdates = true
+  let subscriptions = []
+  let experiment
+
+  const startCarUpdatesSubscription = (experiment, io) =>
+    experiment.carUpdates
+      .pipe(
+        windowTime(100), // start a window every x ms
+        mergeMap((win) =>
+          win.pipe(
+            groupBy((car) => car.id), // create a stream for each car in this window
+            mergeMap((cars) => cars.pipe(last())) // take the last update in this window
+          )
+        ),
+        filter((car) => {
+          if (!car) return false
+          if (car.vehicleType === 'bus' && !emitBusUpdates) return false
+          if (car.vehicleType === 'taxi' && !emitTaxiUpdates) return false
+          if (car.vehicleType === 'car' && !emitCars) return false
+          return true
+        }),
+        map(cleanCars),
+        map((vehicle) =>
+          Object.assign({ experimentId: experiment.parameters.id }, vehicle)
+        ),
+        bufferTime(100, null, 100)
+      )
+      .subscribe((cars) => {
+        // console.log(cars)
+        if (!cars.length) return
+        io.emit('cars', cars)
+      })
 
   io.on('connection', function (socket) {
-    socket.emit('reset')
     socket.emit('parameters', experiment.parameters)
+    socket.emit('reset')
 
+    setUpSocketListeners(socket)
+    replayBaseDataToNewClient(socket)
+  })
+
+  const setUpSocketListeners = (socket) => {
     socket.on('reset', () => {
-      process.kill(process.pid, 'SIGUSR2')
+      subscriptions.map((e) => e.unsubscribe())
+      experiment = engine.createExperiment()
+      subscriptions = start(experiment)
+      virtualTime.reset()
     })
 
     socket.on('play', () => {
@@ -118,41 +157,40 @@ function register(io) {
       emitBusUpdates = value
     })
 
-    // Receiving a new set of experiment parameters
     socket.on('experimentParameters', (value) => {
       console.log('new expiriment settings: ', value)
       saveParameters(value)
       socket.emit('reset')
     })
+  }
 
-    experiment.postombud.pipe(toArray()).subscribe((postombud) => {
-      socket.emit('postombud', postombud)
-    })
-
-    experiment.busStops.subscribe((busStops) =>
-      socket.emit('busStops', busStops)
-    )
-
-    experiment.lineShapes.subscribe((lineShapes) =>
-      socket.emit('lineShapes', lineShapes)
-    )
-
+  /**
+   * Replay all static data that is used to setup the experiment.
+   * @param {*} socket
+   */
+  const replayBaseDataToNewClient = (socket) => {
+    experiment.buses
+      .pipe(
+        map(cleanCars),
+        map((vehicle) =>
+          Object.assign({ experimentId: experiment.parameters.id }, vehicle)
+        )
+      )
+      .subscribe((e) => {
+        // console.log(e)
+        socket.emit('cars', [e])
+      })
     experiment.kommuner
       .pipe(map(({ id, name, geometry, co2 }) => ({ id, name, geometry, co2 })))
       .subscribe((kommun) => socket.emit('kommun', kommun))
-
     experiment.dispatchedBookings
       .pipe(bufferTime(100, null, 1000))
       .subscribe((bookings) => {
         if (bookings.length) {
-          socket.emit('bookings', bookings)
+          io.socket('bookings', bookings)
         }
       })
-    experiment.buses.pipe(map(cleanCars)).subscribe((e) => {
-      // console.log(e)
-      socket.emit('cars', [e])
-    })
-    experiment.passengers.subscribe((passengers) => {
+    experiment.passengers.pipe(toArray()).subscribe((passengers) => {
       console.log('sending', passengers.length, 'passengers')
       return passengers.map((passenger) => {
         socket.emit('passenger', passenger.toObject())
@@ -162,48 +200,44 @@ function register(io) {
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
       socket.emit('taxi', { id, position: [lon, lat] })
     })
-  })
+    experiment.postombud.pipe(toArray()).subscribe((postombud) => {
+      socket.emit('postombud', postombud)
+    })
+    experiment.busStops.subscribe((busStops) =>
+      socket.emit('busStops', busStops)
+    )
+    experiment.lineShapes.subscribe((lineShapes) =>
+      socket.emit('lineShapes', lineShapes)
+    )
+  }
+  const start = (experiment) => {
+    setInterval(() => {
+      io.emit('time', experiment.virtualTime.time())
+    }, 1000)
 
-  experiment.passengerUpdates.subscribe((passenger) => {
-    if (passenger.position) {
-      io.emit('passenger', passenger)
-    }
-  })
-  experiment.bookingUpdates
-    .pipe(cleanBookings(), bufferTime(100, null, 1000))
-    .subscribe((bookings) => {
-      if (bookings.length) {
-        io.emit('bookings', bookings)
+    const carSubscription = startCarUpdatesSubscription(experiment, io)
+
+    const passengerSub = experiment.passengerUpdates.subscribe((passenger) => {
+      if (passenger.position) {
+        io.emit('passenger', passenger)
       }
     })
 
-  const emitOnlyCars = experiment.carUpdates
-    .pipe(
-      windowTime(100), // start a window every x ms
-      mergeMap((win) =>
-        win.pipe(
-          groupBy((car) => car.id), // create a stream for each car in this window
-          mergeMap((cars) => cars.pipe(last())) // take the last update in this window
-        )
-      ),
-      filter((car) => {
-        if (!car) return false
-        if (car.vehicleType === 'bus' && !emitBusUpdates) return false
-        if (car.vehicleType === 'taxi' && !emitTaxiUpdates) return false
-        if (car.vehicleType === 'car' && !emitCars) return false
-        return true
-      }),
-      map(cleanCars),
-      bufferTime(100, null, 100)
-    )
-    .subscribe((cars) => {
-      if (!cars.length) return
-      io.emit('cars', cars)
-    })
-
-  setInterval(() => {
-    io.emit('time', experiment.virtualTime.time())
-  }, 1000)
+    const bookingSub = experiment.bookingUpdates
+      .pipe(cleanBookings(), bufferTime(100, null, 1000))
+      .subscribe((bookings) => {
+        if (bookings.length) {
+          io.emit('bookings', bookings)
+        }
+      })
+    io.emit('parameters', experiment.parameters)
+    replayBaseDataToNewClient(io)
+    return [carSubscription, bookingSub, passengerSub]
+  }
+  if (!experiment) {
+    experiment = engine.createExperiment()
+  }
+  subscriptions = start(experiment)
 
   experiment.kommuner
     .pipe(
@@ -214,7 +248,7 @@ function register(io) {
         )
 
         const averageDeliveryTime = dispatchedBookings.pipe(
-          mergeMap((booking) => fromEvent(booking, 'delivered')),
+          mergeMap((booking) => booking.deliveredEvents),
           scan(
             ({ total, deliveryTimeTotal }, { deliveryTime }) => ({
               total: total + 1,
@@ -230,7 +264,7 @@ function register(io) {
         )
 
         const averageUtilization = cars.pipe(
-          mergeMap((car) => fromEvent(car, 'cargo')),
+          mergeMap((car) => car.cargoEvents),
           scan((acc, car) => ({ ...acc, [car.id]: car }), {}),
           map((cars) => {
             const result = {
@@ -329,7 +363,6 @@ function register(io) {
       io.emit('kommun', kommun)
     })
 }
-
 module.exports = {
   register,
 }

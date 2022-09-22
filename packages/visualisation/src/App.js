@@ -119,8 +119,10 @@ const App = () => {
           queue,
           vehicleType,
           speed,
+          experimentId,
         }) => ({
           id,
+          experimentId,
           co2,
           distance,
           heading,
@@ -144,6 +146,7 @@ const App = () => {
 
   const [bookings, setBookings] = React.useState([])
   useSocket('bookings', (newBookings) => {
+    setReset(false)
     setBookings((bookings) => [
       ...bookings.filter(
         (booking) => !newBookings.some((nb) => nb.id === booking.id)
@@ -178,6 +181,7 @@ const App = () => {
 
   const [postombud, setPostombud] = React.useState([])
   useSocket('postombud', (newPostombud) => {
+    setReset(false)
     setPostombud((current) => [
       ...current,
       ...newPostombud.map(({ id, operator, position }) => ({
@@ -190,6 +194,7 @@ const App = () => {
 
   const [busStops, setBusStops] = React.useState([])
   useSocket('busStops', ({ position, name }) => {
+    setReset(false)
     setBusStops((current) => [
       ...current,
       {
@@ -212,10 +217,12 @@ const App = () => {
 
   const [kommuner, setKommuner] = React.useState([])
   useSocket('kommun', (kommun) => {
+    setReset(false)
     setKommuner((current) => upsert(current, kommun, 'id'))
   })
 
   useSocket('parameters', (currentParameters) => {
+    console.log('new experimentId', currentParameters.id)
     setCurrentParameters(currentParameters)
     setNewParameters(currentParameters)
   })
@@ -254,6 +261,7 @@ const App = () => {
   )
   const [taxis, setTaxis] = React.useState([])
   useSocket('taxi', ({ name, position, id }) => {
+    setReset(false)
     setTaxis((currenttaxis) =>
       upsert(
         currenttaxis,
@@ -273,6 +281,7 @@ const App = () => {
   }
 
   const onPlay = () => {
+    setReset(false)
     socket.emit('play')
     console.log('play stream')
   }
@@ -289,9 +298,6 @@ const App = () => {
     setPassengers([])
     setTaxis([])
     setCars([])
-    setKommuner([])
-    setPostombud([])
-    setBusStops([])
     setActiveCar(null)
   }
 

@@ -11,6 +11,7 @@ const lanstrafiken = {
 
 class Bus extends Vehicle {
   constructor({
+    startPosition,
     position,
     heading,
     lineNumber,
@@ -32,6 +33,7 @@ class Bus extends Vehicle {
     this.vehicleType = 'bus'
     this.heading = heading
     this.kommun = kommun
+    this.startPosition = startPosition
     this.co2PerKmKg = 1.3 // NOTE: From a quick google. Needs to be verified.
     // stops
     //   .pipe(toArray())
@@ -55,17 +57,22 @@ class Bus extends Vehicle {
   async handleBooking(booking) {
     if (!this.busy) {
       this.busy = true
-      this.emit('busy', this)
       this.booking = booking
       booking.assigned(this)
       this.status = 'Pickup'
       await this.navigateTo(booking.destination.position)
-      this.emit('moved', this)
+      this.movedEvents.next(this)
     } else {
       this.queue.push(booking)
       booking.queued(this)
     }
     return booking
+  }
+
+  reset() {
+    this.queue = []
+    this.busy = false
+    this.position = this.startPosition
   }
 
   // This is called when the bus arrives at each stop. Let's check if the departure time
@@ -81,24 +88,23 @@ class Bus extends Vehicle {
       ? this.booking.lineNumber
       : this.lineNumber
 
-    console.log(
-      'bus',
-      this.lineNumber,
-      'at stop.',
-      'time:',
-      moment(virtualTime.time()).format('HH:mm'),
-      'should be:',
-      this.booking.pickup.arrivalTime,
-      this.cargo.length,
-      'stops finished,',
-      this.queue.length,
-      'stops left'
-    )
+    // console.log(
+    //   'bus',
+    //   this.lineNumber,
+    //   'at stop.',
+    //   'time:',
+    //   moment(virtualTime.time()).format('HH:mm'),
+    //   'should be:',
+    //   this.booking.pickup.arrivalTime,
+    //   this.cargo.length,
+    //   'stops finished,',
+    //   this.queue.length,
+    //   'stops left'
+    // )
 
     this.booking.pickedUp(this.position)
     this.cargo.push(this.booking)
 
-    this.emit('cargo', this)
     const departure = moment(
       this.booking.pickup.departureTime,
       'hh:mm:ss'

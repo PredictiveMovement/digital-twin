@@ -39,6 +39,7 @@ const CarInfo = ({ data }) => {
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <div>
         <Paragraph>{`Fordon ${data.id}`}</Paragraph>
+        <Paragraph>{`ExperimentId ${data.experimentId}`}</Paragraph>
         {data.lineNumber !== undefined && (
           <Paragraph>Linje: {data.lineNumber}</Paragraph>
         )}

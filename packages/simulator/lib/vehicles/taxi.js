@@ -5,12 +5,11 @@ const fleet = {
   name: 'taxi',
 }
 
-
 class Taxi extends Vehicle {
   id
   position
   heading
-  constructor({ id, position, ...vehicle }) {
+  constructor({ id, position, startPosition, ...vehicle }) {
     super({ position, id, fleet, ...vehicle })
     this.id = id
     this.position = position
@@ -22,20 +21,28 @@ class Taxi extends Vehicle {
     this.capacity = 4
     this.booking = true
     this.vehicleType = 'taxi'
+    this.startPosition = startPosition
     this.co2PerKmKg = 0.1201 // NOTE: From a quick google. Needs to be verified.
   }
   canPickupBooking() {
     true
   }
 
-  navigateNextJob () {
+  navigateNextJob() {
+    if (!this.instruction) return
     const passenger = this.instruction?.passenger
-    console.log(`taxi ${this.id}: navigating to ${this.instruction?.type} ${passenger?.id} ${passenger?.name}`)
+    // console.log(`taxi ${this.id}: navigating to ${this.instruction?.type} ${passenger?.id} ${passenger?.name}`)
     const location = this.instruction.location
     return this.navigateTo({
       lat: location[1],
       lon: location[0],
     })
+  }
+  reset() {
+    this.instructions = []
+    this.busy = false
+    this.position = this.startPosition
+    this.cargo = []
   }
 
   addInstruction(instruction) {
@@ -68,9 +75,11 @@ class Taxi extends Vehicle {
     }
     this.instruction = this.instructions.shift()
     if (this.instruction) {
-      if(this.instruction.waiting_time > 0) {
+      if (this.instruction.waiting_time > 0) {
         this.simulate(false)
-        const waitTime = virtualTime.timeInSeconds(this.instruction.waiting_time)
+        const waitTime = virtualTime.timeInSeconds(
+          this.instruction.waiting_time
+        )
         // console.log(`taxi ${this.id}: waiting until ${waitTime}`)
         await virtualTime.waitUntil(waitTime.valueOf())
       }

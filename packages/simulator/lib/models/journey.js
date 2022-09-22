@@ -1,10 +1,8 @@
-const EventEmitter = require('events')
-
 const { safeId } = require('./../id')
+const { ReplaySubject } = require('rxjs')
 
-class Journey extends EventEmitter {
+class Journey {
   constructor({ pickup, destination, timeWindow, passenger }) {
-    super()
     this.id = safeId()
     this.status = 'Väntar'
     this.pickup = pickup
@@ -12,12 +10,13 @@ class Journey extends EventEmitter {
     this.timeWindow = timeWindow
     this.passenger = passenger
 
-    this.emit('status', this.toObject(true))
+    this.statusEvents = new ReplaySubject()
+    this.statusEvents.next(this)
   }
 
   setStatus(status) {
     this.status = status
-    this.emit('status', this.toObject(true))
+    this.statusEvents.next(this)
   }
 
   toObject(includePassenger = false) {
@@ -27,7 +26,6 @@ class Journey extends EventEmitter {
       pickup: this.pickup,
       destination: this.destination,
       timeWindow: this.timeWindow,
-
     }
     if (includePassenger) {
       obj.passenger = this.passenger.toObject(false)

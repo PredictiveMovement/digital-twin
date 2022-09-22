@@ -1,4 +1,16 @@
-const { from, filter, share, merge, fromEvent, of, concatMap, shareReplay } = require('rxjs')
+const {
+  map,
+  from,
+  flatMap,
+  take,
+  share,
+  tap,
+  merge,
+  of,
+  concatMap,
+  switchMap,
+  shareReplay,
+} = require('rxjs')
 const { mergeMap } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
@@ -10,11 +22,23 @@ const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
 const statistics = require('./lib/statistics')
 
+const static = {
+  busStops: regions.pipe(mergeMap((region) => region.stops)),
+  lineShapes: regions.pipe(mergeMap((region) => region.lineShapes)),
+}
+
 const engine = {
   experiments: [],
   createExperiment: ({ id = safeId() } = {}) => {
     const savedParams = readParameters()
     console.log('Starting experiment with params:', savedParams)
+    regions
+      .pipe(
+        map((region) => {
+          region.distributeInstructions()
+        })
+      )
+      .subscribe(() => null)
 
     const parameters = {
       id,
@@ -23,56 +47,51 @@ const engine = {
     }
     statistics.collectExperimentMetadata(parameters)
 
-    const experiment = {
-      virtualTime, // TODO: move this from being a static property to being a property of the experiment
-      cars: kommuner.pipe(mergeMap((kommun) => kommun.cars)),
-      dispatchedBookings: kommuner.pipe(mergeMap((k) => k.dispatchedBookings)),
-      buses: regions.pipe(mergeMap((region) => region.buses)),
-      busStops: regions.pipe(mergeMap((region) => region.stops)),
-      lineShapes: regions.pipe(mergeMap((region) => region.lineShapes)),
-      postombud,
-      kommuner,
-      parameters,
-      passengers: regions.pipe(mergeMap((region) => region.passengers)),
-      taxis: regions.pipe(mergeMap((region) => region.taxis)),
-    }
+    const experiment = Object.assign(
+      {
+        virtualTime, // TODO: move this from being a static property to being a property of the experiment
+        cars: kommuner.pipe(mergeMap((kommun) => kommun.cars)),
+        dispatchedBookings: kommuner.pipe(
+          mergeMap((k) => k.dispatchedBookings)
+        ),
+        buses: regions.pipe(mergeMap((region) => region.buses)),
+        postombud,
+        kommuner,
+        parameters,
+        passengers: regions.pipe(mergeMap((region) => region.passengers)),
+        taxis: regions.pipe(mergeMap((region) => region.taxis)),
+      },
+      static
+    )
 
-    experiment.passengers.pipe(
-      mergeMap((passenger) => passenger),
-      concatMap(({journeys}) => from(journeys)),
-      mergeMap((journey) =>
-        fromEvent(journey, 'status')
-      ),
-      shareReplay(),
-    ).subscribe((journey) => {
-      delete(journey.passenger.journeys) // Avoid circular reference in serialization
-      statistics.collectJourney({
-        experimentSettings: parameters,
-        ...journey
+    experiment.passengers
+      .pipe(
+        switchMap(({ journeys }) => journeys),
+        mergeMap((journey) => journey.statusEvents),
+        shareReplay()
+      )
+      .subscribe((journey) => {
+        // delete journey.passenger.journeys // Avoid circular reference in serialization
+        statistics.collectJourney({
+          experimentSettings: parameters,
+          ...journey,
+        })
       })
-    })
-
 
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(
       mergeMap((booking) =>
         merge(
-          of(booking),
-          fromEvent(booking, 'queued'),
-          fromEvent(booking, 'pickedup'),
-          fromEvent(booking, 'assigned'),
-          fromEvent(booking, 'delivered')
+          booking.queuedEvents,
+          booking.pickedUpEvents,
+          booking.assignedEvents,
+          booking.deliveredEvents
         )
       ),
       share()
     )
     experiment.passengerUpdates = experiment.passengers.pipe(
       mergeMap((passenger) =>
-        merge(
-          of(passenger),
-          // fromEvent(passenger, 'moved'), // TODO: If we want this performance will suffer!
-          fromEvent(passenger, 'pickedup'),
-          fromEvent(passenger, 'delivered')
-        )
+        merge(passenger.deliveredEvents, passenger.pickedUpEvents)
       ),
       share()
     )
@@ -83,7 +102,7 @@ const engine = {
       experiment.buses,
       experiment.taxis
     ).pipe(
-      mergeMap((car) => fromEvent(car, 'moved')),
+      mergeMap((car) => car.movedEvents),
       share()
     )
 

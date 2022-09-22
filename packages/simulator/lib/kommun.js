@@ -86,12 +86,14 @@ class Kommun {
       mergeMap(() => Promise.all([randomize(center), randomize(center)]), 5),
       // wander around until a booking comes along
       map(
-        ([position, heading]) => new Taxi({ id: safeId(), position, heading })
+        ([position, heading]) =>
+          new Taxi({ id: safeId(), position, startPosition: position, heading })
       )
     )
 
     this.buses = range(0, this.busCount - nrOfTaxis).pipe(
       map(() => ({
+        startPosition: center,
         position: center,
         heading: center,
         kommun: name,

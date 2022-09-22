@@ -1,7 +1,6 @@
 const osrm = require('../osrm')
 const { haversine, bearing } = require('../distance')
 const interpolate = require('../interpolate')
-const EventEmitter = require('events')
 const Booking = require('../models/booking')
 const { safeId } = require('../id')
 const { assert } = require('console')
@@ -9,7 +8,8 @@ const { error, info } = require('../log')
 const { virtualTime } = require('../virtualTime')
 const { throws } = require('assert')
 
-class Vehicle extends EventEmitter {
+const { ReplaySubject } = require('rxjs')
+class Vehicle {
   constructor({
     id = safeId(),
     position,
@@ -28,7 +28,6 @@ class Vehicle extends EventEmitter {
      */
     co2PerKmKg = 0.013 / 1000,
   } = {}) {
-    super()
     this.id = id
     this.position = position
     this.origin = position
@@ -47,8 +46,8 @@ class Vehicle extends EventEmitter {
     this.created = this.time()
     this.co2PerKmKg = co2PerKmKg
     this.vehicleType = 'default'
-    this.on('error', (err) => error('Car error', err))
-    this.emit('moved', this)
+    this.movedEvents = new ReplaySubject()
+    this.cargoEvents = new ReplaySubject()
   }
 
   dispose() {
@@ -69,6 +68,10 @@ class Vehicle extends EventEmitter {
     this._interval = setInterval(() => {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
       const newPosition = interpolate.route(route, this.time()) ?? this.heading
+      if (route.started > this.time()) {
+        clearInterval(this._interval)
+        return
+      }
       this.updatePosition(newPosition)
     }, 200)
   }
@@ -104,7 +107,6 @@ class Vehicle extends EventEmitter {
     })
     if (!this.busy) {
       this.busy = true
-      this.emit('busy', this)
       this.booking = booking
       booking.assigned(this)
       this.status = 'Pickup'
@@ -120,7 +122,6 @@ class Vehicle extends EventEmitter {
   pickup() {
     if (this._disposed) return
 
-    this.emit('pickup', this.id)
     this.queue.sort(
       (a, b) =>
         haversine(this.position, a.pickup.position) -
@@ -138,7 +139,7 @@ class Vehicle extends EventEmitter {
         const booking = this.queue.shift()
         booking.pickedUp(this.position)
         this.cargo.push(booking)
-        this.emit('cargo', this)
+        this.cargoEvents.next(this)
       }
       if (this.booking && this.booking.destination) {
         this.booking.pickedUp(this.position)
@@ -162,11 +163,8 @@ class Vehicle extends EventEmitter {
   dropOff() {
     if (this.booking) {
       this.busy = false
-      // delete this.cargo[this.cargo.findIndex(b => b.id === this.booking.id)]
       this.booking.delivered(this.position)
       this.delivered.push(this.booking)
-      this.emit('busy', this)
-      this.emit('dropoff', this)
     }
 
     this.booking = this.pickNextFromCargo()
@@ -180,7 +178,7 @@ class Vehicle extends EventEmitter {
         haversine(this.position, b.destination.position)
     )
     const booking = this.cargo.shift()
-    this.emit('cargo', this)
+    this.cargoEvents.next(this)
 
     if (booking) {
       this.navigateTo(this.booking.destination.position)
@@ -242,7 +240,7 @@ class Vehicle extends EventEmitter {
     if (metersMoved > 0) {
       this.bearing = bearing(lastPosition, position) || 0
       this.lastPositions.push({ ...position, date })
-      this.emit('moved', this)
+      this.movedEvents.next(this)
 
       // NOTE: cargo is passengers or packages.
       this.cargo.map((booking) => {
@@ -256,7 +254,6 @@ class Vehicle extends EventEmitter {
       })
     }
     if (!position.next) {
-      this.emit('stopped', this)
       this.simulate(false)
       if (this.booking) {
         if (this.status === 'Pickup') this.pickup()
