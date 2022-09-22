@@ -119,8 +119,10 @@ const App = () => {
           queue,
           vehicleType,
           speed,
+          experimentId,
         }) => ({
           id,
+          experimentId,
           co2,
           distance,
           heading,
