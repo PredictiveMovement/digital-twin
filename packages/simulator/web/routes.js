@@ -207,7 +207,6 @@ function register(io) {
     )
   }
   const start = (experiment) => {
-    console.log('STARTINBG IT!!')
     setInterval(() => {
       io.emit('time', experiment.virtualTime.time())
     }, 1000)
