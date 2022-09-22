@@ -113,7 +113,7 @@ function register(io) {
       )
       .subscribe((cars) => {
         // console.log(cars)
-        // if (!cars.length) return
+        if (!cars.length) return
         io.emit('cars', cars)
       })
 
@@ -122,7 +122,7 @@ function register(io) {
     socket.emit('reset')
 
     setUpSocketListeners(socket)
-    replayOldDataToNewClient(socket)
+    replayBaseDataToNewClient(socket)
   })
 
   const setUpSocketListeners = (socket) => {
@@ -164,7 +164,11 @@ function register(io) {
     })
   }
 
-  const replayOldDataToNewClient = (socket) => {
+  /**
+   * Replay all static data that is used to setup the experiment.
+   * @param {*} socket
+   */
+  const replayBaseDataToNewClient = (socket) => {
     experiment.buses
       .pipe(
         map(cleanCars),
@@ -227,7 +231,7 @@ function register(io) {
         }
       })
     io.emit('parameters', experiment.parameters)
-    replayOldDataToNewClient(io)
+    replayBaseDataToNewClient(io)
     return [carSubscription, bookingSub, passengerSub]
   }
   if (!experiment) {
