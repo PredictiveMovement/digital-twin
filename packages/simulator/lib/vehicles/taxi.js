@@ -9,7 +9,7 @@ class Taxi extends Vehicle {
   id
   position
   heading
-  constructor({ id, position, ...vehicle }) {
+  constructor({ id, position, startPosition, ...vehicle }) {
     super({ position, id, fleet, ...vehicle })
     this.id = id
     this.position = position
@@ -21,6 +21,7 @@ class Taxi extends Vehicle {
     this.capacity = 4
     this.booking = true
     this.vehicleType = 'taxi'
+    this.startPosition = startPosition
     this.co2PerKmKg = 0.1201 // NOTE: From a quick google. Needs to be verified.
   }
   canPickupBooking() {
@@ -35,6 +36,11 @@ class Taxi extends Vehicle {
       lat: location[1],
       lon: location[0],
     })
+  }
+  reset() {
+    this.instructions = []
+    this.busy = false
+    this.position = this.startPosition
   }
 
   addInstruction(instruction) {

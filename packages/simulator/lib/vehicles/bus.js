@@ -69,7 +69,7 @@ class Bus extends Vehicle {
     return booking
   }
 
-  resetBus() {
+  reset() {
     this.queue = []
     this.busy = false
     this.position = this.startPosition

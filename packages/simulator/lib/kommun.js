@@ -86,7 +86,8 @@ class Kommun {
       mergeMap(() => Promise.all([randomize(center), randomize(center)]), 5),
       // wander around until a booking comes along
       map(
-        ([position, heading]) => new Taxi({ id: safeId(), position, heading })
+        ([position, heading]) =>
+          new Taxi({ id: safeId(), position, startPosition: position, heading })
       )
     )
 

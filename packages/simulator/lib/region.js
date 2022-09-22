@@ -125,7 +125,7 @@ class Region {
         toArray(),
         map((buses) =>
           buses.map((bus) => {
-            bus.resetBus()
+            bus.reset()
           })
         )
       )
@@ -135,9 +135,22 @@ class Region {
           .subscribe(() => {})
       )
 
-    taxiDispatch(this.taxis, this.passengers).subscribe((e) => {
-      e.map(({ taxi, steps }) => steps.map((step) => taxi.addInstruction(step)))
-    })
+    this.taxis
+      .pipe(
+        toArray(),
+        map((taxis) =>
+          taxis.map((taxi) => {
+            taxi.reset()
+          })
+        )
+      )
+      .subscribe(() =>
+        taxiDispatch(this.taxis, this.passengers).subscribe((e) => {
+          e.map(({ taxi, steps }) =>
+            steps.map((step) => taxi.addInstruction(step))
+          )
+        })
+      )
   }
 }
 const stopsToBooking = ([pickup, destination]) =>
