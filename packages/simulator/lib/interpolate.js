@@ -2,6 +2,16 @@ function interpolatePositionFromRoute(route, time) {
   const currentTime = (time - route.started) / 1000
   const points = extractPoints(route)
 
+  if (route.started > time) {
+    // route.started > time happens when a "reset" is triggered
+    return {
+      lat: points[0].position.lat,
+      lon: points[0].position.lon,
+      speed: 0,
+      instruction: points[0],
+      next: points[0],
+    }
+  }
   const futurePoints = points.filter(
     (point) => point.passed + point.duration > currentTime
   )
