@@ -1,8 +1,6 @@
-const { combineLatest, from } = require('rxjs')
+const { combineLatest } = require('rxjs')
 const {
   map,
-
-  take,
   toArray,
   mergeMap,
   bufferTime,
@@ -18,6 +16,7 @@ const {
 const engine = require('../index')
 const { virtualTime } = require('../lib/virtualTime')
 const { saveParameters } = require('../lib/fileUtils')
+const { info } = require('../lib/log')
 
 const cleanBookings = () => (bookings) =>
   bookings.pipe(
@@ -48,7 +47,6 @@ const cleanBookings = () => (bookings) =>
   )
 
 const cleanCars = ({
-  booking,
   position: { lon, lat },
   id,
   altitude,
@@ -112,7 +110,6 @@ function register(io) {
         bufferTime(100, null, 100)
       )
       .subscribe((cars) => {
-        // console.log(cars)
         if (!cars.length) return
         io.emit('cars', cars)
       })
@@ -158,7 +155,7 @@ function register(io) {
     })
 
     socket.on('experimentParameters', (value) => {
-      console.log('new expiriment settings: ', value)
+      info('New expiriment settings: ', value)
       saveParameters(value)
       socket.emit('reset')
     })
@@ -177,7 +174,6 @@ function register(io) {
         )
       )
       .subscribe((e) => {
-        // console.log(e)
         socket.emit('cars', [e])
       })
     experiment.kommuner
@@ -191,7 +187,7 @@ function register(io) {
         }
       })
     experiment.passengers.pipe(toArray()).subscribe((passengers) => {
-      console.log('sending', passengers.length, 'passengers')
+      info(`Sending ${passengers.length} passengers`)
       return passengers.map((passenger) => {
         socket.emit('passenger', passenger.toObject())
       })
@@ -348,14 +344,6 @@ function register(io) {
           // Do not emit more than 1 event per kommun per second
           throttleTime(1000)
         )
-
-        // return combineLatest([totalBookings, totalCars, averageUtilization, averageDeliveryTime, totalCapacity]).pipe(
-        //   map(([totalBookings, totalCars, { totalCargo, averageUtilization, totalQueued, averageQueued }, { totalDelivered, averageDeliveryTime }, totalCapacity]) => ({
-        //     id, name, totalBookings, totalCars, totalCargo, totalCapacity, averageUtilization, averageDeliveryTime, totalDelivered, totalQueued, averageQueued
-        //   })),
-        //   // Do not emit more than 1 event per kommun per second
-        //   throttleTime(5000)
-        // )
       }),
       filter(({ totalCars }) => totalCars > 0)
     )

@@ -1,5 +1,6 @@
 const { toArray, map, filter, mergeMap, take } = require('rxjs/operators')
 const { plan } = require('./vroom')
+const { info } = require('./log')
 
 const journeyToShipment = (id, journey) => ({
   id,
@@ -47,12 +48,8 @@ const taxiDispatch = (taxis, passengers) =>
         toArray(),
         filter((taxis) => taxis.length > 0),
         mergeMap(async (taxis) => {
-          // console.log(
-          //   'PLAN PLEASE',
-          //   JSON.stringify(passengersToShipments(passengers), null, 2)
-          // )
           const [shipments, jobMap] = passengersToShipments(passengers)
-          console.log('calling vroom for taxi')
+          info('Calling vroom for taxi')
           const result = await plan({
             shipments: shipments,
             vehicles: taxis.map(taxiToVehicle),
@@ -63,9 +60,6 @@ const taxiDispatch = (taxis, passengers) =>
             jobMap,
           }
         }),
-        // tap((res) =>
-        //   console.log('vroom result: ', JSON.stringify(res, null, 2))
-        // ),
         map(({ taxis, routes = [], jobMap }) => {
           return routes.map((route, index) => ({
             taxi: taxis[index],

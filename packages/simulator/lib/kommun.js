@@ -1,7 +1,6 @@
 const {
   from,
   shareReplay,
-  share,
   Subject,
   ReplaySubject,
   mergeMap,
@@ -9,14 +8,8 @@ const {
   of,
   range,
 } = require('rxjs')
-const {
-  map,
-  catchError,
-  toArray,
-  reduce,
-  mapTo,
-  groupBy,
-} = require('rxjs/operators')
+const { map, catchError, toArray, mapTo } = require('rxjs/operators')
+const { error } = require('./log')
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
@@ -105,7 +98,7 @@ class Kommun {
     this.dispatchedBookings = this.fleets.pipe(
       mergeMap((fleet) => fleet.dispatchedBookings),
       catchError((error) => {
-        console.log(error)
+        error(error)
         return of(false)
       }),
       shareReplay()

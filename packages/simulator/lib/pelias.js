@@ -1,8 +1,9 @@
 const fetch = require('node-fetch')
+const { info } = require('./log')
 const peliasUrl =
   process.env.PELIAS_URL || 'https://pelias.predictivemovement.se'
 
-console.log('Pelias URL', peliasUrl)
+info('Pelias URL', peliasUrl)
 module.exports = {
   nearest(position) {
     const url = `${peliasUrl}/v1/reverse?point.lat=${position.lat}&point.lon=${position.lon}&size=1&layers=address,venue`

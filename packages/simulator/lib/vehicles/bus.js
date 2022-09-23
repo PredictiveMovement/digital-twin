@@ -35,9 +35,6 @@ class Bus extends Vehicle {
     this.kommun = kommun
     this.startPosition = startPosition
     this.co2PerKmKg = 1.3 // NOTE: From a quick google. Needs to be verified.
-    // stops
-    //   .pipe(toArray())
-    //   .subscribe((stops) => console.log('init bus id', id, 'stops', stops))
     stops
       .pipe(
         pairwise(),
@@ -87,20 +84,6 @@ class Bus extends Vehicle {
     this.lineNumber = this.booking.lineNumber
       ? this.booking.lineNumber
       : this.lineNumber
-
-    // console.log(
-    //   'bus',
-    //   this.lineNumber,
-    //   'at stop.',
-    //   'time:',
-    //   moment(virtualTime.time()).format('HH:mm'),
-    //   'should be:',
-    //   this.booking.pickup.arrivalTime,
-    //   this.cargo.length,
-    //   'stops finished,',
-    //   this.queue.length,
-    //   'stops left'
-    // )
 
     this.booking.pickedUp(this.position)
     this.cargo.push(this.booking)
