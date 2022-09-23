@@ -1,16 +1,4 @@
-const {
-  map,
-  from,
-  flatMap,
-  take,
-  share,
-  tap,
-  merge,
-  of,
-  concatMap,
-  switchMap,
-  shareReplay,
-} = require('rxjs')
+const { map, share, merge, switchMap, shareReplay } = require('rxjs')
 const { mergeMap } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
@@ -21,6 +9,7 @@ const regions = require('./streams/regions')(kommuner)
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
 const statistics = require('./lib/statistics')
+const { info } = require('./lib/log')
 
 const static = {
   busStops: regions.pipe(mergeMap((region) => region.stops)),
@@ -31,7 +20,8 @@ const engine = {
   experiments: [],
   createExperiment: ({ id = safeId() } = {}) => {
     const savedParams = readParameters()
-    console.log('Starting experiment with params:', savedParams)
+
+    info('Starting experiment with params:', savedParams)
     regions
       .pipe(
         map((region) => {

@@ -98,7 +98,6 @@ class Vehicle {
   }
 
   handleBooking(booking) {
-    // console.log('** handle booking', booking.id)
     assert(booking instanceof Booking, 'Booking needs to be of type Booking')
     this.history.push({
       status: 'received_booking',

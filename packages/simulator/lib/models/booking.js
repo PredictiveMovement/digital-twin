@@ -24,7 +24,6 @@ class Booking {
     this.status = 'Queued'
     this.car = car
     this.queuedEvents.next(this)
-    //console.log(`*** booking queued ${this.id}: ${this.status} with ${this.car.id}`)
   }
 
   assigned(car) {
@@ -32,7 +31,6 @@ class Booking {
     this.car = car
     this.status = 'Assigned'
     this.assignedEvents.next(this)
-    //console.log(`*** booking ${this.id}: ${this.status}`)
   }
 
   moved(position, metersMoved, co2, cost) {
@@ -47,7 +45,6 @@ class Booking {
     this.pickupPosition = position
     this.status = 'Picked up'
     this.pickedUpEvents.next(this)
-    //console.log(`*** booking ${this.id}: ${this.status}`)
   }
 
   delivered(position, date = virtualTime.time()) {
@@ -57,7 +54,6 @@ class Booking {
       (date - (this.assignedDateTime || this.queuedDateTime)) / 1000
     this.status = 'Delivered'
     this.deliveredEvents.next(this)
-    // console.log(`*** booking ${this.id}: ${this.status}`)
   }
 }
 

@@ -262,7 +262,7 @@ const Map = ({
         type: 'car',
         x,
         y,
-        viewport
+        viewport,
       })
     },
     onClick: ({ object }) => {
@@ -393,7 +393,6 @@ const Map = ({
         : [255, 170, 187, 55],
     pickable: true,
     onHover: ({ object, x, y, viewport }) => {
-      // console.log('booking', object)
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         ...object,

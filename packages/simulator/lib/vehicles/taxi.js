@@ -1,4 +1,3 @@
-const moment = require('moment')
 const Vehicle = require('../vehicles/vehicle')
 const { virtualTime } = require('../virtualTime')
 const fleet = {
@@ -30,8 +29,6 @@ class Taxi extends Vehicle {
 
   navigateNextJob() {
     if (!this.instruction) return
-    const passenger = this.instruction?.passenger
-    // console.log(`taxi ${this.id}: navigating to ${this.instruction?.type} ${passenger?.id} ${passenger?.name}`)
     const location = this.instruction.location
     return this.navigateTo({
       lat: location[1],
@@ -49,7 +46,6 @@ class Taxi extends Vehicle {
     if (instruction.type === 'start') {
       return
     }
-    // console.log(instruction)
     const location = instruction.location
     if (!this.busy) {
       this.busy = true
@@ -64,13 +60,11 @@ class Taxi extends Vehicle {
     if (this.instruction.passenger && this.instruction.type === 'pickup') {
       const passenger = this.instruction.passenger
       passenger.pickedUp(this.instruction.journeyId)
-      // console.log(`taxi ${this.id}: picked up passenger ${passenger.id} ${passenger.name}`)
       this.cargo.push(passenger)
     }
     if (this.instruction.passenger && this.instruction.type === 'delivery') {
       const passenger = this.instruction.passenger
       passenger.delivered(this.instruction.journeyId)
-      // console.log(`taxi ${this.id}: delivered passenger ${passenger.id} ${passenger.name}`)
       this.cargo = this.cargo.filter((passenger) => passenger !== passenger)
     }
     this.instruction = this.instructions.shift()
@@ -80,7 +74,6 @@ class Taxi extends Vehicle {
         const waitTime = virtualTime.timeInSeconds(
           this.instruction.waiting_time
         )
-        // console.log(`taxi ${this.id}: waiting until ${waitTime}`)
         await virtualTime.waitUntil(waitTime.valueOf())
       }
       return this.navigateNextJob()

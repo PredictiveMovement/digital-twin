@@ -1,10 +1,9 @@
 const fetch = require('node-fetch')
 const vroomUrl = process.env.VROOM_URL || 'https://vroom.predictivemovement.se/'
-const { decodePolyline } = require('./osrm')
+const { info } = require('./log')
 
 module.exports = {
   async plan({ jobs, shipments, vehicles }) {
-    // console.log('VROOM', shipments)
     const result = await fetch(vroomUrl, {
       method: 'POST',
       headers: {
@@ -18,10 +17,7 @@ module.exports = {
     })
       .then((res) => (!res.ok ? Promise.reject(res.text()) : res))
       .then((res) => res.json())
-    console.log(
-      'Results from vroom, computing_times:',
-      result.summary.computing_times
-    )
+    info('Results from vroom, computing_times:', result.summary.computing_times)
     return result
   },
 }
