@@ -1,6 +1,6 @@
 const chalk = require('chalk')
 
-const LOG_LEGEL = process.env.LOG_LEVEL || 'info'
+const LOG_LEVEL = process.env.LOG_LEVEL || 'info'
 
 module.exports = {
   error: (title, error, data) => {
@@ -11,7 +11,7 @@ module.exports = {
     }
   },
   info: (message, data = '') => {
-    if (LOG_LEGEL !== 'info') {
+    if (LOG_LEVEL !== 'info') {
       return
     }
     console.log(
