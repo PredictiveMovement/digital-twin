@@ -3,10 +3,12 @@ const mappings = require('../data/elasticsearch_mappings.json')
 
 const host = process.env.ELASTICSEARCH_URL || 'http://localhost:9200'
 
+const { error, info } = require('./log')
+
 if (!host) {
-  console.log('No elasticsearch url provided, skipping statistics collection')
+  info('No elasticsearch url provided, skipping statistics collection')
   const noOp = (name) => (value) => {
-    console.log(`noOp: ${name}`)
+    info(`noOp: ${name}`)
   }
   module.exports = {
     save: noOp('save'),
@@ -14,7 +16,7 @@ if (!host) {
   }
   return
 } else {
-  console.log(`Elasticsearch url provided, collecting statistics to ${host}`)
+  info(`Elasticsearch url provided, collecting statistics to ${host}`)
 }
 
 const client = new elastic.Client({ node: host, log: 'error' })
@@ -32,14 +34,14 @@ const createIndices = () =>
           try {
             errorType = JSON.parse(err.response)?.error?.type
           } catch (e) {
-            console.error(
+            error(
               '>>>= Cannot create indices, Malformed Elasticsearch Error',
               e,
               err
             )
           }
           if (errorType === 'resource_already_exists_exception') {
-            console.log(`
+            error(`
             Index ${index} already mapped.
             If you want to re-map it:
             - Delete it in Elasticsearch
@@ -47,10 +49,7 @@ const createIndices = () =>
             - Recreate "index pattern" in kibana.
           `)
           } else {
-            console.error(
-              '>>>= Cannot create indices, Unkown Elasticsearch Error',
-              err
-            )
+            error('>>>= Cannot create indices, Unkown Elasticsearch Error', err)
           }
         })
     })
@@ -63,8 +62,10 @@ const save = (booking, indexName) => {
       id: booking.id,
       body: booking,
     })
-    .then((_) => console.log('Saved!'))
-    .catch(console.error)
+    .then((_) => info('Saved!'))
+    .catch((e) => {
+      error('Could not save booking', e)
+    })
 }
 
 module.exports = {

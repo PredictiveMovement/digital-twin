@@ -1,16 +1,7 @@
-const { from, range, concatAll, expand, shareReplay, of } = require('rxjs')
-const {
-  map,
-  tap,
-  filter,
-  first,
-  concatMap,
-  mergeMap,
-  mergeAll,
-  toArray,
-} = require('rxjs/operators')
+const { from, of } = require('rxjs')
+const { map, tap, filter, first, mergeMap, toArray } = require('rxjs/operators')
 const pelias = require('../lib/pelias')
-const { haversine, addMeters, convertPosition } = require('../lib/distance')
+const { haversine, addMeters } = require('../lib/distance')
 const perlin = require('perlin-noise')
 const Booking = require('../lib/models/booking')
 const Car = require('../lib/vehicles/car')
@@ -20,13 +11,11 @@ const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
 // generate a pattern of random positions so we can take x out of these and get a natural pattern of these positions
 const randomPositions = perlin
   .generatePerlinNoise(100, 100)
-  // .generatePerlinNoise(1, 1)
   .map((probability, i) => ({ x: xy(i).x * 10, y: xy(i).y * 10, probability }))
   .sort((a, b) => b.probability - a.probability) // sort them so we can just pick how many we want
 
 function generateBookingsInKommun(kommun) {
-  // console.log(`*** generateBookingsInKommun ${kommun.name}`)
-  // // a square is a km2 box with a population total. We will here populate each square with nearest postombud
+  // a square is a km2 box with a population total. We will here populate each square with nearest postombud
   const squaresWithNearestPostombud = kommun.squares.pipe(
     mergeMap((square) =>
       kommun.postombud.pipe(
@@ -92,25 +81,9 @@ function generateBookingsInKommun(kommun) {
         })
         .catch(() => Promise.resolve(null))
     }, 1),
-    /*tap(booking => {
-      booking.on('delivered', booking => {
-        console.log('relaying booking to its final destination')
-        if (booking.destination !== booking.finalDestination) {
-          booking.destination = booking.finalDestination
-          kommun.unhandledBookings.next(booking)
-        }
-      })
-    }),*/
-    //expand(({isCommercial}) => Math.ceil(Math.random() * (isCommercial ? 100 : 2))),
     filter((p) => p !== null)
-    //retry(5)
   )
   return bookings
 }
 
 module.exports = { generateBookingsInKommun }
-
-// kommuner.pipe(
-//   first(k => k.name.startsWith('Arjeplog')),
-//   mergeMap(k => generateBookingsInKommun(k))
-// ).subscribe(booking => console.dir(booking))

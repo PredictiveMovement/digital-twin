@@ -1,14 +1,22 @@
 const chalk = require('chalk')
 
+const LOG_LEVEL = process.env.LOG_LEVEL || 'info'
+
 module.exports = {
-  error: (title, error) => {
-    console.log(
-      `${chalk.gray(' ***')} ${chalk.redBright.bold('ERROR')} ${chalk.red.bold(
-        JSON.stringify(title).slice(0, 200)
-      )} ${chalk.redBright(error)}`
-    )
+  error: (title, error, data) => {
+    console.error(`${chalk.redBright.bold('ERROR')} ${chalk.red(title)}`)
+    console.error(error)
+    if (data) {
+      console.error(JSON.stringify(data, null, 2))
+    }
   },
   info: (message, data = '') => {
-    // console.log(`${chalk.gray(' ***')} ${chalk.whiteBright.bold('INFO')} ${chalk.white(message)}`, data)
+    if (LOG_LEVEL !== 'info') {
+      return
+    }
+    console.log(
+      `${chalk.whiteBright.bold('INFO')} ${chalk.white(message)}`,
+      data
+    )
   },
 }

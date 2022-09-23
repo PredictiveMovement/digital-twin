@@ -1,8 +1,5 @@
 const Bus = require('../../lib/vehicles/bus')
-const { take, toArray } = require('rxjs/operators')
-const Booking = require('../../lib/booking')
-const { virtualTime } = require('../../lib/virtualTime')
-const { from, Subject } = require('rxjs')
+const { Subject } = require('rxjs')
 const range = (length) => Array.from({ length }).map((_, i) => i)
 const moment = require('moment')
 describe('A bus', () => {
