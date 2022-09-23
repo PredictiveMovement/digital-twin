@@ -1,18 +1,8 @@
-const {
-  toArray,
-  mergeMap,
-  groupBy,
-  mergeAll,
-  filter,
-  take,
-  takeLast,
-} = require('rxjs/operators')
 const moment = require('moment')
 const { plan } = require('./vroom')
-const { from } = require('rxjs')
-
 const correctTime = (time) => time.replace(/^24:/, '00:')
 const unix = (str) => moment(correctTime(str), 'HH:mm:ss').unix()
+const { info } = require('./log')
 
 const tripToShipment = ({ tripId, firstStop, lastStop }, i) => ({
   id: i,
@@ -58,14 +48,8 @@ const busDispatch = async (buses, trips) => {
   const shipments = trips.map(tripToShipment)
   const vehicles = buses.map(busToVehicle)
   const kommunName = trips[0].kommun
-  console.log(
-    'calling vroom for',
-    kommunName,
-    'with',
-    vehicles.length,
-    'buses',
-    shipments.length,
-    'trips'
+  info(
+    `Calling vroom for ${kommunName} with ${vehicles.length} buses and ${shipments.length} trips`
   )
 
   const result = await plan({
@@ -76,7 +60,7 @@ const busDispatch = async (buses, trips) => {
   const unassigned = result.unassigned
     .filter((s) => s.type === 'pickup')
     .map((step) => trips[step.id].tripId)
-  console.log('Unassigned in', kommunName, ':', unassigned.length)
+  info(`Unassigned in ${kommunName}: ${unassigned.length}`)
   return result.routes.map((route) => {
     const toFirstStop = stepToBookingEntity(route.steps[0])
     const toHub = stepToBookingEntity(route.steps[route.steps.length - 1])

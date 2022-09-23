@@ -3,28 +3,12 @@ const operator = 'norrbotten'
 const fs = require('fs')
 const path = require('path')
 const parse = require('csv-parse/lib/sync')
+const { info } = require('../lib/log')
 
 //const url = `https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${key}`
 const gtfs = require('gtfs-stream')
-const {
-  shareReplay,
-  from,
-  of,
-  firstValueFrom,
-  groupBy,
-  take,
-  Observable,
-} = require('rxjs')
-const {
-  map,
-  mergeMap,
-  switchMap,
-  filter,
-  toArray,
-  share,
-  reduce,
-  tap,
-} = require('rxjs/operators')
+const { shareReplay, Observable } = require('rxjs')
+const { map } = require('rxjs/operators')
 const csv = require('csv-stream')
 
 const tripMapper = ({
@@ -59,12 +43,11 @@ const gtfsStream = (file) => {
       .createReadStream(path.join(__dirname, `../data/${operator}/${file}.txt`))
       .pipe(csv.createStream({ enclosedChar: '"' }))
     stream.on('data', (data) => {
-      // console.log(`data ${Object.values(data)}`)
       return observer.next(data)
     })
     stream.on('end', () => observer.complete())
     stream.on('finish', () => {
-      console.log(`FINISH ${file}`)
+      info(`FINISH ${file}`)
       return observer.complete() // memory leak?
     })
   })

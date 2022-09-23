@@ -4,6 +4,7 @@ const osrmUrl =
   process.env.OSRM_URL ||
   'https://osrm.predictivemovement.se' ||
   'http://localhost:5000'
+const { error } = require('./log')
 
 const decodePolyline = function (geometry) {
   return polyline.decode(geometry).map((point) => ({
@@ -51,7 +52,7 @@ module.exports = {
         return response.json()
       },
       (err) => {
-        console.log('OSRM fetch err', err)
+        error('OSRM fetch err', err)
       }
     )
 
