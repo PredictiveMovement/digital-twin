@@ -19,6 +19,19 @@ const { virtualTime } = require('../lib/virtualTime')
 const { saveParameters } = require('../lib/fileUtils')
 const { info } = require('../lib/log')
 
+const count = () => pipe(scan((acc) => acc + 1, 0))
+
+const lastUpdatePerIntervalAndId = (interval, idProperty = 'id') =>
+  pipe(
+    windowTime(interval), // start a window every x ms
+    mergeMap((win) =>
+      win.pipe(
+        groupBy((object) => object[idProperty]), // create a stream for each object in this window
+        mergeMap((objects) => objects.pipe(last())) // take the last update in this window
+      )
+    )
+  )
+
 const cleanBookings = () =>
   pipe(
     map(
@@ -194,6 +207,7 @@ function register(io) {
       })
     experiment.passengerBookingUpdates.subscribe((passenger) => {
       socket.emit('passenger', passenger)
+      socket.emit('bookings', passenger.bookings)
     })
 
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
@@ -238,13 +252,22 @@ function register(io) {
   }
   subscriptions = start(experiment)
 
+  experiment.passengers.subscribe((passenger) => {
+    io.emit('passenger', passenger.toObject())
+  })
+
+  setInterval(() => {
+    io.emit('time', experiment.virtualTime.time())
+  }, 1000)
+
+  experiment.passengers.subscribe((passenger) => {
+    io.emit('passenger', passenger.toObject())
+  })
+
   experiment.kommuner
     .pipe(
       mergeMap(({ id, dispatchedBookings, name, cars, co2 }) => {
-        const totalBookings = dispatchedBookings.pipe(
-          scan((a) => a + 1, 0),
-          startWith(0)
-        )
+        const totalBookings = dispatchedBookings.pipe(count(), startWith(0))
 
         const averageDeliveryTime = dispatchedBookings.pipe(
           mergeMap((booking) => booking.deliveredEvents),
@@ -298,10 +321,7 @@ function register(io) {
           })
         )
 
-        const totalCars = cars.pipe(
-          scan((a) => a + 1, 0),
-          startWith(0)
-        )
+        const totalCars = cars.pipe(count(), startWith(0))
 
         const totalCapacity = cars.pipe(
           filter((car) => car.capacity),

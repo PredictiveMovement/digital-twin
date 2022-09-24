@@ -1,6 +1,5 @@
 const fetch = require('node-fetch')
 const polyline = require('polyline')
-const Position = require('./models/position')
 const osrmUrl =
   process.env.OSRM_URL ||
   'https://osrm.predictivemovement.se' ||
@@ -8,13 +7,10 @@ const osrmUrl =
 const { error } = require('./log')
 
 const decodePolyline = function (geometry) {
-  return polyline.decode(geometry).map(
-    (point) =>
-      new Position({
-        lat: point[0],
-        lon: point[1],
-      })
-  )
+  return polyline.decode(geometry).map((point) => ({
+    lat: point[0],
+    lon: point[1],
+  }))
 }
 
 const encodePolyline = function (geometry) {
@@ -48,14 +44,19 @@ module.exports = {
         })
     )
   },
-  async nearest(position) {
+  nearest(position) {
     const coordinates = [position.lon, position.lat].join(',')
     const url = `${osrmUrl}/nearest/v1/driving/${coordinates}`
-    try {
-      return await fetch(url).then((res) => res.json())
-    } catch (err) {
-      console.log('OSRM fetch err', err)
-    }
+    const promise = fetch(url).then(
+      (response) => {
+        return response.json()
+      },
+      (err) => {
+        console.log('OSRM fetch err', err)
+      }
+    )
+
+    return promise
   },
   match(positions) {
     const coordinates = positions

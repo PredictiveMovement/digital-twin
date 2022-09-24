@@ -66,14 +66,15 @@ class Vehicle {
       return this.updatePosition(route) // teleport mode
     this._interval = setInterval(() => {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
-      const newPosition = new Position(
+      const { next, ...position } =
         interpolate.route(route, this.time()) ?? this.heading
-      )
+      const newPosition = new Position(position)
       if (route.started > this.time()) {
         clearInterval(this._interval)
         return
       }
       this.updatePosition(newPosition)
+      if (!next) this.stopped()
     }, 200)
   }
 
@@ -118,14 +119,18 @@ class Vehicle {
   pickup() {
     if (this._disposed) return
 
-    this.queue.sort(
-      (a, b) =>
-        haversine(this.position, a.pickup.position) -
-        haversine(this.position, b.pickup.position)
-    )
+    this.emit('pickup', this.id)
+    // this.queue.sort(
+    //   (a, b) =>
+    //     haversine(this.position, a.pickup.position) -
+    //     haversine(this.position, b.pickup.position)
+    // )
 
     // wait one tick so the pickup event can be parsed before changing status
     setImmediate(() => {
+      if (this.booking) this.booking.pickedUp(this.position)
+      this.cargo.push(this.booking)
+      this.emit('cargo', this)
       // see if we have more packages to pickup from this position
       while (
         this.queue.length < this.capacity &&
@@ -248,12 +253,14 @@ class Vehicle {
         )
       })
     }
-    if (!position.next) {
-      this.simulate(false)
-      if (this.booking) {
-        if (this.status === 'Pickup') this.pickup()
-        if (this.status === 'Delivery') this.dropOff()
-      }
+  }
+
+  stopped() {
+    this.emit('stopped', this)
+    //this.simulate(false)
+    if (this.booking) {
+      if (this.status === 'Pickup') this.pickup()
+      if (this.status === 'Delivery') this.dropOff()
     }
   }
 
