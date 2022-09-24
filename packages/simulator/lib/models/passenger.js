@@ -8,6 +8,9 @@ const {
   mergeMap,
   of,
   from,
+  catchError,
+  tap,
+  retry,
 } = require('rxjs')
 const { randomize } = require('../../simulator/address')
 const { virtualTime } = require('../virtualTime')
@@ -15,9 +18,10 @@ const { virtualTime } = require('../virtualTime')
 const { safeId } = require('./../id')
 const moment = require('moment')
 const Booking = require('./booking')
+const pelias = require('../pelias')
 
 class Passenger {
-  constructor({ name, position, workplace, home, startPosition }) {
+  constructor({ name, position, workplace, home, startPosition, kommun }) {
     this.id = 'p-' + safeId()
     this.workplace = workplace
     this.home = home
@@ -28,6 +32,7 @@ class Passenger {
     this.cost = 0
     this.co2 = 0
     this.inVehicle = false
+    this.kommun = kommun
 
     // Aggregated values
     this.co2 = 0
@@ -43,10 +48,10 @@ class Passenger {
       })),
       //filter(() => Math.random() > 0.5),
       map(({ hour }) => {
-        if (hour < 4 || hour > 22) return 'sleep'
-        if (hour >= 12 || hour <= 16) return 'lunch'
-        if (hour >= 4 || hour < 10) return 'goToWork'
-        if (hour >= 16 || hour <= 18) return 'goHome'
+        if (hour < 4 && hour > 22) return 'sleep'
+        if (hour >= 12 && hour <= 16) return 'lunch'
+        if (hour >= 6 && hour < 10) return 'goToWork'
+        if (hour >= 16 && hour <= 18) return 'goHome'
         // pickup kids
         // go to gym
         // go to school etc
@@ -90,10 +95,19 @@ class Passenger {
               })
             )
           case 'lunch':
-            return from(randomize(this.workplace.position)).pipe(
-              map((position) => ({
-                position,
-              })),
+            return of(this.workplace.position).pipe(
+              mergeMap((position) =>
+                pelias.search('restaurang', position, 'venue')
+              ),
+              retry(3),
+              catchError(
+                (e) =>
+                  console.error(
+                    `Couldn't find lunchplace. ${this.name} have to eat at the office ¯\_(ツ)_/¯ `,
+                    e.message
+                  ) || of(null)
+              ),
+              filter((position) => position != null),
               mergeMap((lunchPlace) =>
                 from([
                   new Booking({

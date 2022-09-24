@@ -75,7 +75,7 @@ class Region {
     this.id = id
     this.unhandledBookings = new Subject()
     this.stops = stops
-    this.passengers = passengers.pipe(mergeAll())
+    this.passengers = passengers
     this.lineShapes = lineShapes
 
     this.taxis = kommuner.pipe(
@@ -171,7 +171,7 @@ class Region {
             filter(
               ({ queue, cargo, capacity }) =>
                 queue.length + cargo.length < capacity
-            ), // TODO: filter out all cars that are fully booked
+            ),
             takeNearest(center, 10),
             filter((taxis) => taxis.length),
             mergeMap((taxis) => taxiDispatch(taxis, bookings))
@@ -183,6 +183,7 @@ class Region {
         bookings.forEach((booking) => {
           console.log('Dispatching booking', booking.id, 'to taxi', taxi.id)
           taxi.handleBooking(booking)
+          booking.passenger?.kommun.dispatchedBookings.next(booking)
           this.dispatchedBookings.next(booking)
         })
       })

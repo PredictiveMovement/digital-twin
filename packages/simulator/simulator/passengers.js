@@ -28,63 +28,58 @@ const randomPositions = perlin
   }))
   .sort((a, b) => b.probability - a.probability) // sort them so we can just pick how many we want
 
-const generatePassengers = (kommuner) =>
-  kommuner.pipe(
-    mergeMap((kommun) => {
-      return kommun.squares.pipe(
-        mergeMap(({ population, position }) =>
-          randomPositions
-            .slice(0, population)
-            .map(({ x, y }) => addMeters(position, { x, y }))
-        ),
-        mergeMap((homePosition) => {
-          return kommun.postombud.pipe(
-            toArray(),
-            mergeMap(async (postombudInKommun) => {
-              const randomPostombud =
-                postombudInKommun[
-                  Math.floor(Math.random() * postombudInKommun.length)
-                ]
-              const workPosition = await randomize(randomPostombud.position)
-              return { homePosition, workPosition }
-            })
-          )
-        }, 20),
-        concatMap(async ({ homePosition, workPosition }) => {
-          try {
-            const home = await pelias.nearest(homePosition, 'address')
-            return { home, workPosition }
-          } catch (e) {
-            return null
-          }
-        }),
-        filter((p) => p),
-        concatMap(async ({ home, workPosition }) => {
-          try {
-            const workplace = await pelias.nearest(workPosition)
-            return { home, workplace, kommun }
-          } catch (e) {
-            return null
-          }
-        }),
-        filter((p) => p),
-        zipWith(randomNames.pipe(take(1))),
-        map(
-          ([{ home, workplace, kommun }, { name, firstName, lastName }]) =>
-            new Passenger({
-              position: home.position,
-              workplace,
-              kommun: kommun,
-              home,
-              name,
-              firstName,
-              lastName,
-            })
-        )
+const generatePassengers = (kommun) =>
+  kommun.squares.pipe(
+    mergeMap(({ population, position }) =>
+      randomPositions
+        .slice(0, population)
+        .map(({ x, y }) => addMeters(position, { x, y }))
+    ),
+    mergeMap((homePosition) => {
+      return kommun.postombud.pipe(
+        toArray(),
+        mergeMap(async (postombudInKommun) => {
+          const randomPostombud =
+            postombudInKommun[
+              Math.floor(Math.random() * postombudInKommun.length)
+            ]
+          const workPosition = await randomize(randomPostombud.position)
+          return { homePosition, workPosition }
+        })
       )
+    }, 20),
+    concatMap(async ({ homePosition, workPosition }) => {
+      try {
+        const home = await pelias.nearest(homePosition, 'address')
+        return { home, workPosition }
+      } catch (e) {
+        return null
+      }
     }),
-    take(100),
-    shareReplay() // ShareReplay needed to keep ID's and names consistent between console and visualisation
+    filter((p) => p),
+    concatMap(async ({ home, workPosition }) => {
+      try {
+        const workplace = await pelias.nearest(workPosition)
+        return { home, workplace }
+      } catch (e) {
+        return null
+      }
+    }),
+    filter((p) => p),
+    zipWith(randomNames.pipe(take(1))),
+    map(
+      ([{ home, workplace }, { name, firstName, lastName }]) =>
+        new Passenger({
+          position: home.position,
+          workplace,
+          kommun,
+          home,
+          name,
+          firstName,
+          lastName,
+        })
+    ),
+    take(kommun.population / 100) // sample 1% of the population
   )
 
 module.exports = {
