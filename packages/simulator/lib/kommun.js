@@ -95,13 +95,17 @@ class Kommun {
       map((props) => new Bus(props))
     )
 
-    this.dispatchedBookings = this.fleets.pipe(
-      mergeMap((fleet) => fleet.dispatchedBookings),
-      catchError((error) => {
-        error(error)
-        return of(false)
-      }),
-      shareReplay()
+    this.manualBookings = new Subject()
+    this.dispatchedBookings = merge(
+      this.fleets.pipe(
+        mergeMap((fleet) => fleet.dispatchedBookings),
+        catchError((error) => {
+          error(error)
+          return of(false)
+        }),
+        shareReplay()
+      ),
+      this.manualBookings
     )
   }
 

@@ -183,7 +183,7 @@ class Region {
         bookings.forEach((booking) => {
           console.log('Dispatching booking', booking.id, 'to taxi', taxi.id)
           taxi.handleBooking(booking)
-          booking.passenger?.kommun.dispatchedBookings.next(booking)
+          booking.passenger?.kommun.manualBookings.next(booking) // TODO: dispatch to a fleet instead
           this.dispatchedBookings.next(booking)
         })
       })
