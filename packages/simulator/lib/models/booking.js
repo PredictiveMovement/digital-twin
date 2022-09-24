@@ -38,6 +38,13 @@ class Booking {
 
   moved(position, metersMoved, co2, cost) {
     this.position = position
+    this.passenger?.moved(
+      position,
+      metersMoved,
+      co2,
+      cost,
+      virtualTime.time() - this.pickedUpDateTime
+    )
     this.distance += metersMoved
     this.cost += cost
     this.co2 += co2
@@ -69,6 +76,7 @@ class Booking {
       weight: this.weight,
       position: this.position?.toObject(),
       pickup: this.pickup,
+      carId: this.car?.id,
       destination: this.destination,
       pickupPosition: this.pickupPosition?.toObject(),
       deliveredPosition: this.deliveredPosition?.toObject(),
