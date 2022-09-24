@@ -18,7 +18,7 @@ module.exports = {
       .then((p) =>
         p.features[0]?.geometry?.coordinates?.length
           ? p
-          : Promise.reject('No coordinates found')
+          : Promise.reject('No coordinates found' + position.toString())
       )
       .then(
         ({
@@ -39,8 +39,11 @@ module.exports = {
 
     return promise
   },
-  search(name) {
-    const url = `${peliasUrl}/v1/search?text=${name}`
+  search(name, near = null, layers = 'address,venue') {
+    const focus = near
+      ? `&focus.point.lat=${near.lat}&focus.point.lon=${near.lon}}&layers=${layers}`
+      : ''
+    const url = `${peliasUrl}/v1/search?text=${name}${focus}&size=1`
     return fetch(url)
       .then((response) => {
         if (!response.ok) throw 'pelias error: ' + response.statusText
