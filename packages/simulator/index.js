@@ -103,7 +103,7 @@ const engine = {
 
     experiment.dispatchedBookings.subscribe((booking) =>
       console.log(
-        `Booking ${booking?.id} dispatched to fleet ${booking?.fleet?.name}`
+        `Booking ${booking?.id} dispatched to car ${booking?.car?.id}`
       )
     )
     engine.experiments.push(experiment)
