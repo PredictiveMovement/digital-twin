@@ -4,7 +4,7 @@ const { from } = require('rxjs')
 
 const correctTime = (time) => time.replace(/^24:/, '00:')
 const unix = (str) => moment(correctTime(str), 'HH:mm:ss').unix()
-const { info } = require('./log')
+const { info } = require('../log')
 
 const tripToShipment = ({ tripId, firstStop, lastStop }, i) => ({
   id: i,
@@ -84,6 +84,7 @@ const stepToBookingEntity = ({
   arrival: departureTime,
   location: [lon, lat],
 }) => ({
+  // TODO: decide if we want to use departureTime or timeWindows
   departureTime: moment((departureTime + waiting_time) * 1000).format(
     'HH:mm:ss'
   ),

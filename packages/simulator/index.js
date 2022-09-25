@@ -6,9 +6,10 @@ const {
   fromEvent,
   of,
   concatMap,
+  switchMap,
   shareReplay,
 } = require('rxjs')
-const { mergeMap, map, scan } = require('rxjs/operators')
+const { mergeMap, map, scan, catchError } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
 
@@ -31,13 +32,6 @@ const engine = {
     const savedParams = readParameters()
 
     info('Starting experiment with params:', savedParams)
-    regions
-      .pipe(
-        map((region) => {
-          region.distributeInstructions()
-        })
-      )
-      .subscribe(() => null)
 
     const parameters = {
       id,
@@ -67,6 +61,7 @@ const engine = {
       .pipe(
         switchMap(({ bookings }) => bookings),
         mergeMap((booking) => booking.statusEvents),
+        catchError((err) => error('passenger bookings err', err)),
         shareReplay()
       )
       .subscribe((booking) => {
@@ -82,12 +77,15 @@ const engine = {
           booking.deliveredEvents
         )
       ),
+      catchError((err) => error('booking updates err', err)),
       share()
     )
     experiment.passengerUpdates = experiment.passengers.pipe(
       mergeMap((passenger) =>
         merge(passenger.deliveredEvents, passenger.pickedUpEvents)
       ),
+      catchError((err) => error('passenger updates err', err)),
+
       share()
     )
 
@@ -98,13 +96,13 @@ const engine = {
       experiment.taxis
     ).pipe(
       mergeMap((car) => car.movedEvents),
+      catchError((err) => error('car updates err', err)),
+
       share()
     )
 
     experiment.dispatchedBookings.subscribe((booking) =>
-      console.log(
-        `Booking ${booking?.id} dispatched to car ${booking?.car?.id}`
-      )
+      info(`Booking ${booking?.id} dispatched to car ${booking?.car?.id}`)
     )
     engine.experiments.push(experiment)
 

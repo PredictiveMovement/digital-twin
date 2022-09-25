@@ -1,4 +1,3 @@
-const EventEmitter = require('events')
 const {
   interval,
   map,
@@ -11,14 +10,15 @@ const {
   catchError,
   tap,
   retry,
+  ReplaySubject,
 } = require('rxjs')
-const { randomize } = require('../../simulator/address')
 const { virtualTime } = require('../virtualTime')
 
 const { safeId } = require('./../id')
 const moment = require('moment')
 const Booking = require('./booking')
 const pelias = require('../pelias')
+const { error } = require('../log')
 
 class Passenger {
   constructor({ name, position, workplace, home, startPosition, kommun }) {
@@ -50,7 +50,7 @@ class Passenger {
       map(({ hour }) => {
         if (hour < 4 && hour > 22) return 'sleep'
         if (hour >= 12 && hour <= 16) return 'lunch'
-        if (hour >= 6 && hour < 10) return 'goToWork'
+        if (hour >= 4 && hour < 10) return 'goToWork'
         if (hour >= 16 && hour <= 18) return 'goHome'
         // pickup kids
         // go to gym
@@ -62,6 +62,7 @@ class Passenger {
     this.bookings = this.intents.pipe(
       distinctUntilChanged(),
       filter((intent) => intent !== 'idle' && intent !== 'sleep'),
+      catchError((err) => error('passenger bookings err', err) || of(err)),
       mergeMap((intent) => {
         switch (intent) {
           case 'goToWork':
@@ -143,6 +144,7 @@ class Passenger {
         return of(null)
       }),
       filter((f) => f !== null),
+      catchError((err) => error('passenger intent err', err) || of(err)),
       shareReplay()
     )
     this.pickedUpEvents = new ReplaySubject()

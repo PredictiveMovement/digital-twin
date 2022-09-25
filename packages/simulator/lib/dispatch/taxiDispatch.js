@@ -41,7 +41,7 @@ const taxiToVehicle = ({ id, position, capacity, heading, bookings }, i) => ({
 
 const taxiDispatch = async (taxis, bookings) => {
   const vehicles = taxis.map(taxiToVehicle)
-  const shipments = bookings.map(bookingToShipment)
+  const shipments = bookings.map(bookingToShipment) // TODO: concat bookings from existing vehicles with previous assignments
   console.log('calling vroom for taxi', vehicles.length, shipments.length)
   const result = await plan({ shipments, vehicles })
 

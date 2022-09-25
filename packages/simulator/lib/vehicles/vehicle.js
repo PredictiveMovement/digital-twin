@@ -47,6 +47,7 @@ class Vehicle {
     this.vehicleType = 'default'
     this.movedEvents = new ReplaySubject()
     this.cargoEvents = new ReplaySubject()
+    this.statusEvents = new ReplaySubject()
   }
 
   dispose() {
@@ -107,11 +108,13 @@ class Vehicle {
       this.booking = booking
       booking.assign(this)
       this.status = 'Pickup'
+      this.statusEvents.next(this)
+
       this.navigateTo(booking.pickup.position)
     } else {
       // TODO: switch places with current booking if it makes more sense to pick this package up before picking up current
       this.queue.push(booking)
-      booking.queue(this)
+      booking.queued(this)
     }
     return booking
   }
@@ -119,7 +122,6 @@ class Vehicle {
   pickup() {
     if (this._disposed) return
 
-    this.emit('pickup', this.id)
     // this.queue.sort(
     //   (a, b) =>
     //     haversine(this.position, a.pickup.position) -
@@ -130,7 +132,6 @@ class Vehicle {
     setImmediate(() => {
       if (this.booking) this.booking.pickedUp(this.position)
       this.cargo.push(this.booking)
-      this.emit('cargo', this)
       // see if we have more packages to pickup from this position
       while (
         this.queue.length < this.capacity &&
@@ -145,6 +146,7 @@ class Vehicle {
       if (this.booking && this.booking.destination) {
         this.booking.pickedUp(this.position)
         this.status = 'Delivery'
+        this.statusEvents.next(this)
 
         // should we first pickup more bookings before going to the destination?
         if (
@@ -256,7 +258,8 @@ class Vehicle {
   }
 
   stopped() {
-    this.emit('stopped', this)
+    this.status = 'Stopped'
+    this.statusEvents.next(this)
     //this.simulate(false)
     if (this.booking) {
       if (this.status === 'Pickup') this.pickup()

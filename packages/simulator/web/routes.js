@@ -192,22 +192,28 @@ function register(io) {
     experiment.kommuner
       .pipe(map(({ id, name, geometry, co2 }) => ({ id, name, geometry, co2 })))
       .subscribe((kommun) => socket.emit('kommun', kommun))
+
     experiment.dispatchedBookings
       .pipe(cleanBookings(), bufferTime(100, null, 1000))
       .subscribe((bookings) => {
         if (bookings.length) {
-          io.socket('bookings', bookings)
+          socket.emit('bookings', bookings)
         }
       })
+
     experiment.buses
       .pipe(map(cleanCars), bufferCount(100))
       .subscribe((cars) => {
         // console.log(e)
         socket.emit('cars', cars)
       })
-    experiment.passengerBookingUpdates.subscribe((passenger) => {
-      socket.emit('passenger', passenger)
-      socket.emit('bookings', passenger.bookings)
+
+    experiment.passengerUpdates.subscribe((passenger) => {
+      socket.emit('passenger', passenger.toObject())
+      socket.emit(
+        'bookings',
+        passenger.bookings.map((b) => b.toObject())
+      )
     })
 
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {

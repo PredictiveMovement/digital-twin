@@ -1,12 +1,9 @@
 const { virtualTime } = require('../virtualTime')
 const { safeId } = require('../id')
 
-const { ReplaySubject } = require('rxjs')
+const { ReplaySubject, merge } = require('rxjs')
 class Booking {
-  position
-
   constructor(booking) {
-    super()
     Object.assign(this, booking)
     this.id = 'b-' + safeId()
     this.status = 'New'
@@ -21,6 +18,12 @@ class Booking {
     this.pickedUpEvents = new ReplaySubject()
     this.assignedEvents = new ReplaySubject()
     this.deliveredEvents = new ReplaySubject()
+    this.statusEvents = merge(
+      this.queuedEvents,
+      this.assignedEvents,
+      this.pickedUpEvents,
+      this.deliveredEvents
+    )
   }
   queued(car) {
     this.queuedDateTime = virtualTime.time()

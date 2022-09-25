@@ -61,7 +61,7 @@ class Bus extends Vehicle {
       this.movedEvents.next(this)
     } else {
       this.queue.push(booking)
-      booking.queue(this)
+      booking.queued(this)
     }
     return booking
   }
@@ -94,6 +94,7 @@ class Bus extends Vehicle {
     ).valueOf()
     this.simulate(false) // pause interpolation while we wait
     const waitingtime = moment(departure).diff(moment(virtualTime.time()))
+    // TODO: move this logic to vehicle so all bookings can have a departure time
 
     if (waitingtime > 0) await virtualTime.waitUntil(departure)
     if (!this.booking) {

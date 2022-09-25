@@ -17,7 +17,6 @@ class Taxi extends Vehicle {
     this.heading = null
     this.currentPassengerCount = 0
     this.cargo = []
-    this.instructions = []
     this.queue = []
     this.capacity = 4
     this.booking = true

@@ -7,6 +7,7 @@ const {
   ReplaySubject,
   merge,
   lastValueFrom,
+  of,
 } = require('rxjs')
 const {
   map,
@@ -24,6 +25,8 @@ const {
   take,
   scan,
   pluck,
+  catchError,
+  switchMap,
 } = require('rxjs/operators')
 const Booking = require('./models/booking')
 const { busDispatch } = require('./dispatch/busDispatch')
@@ -31,6 +34,20 @@ const { isInsideCoordinates } = require('../lib/polygon')
 const { clusterPositions } = require('./kmeans')
 const { haversine } = require('./distance')
 const { taxiDispatch } = require('./dispatch/taxiDispatch')
+const { error, info } = require('./log')
+
+const flattenProperty = (property) => (stream) =>
+  stream.pipe(
+    mergeMap((object) =>
+      object[property].pipe(
+        toArray(),
+        map((arr) => ({
+          ...object,
+          [property]: arr,
+        }))
+      )
+    )
+  )
 
 const getTripsPerKommun = (kommuner) => (stopTimes) =>
   stopTimes.pipe(
@@ -90,20 +107,7 @@ class Region {
       shareReplay()
     )
 
-    const flattenProperty = (property) => (stream) =>
-      stream.pipe(
-        mergeMap((object) =>
-          object[property].pipe(
-            toArray(),
-            map((arr) => ({
-              ...object,
-              [property]: arr,
-            }))
-          )
-        )
-      )
-
-    const stopAssignments = stopTimes.pipe(
+    this.stopAssignments = stopTimes.pipe(
       getTripsPerKommun(kommuner),
       map(({ kommunName, trips }) => ({
         buses: this.buses.pipe(filter((bus) => bus.kommun === kommunName)),
@@ -122,23 +126,10 @@ class Region {
         )
       )
     )
-  }
 
-  distributeInstructions() {
-    this.buses
-      .pipe(
-        toArray(),
-        map((buses) =>
-          buses.map((bus) => {
-            bus.reset()
-          })
-        )
-      )
-      .subscribe(() =>
-        this.stopAssignments
-          .pipe(mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5))
-          .subscribe(() => {})
-      )
+    this.stopAssignments
+      .pipe(mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5))
+      .subscribe(() => {})
 
     this.citizens
       .pipe(mergeMap((passenger) => passenger.bookings))
@@ -159,9 +150,11 @@ class Region {
         ),
         filter((bookings) => bookings.length > 10),
         tap((bookings) => bookings.forEach((b) => (b.dispatching = true))), // mark all bookings as calculating so we don't include them in the next batch
-        mergeMap((bookings) => clusterPositions(bookings)), // continously cluster bookings
+        tap((bookings) => info('Clustering bookings', bookings.length)),
+        switchMap((bookings) => clusterPositions(bookings)), // continously cluster bookings
         mergeAll(),
         map(({ center, items: bookings }) => ({ center, bookings })),
+        catchError((err) => error('taxi cluster err', err)),
         filter(({ bookings }) => bookings.length > 5), // wait until we have at least 10 bookings in a cluster
         mergeMap(({ center, bookings }) =>
           this.taxis.pipe(
@@ -180,6 +173,8 @@ class Region {
             mergeMap((taxis) => taxiDispatch(taxis, bookings))
           )
         ),
+        catchError((err) => error('taxi dispatch err', err)),
+        tap((s) => console.log('dispatched', s)),
         mergeAll()
       )
       .subscribe(({ taxi, bookings }) => {
