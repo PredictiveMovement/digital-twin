@@ -59,7 +59,7 @@ const engine = {
       postombud,
       kommuner,
       parameters,
-      passengers: regions.pipe(mergeMap((region) => region.passengers)),
+      passengers: regions.pipe(mergeMap((region) => region.citizens)),
       taxis: regions.pipe(mergeMap((region) => region.taxis)),
     }
 

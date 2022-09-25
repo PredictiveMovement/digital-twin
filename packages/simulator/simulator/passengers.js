@@ -66,7 +66,7 @@ const generatePassengers = (kommun) =>
       }
     }),
     filter((p) => p),
-    zipWith(randomNames.pipe(take(1))),
+    zipWith(randomNames.pipe(take(Math.ceil(kommun.population * 0.001)))), // for some reason we need to limit the randomNames stream here, otherwise it will never end
     map(
       ([{ home, workplace }, { name, firstName, lastName }]) =>
         new Passenger({
@@ -78,8 +78,8 @@ const generatePassengers = (kommun) =>
           firstName,
           lastName,
         })
-    ),
-    take(kommun.population / 100) // sample 1% of the population
+    )
+    //    take() // sample 1% of the population
   )
 
 module.exports = {

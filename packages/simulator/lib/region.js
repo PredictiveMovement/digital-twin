@@ -67,7 +67,7 @@ class Region {
     stops,
     stopTimes,
     lineShapes,
-    passengers,
+    citizens,
     kommuner,
   }) {
     this.geometry = geometry
@@ -75,7 +75,7 @@ class Region {
     this.id = id
     this.unhandledBookings = new Subject()
     this.stops = stops
-    this.passengers = passengers
+    this.citizens = citizens
     this.lineShapes = lineShapes
 
     this.taxis = kommuner.pipe(
@@ -140,7 +140,7 @@ class Region {
           .subscribe(() => {})
       )
 
-    this.passengers
+    this.citizens
       .pipe(mergeMap((passenger) => passenger.bookings))
       .subscribe((booking) => {
         this.unhandledBookings.next(booking)
@@ -154,8 +154,11 @@ class Region {
     this.unhandledBookings
       .pipe(
         scan((acc, booking) => [...acc, booking], []),
-        map((bookings) => bookings.filter((b) => !b.assigned)),
+        map((bookings) =>
+          bookings.filter((b) => !b.assigned && !b.dispatching)
+        ),
         filter((bookings) => bookings.length > 10),
+        tap((bookings) => bookings.forEach((b) => (b.dispatching = true))), // mark all bookings as calculating so we don't include them in the next batch
         mergeMap((bookings) => clusterPositions(bookings)), // continously cluster bookings
         mergeAll(),
         map(({ center, items: bookings }) => ({ center, bookings })),

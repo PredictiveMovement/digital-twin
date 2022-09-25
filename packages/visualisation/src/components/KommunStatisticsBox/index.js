@@ -69,7 +69,7 @@ const KommunStatisticsBox = ({
         <Grid>
           <ParagraphBold black>Genomsnittlig restid</ParagraphBold>
           <Paragraph black>
-            {Math.ceil(averageDeliveryTime / 60 / 1000) || 0} min
+            {Math.ceil(averageDeliveryTime / 60) || 0} min
           </Paragraph>
         </Grid>
       </GridWrapper>

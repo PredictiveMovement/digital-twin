@@ -9,10 +9,7 @@ const norrbotten = (kommuner) =>
     id: 'norrbotten',
     stops: stops.pipe(shareReplay()), // todo: support more regions
     stopTimes: stopTimes.pipe(shareReplay()),
-    passengers: kommuner.pipe(
-      mergeMap((kommun) => generatePassengers(kommun)),
-      shareReplay()
-    ),
+    citizens: kommuner.pipe(mergeMap((kommun) => kommun.citizens)),
     lineShapes: lineShapes.pipe(shareReplay()),
     kommuner,
   })

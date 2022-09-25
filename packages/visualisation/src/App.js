@@ -199,38 +199,18 @@ const App = () => {
     setNewParameters(currentParameters)
   })
   const [passengers, setPassengers] = React.useState([])
-  useSocket(
-    'passenger',
-    ({
-      id,
-      co2,
-      distance,
-      inVehicle,
-      bookings,
-      moveTime,
-      name,
-      position,
-      waitTime,
-    }) => {
-      setPassengers((currentPassengers) =>
-        upsert(
-          currentPassengers,
-          {
-            id,
-            co2,
-            distance,
-            inVehicle,
-            bookings,
-            moveTime,
-            name,
-            position: [position.lon, position.lat].map((s) => parseFloat(s)),
-            waitTime,
-          },
-          'id'
-        )
+  useSocket('passenger', ({ position, ...passenger }) => {
+    setPassengers((currentPassengers) =>
+      upsert(
+        currentPassengers,
+        {
+          ...passenger,
+          position: [position.lon, position.lat].map((s) => parseFloat(s)),
+        },
+        'id'
       )
-    }
-  )
+    )
+  })
   const [taxis, setTaxis] = React.useState([])
   useSocket('taxi', ({ name, position, id }) => {
     setReset(false)

@@ -42,7 +42,8 @@ class Kommun {
     telephone,
     postombud,
     population,
-    busesPerCapita,
+    citizens,
+    bookings,
     squares,
     fleets,
     busCount,
@@ -65,6 +66,8 @@ class Kommun {
       busCount || Math.max(5, Math.round(this.population * this.busesPerCapita))
 
     this.co2 = 0
+    this.citizens = citizens
+    this.bookings = bookings
 
     this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
 
