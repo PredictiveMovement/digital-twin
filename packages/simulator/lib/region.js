@@ -170,7 +170,7 @@ class Region {
             ),
             takeNearest(center, 10),
             filter((taxis) => taxis.length),
-            mergeMap((taxis) => taxiDispatch(taxis, bookings))
+            mergeMap((taxis) => taxiDispatch(taxis, bookings), 3)
           )
         ),
         catchError((err) => error('taxi dispatch err', err)),

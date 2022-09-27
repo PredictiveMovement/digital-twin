@@ -19,7 +19,7 @@ const regions = require('./streams/regions')(kommuner)
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
 const statistics = require('./lib/statistics')
-const { info } = require('./lib/log')
+const { info, error } = require('./lib/log')
 
 const static = {
   busStops: regions.pipe(mergeMap((region) => region.stops)),
