@@ -182,7 +182,7 @@ const App = () => {
   })
 
   useSocket('parameters', (currentParameters) => {
-    console.log('new experimentId', currentParameters.id)
+    console.log('new experimentId', currentParameters)
     setCurrentParameters(currentParameters)
     const layerSetFunctions = {
       taxis: setTaxiLayer,
