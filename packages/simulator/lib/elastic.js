@@ -1,14 +1,14 @@
 const elastic = require('@elastic/elasticsearch')
 const mappings = require('../data/elasticsearch_mappings.json')
 
-const host = process.env.ELASTICSEARCH_URL || 'http://localhost:9200'
+const host = process.env.ELASTICSEARCH_URL
 
 const { error, info } = require('./log')
 
 if (!host) {
   info('No elasticsearch url provided, skipping statistics collection')
   const noOp = (name) => (value) => {
-    info(`noOp: ${name}`)
+    // info(`noOp: ${name}`)
   }
   module.exports = {
     save: noOp('save'),
