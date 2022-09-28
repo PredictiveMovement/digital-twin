@@ -93,6 +93,7 @@ const App = () => {
 
   const [cars, setCars] = React.useState([])
   useSocket('cars', (newCars) => {
+    console.log(newCars)
     setReset(false)
     setCars((cars) => [
       ...cars.filter((car) => !newCars.some((nc) => nc.id === car.id)),
