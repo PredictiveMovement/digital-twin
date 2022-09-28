@@ -30,6 +30,25 @@ const { generateBookingsInKommun } = require('../simulator/bookings')
 const bookingsCache = require('../streams/cacheBookingStream')
 const Pelias = require('../lib/pelias')
 const { generatePassengers } = require('../simulator/passengers')
+let kommunNames = [
+  'Arjeplog',
+  'Arvidsjaur',
+  'Boden',
+  'Gällivare',
+  'Haparanda',
+  'Jokkmokk',
+  'Kalix',
+  'Kiruna',
+  'Luleå',
+  'Pajala',
+  'Piteå',
+  'Älvsbyn',
+  'Överkalix',
+  'Övertorneå',
+]
+if (process.env.PROJECT_NAME === 'Helsingborg') {
+  kommunNames = ['Helsingborg']
+}
 
 function getPopulationSquares({ geometry: { coordinates } }) {
   return population.pipe(
@@ -57,24 +76,7 @@ function getPostombud(kommunName) {
 
 function read() {
   return from(data).pipe(
-    filter(({ namn }) =>
-      [
-        'Arjeplog',
-        'Arvidsjaur',
-        'Boden',
-        'Gällivare',
-        'Haparanda',
-        'Jokkmokk',
-        'Kalix',
-        'Kiruna',
-        'Luleå',
-        'Pajala',
-        'Piteå',
-        'Älvsbyn',
-        'Överkalix',
-        'Övertorneå',
-      ].some((name) => namn.startsWith(name))
-    ),
+    filter(({ namn }) => kommunNames.some((name) => namn.startsWith(name))),
     mergeMap(
       async ({
         geometry,
@@ -110,7 +112,7 @@ function read() {
       }
     ),
     tap((kommun) => {
-      //kommun.bookings = generateBookingsInKommun(kommun)
+      kommun.bookings = generateBookingsInKommun(kommun)
       generatePassengers(kommun).subscribe((passenger) =>
         kommun.citizens.next(passenger)
       )

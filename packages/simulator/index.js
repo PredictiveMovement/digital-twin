@@ -28,7 +28,7 @@ const static = {
 
 const engine = {
   experiments: [],
-  createExperiment: ({ id = safeId() } = {}) => {
+  createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
     const savedParams = readParameters()
 
     info('Starting experiment with params:', savedParams)
@@ -37,25 +37,27 @@ const engine = {
       id,
       startDate: new Date(),
       fixedRoute: savedParams.fixedRoute || 100,
+      emitters: defaultEmitters,
     }
     statistics.collectExperimentMetadata(parameters)
 
-    const experiment = {
-      virtualTime, // TODO: move this from being a static property to being a property of the experiment
-      cars: kommuner.pipe(mergeMap((kommun) => kommun.cars)),
-      dispatchedBookings: merge(
-        regions.pipe(mergeMap((r) => r.dispatchedBookings)),
-        kommuner.pipe(mergeMap((k) => k.dispatchedBookings))
-      ),
-      buses: regions.pipe(mergeMap((region) => region.buses)),
-      busStops: regions.pipe(mergeMap((region) => region.stops)),
-      lineShapes: regions.pipe(mergeMap((region) => region.lineShapes)),
-      postombud,
-      kommuner,
-      parameters,
-      passengers: regions.pipe(mergeMap((region) => region.citizens)),
-      taxis: regions.pipe(mergeMap((region) => region.taxis)),
-    }
+    const experiment = Object.assign(
+      {
+        virtualTime, // TODO: move this from being a static property to being a property of the experiment
+        cars: kommuner.pipe(mergeMap((kommun) => kommun.cars)),
+        dispatchedBookings: merge(
+          regions.pipe(mergeMap((r) => r.dispatchedBookings)),
+          kommuner.pipe(mergeMap((k) => k.dispatchedBookings))
+        ),
+        buses: regions.pipe(mergeMap((region) => region.buses)),
+        postombud,
+        kommuner,
+        parameters,
+        passengers: regions.pipe(mergeMap((region) => region.citizens)),
+        taxis: regions.pipe(mergeMap((region) => region.taxis)),
+      },
+      static
+    )
 
     experiment.passengers
       .pipe(

@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/PredictiveMovement/digital-twin/issues"
   },
-  "homepage": "https://github.com/PredictiveMovement/digital-twin#readme"
+  "homepage": "https://github.com/PredictiveMovement/digital-twin#readme",
+  "dependencies": {
+    "dotenv": "^16.0.2"
+  }
 }
