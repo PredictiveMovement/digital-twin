@@ -191,12 +191,10 @@ function register(io, defaultEmitters) {
         }
       })
 
-    experiment.buses
-      .pipe(map(cleanCars), bufferCount(100))
-      .subscribe((cars) => {
-        // console.log(e)
-        socket.emit('cars', cars)
-      })
+    experiment.cars.pipe(map(cleanCars)).subscribe((cars) => {
+      console.log('CARS! emit!', cars)
+      socket.emit('cars', [cars])
+    })
 
     experiment.passengerUpdates.subscribe((passenger) => {
       socket.emit('passenger', passenger.toObject())
