@@ -113,6 +113,7 @@ class Kommun {
   }
 
   handleBooking(booking) {
+    this.bookings.next(booking)
     booking.kommun = this
     this.fleets
       .pipe(

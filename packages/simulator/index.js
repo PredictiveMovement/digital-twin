@@ -28,7 +28,7 @@ const static = {
 
 const engine = {
   experiments: [],
-  createExperiment: ({ id = safeId() } = {}) => {
+  createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
     const savedParams = readParameters()
 
     info('Starting experiment with params:', savedParams)
@@ -37,6 +37,7 @@ const engine = {
       id,
       startDate: new Date(),
       fixedRoute: savedParams.fixedRoute || 100,
+      emitters: defaultEmitters,
     }
     statistics.collectExperimentMetadata(parameters)
 
@@ -55,7 +56,6 @@ const engine = {
       taxis: regions.pipe(mergeMap((region) => region.taxis)),
       ...static,
     }
-
     experiment.passengers
       .pipe(
         switchMap(({ bookings }) => bookings),

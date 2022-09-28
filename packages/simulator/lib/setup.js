@@ -1,4 +1,4 @@
-const includedMunicipalities = [
+let includedMunicipalities = [
   'Arjeplog',
   'Arvidsjaur',
   'Boden',
@@ -14,7 +14,11 @@ const includedMunicipalities = [
   'Överkalix',
   'Övertorneå',
 ]
+if (process.env.PROJECT_NAME === 'Helsingborg') {
+  includedMunicipalities = ['Helsingborg']
+}
 
 module.exports = {
   includedMunicipalities,
 }
+

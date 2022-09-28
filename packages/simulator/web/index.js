@@ -3,6 +3,17 @@ require('dotenv').config()
 const { env } = require('process')
 const routes = require('./routes')
 const port = env.PORT || 4000
+let defaultEmitters = [
+  'taxis',
+  'buses',
+  'busStops',
+  'busLines',
+  'passengers',
+  'cars',
+  'postombud',
+  'kommuner',
+  'bookings',
+]
 
 const ok = function (req, res) {
   res.writeHead(200)
@@ -18,5 +29,9 @@ const io = require('socket.io')(server, {
   },
 })
 
+if (process.env.PROJECT_NAME === 'Helsingborg') {
+  defaultEmitters = ['cars', 'postombud', 'kommuner', 'bookings']
+}
+
 server.listen(port)
-routes.register(io)
+routes.register(io, defaultEmitters)

@@ -81,10 +81,11 @@ const cleanCars = ({
   vehicleType,
 })
 
-function register(io) {
-  let emitCars = true
-  let emitTaxiUpdates = true
-  let emitBusUpdates = true
+function register(io, defaultEmitters) {
+  let emitCars = defaultEmitters.includes('cars')
+  let emitTaxiUpdates = defaultEmitters.includes('taxis')
+  let emitBusUpdates = defaultEmitters.includes('buses')
+
   let subscriptions = []
   let experiment
 
@@ -127,7 +128,7 @@ function register(io) {
   const setUpSocketListeners = (socket) => {
     socket.on('reset', () => {
       subscriptions.map((e) => e.unsubscribe())
-      experiment = engine.createExperiment()
+      experiment = engine.createExperiment({ defaultEmitters })
       subscriptions = start(experiment)
       virtualTime.reset()
     })
@@ -239,11 +240,12 @@ function register(io) {
         }
       })
     io.emit('parameters', experiment.parameters)
+    console.log(experiment.parameters)
     replayBaseDataToNewClient(io)
     return [carSubscription, bookingSub, passengerSub]
   }
   if (!experiment) {
-    experiment = engine.createExperiment()
+    experiment = engine.createExperiment({ defaultEmitters })
   }
   subscriptions = start(experiment)
 
