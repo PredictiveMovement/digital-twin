@@ -258,7 +258,6 @@ class Vehicle {
   }
 
   stopped() {
-    this.status = 'Stopped'
     this.statusEvents.next(this)
     //this.simulate(false)
     if (this.booking) {
