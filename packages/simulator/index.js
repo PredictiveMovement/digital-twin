@@ -96,7 +96,6 @@ const engine = {
       // experiment.taxis // Is this a duplicate property? Doesn't this already exist inside experiment.cars ?
     ).pipe(
       mergeMap((car) => car.movedEvents),
-      tap((e) => console.log('moved events', e)),
       catchError((err) => error('car updates err', err)),
 
       share()
