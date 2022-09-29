@@ -112,7 +112,10 @@ function read() {
       }
     ),
     tap((kommun) => {
-      kommun.bookings = generateBookingsInKommun(kommun)
+      generateBookingsInKommun(kommun).subscribe((booking) =>
+        kommun.handleBooking(booking)
+      )
+
       generatePassengers(kommun).subscribe((passenger) =>
         kommun.citizens.next(passenger)
       )

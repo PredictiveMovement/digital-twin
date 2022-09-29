@@ -203,7 +203,6 @@ function register(io, defaultEmitters) {
       })
 
     experiment.cars.pipe(map(cleanCars)).subscribe((cars) => {
-      console.log('CARS! emit!', cars)
       socket.emit('cars', [cars])
     })
 

@@ -174,7 +174,6 @@ class Region {
           )
         ),
         catchError((err) => error('taxi dispatch err', err)),
-        tap((s) => console.log('dispatched', s)),
         mergeAll()
       )
       .subscribe(({ taxi, bookings }) => {
