@@ -82,6 +82,10 @@ function read() {
       passengersFromNeeds(kommun.name).subscribe((passenger) =>
         kommun.citizens.next(passenger)
       )
+      generateBookingsInKommun(kommun).subscribe((booking) =>
+        kommun.handleBooking(booking)
+      )
+
       generateBookingsInKommun(kommun)
     }),
 

@@ -7,6 +7,7 @@ const {
   merge,
   of,
   range,
+  first,
 } = require('rxjs')
 const { map, catchError, toArray, mapTo } = require('rxjs/operators')
 const { error } = require('./log')
@@ -123,7 +124,7 @@ class Kommun {
       .subscribe((fleet) => fleet.handleBooking(booking))
 
     if (booking.finalDestination?.position) {
-      booking.once('delivered', () => {
+      booking.deliveredEvents.pipe(first()).subscribe(() => {
         booking.pickup = booking.destination
         booking.destination = booking.finalDestination
 
