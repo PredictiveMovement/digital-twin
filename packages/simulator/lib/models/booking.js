@@ -36,6 +36,7 @@ class Booking {
     console.log("Booking assign, " + this.id)
     this.assigned = this.assigned || virtualTime.time()
     this.car = car
+    this.passenger?.assign(this.id)
     this.status = 'Assigned'
     this.assignedEvents.next(this)
   }

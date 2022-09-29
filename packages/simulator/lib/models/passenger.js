@@ -33,6 +33,7 @@ class Passenger {
     this.co2 = 0
     this.inVehicle = false
     this.kommun = kommun
+    this.unfilledNeeds = []
 
     // Aggregated values
     this.co2 = 0
@@ -147,6 +148,7 @@ class Passenger {
       catchError((err) => error('passenger intent err', err) || of(err)),
       shareReplay()
     )
+    this.assignEvents = new ReplaySubject()
     this.pickedUpEvents = new ReplaySubject()
     this.deliveredEvents = new ReplaySubject()
   }
@@ -167,6 +169,7 @@ class Passenger {
       name: this.name,
       position: this.position,
       waitTime: this.waitTime,
+      unfilledNeeds: this.unfilledNeeds,
     }
     return obj
   }
@@ -177,6 +180,11 @@ class Passenger {
   //   )
   //   bookingToUpdate.setStatus(status)
   // }
+
+  assign(bookingId) {
+    this.unfilledNeeds.push(bookingId)
+    this.assignedEvents.next(this.toObject())
+  }
 
   moved(position, metersMoved, co2, cost, moveTime) {
     this.position = position
@@ -199,6 +207,7 @@ class Passenger {
     console.log("delivered", bookingId)
     this.inVehicle = false
     // this.updateBooking(bookingId, 'Avklarad')
+    delete this.unfilledNeeds.find((need) => need === bookingId)
     this.deliveredEvents.next(this.toObject())
   }
 }
