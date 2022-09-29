@@ -23,7 +23,7 @@ function execute() {
           // Månad: month,
           // 'VaDT Tung': heavyTraficCount,
         }) => ({
-          position: sweCoords.toLatLng(x, y),
+          position: sweCoords.toLatLng(x.toString(), y.toString()),
         })
       ),
       shareReplay()
