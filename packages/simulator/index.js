@@ -48,13 +48,12 @@ const engine = {
         kommuner.pipe(mergeMap((k) => k.dispatchedBookings))
       ),
       buses: regions.pipe(mergeMap((region) => region.buses)),
-      busStops: regions.pipe(mergeMap((region) => region.stops)),
-      lineShapes: regions.pipe(mergeMap((region) => region.lineShapes)),
       postombud,
       kommuner,
       parameters,
       passengers: regions.pipe(mergeMap((region) => region.citizens)),
       taxis: regions.pipe(mergeMap((region) => region.taxis)),
+      static,
     }
 
     experiment.passengers

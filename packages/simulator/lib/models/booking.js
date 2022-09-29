@@ -12,7 +12,6 @@ class Booking {
     this.cost = 0 // startkostnad?
     this.distance = 0 //TODO: räkna med sträcka innan?
     this.weight = Math.random() * 10 // kg TODO: find reference kg // TODO: passagerare väger mer..
-    this.passenger = booking.passenger
     this.position = this.pickup?.position
     this.queuedEvents = new ReplaySubject()
     this.pickedUpEvents = new ReplaySubject()

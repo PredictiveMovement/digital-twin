@@ -1,6 +1,5 @@
 const moment = require('moment')
 const { plan } = require('../vroom')
-const { from } = require('rxjs')
 
 const correctTime = (time) => time.replace(/^24:/, '00:')
 const unix = (str) => moment(correctTime(str), 'HH:mm:ss').unix()
