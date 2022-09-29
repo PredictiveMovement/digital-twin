@@ -20,6 +20,7 @@ const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
 const statistics = require('./lib/statistics')
 const { info, error } = require('./lib/log')
+const Passenger = require('./lib/models/passenger')
 
 const static = {
   busStops: regions.pipe(mergeMap((region) => region.stops)),
@@ -53,7 +54,7 @@ const engine = {
       parameters,
       passengers: regions.pipe(mergeMap((region) => region.citizens)),
       taxis: regions.pipe(mergeMap((region) => region.taxis)),
-      static,
+      ...static,
     }
 
     experiment.passengers
@@ -87,6 +88,30 @@ const engine = {
 
       share()
     )
+    experiment.passengerBookingUpdates = experiment.passengers.pipe(
+      mergeMap((passenger) => {
+        return passenger.bookings.pipe(
+          mergeMap((booking) =>
+            merge(
+              of(booking),
+              booking.statusEvents,
+            )
+          ),
+          scan((acc, booking) => {
+            acc[booking.id] = booking.toObject()
+            return acc
+          }, {}),
+          map((bookings) => Object.values(bookings)),
+          map((bookings) => (new Passenger({...passenger, bookings})))
+        )
+      }),
+      catchError((err) => error('passengerBooking updates err', err)),
+      share()
+    )
+
+
+
+
 
     // TODO: Rename to vehicleUpdates
     experiment.carUpdates = merge(

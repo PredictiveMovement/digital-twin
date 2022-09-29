@@ -48,6 +48,7 @@ class Vehicle {
     this.movedEvents = new ReplaySubject()
     this.cargoEvents = new ReplaySubject()
     this.statusEvents = new ReplaySubject()
+    this._disposed = false
   }
 
   dispose() {
@@ -102,7 +103,7 @@ class Vehicle {
 
   handleBooking(booking) {
     assert(booking instanceof Booking, 'Booking needs to be of type Booking')
-
+    console.log("vehicle handleBooking", this.id, this.busy, this.status)
     if (!this.busy) {
       this.busy = true
       this.booking = booking
@@ -120,6 +121,7 @@ class Vehicle {
   }
 
   pickup() {
+    console.log("vehicle pickup", this.id)
     if (this._disposed) return
 
     // this.queue.sort(
@@ -130,6 +132,7 @@ class Vehicle {
 
     // wait one tick so the pickup event can be parsed before changing status
     setImmediate(() => {
+      console.log("immediate", this.id)
       if (this.booking) this.booking.pickedUp(this.position)
       this.cargo.push(this.booking)
       // see if we have more packages to pickup from this position
@@ -258,13 +261,14 @@ class Vehicle {
   }
 
   stopped() {
-    this.status = 'Stopped'
-    this.statusEvents.next(this)
-    //this.simulate(false)
+    if(this.vehicleType === 'taxi') console.log("vehicle stopped", this.id, this.status, !!this.booking, this.booking.status)
     if (this.booking) {
       if (this.status === 'Pickup') this.pickup()
       if (this.status === 'Delivery') this.dropOff()
     }
+    this.status = 'Stopped'
+    this.statusEvents.next(this)
+    //this.simulate(false)
   }
 
   /**

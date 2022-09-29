@@ -73,8 +73,8 @@ class Passenger {
                 destination: {
                   ...this.workplace,
                   timeWindow: [
-                    virtualTime.time(),
-                    virtualTime.time() + 60 * 60 * 1000,
+                    virtualTime.addMinutes(0),
+                    virtualTime.addMinutes(60),
                   ],
                 },
                 passenger: this,
@@ -87,8 +87,8 @@ class Passenger {
                 pickup: {
                   ...this.workplace,
                   timeWindow: [
-                    virtualTime.time(),
-                    virtualTime.time() + 60 * 60 * 1000,
+                    virtualTime.addMinutes(0),
+                    virtualTime.addMinutes(60),
                   ],
                 },
                 destination: this.home,
@@ -117,8 +117,8 @@ class Passenger {
                     pickup: {
                       ...this.workplace,
                       timeWindow: [
-                        virtualTime.time(),
-                        virtualTime.time() + 60 * 60 * 1000,
+                        virtualTime.addMinutes(0),
+                        virtualTime.addMinutes(60),
                       ],
                     },
                     destination: lunchPlace,
@@ -131,8 +131,8 @@ class Passenger {
                     destination: {
                       ...this.workplace,
                       timeWindow: [
-                        virtualTime.time() + 60 * 60 * 1000,
-                        virtualTime.time() + 80 * 60 * 1000,
+                        virtualTime.addMinutes(60),
+                        virtualTime.addMinutes(80),
                       ],
                     },
                     passenger: this,
@@ -171,6 +171,13 @@ class Passenger {
     return obj
   }
 
+  // updateBooking(bookingId, status) {
+  //   const bookingToUpdate = this.bookings.find(
+  //     (booking) => booking.id === bookingId
+  //   )
+  //   bookingToUpdate.setStatus(status)
+  // }
+
   moved(position, metersMoved, co2, cost, moveTime) {
     this.position = position
 
@@ -179,6 +186,20 @@ class Passenger {
     this.cost += cost
     this.distance += metersMoved
     this.moveTime += moveTime
+  }
+
+  pickedUp(bookingId) {
+    console.log("pickedUp", bookingId)
+    this.inVehicle = true
+    // this.updateBooking(bookingId, 'Pågående')
+    this.pickedUpEvents.next(this.toObject())
+  }
+
+  delivered(bookingId) {
+    console.log("delivered", bookingId)
+    this.inVehicle = false
+    // this.updateBooking(bookingId, 'Avklarad')
+    this.deliveredEvents.next(this.toObject())
   }
 }
 

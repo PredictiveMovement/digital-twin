@@ -209,11 +209,11 @@ function register(io) {
       })
 
     experiment.passengerUpdates.subscribe((passenger) => {
+      socket.emit('passenger', passenger) // TODO: Investigate why toObject() is needed/not needed, causes stacktrace
+    })
+
+    experiment.passengerBookingUpdates.subscribe((passenger) => {
       socket.emit('passenger', passenger.toObject())
-      socket.emit(
-        'bookings',
-        passenger.bookings.map((b) => b.toObject())
-      )
     })
 
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {

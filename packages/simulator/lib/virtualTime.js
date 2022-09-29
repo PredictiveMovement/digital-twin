@@ -37,8 +37,8 @@ class VirtualTime {
     })
   }
 
-  timeInSeconds(seconds) {
-    return moment(this.time()).add(seconds, 'seconds')
+  addMinutes(minutes) {
+    return this.time() + minutes * 60 * 1000
   }
 
   // Set the speed in which time should advance

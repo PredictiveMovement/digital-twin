@@ -25,6 +25,7 @@ class Booking {
     )
   }
   queued(car) {
+    console.log("Booking queued, " + this.id)
     this.queuedDateTime = virtualTime.time()
     this.status = 'Queued'
     this.car = car
@@ -32,6 +33,7 @@ class Booking {
   }
 
   assign(car) {
+    console.log("Booking assign, " + this.id)
     this.assigned = this.assigned || virtualTime.time()
     this.car = car
     this.status = 'Assigned'
@@ -39,6 +41,7 @@ class Booking {
   }
 
   moved(position, metersMoved, co2, cost) {
+    console.log("Booking moved, " + this.id)
     this.position = position
     this.passenger?.moved(
       position,
@@ -53,6 +56,8 @@ class Booking {
   }
 
   pickedUp(position, date = virtualTime.time()) {
+    console.log("Booking pickedUp, " + this.id)
+    this.passenger?.pickedUp(this.id)
     this.pickupDateTime = date
     this.pickupPosition = position
     this.status = 'Picked up'
@@ -60,6 +65,8 @@ class Booking {
   }
 
   delivered(position, date = virtualTime.time()) {
+    console.log("Booking delivered, " + this.id)
+    this.passenger?.delivered(this.id)
     this.deliveredDateTime = date
     this.deliveredPosition = position
     this.deliveryTime = (date - (this.assigned || this.queued)) / 1000
