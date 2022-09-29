@@ -8,7 +8,7 @@ const data = require('../data/kommuner.json')
 const population = require('./population')
 const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
-
+const measureStations = require('./measureStations')
 const inside = require('point-in-polygon')
 const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const Pelias = require('../lib/pelias')
