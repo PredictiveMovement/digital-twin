@@ -14,7 +14,6 @@ const { mergeMap, map, scan, catchError } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
 
-const postombud = require('./streams/postombud')
 const kommuner = require('./streams/kommuner')
 const regions = require('./streams/regions')(kommuner)
 const { safeId } = require('./lib/id')
@@ -51,7 +50,7 @@ const engine = {
           kommuner.pipe(mergeMap((k) => k.dispatchedBookings))
         ),
         buses: regions.pipe(mergeMap((region) => region.buses)),
-        postombud,
+        postombud: kommuner.pipe(mergeMap((kommun) => kommun.postombud)),
         kommuner,
         parameters,
         passengers: regions.pipe(mergeMap((region) => region.citizens)),
