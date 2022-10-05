@@ -34,6 +34,7 @@ class Passenger {
     this.inVehicle = false
     this.kommun = kommun
     this.unfilledNeeds = []
+    this.assignedEvents = new ReplaySubject()
 
     // Aggregated values
     this.co2 = 0
@@ -197,14 +198,14 @@ class Passenger {
   }
 
   pickedUp(bookingId) {
-    console.log("pickedUp", bookingId)
+    console.log('pickedUp', bookingId)
     this.inVehicle = true
     // this.updateBooking(bookingId, 'Pågående')
     this.pickedUpEvents.next(this.toObject())
   }
 
   delivered(bookingId) {
-    console.log("delivered", bookingId)
+    console.log('delivered', bookingId)
     this.inVehicle = false
     // this.updateBooking(bookingId, 'Avklarad')
     delete this.unfilledNeeds.find((need) => need === bookingId)
