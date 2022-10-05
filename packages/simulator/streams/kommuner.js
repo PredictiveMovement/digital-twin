@@ -68,6 +68,13 @@ function getCommercialAreas(kommunkod) {
   )
 }
 
+function getMeasureStations(kommunName) {
+  return measureStations.pipe(
+    filter((station) => kommunName.startsWith(station.kommun)),
+    shareReplay()
+  )
+}
+
 function getPostombud(kommunName) {
   return postombud.pipe(
     filter((ombud) => kommunName.startsWith(ombud.kommun)),
@@ -104,6 +111,7 @@ function read() {
           bookings: new ReplaySubject(), // will be set later
           citizens: new ReplaySubject(), // will be set later
           postombud: getPostombud(namn),
+          measureStations: getMeasureStations(),
           population: await squares
             .pipe(reduce((a, b) => a + b.population, 0))
             .toPromise(),
