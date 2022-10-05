@@ -129,7 +129,6 @@ function register(io) {
 
   io.on('connection', function (socket) {
     socket.emit('parameters', experiment.parameters)
-    socket.emit('reset')
 
     setUpSocketListeners(socket)
     replayBaseDataToNewClient(socket)
