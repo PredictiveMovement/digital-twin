@@ -53,7 +53,7 @@ const engine = {
       parameters,
       passengers: regions.pipe(mergeMap((region) => region.citizens)),
       taxis: regions.pipe(mergeMap((region) => region.taxis)),
-      static,
+      ...static,
     }
 
     experiment.passengers
