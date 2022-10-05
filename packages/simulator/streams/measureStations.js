@@ -11,24 +11,25 @@ function execute() {
       }`,
       `${process.env.transports_sheet || 'Blad1'}`
     )
+  ).pipe(
+    map(
+      ({
+        x,
+        y,
+        // 'HBG nr': hbgNr,
+        // 'Traffic Web': trafficWeb,
+        // Mätår: year,
+        // Månad: month,
+        // 'VaDT Tung': heavyTraficCount,
+      }) => ({
+        position: sweCoords.toLatLng(
+          Math.floor(x).toString(),
+          Math.floor(y).toString()
+        ),
+      })
+    ),
+    shareReplay()
   )
-    .pipe(
-      map(
-        ({
-          x,
-          y,
-          // 'HBG nr': hbgNr,
-          // 'Traffic Web': trafficWeb,
-          // Mätår: year,
-          // Månad: month,
-          // 'VaDT Tung': heavyTraficCount,
-        }) => ({
-          position: sweCoords.toLatLng(x.toString(), y.toString()),
-        })
-      ),
-      shareReplay()
-    )
-    .subscribe(console.log)
 }
 
 module.exports = execute()
