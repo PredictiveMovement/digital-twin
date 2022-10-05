@@ -21,6 +21,7 @@ const shuffle = () =>
     mergeAll()
   )
 
+// NOTE: There seems to be a bug where passengers get the same name.
 const zipfDistribution = () =>
   pipe(
     map((name, i) => ({
