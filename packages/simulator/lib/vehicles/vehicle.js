@@ -259,8 +259,8 @@ class Vehicle {
 
   stopped() {
     this.statusEvents.next(this)
-    //this.simulate(false)
     if (this.booking) {
+      this.simulate(false)
       if (this.status === 'Pickup') this.pickup()
       if (this.status === 'Delivery') this.dropOff()
     }
