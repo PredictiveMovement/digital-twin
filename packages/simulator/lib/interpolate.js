@@ -52,7 +52,7 @@ function interpolatePositionFromRoute(route, time) {
   return interpolatedPosition
 }
 
-const speedFactor = 1.2 // apply this to all speeds
+const speedFactor = 1.4 // apply this to all speeds, TODO: Investigate ways to get buses to start position faster other ways. With speedFactor this high we greatly reduce the number of buses that get unassigned because it missed the first stop time due to too slowly navigating from bus depots to first stop. Might be improved by improving knowledge about the Swedish road network in OSRM/OSM (speeds might not be correct for roads in sweden)
 
 function extractPoints(route) {
   const annotation = route.legs

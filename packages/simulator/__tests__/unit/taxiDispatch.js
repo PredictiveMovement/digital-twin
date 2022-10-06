@@ -1,6 +1,6 @@
 const { from } = require('rxjs')
 
-const { taxiDispatch } = require('../../lib/taxiDispatch')
+const { taxiDispatch } = require('../../lib/dispatch/taxiDispatch')
 const Taxi = require('../../lib/vehicles/taxi')
 
 describe('taxiDispatch', () => {

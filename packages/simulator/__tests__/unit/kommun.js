@@ -4,9 +4,9 @@ const { first, map } = require('rxjs/operators')
 const Booking = require('../../lib/booking')
 const { virtualTime } = require('../../lib/virtualTime')
 
-const dispatch = require('../../lib/dispatchCentral')
+const dispatch = require('../../lib/dispatch/dispatchCentral')
 
-jest.mock('../../lib/dispatchCentral')
+jest.mock('../../lib/dispatch/dispatchCentral')
 
 const range = (length) => Array.from({ length }).map((_, i) => i)
 

@@ -7,11 +7,12 @@ const { assert } = require('console')
 const { error, info } = require('../log')
 const { virtualTime } = require('../virtualTime')
 const { throws } = require('assert')
+const Position = require('../models/position')
 
 const { ReplaySubject } = require('rxjs')
 class Vehicle {
   constructor({
-    id = safeId(),
+    id = 'v-' + safeId(),
     position,
     status = 'Ready',
     capacity = 250,
@@ -31,7 +32,6 @@ class Vehicle {
     this.id = id
     this.position = position
     this.origin = position
-    this.history = []
     this.queue = []
     this.cargo = []
     this.delivered = []
@@ -41,13 +41,13 @@ class Vehicle {
     this.co2 = 0
     this.distance = 0
     this.status = status
-    this.lastPositions = []
     this.fleet = fleet
     this.created = this.time()
     this.co2PerKmKg = co2PerKmKg
     this.vehicleType = 'default'
     this.movedEvents = new ReplaySubject()
     this.cargoEvents = new ReplaySubject()
+    this.statusEvents = new ReplaySubject()
   }
 
   dispose() {
@@ -67,12 +67,15 @@ class Vehicle {
       return this.updatePosition(route) // teleport mode
     this._interval = setInterval(() => {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
-      const newPosition = interpolate.route(route, this.time()) ?? this.heading
+      const { next, ...position } =
+        interpolate.route(route, this.time()) ?? this.heading
+      const newPosition = new Position(position)
       if (route.started > this.time()) {
         clearInterval(this._interval)
         return
       }
       this.updatePosition(newPosition)
+      if (!next) this.stopped()
     }, 200)
   }
 
@@ -99,16 +102,14 @@ class Vehicle {
 
   handleBooking(booking) {
     assert(booking instanceof Booking, 'Booking needs to be of type Booking')
-    this.history.push({
-      status: 'received_booking',
-      date: this.time(),
-      booking,
-    })
+
     if (!this.busy) {
       this.busy = true
       this.booking = booking
-      booking.assigned(this)
+      booking.assign(this)
       this.status = 'Pickup'
+      this.statusEvents.next(this)
+
       this.navigateTo(booking.pickup.position)
     } else {
       // TODO: switch places with current booking if it makes more sense to pick this package up before picking up current
@@ -121,19 +122,21 @@ class Vehicle {
   pickup() {
     if (this._disposed) return
 
-    this.queue.sort(
-      (a, b) =>
-        haversine(this.position, a.pickup.position) -
-        haversine(this.position, b.pickup.position)
-    )
+    // this.queue.sort(
+    //   (a, b) =>
+    //     haversine(this.position, a.pickup.position) -
+    //     haversine(this.position, b.pickup.position)
+    // )
 
     // wait one tick so the pickup event can be parsed before changing status
     setImmediate(() => {
+      if (this.booking) this.booking.pickedUp(this.position)
+      this.cargo.push(this.booking)
       // see if we have more packages to pickup from this position
       while (
         this.queue.length < this.capacity &&
         this.queue.length &&
-        haversine(this.position, this.queue[0].pickup.position) < 100
+        haversine(this.position, this.queue[0].pickup.position) < 200
       ) {
         const booking = this.queue.shift()
         booking.pickedUp(this.position)
@@ -143,6 +146,7 @@ class Vehicle {
       if (this.booking && this.booking.destination) {
         this.booking.pickedUp(this.position)
         this.status = 'Delivery'
+        this.statusEvents.next(this)
 
         // should we first pickup more bookings before going to the destination?
         if (
@@ -166,7 +170,7 @@ class Vehicle {
       this.delivered.push(this.booking)
     }
 
-    this.booking = this.pickNextFromCargo()
+    this.pickNextFromCargo()
   }
 
   pickNextFromCargo() {
@@ -238,7 +242,6 @@ class Vehicle {
     this.ema = haversine(this.heading, this.position)
     if (metersMoved > 0) {
       this.bearing = bearing(lastPosition, position) || 0
-      this.lastPositions.push({ ...position, date })
       this.movedEvents.next(this)
 
       // NOTE: cargo is passengers or packages.
@@ -246,18 +249,20 @@ class Vehicle {
         booking.moved(
           this.position,
           metersMoved,
-          co2 / (this.cargo.length + 1), // TODO: Why do we do +1 here?
+          co2 / (this.cargo.length + 1), // TODO: Why do we do +1 here? Because we have one active booking + cargo
           (h * this.costPerHour) / (this.cargo.length + 1),
           timeDiff
         )
       })
     }
-    if (!position.next) {
+  }
+
+  stopped() {
+    this.statusEvents.next(this)
+    if (this.booking) {
       this.simulate(false)
-      if (this.booking) {
-        if (this.status === 'Pickup') this.pickup()
-        if (this.status === 'Delivery') this.dropOff()
-      }
+      if (this.status === 'Pickup') this.pickup()
+      if (this.status === 'Delivery') this.dropOff()
     }
   }
 
