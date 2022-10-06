@@ -170,7 +170,7 @@ class Vehicle {
       this.delivered.push(this.booking)
     }
 
-    this.booking = this.pickNextFromCargo()
+    this.pickNextFromCargo()
   }
 
   pickNextFromCargo() {
