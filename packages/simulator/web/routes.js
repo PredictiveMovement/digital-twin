@@ -1,4 +1,4 @@
-const { fromEvent, combineLatest, pipe, merge, of } = require('rxjs')
+const { combineLatest, pipe } = require('rxjs')
 const {
   map,
   toArray,
@@ -20,17 +20,6 @@ const { saveParameters } = require('../lib/fileUtils')
 const { info } = require('../lib/log')
 
 const count = () => pipe(scan((acc) => acc + 1, 0))
-
-const lastUpdatePerIntervalAndId = (interval, idProperty = 'id') =>
-  pipe(
-    windowTime(interval), // start a window every x ms
-    mergeMap((win) =>
-      win.pipe(
-        groupBy((object) => object[idProperty]), // create a stream for each object in this window
-        mergeMap((objects) => objects.pipe(last())) // take the last update in this window
-      )
-    )
-  )
 
 const cleanBookings = () =>
   pipe(
