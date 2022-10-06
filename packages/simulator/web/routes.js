@@ -1,4 +1,4 @@
-const { combineLatest } = require('rxjs')
+const { combineLatest, pipe } = require('rxjs')
 const {
   map,
   toArray,
@@ -11,6 +11,7 @@ const {
   windowTime,
   groupBy,
   last,
+  bufferCount,
 } = require('rxjs/operators')
 
 const engine = require('../index')
@@ -18,12 +19,14 @@ const { virtualTime } = require('../lib/virtualTime')
 const { saveParameters } = require('../lib/fileUtils')
 const { info } = require('../lib/log')
 
-const cleanBookings = () => (bookings) =>
-  bookings.pipe(
+const count = () => pipe(scan((acc) => acc + 1, 0))
+
+const cleanBookings = () =>
+  pipe(
     map(
       ({
-        pickup: { position: pickup },
-        destination: { position: destination, name },
+        pickup,
+        destination,
         id,
         status,
         isCommercial,
@@ -33,9 +36,8 @@ const cleanBookings = () => (bookings) =>
         car,
       }) => ({
         id,
-        pickup,
-        destination,
-        name,
+        pickup: pickup.position,
+        destination: destination.position,
         status,
         isCommercial,
         deliveryTime,
@@ -179,18 +181,28 @@ function register(io) {
     experiment.kommuner
       .pipe(map(({ id, name, geometry, co2 }) => ({ id, name, geometry, co2 })))
       .subscribe((kommun) => socket.emit('kommun', kommun))
+
     experiment.dispatchedBookings
-      .pipe(bufferTime(100, null, 1000))
+      .pipe(cleanBookings(), bufferTime(100, null, 1000))
       .subscribe((bookings) => {
         if (bookings.length) {
-          io.socket('bookings', bookings)
+          socket.emit('bookings', bookings)
         }
       })
-    experiment.passengers.pipe(toArray()).subscribe((passengers) => {
-      info(`Sending ${passengers.length} passengers`)
-      return passengers.map((passenger) => {
-        socket.emit('passenger', passenger.toObject())
+
+    experiment.buses
+      .pipe(map(cleanCars), bufferCount(100))
+      .subscribe((cars) => {
+        // console.log(e)
+        socket.emit('cars', cars)
       })
+
+    experiment.passengerUpdates.subscribe((passenger) => {
+      socket.emit('passenger', passenger.toObject())
+      socket.emit(
+        'bookings',
+        passenger.bookings.map((b) => b.toObject())
+      )
     })
 
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
@@ -235,13 +247,22 @@ function register(io) {
   }
   subscriptions = start(experiment)
 
+  experiment.passengers.subscribe((passenger) => {
+    io.emit('passenger', passenger.toObject())
+  })
+
+  setInterval(() => {
+    io.emit('time', experiment.virtualTime.time())
+  }, 1000)
+
+  experiment.passengers.subscribe((passenger) => {
+    io.emit('passenger', passenger.toObject())
+  })
+
   experiment.kommuner
     .pipe(
       mergeMap(({ id, dispatchedBookings, name, cars, co2 }) => {
-        const totalBookings = dispatchedBookings.pipe(
-          scan((a) => a + 1, 0),
-          startWith(0)
-        )
+        const totalBookings = dispatchedBookings.pipe(count(), startWith(0))
 
         const averageDeliveryTime = dispatchedBookings.pipe(
           mergeMap((booking) => booking.deliveredEvents),
@@ -283,7 +304,7 @@ function register(io) {
             totalQueued,
             averageUtilization: totalCargo / totalCapacity,
             averageQueued: totalQueued / totalCapacity,
-            totalCo2: co2,
+            totalCo2: totalCo2,
           })),
           startWith({
             totalCargo: 0,
@@ -295,10 +316,7 @@ function register(io) {
           })
         )
 
-        const totalCars = cars.pipe(
-          scan((a) => a + 1, 0),
-          startWith(0)
-        )
+        const totalCars = cars.pipe(count(), startWith(0))
 
         const totalCapacity = cars.pipe(
           filter((car) => car.capacity),

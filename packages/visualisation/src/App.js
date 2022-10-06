@@ -85,14 +85,18 @@ const App = () => {
     socket.emit('speed', speed) // reset speed on server
   })
 
-  function upsert(array, object, idProperty = 'id') {
+  function upsert(array, object, idProperty = 'id', deep = false) {
     const currentIndex = array.findIndex(
       (k) => k[idProperty] === object[idProperty]
     )
     let new_arr = [...array]
 
     if (currentIndex >= 0) {
-      new_arr[currentIndex] = object
+      if (deep) {
+        new_arr[currentIndex] = { ...new_arr[currentIndex], ...object }
+      } else {
+        new_arr[currentIndex] = object
+      }
     } else {
       new_arr.push(object)
     }
@@ -104,39 +108,7 @@ const App = () => {
     setReset(false)
     setCars((cars) => [
       ...cars.filter((car) => !newCars.some((nc) => nc.id === car.id)),
-      ...newCars.map(
-        ({
-          id,
-          co2,
-          distance,
-          heading,
-          bearing,
-          position,
-          fleet,
-          cargo,
-          capacity,
-          lineNumber,
-          queue,
-          vehicleType,
-          speed,
-          experimentId,
-        }) => ({
-          id,
-          experimentId,
-          co2,
-          distance,
-          heading,
-          bearing,
-          position,
-          fleet,
-          cargo,
-          capacity,
-          lineNumber,
-          queue,
-          vehicleType,
-          speed,
-        })
-      ),
+      ...newCars,
     ])
   })
 
@@ -218,7 +190,7 @@ const App = () => {
   const [kommuner, setKommuner] = React.useState([])
   useSocket('kommun', (kommun) => {
     setReset(false)
-    setKommuner((current) => upsert(current, kommun, 'id'))
+    setKommuner((current) => upsert(current, kommun, 'id', true))
   })
 
   useSocket('parameters', (currentParameters) => {
@@ -227,38 +199,18 @@ const App = () => {
     setNewParameters(currentParameters)
   })
   const [passengers, setPassengers] = React.useState([])
-  useSocket(
-    'passenger',
-    ({
-      id,
-      co2,
-      distance,
-      inVehicle,
-      journeys,
-      moveTime,
-      name,
-      position,
-      waitTime,
-    }) => {
-      setPassengers((currentPassengers) =>
-        upsert(
-          currentPassengers,
-          {
-            id,
-            co2,
-            distance,
-            inVehicle,
-            journeys,
-            moveTime,
-            name,
-            position: [position.lon, position.lat].map((s) => parseFloat(s)),
-            waitTime,
-          },
-          'id'
-        )
+  useSocket('passenger', ({ position, ...passenger }) => {
+    setPassengers((currentPassengers) =>
+      upsert(
+        currentPassengers,
+        {
+          ...passenger,
+          position: [position.lon, position.lat].map((s) => parseFloat(s)),
+        },
+        'id'
       )
-    }
-  )
+    )
+  })
   const [taxis, setTaxis] = React.useState([])
   useSocket('taxi', ({ name, position, id }) => {
     setReset(false)

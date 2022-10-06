@@ -52,7 +52,7 @@ module.exports = {
         return response.json()
       },
       (err) => {
-        error('OSRM fetch err', err)
+        console.log('OSRM fetch err', err)
       }
     )
 

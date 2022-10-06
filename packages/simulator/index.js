@@ -1,5 +1,15 @@
-const { map, share, merge, switchMap, shareReplay } = require('rxjs')
-const { mergeMap } = require('rxjs/operators')
+const {
+  from,
+  filter,
+  share,
+  merge,
+  fromEvent,
+  of,
+  concatMap,
+  switchMap,
+  shareReplay,
+} = require('rxjs')
+const { mergeMap, map, scan, catchError } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
 
@@ -9,7 +19,7 @@ const regions = require('./streams/regions')(kommuner)
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
 const statistics = require('./lib/statistics')
-const { info } = require('./lib/log')
+const { info, error } = require('./lib/log')
 
 const static = {
   busStops: regions.pipe(mergeMap((region) => region.stops)),
@@ -22,13 +32,6 @@ const engine = {
     const savedParams = readParameters()
 
     info('Starting experiment with params:', savedParams)
-    regions
-      .pipe(
-        map((region) => {
-          region.distributeInstructions()
-        })
-      )
-      .subscribe(() => null)
 
     const parameters = {
       id,
@@ -37,35 +40,31 @@ const engine = {
     }
     statistics.collectExperimentMetadata(parameters)
 
-    const experiment = Object.assign(
-      {
-        virtualTime, // TODO: move this from being a static property to being a property of the experiment
-        cars: kommuner.pipe(mergeMap((kommun) => kommun.cars)),
-        dispatchedBookings: kommuner.pipe(
-          mergeMap((k) => k.dispatchedBookings)
-        ),
-        buses: regions.pipe(mergeMap((region) => region.buses)),
-        postombud,
-        kommuner,
-        parameters,
-        passengers: regions.pipe(mergeMap((region) => region.passengers)),
-        taxis: regions.pipe(mergeMap((region) => region.taxis)),
-      },
-      static
-    )
+    const experiment = {
+      virtualTime, // TODO: move this from being a static property to being a property of the experiment
+      cars: kommuner.pipe(mergeMap((kommun) => kommun.cars)),
+      dispatchedBookings: merge(
+        regions.pipe(mergeMap((r) => r.dispatchedBookings)),
+        kommuner.pipe(mergeMap((k) => k.dispatchedBookings))
+      ),
+      buses: regions.pipe(mergeMap((region) => region.buses)),
+      postombud,
+      kommuner,
+      parameters,
+      passengers: regions.pipe(mergeMap((region) => region.citizens)),
+      taxis: regions.pipe(mergeMap((region) => region.taxis)),
+      ...static,
+    }
 
     experiment.passengers
       .pipe(
-        switchMap(({ journeys }) => journeys),
-        mergeMap((journey) => journey.statusEvents),
+        switchMap(({ bookings }) => bookings),
+        mergeMap((booking) => booking.statusEvents),
+        catchError((err) => error('passenger bookings err', err)),
         shareReplay()
       )
-      .subscribe((journey) => {
-        // delete journey.passenger.journeys // Avoid circular reference in serialization
-        statistics.collectJourney({
-          experimentSettings: parameters,
-          ...journey,
-        })
+      .subscribe((booking) => {
+        statistics.collectBooking(booking, parameters)
       })
 
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(
@@ -77,12 +76,15 @@ const engine = {
           booking.deliveredEvents
         )
       ),
+      catchError((err) => error('booking updates err', err)),
       share()
     )
     experiment.passengerUpdates = experiment.passengers.pipe(
       mergeMap((passenger) =>
         merge(passenger.deliveredEvents, passenger.pickedUpEvents)
       ),
+      catchError((err) => error('passenger updates err', err)),
+
       share()
     )
 
@@ -93,11 +95,13 @@ const engine = {
       experiment.taxis
     ).pipe(
       mergeMap((car) => car.movedEvents),
+      catchError((err) => error('car updates err', err)),
+
       share()
     )
 
     experiment.dispatchedBookings.subscribe((booking) =>
-      info(`Booking ${booking?.id} dispatched to fleet ${booking?.fleet?.name}`)
+      info(`Booking ${booking?.id} dispatched to car ${booking?.car?.id}`)
     )
     engine.experiments.push(experiment)
 

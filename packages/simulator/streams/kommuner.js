@@ -1,7 +1,14 @@
 /**
  * TODO: Describe the stream that this file exports and what its data means
  */
-const { from, shareReplay, withLatestFrom, merge, range } = require('rxjs')
+const {
+  from,
+  shareReplay,
+  withLatestFrom,
+  merge,
+  range,
+  ReplaySubject,
+} = require('rxjs')
 const {
   map,
   tap,
@@ -10,6 +17,7 @@ const {
   finalize,
   share,
   mergeMap,
+  count,
 } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
@@ -21,6 +29,7 @@ const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const { generateBookingsInKommun } = require('../simulator/bookings')
 const bookingsCache = require('../streams/cacheBookingStream')
 const Pelias = require('../lib/pelias')
+const { generatePassengers } = require('../simulator/passengers')
 
 function getPopulationSquares({ geometry: { coordinates } }) {
   return population.pipe(
@@ -89,6 +98,8 @@ function read() {
           center: await Pelias.search(namn).then((res) => res.position),
           pickupPositions: pickupPositions || [],
           squares,
+          bookings: new ReplaySubject(), // will be set later
+          citizens: new ReplaySubject(), // will be set later
           postombud: getPostombud(namn),
           population: await squares
             .pipe(reduce((a, b) => a + b.population, 0))
@@ -98,6 +109,12 @@ function read() {
         })
       }
     ),
+    tap((kommun) => {
+      //kommun.bookings = generateBookingsInKommun(kommun)
+      generatePassengers(kommun).subscribe((passenger) =>
+        kommun.citizens.next(passenger)
+      )
+    }),
 
     shareReplay()
   )

@@ -55,7 +55,7 @@ class Bus extends Vehicle {
     if (!this.busy) {
       this.busy = true
       this.booking = booking
-      booking.assigned(this)
+      booking.assign(this)
       this.status = 'Pickup'
       await this.navigateTo(booking.destination.position)
       this.movedEvents.next(this)
@@ -94,6 +94,7 @@ class Bus extends Vehicle {
     ).valueOf()
     this.simulate(false) // pause interpolation while we wait
     const waitingtime = moment(departure).diff(moment(virtualTime.time()))
+    // TODO: move this logic to vehicle so all bookings can have a departure time
 
     if (waitingtime > 0) await virtualTime.waitUntil(departure)
     if (!this.booking) {

@@ -27,24 +27,36 @@ const GridWrapper = styled.div`
   margin-top: 1.5rem;
 `
 
-const KommunStatisticsBox = ({ name, co2 }) => {
+const KommunStatisticsBox = ({
+  name,
+  totalBookings,
+  totalCars,
+  totalCargo,
+  totalCo2,
+  totalCapacity,
+  averageDeliveryTime,
+  totalDelivered,
+  totalQueued,
+  averageQueued,
+  averageUtilization,
+}) => {
   return (
     <Wrapper>
       <H4>{name}</H4>
       <GridWrapper>
         <Grid>
           <ParagraphBold black>Antal fordon</ParagraphBold>
-          <Paragraph black>xxxx fordon</Paragraph>
+          <Paragraph black>{totalCars} fordon</Paragraph>
         </Grid>
         <Grid>
           <ParagraphBold black>Total kapacitet</ParagraphBold>
-          <Paragraph black>xxxx personer</Paragraph>
+          <Paragraph black>{totalCapacity} personer</Paragraph>
         </Grid>
         <Grid>
           <ParagraphBold black>
             CO<sub>2</sub>
           </ParagraphBold>
-          <Paragraph black>{co2} kg</Paragraph>
+          <Paragraph black>{totalCo2} kg</Paragraph>
         </Grid>
         <Grid>
           <ParagraphBold black>Genomsnittskostnad</ParagraphBold>
@@ -52,11 +64,13 @@ const KommunStatisticsBox = ({ name, co2 }) => {
         </Grid>
         <Grid>
           <ParagraphBold black>Medelfyllnadsgrad per bil</ParagraphBold>
-          <Paragraph black>xx%</Paragraph>
+          <Paragraph black>{averageUtilization}%</Paragraph>
         </Grid>
         <Grid>
           <ParagraphBold black>Genomsnittlig restid</ParagraphBold>
-          <Paragraph black>xxxx</Paragraph>
+          <Paragraph black>
+            {Math.ceil(averageDeliveryTime / 60) || 0} min
+          </Paragraph>
         </Grid>
       </GridWrapper>
     </Wrapper>
