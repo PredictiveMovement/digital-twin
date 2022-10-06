@@ -150,7 +150,7 @@ class Region {
         ),
         filter((bookings) => bookings.length > 10),
         tap((bookings) => bookings.forEach((b) => (b.dispatching = true))), // mark all bookings as calculating so we don't include them in the next batch
-        tap((bookings) => info('Clustering bookings', bookings.length)),
+        // tap((bookings) => info('Clustering bookings', bookings.length)),
         // switchMap((bookings) => clusterPositions(bookings)), // continously cluster bookings
         // mergeAll(),
         // map(({ center, items: bookings }) => ({ center, bookings })),
