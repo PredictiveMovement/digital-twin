@@ -151,24 +151,25 @@ class Region {
         filter((bookings) => bookings.length > 10),
         tap((bookings) => bookings.forEach((b) => (b.dispatching = true))), // mark all bookings as calculating so we don't include them in the next batch
         tap((bookings) => info('Clustering bookings', bookings.length)),
-        switchMap((bookings) => clusterPositions(bookings)), // continously cluster bookings
-        mergeAll(),
-        map(({ center, items: bookings }) => ({ center, bookings })),
-        catchError((err) => error('taxi cluster err', err)),
-        filter(({ bookings }) => bookings.length > 5), // wait until we have at least 10 bookings in a cluster
-        mergeMap(({ center, bookings }) =>
+        // switchMap((bookings) => clusterPositions(bookings)), // continously cluster bookings
+        // mergeAll(),
+        // map(({ center, items: bookings }) => ({ center, bookings })),
+        // catchError((err) => error('taxi cluster err', err)),
+        // filter(({ bookings }) => bookings.length > 5), // wait until we have at least 10 bookings in a cluster
+        mergeMap((bookings) =>
           this.taxis.pipe(
-            map((taxi) => ({
-              taxi,
-              distance: haversine(taxi.position, center),
-            })),
-            filter(({ distance }) => distance < 100_000),
-            pluck('taxi'),
-            filter(
-              ({ queue, cargo, capacity }) =>
-                queue.length + cargo.length < capacity
-            ),
-            takeNearest(center, 10),
+            // map((taxi) => ({
+            //   taxi,
+            //   distance: haversine(taxi.position, center),
+            // })),
+            // filter(({ distance }) => distance < 100_000),
+            // pluck('taxi'),
+            // filter(
+            //   ({ queue, cargo, capacity }) =>
+            //     queue.length + cargo.length < capacity
+            // ),
+            // takeNearest(center, 10),
+            toArray(),
             filter((taxis) => taxis.length),
             mergeMap((taxis) => taxiDispatch(taxis, bookings), 3)
           )
