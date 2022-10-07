@@ -1,5 +1,5 @@
 const Kommun = require('../../lib/Kommun')
-const { from, lastValueFrom } = require('rxjs')
+const { from, lastValueFrom, ReplaySubject } = require('rxjs')
 const { first, map } = require('rxjs/operators')
 const Booking = require('../../lib/models/booking')
 const { virtualTime } = require('../../lib/virtualTime')
@@ -25,7 +25,13 @@ describe('A kommun', () => {
   beforeEach(() => {
     virtualTime.setTimeMultiplier(Infinity)
     fleets = [
-      { name: 'postnord', marketshare: 1, numberOfCars: 1, hub: arjeplog },
+      {
+        name: 'postnord',
+        marketshare: 1,
+        numberOfCars: 1,
+        hub: arjeplog,
+        dispatchedBookings: new ReplaySubject(),
+      },
     ]
     jest.clearAllMocks()
   })
@@ -48,6 +54,8 @@ describe('A kommun', () => {
   })
 
   it.only('handled bookings are dispatched', function (done) {
+    kommun = new Kommun({ name: 'stockholm', squares, fleets })
+
     dispatch.dispatch.mockImplementation((cars, bookings) =>
       bookings.pipe(
         map((booking) => ({
@@ -57,7 +65,6 @@ describe('A kommun', () => {
       )
     )
 
-    kommun = new Kommun({ name: 'stockholm', squares, fleets })
     kommun.handleBooking(testBooking)
 
     kommun.dispatchedBookings.pipe(first()).subscribe(({ booking }) => {
