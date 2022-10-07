@@ -38,8 +38,8 @@ describe('A car', () => {
     car = new Car({ id: 1, position: arjeplog })
     car.navigateTo(ljusdal)
     car.statusEvents.pipe(filter((car) => !car.moving)).subscribe((car) => {
-      expect(car.position?.lon).toEqual(ljusdal.lon)
-      expect(car.position?.lat).toEqual(ljusdal.lat)
+      expect(car.position.lon).toEqual(ljusdal.lon)
+      expect(car.position.lat).toEqual(ljusdal.lat)
       done()
     })
   })
@@ -55,8 +55,8 @@ describe('A car', () => {
       })
     )
     once(car.statusEvents, 'AtPickup', (car) => {
-      expect(car.position?.lon).toEqual(ljusdal.lon)
-      expect(car.position?.lat).toEqual(ljusdal.lat)
+      expect(car.position.lon).toEqual(ljusdal.lon)
+      expect(car.position.lat).toEqual(ljusdal.lat)
       done()
     })
   })
@@ -76,8 +76,8 @@ describe('A car', () => {
     )
     expect(car.status).toEqual('Pickup')
     once(car.statusEvents, 'AtPickup', () => {
-      expect(car.position?.lon).toEqual(ljusdal.lon)
-      expect(car.position?.lat).toEqual(ljusdal.lat)
+      expect(car.position.lon).toEqual(ljusdal.lon)
+      expect(car.position.lat).toEqual(ljusdal.lat)
       done()
     })
   })
@@ -95,14 +95,16 @@ describe('A car', () => {
         },
       })
     )
-    car.once('pickup', () => {
-      expect(car.position?.lon).toEqual(ljusdal.lon)
-      expect(car.position?.lat).toEqual(ljusdal.lat)
+    car.statusEvents.subscribe((car) => console.log(car.status))
+
+    once(car.statusEvents, 'AtPickup', () => {
+      expect(car.position.lon).toEqual(ljusdal.lon)
+      expect(car.position.lat).toEqual(ljusdal.lat)
     })
 
-    car.once('dropoff', () => {
-      expect(car.position?.lon).toEqual(arjeplog.lon)
-      expect(car.position?.lat).toEqual(arjeplog.lat)
+    once(car.statusEvents, 'AtDropoff', () => {
+      expect(car.position.lon).toEqual(arjeplog.lon)
+      expect(car.position.lat).toEqual(arjeplog.lat)
       done()
     })
   })
@@ -168,15 +170,15 @@ describe('A car', () => {
 
     const [firstBooking, secondBooking, thirdBooking, ...rest] = bookings
 
-    firstBooking.once('delivered', () => {
+    once(firstBooking.deliveredEvents, 'Delivered', () => {
       expect(car.queue).toHaveLength(1)
     })
 
-    secondBooking.once('delivered', () => {
+    once(secondBooking.deliveredEvents, 'Delivered', () => {
       expect(car.queue).toHaveLength(1)
     })
 
-    last.once('delivered', () => {
+    once(last.deliveredEvents, 'Delivered', () => {
       expect(car.queue).toHaveLength(0)
       done()
     })

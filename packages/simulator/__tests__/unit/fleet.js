@@ -21,6 +21,7 @@ describe('A fleet', () => {
   })
 
   beforeEach(() => {
+    dispatch.dispatch.mockImplementation((cars, bookings) => from([]))
     virtualTime.setTimeMultiplier(Infinity)
     jest.clearAllMocks()
   })

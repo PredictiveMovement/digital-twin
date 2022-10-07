@@ -7,7 +7,7 @@ describe('A bus', () => {
   const ljusdal = { lon: 14.44681991219, lat: 61.59465992477 }
   let bus
 
-  it.only('should be able to pickup multiple bookings and queue the all except the first', () => {
+  it('should be able to pickup multiple bookings and queue the all except the first', () => {
     const stops = new Subject()
     bus = new Bus({ id: 1, position: arjeplog, stops })
 
@@ -15,7 +15,7 @@ describe('A bus', () => {
       stops.next({
         pickup: ljusdal,
         destination: arjeplog,
-        departureTime: moment('2021-04-20:00:00:00')
+        departureTime: moment('2021-04-20 00:00:00')
           .add(i, 'minutes')
           .format('HH:mm:ss'),
       })

@@ -215,6 +215,9 @@ class Vehicle {
     this.status = 'AtDropOff'
     this.statusEvents.next(this)
 
+    this.status = 'AtDropOff'
+    this.statusEvents.next(this)
+
     this.pickNextFromCargo()
   }
 

@@ -3,9 +3,9 @@ const { safeId } = require('../id')
 
 const { ReplaySubject, merge } = require('rxjs')
 class Booking {
-  constructor(booking) {
+  constructor({ id, ...booking }) {
     Object.assign(this, booking)
-    this.id = 'b-' + safeId()
+    this.id = id || 'b-' + safeId()
     this.status = 'New'
     this.co2 = 0 //TODO: initialvärde?
     this.passenger = booking.passenger
