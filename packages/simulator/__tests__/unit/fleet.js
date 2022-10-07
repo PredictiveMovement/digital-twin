@@ -1,12 +1,12 @@
 const Fleet = require('../../lib/fleet')
 const { from, lastValueFrom } = require('rxjs')
 const { first, take, toArray } = require('rxjs/operators')
-const Booking = require('../../lib/booking')
+const Booking = require('../../lib/models/booking')
 const { virtualTime } = require('../../lib/virtualTime')
 
-const dispatch = require('../../lib/dispatchCentral')
+const dispatch = require('../../lib/dispatch/dispatchCentral')
 
-jest.mock('../../lib/dispatchCentral')
+jest.mock('../../lib/dispatch/dispatchCentral')
 
 const range = (length) => Array.from({ length }).map((_, i) => i)
 

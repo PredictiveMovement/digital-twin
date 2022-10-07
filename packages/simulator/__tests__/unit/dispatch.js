@@ -11,8 +11,8 @@ const {
   shareReplay,
 } = require('rxjs/operators')
 const { dispatch } = require('../../lib/dispatch/dispatchCentral')
-const Car = require('../../lib/car')
-const Booking = require('../../lib/booking')
+const Car = require('../../lib/vehicles/car')
+const Booking = require('../../lib/models/booking')
 const { virtualTime } = require('../../lib/virtualTime')
 
 describe('dispatch', () => {

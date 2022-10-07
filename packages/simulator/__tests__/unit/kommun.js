@@ -1,7 +1,7 @@
 const Kommun = require('../../lib/Kommun')
 const { from, lastValueFrom } = require('rxjs')
 const { first, map } = require('rxjs/operators')
-const Booking = require('../../lib/booking')
+const Booking = require('../../lib/models/booking')
 const { virtualTime } = require('../../lib/virtualTime')
 
 const dispatch = require('../../lib/dispatch/dispatchCentral')

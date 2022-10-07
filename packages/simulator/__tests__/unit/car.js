@@ -1,9 +1,17 @@
 const Car = require('../../lib/vehicles/car')
-const { take, toArray } = require('rxjs/operators')
-const Booking = require('../../lib/booking')
+const { take, toArray, filter } = require('rxjs/operators')
+const Booking = require('../../lib/models/booking')
 const { virtualTime } = require('../../lib/virtualTime')
 
 const range = (length) => Array.from({ length }).map((_, i) => i)
+
+const once = (eventsStream, status, fn) =>
+  eventsStream
+    .pipe(
+      filter((car) => car.status === status),
+      take(1)
+    )
+    .subscribe(fn)
 
 describe('A car', () => {
   const arjeplog = { lon: 17.886855, lat: 66.041054 }
@@ -14,13 +22,9 @@ describe('A car', () => {
     virtualTime.setTimeMultiplier(Infinity)
   })
 
-  afterEach(() => {
-    car.dispose()
-  })
-
   it('should initialize correctly', function (done) {
     car = new Car()
-    expect(car.id).toHaveLength(9)
+    expect(car.id).toHaveLength(11)
     done()
   })
 
@@ -33,7 +37,7 @@ describe('A car', () => {
   it('should be able to teleport', function (done) {
     car = new Car({ id: 1, position: arjeplog })
     car.navigateTo(ljusdal)
-    car.on('stopped', () => {
+    car.statusEvents.pipe(filter((car) => !car.moving)).subscribe((car) => {
       expect(car.position?.lon).toEqual(ljusdal.lon)
       expect(car.position?.lat).toEqual(ljusdal.lat)
       done()
@@ -50,7 +54,7 @@ describe('A car', () => {
         },
       })
     )
-    car.once('pickup', () => {
+    once(car.statusEvents, 'AtPickup', (car) => {
       expect(car.position?.lon).toEqual(ljusdal.lon)
       expect(car.position?.lat).toEqual(ljusdal.lat)
       done()
@@ -71,7 +75,7 @@ describe('A car', () => {
       })
     )
     expect(car.status).toEqual('Pickup')
-    car.on('pickup', () => {
+    once(car.statusEvents, 'AtPickup', () => {
       expect(car.position?.lon).toEqual(ljusdal.lon)
       expect(car.position?.lat).toEqual(ljusdal.lat)
       done()
