@@ -193,7 +193,7 @@ const App = () => {
       passengers: setPassengerLayer,
       postombud: setPostombudLayer,
       kommuner: setKommunLayer,
-      // commercialAreas: setCommercialAreasLayer,
+      commercialAreas: setCommercialAreasLayer,
     }
 
     Object.entries(layerSetFunctions).map(([emitterName, setStateFunction]) => {
