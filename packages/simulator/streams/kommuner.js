@@ -1,7 +1,7 @@
 /**
  * TODO: Describe the stream that this file exports and what its data means
  */
-const { from, shareReplay, ReplaySubject } = require('rxjs')
+const { from, shareReplay, take, ReplaySubject } = require('rxjs')
 const { map, tap, filter, reduce, mergeMap } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
@@ -91,11 +91,13 @@ function read() {
       passengersFromNeeds(kommun.name).subscribe((passenger) =>
         kommun.citizens.next(passenger)
       )
-      generateBookingsInKommun(kommun).subscribe((booking) =>
-        kommun.handleBooking(booking)
-      )
-
-      generateBookingsInKommun(kommun)
+      kommun.fleets
+        .pipe(take(1)) // We use take(1) to make sure there's atleast one fleet (with a depo) in the kommun. Otherwise bookings shouldn't be generated
+        .subscribe(() =>
+          generateBookingsInKommun(kommun).subscribe((booking) =>
+            kommun.handleBooking(booking)
+          )
+        )
     }),
 
     shareReplay()
