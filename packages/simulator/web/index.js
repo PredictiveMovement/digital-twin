@@ -9,10 +9,8 @@ let defaultEmitters = [
   'busStops',
   'busLines',
   'passengers',
-  'cars',
   'postombud',
   'kommuner',
-  'bookings',
 ]
 
 const ok = function (req, res) {
