@@ -49,7 +49,7 @@ const engine = {
         kommuner.pipe(mergeMap((k) => k.dispatchedBookings))
       ),
       buses: regions.pipe(mergeMap((region) => region.buses)),
-      postombud,
+      postombud: kommuner.pipe(mergeMap((kommun) => kommun.postombud)),
       kommuner,
       parameters,
       passengers: regions.pipe(mergeMap((region) => region.citizens)),
