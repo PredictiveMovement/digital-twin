@@ -237,7 +237,6 @@ function register(io, defaultEmitters) {
         }
       })
     io.emit('parameters', experiment.parameters)
-    console.log(experiment.parameters)
     replayBaseDataToNewClient(io)
     return [carSubscription, bookingSub, passengerSub]
   }
