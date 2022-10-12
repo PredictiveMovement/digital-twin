@@ -17,6 +17,7 @@ import Button from './components/Button'
 
 import mapboxgl from 'mapbox-gl'
 import HoverInfoBox from './components/HoverInfoBox'
+
 // @ts-ignore
 mapboxgl.workerClass =
   // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -30,7 +31,7 @@ const Map = ({
   passengers,
   cars,
   bookings,
-  hubs,
+  postombud,
   busStops,
   lineShapes,
   kommuner,
@@ -409,9 +410,9 @@ const Map = ({
     },
   })
 
-  const hubLayer = new ScatterplotLayer({
-    id: 'hub-layer',
-    data: hubs,
+  const postombudLayer = new ScatterplotLayer({
+    id: 'postombud-layer',
+    data: postombud,
     opacity: 0.4,
     stroked: false,
     filled: true,
@@ -428,7 +429,7 @@ const Map = ({
     onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
-        type: 'hub',
+        type: 'postombud',
         title: 'Paketombud för ' + object.operator,
         x,
         y,
@@ -541,7 +542,7 @@ const Map = ({
       layers={[
         // The order of these layers matter, roughly equal to increasing z-index by 1
         activeLayers.kommunLayer && kommunLayer, // TODO: This hides some items behind it, sort of
-        activeLayers.postombudLayer && hubLayer,
+        activeLayers.postombudLayer && postombudLayer,
         bookingLayer,
         showArcLayer && arcLayer,
         showQueuedBookings && arcLayerQueuedBookings,

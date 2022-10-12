@@ -30,7 +30,7 @@ const io = require('socket.io')(server, {
 })
 
 if (process.env.PROJECT_NAME === 'Helsingborg') {
-  defaultEmitters = ['cars', 'postombud', 'kommuner', 'bookings']
+  defaultEmitters = ['cars', 'postombud', 'kommuner', 'bookings', 'measureStations']
 }
 
 server.listen(port)

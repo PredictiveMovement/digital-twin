@@ -43,7 +43,8 @@ const App = () => {
     setBusLayer,
     postombudLayer,
     setPostombudLayer,
-
+    measureStationsLayer,
+    setMeasureStationsLayer,
     taxiLayer,
     setTaxiLayer,
     passengerLayer,
@@ -209,6 +210,7 @@ const App = () => {
       busLines: setBusLineLayer,
       passengers: setPassengerLayer,
       postombud: setPostombudLayer,
+      measureStations: setMeasureStationsLayer,
       kommuner: setKommunLayer,
       commercialAreas: setCommercialAreasLayer,
     }
@@ -307,7 +309,7 @@ const App = () => {
         taxis={taxis}
         cars={cars}
         bookings={bookings}
-        hubs={postombud}
+        postombud={postombud}
         busStops={busStops}
         kommuner={kommuner}
         activeCar={activeCar}
