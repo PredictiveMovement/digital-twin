@@ -10,35 +10,45 @@ const Passenger = require('../lib/models/passenger')
 const elastic = require('./../lib/elastic')
 const { from } = require('rxjs')
 
-const findPassengerNeeds = (limit) => {
-  return elastic.search({
-    index: 'passenger_needs',
-    body: {
-      query: {
-        bool: {
-          must: [
-            {
-              match: {
-                source: 'generated',
+const findPassengerNeeds = async (kommunName, limit) => {
+  try {
+    return await elastic.search({
+      index: 'passengers',
+      body: {
+        query: {
+          bool: {
+            must: [
+              {
+                match: {
+                  source: 'generated',
+                },
               },
-            },
-          ],
+              {
+                match: {
+                  kommun: kommunName,
+                },
+              },
+            ],
+          },
         },
+        size: limit,
       },
-      size: limit,
-    },
-  })
+    })
+  } catch (error) {
+    console.error("If there are no stored passenger, this error might be okay", error)
+    return { body: { hits: { hits: [] } } }
+  }
 }
 
-const passengersFromNeeds = (numberOfPassengers = 250) => {
+const passengersFromNeeds = (kommunName, numberOfPassengers = 250) => {
   if (numberOfPassengers > 250) { numberOfPassengers = 250 }
-  return from(findPassengerNeeds(numberOfPassengers)).pipe(
+  return from(findPassengerNeeds(kommunName, numberOfPassengers)).pipe(
     mergeMap((results) => {
       return results.body.hits.hits
-    },4),
+    }, 4),
     map(createPassengerFromAddress),
     take(numberOfPassengers),
-    toArray(),
+    toArray()
   )
 }
 

@@ -22,6 +22,8 @@ const inside = require('point-in-polygon')
 const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const Pelias = require('../lib/pelias')
 const { passengersFromNeeds } = require('../simulator/passengers')
+const { includedMunicipalities } = require('../lib/setup')
+
 
 function getPopulationSquares({ geometry: { coordinates } }) {
   return population.pipe(
@@ -50,22 +52,7 @@ function getPostombud(kommunName) {
 function read() {
   return from(data).pipe(
     filter(({ namn }) =>
-      [
-        'Arjeplog',
-        'Arvidsjaur',
-        'Boden',
-        'Gällivare',
-        'Haparanda',
-        'Jokkmokk',
-        'Kalix',
-        'Kiruna',
-        'Luleå',
-        'Pajala',
-        'Piteå',
-        'Älvsbyn',
-        'Överkalix',
-        'Övertorneå',
-      ].some((name) => namn.startsWith(name))
+      includedMunicipalities.some((name) => namn.startsWith(name))
     ),
     mergeMap(
       async ({
@@ -102,7 +89,7 @@ function read() {
       }
     ),
     tap((kommun) => {
-      passengersFromNeeds(kommun).subscribe((passenger) =>
+      passengersFromNeeds(kommun.name).subscribe((passenger) =>
         kommun.citizens.next(passenger)
       )
     }),
