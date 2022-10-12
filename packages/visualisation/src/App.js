@@ -93,7 +93,6 @@ const App = () => {
 
   const [cars, setCars] = React.useState([])
   useSocket('cars', (newCars) => {
-    console.log(newCars)
     setReset(false)
     setCars((cars) => [
       ...cars.filter((car) => !newCars.some((nc) => nc.id === car.id)),
@@ -183,7 +182,7 @@ const App = () => {
   })
 
   useSocket('parameters', (currentParameters) => {
-    console.log('new experimentId', currentParameters)
+    console.log('new experimentId', currentParameters.id)
     setCurrentParameters(currentParameters)
     const layerSetFunctions = {
       taxis: setTaxiLayer,
