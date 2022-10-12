@@ -27,6 +27,7 @@ const App = () => {
   const [busStopLayer, setBusStopLayer] = useState(true)
   const [passengerLayer, setPassengerLayer] = useState(true)
   const [postombudLayer, setPostombudLayer] = useState(false)
+  const [measureStationsLayer, setMeasureStationsLayer] = useState(false)
   const [commercialAreasLayer, setCommercialAreasLayer] = useState(false)
   const [busLineLayer, setBusLineLayer] = useState(true)
   const [kommunLayer, setKommunLayer] = useState(true)
@@ -42,6 +43,7 @@ const App = () => {
     setBusLayer,
     postombudLayer,
     setPostombudLayer,
+
     taxiLayer,
     setTaxiLayer,
     passengerLayer,
@@ -68,6 +70,7 @@ const App = () => {
     setCars([])
     setKommuner([])
     setPostombud([])
+    setMeasureStations([])
     setBusStops([])
     setLineShapes([])
     socket.emit('speed', speed) // reset speed on server
@@ -148,6 +151,19 @@ const App = () => {
       ...newPostombud.map(({ id, operator, position }) => ({
         position: [position.lon, position.lat],
         operator,
+        id,
+      })),
+    ])
+  })
+  
+  const [measureStations, setMeasureStations] = React.useState([])
+  useSocket('measureStations', (newMeasureStations) => {
+    console.log("hello measure stations")
+    setReset(false)
+    setMeasureStations((current) => [
+      ...current,
+      ...newMeasureStations.map(({ id, position }) => ({
+        position: [position.lon, position.lat],
         id,
       })),
     ])

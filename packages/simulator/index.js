@@ -49,6 +49,7 @@ const engine = {
       ),
       buses: regions.pipe(mergeMap((region) => region.buses)),
       postombud: kommuner.pipe(mergeMap((kommun) => kommun.postombud)),
+      measureStations: kommuner.pipe(mergeMap((kommun) => kommun.measureStations)),
       kommuner,
       parameters,
       passengers: regions.pipe(mergeMap((region) => region.citizens)),

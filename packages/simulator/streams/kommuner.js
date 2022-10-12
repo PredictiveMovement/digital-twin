@@ -71,6 +71,7 @@ function read() {
           bookings: new ReplaySubject(), // will be set later
           citizens: new ReplaySubject(), // will be set later
           postombud: getPostombud(namn),
+          measureStations: getMeasureStations(namn),
           population: await squares
             .pipe(reduce((a, b) => a + b.population, 0))
             .toPromise(),
