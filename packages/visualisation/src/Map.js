@@ -32,6 +32,7 @@ const Map = ({
   cars,
   bookings,
   postombud,
+  measureStations,
   busStops,
   lineShapes,
   kommuner,
@@ -438,6 +439,34 @@ const Map = ({
     },
   })
 
+  const measureStationsLayer = new ScatterplotLayer({
+    id: 'measureStations-layer',
+    data: measureStations,
+    opacity: 0.4,
+    stroked: false,
+    filled: true,
+    radiusScale: 5,
+    radiusUnits: 'pixels',
+    radiusMinPixels: 2,
+    radiusMaxPixels: 5,
+    getPosition: (c) => {
+      return c.position
+    },
+    // #127DBD
+    getFillColor: [0, 255, 222, 130],
+    pickable: true,
+    onHover: ({ object, x, y, viewport }) => {
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        type: 'Mätpunkt',
+        title: 'Mätpunkt ',
+        x,
+        y,
+        viewport,
+      })
+    },
+  })
+
   const [showQueuedBookings, setShowQueuedBookings] = useState(false)
 
   const arcDataWithQueuedBookings =
@@ -543,6 +572,7 @@ const Map = ({
         // The order of these layers matter, roughly equal to increasing z-index by 1
         activeLayers.kommunLayer && kommunLayer, // TODO: This hides some items behind it, sort of
         activeLayers.postombudLayer && postombudLayer,
+        activeLayers.measureStationsLayer && measureStationsLayer,
         bookingLayer,
         showArcLayer && arcLayer,
         showQueuedBookings && arcLayerQueuedBookings,

@@ -27,7 +27,7 @@ const App = () => {
   const [busStopLayer, setBusStopLayer] = useState(true)
   const [passengerLayer, setPassengerLayer] = useState(true)
   const [postombudLayer, setPostombudLayer] = useState(false)
-  const [measureStationsLayer, setMeasureStationsLayer] = useState(false)
+  const [measureStationsLayer, setMeasureStationsLayer] = useState(true)
   const [commercialAreasLayer, setCommercialAreasLayer] = useState(false)
   const [busLineLayer, setBusLineLayer] = useState(true)
   const [kommunLayer, setKommunLayer] = useState(true)
@@ -310,6 +310,7 @@ const App = () => {
         cars={cars}
         bookings={bookings}
         postombud={postombud}
+        measureStations={measureStations}
         busStops={busStops}
         kommuner={kommuner}
         activeCar={activeCar}
