@@ -29,6 +29,12 @@ or just once:
 
     npm test
 
+## Generate passenger needs
+
+Run:
+
+    node passengerGenerator.js
+
 ## Concepts
 
 The idea uses two streams of events to simulate a real world scenario:

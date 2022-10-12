@@ -4,9 +4,6 @@
 const {
   from,
   shareReplay,
-  withLatestFrom,
-  merge,
-  range,
   ReplaySubject,
 } = require('rxjs')
 const {
@@ -14,10 +11,7 @@ const {
   tap,
   filter,
   reduce,
-  finalize,
-  share,
   mergeMap,
-  count,
 } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
@@ -26,10 +20,10 @@ const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
 const inside = require('point-in-polygon')
 const commercialAreas = from(require('../data/scb_companyAreas.json').features)
-const { generateBookingsInKommun } = require('../simulator/bookings')
-const bookingsCache = require('../streams/cacheBookingStream')
 const Pelias = require('../lib/pelias')
-const { generatePassengers } = require('../simulator/passengers')
+const { passengersFromNeeds } = require('../simulator/passengers')
+const { includedMunicipalities } = require('../lib/setup')
+
 
 function getPopulationSquares({ geometry: { coordinates } }) {
   return population.pipe(
@@ -58,22 +52,7 @@ function getPostombud(kommunName) {
 function read() {
   return from(data).pipe(
     filter(({ namn }) =>
-      [
-        'Arjeplog',
-        'Arvidsjaur',
-        'Boden',
-        'Gällivare',
-        'Haparanda',
-        'Jokkmokk',
-        'Kalix',
-        'Kiruna',
-        'Luleå',
-        'Pajala',
-        'Piteå',
-        'Älvsbyn',
-        'Överkalix',
-        'Övertorneå',
-      ].some((name) => namn.startsWith(name))
+      includedMunicipalities.some((name) => namn.startsWith(name))
     ),
     mergeMap(
       async ({
@@ -110,10 +89,7 @@ function read() {
       }
     ),
     tap((kommun) => {
-      //kommun.bookings = generateBookingsInKommun(kommun)
-      generatePassengers(kommun).subscribe((passenger) =>
-        kommun.citizens.next(passenger)
-      )
+      passengersFromNeeds(kommun.name).subscribe((passenger) => kommun.citizens.next(passenger))
     }),
 
     shareReplay()

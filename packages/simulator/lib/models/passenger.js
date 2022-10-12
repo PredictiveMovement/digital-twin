@@ -28,6 +28,7 @@ class Passenger {
     this.name = name
     this.position = position
     this.startPosition = startPosition
+    this.kommun = kommun
     this.distance = 0
     this.cost = 0
     this.co2 = 0
@@ -167,6 +168,7 @@ class Passenger {
       name: this.name,
       position: this.position,
       waitTime: this.waitTime,
+      kommun: this.kommun,
     }
     return obj
   }
