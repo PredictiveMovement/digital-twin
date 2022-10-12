@@ -16,10 +16,11 @@ const { randomize } = require('./simulator/address')
 const kommuner = require('./streams/kommuner')
 const { save } = require('./lib/elastic')
 const { safeId } = require('./lib/id')
+const log = require('./lib/log')
 
 const NUMBER_OF_PASSENGERS = 100
 const GENERATION_ID = safeId()
-const DEBUG = process.env.DEBUG || false
+const LOG_LEVEL = process.env.LOG_LEVEL || 'info'
 
 const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
 
@@ -58,16 +59,16 @@ const generatePassengerDetails = (kommuner, numberOfPassengers) =>
   kommuner.pipe(
     mergeMap((kommun) => {
       const { squares, postombud, name } = kommun
-      if (DEBUG) process.stdout.write('🌆')
+      if (LOG_LEVEL === 'debug') process.stdout.write('🌆')
       return squares.pipe(
         mergeMap(({ population, position }) => {
-          if (DEBUG) process.stdout.write(' 🗺 ')
+          if (LOG_LEVEL === 'debug') process.stdout.write(' 🗺 ')
           return randomPositions
             .slice(0, population)
             .map(({ x, y }) => addMeters(position, { x, y }))
         }),
         mergeMap((homePosition) => {
-          if (DEBUG) process.stdout.write('📍')
+          if (LOG_LEVEL === 'debug') process.stdout.write('📍')
           return postombud.pipe(
             toArray(),
             mergeMap(async (allPostombudInKommun) => {
@@ -77,7 +78,7 @@ const generatePassengerDetails = (kommuner, numberOfPassengers) =>
                 const workPosition = await randomize(randomPostombud.position)
                 return { homePosition, workPosition }
               } catch (err) {
-                if (DEBUG) console.warn('timeout randomizing work position', err)
+                log.debug('timeout randomizing work position', err)
                 return null
               }
             }, 20)
@@ -85,23 +86,23 @@ const generatePassengerDetails = (kommuner, numberOfPassengers) =>
         }, 20),
         filter((p) => p),
         concatMap(async ({ homePosition, workPosition }) => {
-          if (DEBUG) process.stdout.write('🏠')
+          if (LOG_LEVEL === 'debug') process.stdout.write('🏠')
           try {
             const home = await pelias.nearest(homePosition)
             return { home, workPosition }
           } catch (err) {
-            if (DEBUG) console.warn('timeout/finding nearest address to home position', err)
+            log.debug('timeout/finding nearest address to home position', err)
             return null
           }
         }, 10),
         filter((p) => p),
         concatMap(async ({ home, workPosition }) => {
-          if (DEBUG) process.stdout.write('🏢')
+          if (LOG_LEVEL === 'debug') process.stdout.write('🏢')
           try {
             const work = await pelias.nearest(workPosition)
             return { home, work }
           } catch (err) {
-            if (DEBUG) console.warn('timeout/finding nearest address to work position', err)
+            log.debug('timeout/finding nearest address to work position', err)
             return null
           }
         }),
@@ -111,11 +112,9 @@ const generatePassengerDetails = (kommuner, numberOfPassengers) =>
         ), // for some reason we need to limit the randomNames stream here, otherwise it will never end
         concatMap(async (zipf) => {
           const [{ home, work }, { firstName, lastName, name }] = zipf
-          if(DEBUG) process.stdout.write('📦')
+          if (LOG_LEVEL === 'debug') process.stdout.write('📦')
           return Promise.resolve({
             position: home.position,
-            // home,
-            // work,
             home: {
               name: `${home.name}, ${home.localadmin}`,
               ...home.position,
@@ -149,7 +148,7 @@ const passengerSerializer = ({ name, firstName, lastName, home, workplace, kommu
     generationId: GENERATION_ID,
   }
   save(saveablePassenger, 'passengers')
-  process.stdout.write('💾')
+  if (LOG_LEVEL === 'info') process.stdout.write('💾')
 }
 
 execute()

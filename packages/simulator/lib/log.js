@@ -10,8 +10,17 @@ module.exports = {
       console.error(JSON.stringify(data, null, 2))
     }
   },
+  debug: (message, data = '') => {
+    if (LOG_LEVEL !== 'DEBUG') {
+      return
+    }
+    console.log(
+      `${chalk.whiteBright.bold('DEBUG')} ${chalk.white(message)}`,
+      data
+    )
+  },
   info: (message, data = '') => {
-    if (LOG_LEVEL !== 'info') {
+    if (LOG_LEVEL !== 'info' && LOG_LEVEL !== 'DEBUG') {
       return
     }
     console.log(
