@@ -8,7 +8,7 @@ const data = require('../data/kommuner.json')
 const population = require('./population')
 const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
-const measureStations = require('./measureStations')
+
 const inside = require('point-in-polygon')
 const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const Pelias = require('../lib/pelias')
@@ -29,13 +29,6 @@ function getPopulationSquares({ geometry: { coordinates } }) {
 function getCommercialAreas(kommunkod) {
   return commercialAreas.pipe(
     filter((area) => area.properties.KOMMUNKOD === kommunkod),
-    shareReplay()
-  )
-}
-
-function getMeasureStations(kommunName) {
-  return measureStations.pipe(
-    filter((station) => kommunName.startsWith(station.kommun)),
     shareReplay()
   )
 }
@@ -78,7 +71,6 @@ function read() {
           bookings: new ReplaySubject(), // will be set later
           citizens: new ReplaySubject(), // will be set later
           postombud: getPostombud(namn),
-          measureStations: getMeasureStations(),
           population: await squares
             .pipe(reduce((a, b) => a + b.population, 0))
             .toPromise(),
