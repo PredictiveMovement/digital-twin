@@ -89,9 +89,7 @@ function read() {
       }
     ),
     tap((kommun) => {
-      passengersFromNeeds(kommun.name).subscribe((passenger) =>
-        kommun.citizens.next(passenger)
-      )
+      passengersFromNeeds(kommun.name).subscribe((passenger) => kommun.citizens.next(passenger))
     }),
 
     shareReplay()

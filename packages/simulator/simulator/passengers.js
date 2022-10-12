@@ -48,7 +48,6 @@ const passengersFromNeeds = (kommunName, numberOfPassengers = 250) => {
     }, 4),
     map(createPassengerFromAddress),
     take(numberOfPassengers),
-    toArray()
   )
 }
 
