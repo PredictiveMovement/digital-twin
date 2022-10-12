@@ -1,9 +1,10 @@
 const elastic = require('@elastic/elasticsearch')
+
 const mappings = require('../data/elasticsearch_mappings.json')
+const { error, info } = require('./log')
 
 const host = process.env.ELASTICSEARCH_URL || 'http://localhost:9200'
 
-const { error, info } = require('./log')
 
 if (!host) {
   info('No elasticsearch url provided, skipping statistics collection')
@@ -62,13 +63,19 @@ const save = (booking, indexName) => {
       id: booking.id,
       body: booking,
     })
-    .then((_) => info('Saved!'))
+    .then((_) => {})
     .catch((e) => {
       error('Could not save booking', e)
     })
 }
 
+const search = (searchQuery) => {
+  return client
+    .search(searchQuery)
+}
+
 module.exports = {
-  save,
   createIndices,
+  save,
+  search
 }

@@ -23,19 +23,22 @@ module.exports = {
       .then(
         ({
           features: [
-            { geometry, properties: { name, street, houseNumber, label } } = {},
+            { geometry, properties: { name, street, houseNumber, localadmin, label } } = {},
           ] = [],
         }) => ({
           name,
           street,
           houseNumber,
           label,
+          localadmin,
           position: new Position({
             lon: geometry.coordinates[0],
             lat: geometry.coordinates[1],
           }),
         })
-      )
+      ).catch((e) => {
+        console.error('Error in pelias', e)
+      })
 
     return promise
   },

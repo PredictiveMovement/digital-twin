@@ -1,89 +1,69 @@
 const {
   take,
-  filter,
   map,
   mergeMap,
-  concatMap,
   toArray,
-  shareReplay,
-  zipWith,
 } = require('rxjs/operators')
-const perlin = require('perlin-noise')
 
-const pelias = require('../lib/pelias')
-const { addMeters } = require('../lib/distance')
 const Passenger = require('../lib/models/passenger')
-const { randomNames } = require('../lib/personNames')
-const { randomize } = require('./address')
 
-const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
+const elastic = require('./../lib/elastic')
+const { from } = require('rxjs')
 
-// generate a pattern of random positions so we can take x out of these and get a natural pattern of these positions
-const randomPositions = perlin
-  .generatePerlinNoise(100, 100)
-  .map((probability, i) => ({
-    x: xy(i).x * 10,
-    y: xy(i).y * 10,
-    probability,
-  }))
-  .sort((a, b) => b.probability - a.probability) // sort them so we can just pick how many we want
+const findPassengerNeeds = async (kommunName, limit) => {
+  try {
+    return await elastic.search({
+      index: 'passengers',
+      body: {
+        query: {
+          bool: {
+            must: [
+              {
+                match: {
+                  source: 'generated',
+                },
+              },
+              {
+                match: {
+                  kommun: kommunName,
+                },
+              },
+            ],
+          },
+        },
+        size: limit,
+      },
+    })
+  } catch (error) {
+    console.error("If there are no stored passenger, this error might be okay", error)
+    return { body: { hits: { hits: [] } } }
+  }
+}
 
-const generatePassengers = (kommun) =>
-  kommun.squares.pipe(
-    mergeMap(({ population, position }) =>
-      randomPositions
-        .slice(0, population)
-        .map(({ x, y }) => addMeters(position, { x, y }))
-    ),
-    mergeMap((homePosition) => {
-      return kommun.postombud.pipe(
-        toArray(),
-        mergeMap(async (postombudInKommun) => {
-          const randomPostombud =
-            postombudInKommun[
-              Math.floor(Math.random() * postombudInKommun.length)
-            ]
-          const workPosition = await randomize(randomPostombud.position)
-          return { homePosition, workPosition }
-        })
-      )
-    }, 20),
-    concatMap(async ({ homePosition, workPosition }) => {
-      try {
-        const home = await pelias.nearest(homePosition, 'address')
-        return { home, workPosition }
-      } catch (e) {
-        return null
-      }
-    }),
-    filter((p) => p),
-    concatMap(async ({ home, workPosition }) => {
-      try {
-        const workplace = await pelias.nearest(workPosition)
-        return { home, workplace }
-      } catch (e) {
-        return null
-      }
-    }),
-    filter((p) => p),
-    zipWith(
-      randomNames.pipe(take(Math.min(100, Math.ceil(kommun.population * 0.01))))
-    ), // for some reason we need to limit the randomNames stream here, otherwise it will never end
-    map(
-      ([{ home, workplace }, { name, firstName, lastName }]) =>
-        new Passenger({
-          position: home.position,
-          workplace,
-          kommun,
-          home,
-          name,
-          firstName,
-          lastName,
-        })
-    )
-    //    take() // sample 1% of the population
+const passengersFromNeeds = (kommunName, numberOfPassengers = 250) => {
+  if (numberOfPassengers > 250) { numberOfPassengers = 250 }
+  return from(findPassengerNeeds(kommunName, numberOfPassengers)).pipe(
+    mergeMap((results) => {
+      return results.body.hits.hits
+    }, 4),
+    map(createPassengerFromAddress),
+    take(numberOfPassengers),
   )
+}
+
+const createPassengerFromAddress = (hit) => {
+  const { name, home, workplace, kommun, id } = hit._source
+  return new Passenger({
+    id,
+    home,
+    workplace,
+    kommun,
+    position: { lat: home.lat, lon: home.lon },
+    startPosition: { lat: home.lat, lon: home.lon },
+    name: name,
+  })
+}
 
 module.exports = {
-  generatePassengers,
+  passengersFromNeeds,
 }

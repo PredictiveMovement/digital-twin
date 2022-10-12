@@ -1,7 +1,7 @@
 const moment = require('moment')
 
 class VirtualTime {
-  constructor(timeMultiplier = 1, startHour = 4) {
+  constructor(timeMultiplier = 1, startHour = 2) {
     this.startHour = startHour
     this.setTimeMultiplier(timeMultiplier)
     this.reset()
