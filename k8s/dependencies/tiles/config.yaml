@@ -1,0 +1,58 @@
+---
+# Source: pelias/templates/configmap.tpl
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: maptiler-json-configmap
+  namespace: maptiler
+data:
+  config.json: |
+    {
+      "options": {
+        "paths": {
+          "root": "",
+          "fonts": "fonts",
+          "sprites": "sprites",
+          "styles": "styles",
+          "mbtiles": ""
+        },
+        "domains": [
+          "maptiler.iteam.services",
+          "maptiler.predictivemovement.se",
+          "localhost:3000",
+          "127.0.0.1:8080"
+        ],
+        "formatQuality": {
+          "jpeg": 80,
+          "webp": 90
+        },
+        "maxScaleFactor": 3,
+        "maxSize": 2048,
+        "pbfAlias": "pbf",
+        "serveAllFonts": false,
+        "serveAllStyles": false,
+        "serveStaticMaps": true,
+        "tileMargin": 0
+      },
+      "styles": {
+        "basic": {
+          "style": "basic.json",
+          "tilejson": {
+            "type": "overlay",
+            "bounds": [8.44806, 47.32023, 8.62537, 47.43468]
+          }
+        },
+        "hybrid": {
+          "style": "satellite-hybrid.json",
+          "serve_rendered": false,
+          "tilejson": {
+            "format": "webp"
+          }
+        }
+      },
+      "data": {
+        "sweden-vector": {
+          "mbtiles": "/data/europe_sweden.mbtiles"
+        }
+      }
+    }

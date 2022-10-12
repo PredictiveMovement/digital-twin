@@ -53,7 +53,7 @@ spec:
                 name: visualisation
                 port:
                   number: 80
-
+   
     - host: rorla-stage.predictivemovement.se
       http:
         paths:
