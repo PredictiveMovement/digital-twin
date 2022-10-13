@@ -11,13 +11,13 @@ const {
   windowTime,
   groupBy,
   last,
-  bufferCount,
 } = require('rxjs/operators')
 
 const engine = require('../index')
 const { virtualTime } = require('../lib/virtualTime')
 const { saveParameters } = require('../lib/fileUtils')
 const { info } = require('../lib/log')
+const { defaultEmitters } = require('../config')
 
 const count = () => pipe(scan((acc) => acc + 1, 0))
 
@@ -81,7 +81,7 @@ const cleanCars = ({
   vehicleType,
 })
 
-function register(io, defaultEmitters) {
+function register(io) {
   let emitCars = defaultEmitters.includes('cars')
   let emitTaxiUpdates = defaultEmitters.includes('taxis')
   let emitBusUpdates = defaultEmitters.includes('buses')

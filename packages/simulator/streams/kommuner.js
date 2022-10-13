@@ -13,7 +13,7 @@ const inside = require('point-in-polygon')
 const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const Pelias = require('../lib/pelias')
 const { passengersFromNeeds } = require('../simulator/passengers')
-const { includedMunicipalities } = require('../lib/setup')
+const { includedMunicipalities } = require('../config')
 const { generateBookingsInKommun } = require('../simulator/bookings')
 
 function getPopulationSquares({ geometry: { coordinates } }) {
