@@ -140,8 +140,7 @@ const ExperimentSection = ({ activeLayers, currentParameters }) => {
     <MenuContainer>
       <H1>Pågående experiment</H1>
       <ParagraphMedium black>
-        Experiment-id:&nbsp;
-        <strong>{currentParameters.id}</strong>
+        Experiment-id: <strong>{currentParameters.id}</strong>
         <br />
         Starttid: <strong>{currentParameters.startDate}</strong>
         <br />
