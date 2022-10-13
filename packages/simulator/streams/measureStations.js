@@ -17,6 +17,36 @@ function execute() {
         ({
           x,
           y,
+          'HBG nr': hbgNr,
+          'Traffic Web': trafficWeb,
+          Mätår: year,
+          Månad: month,
+          Rikt: directionInSwedish,
+          'VaDT Tung': heavyTraficCount,
+        }) => ({
+          kommun: 'Helsingborg',
+          position: sweCoords.toLatLng(
+            Math.floor(x).toString(),
+            Math.floor(y).toString()
+          ),
+          year,
+          month,
+          heavyTraficCount,
+          id: hbgNr,
+          direction: directionInSwedish,
+        })
+      ),
+      map(({ position: { lat, lng }, ...rest }) => ({
+        position: { lat, lon: lng },
+        ...rest,
+      })),
+      shareReplay()
+    )
+    .pipe(
+      map(
+        ({
+          x,
+          y,
           // 'HBG nr': hbgNr,
           // 'Traffic Web': trafficWeb,
           // Mätår: year,
