@@ -42,22 +42,6 @@ function execute() {
       })),
       shareReplay()
     )
-    .pipe(
-      map(
-        ({
-          x,
-          y,
-          // 'HBG nr': hbgNr,
-          // 'Traffic Web': trafficWeb,
-          // Mätår: year,
-          // Månad: month,
-          // 'VaDT Tung': heavyTraficCount,
-        }) => ({
-          position: sweCoords.toLatLng(x, y),
-        })
-      ),
-      shareReplay()
-    )
     .subscribe(console.log)
 }
 
