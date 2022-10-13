@@ -458,8 +458,8 @@ const Map = ({
     onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
-        type: 'Mätpunkt',
-        title: 'Mätpunkt ',
+        ...object,
+        type: 'measureStation',
         x,
         y,
         viewport,

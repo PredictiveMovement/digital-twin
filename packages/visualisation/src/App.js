@@ -156,16 +156,15 @@ const App = () => {
       })),
     ])
   })
-  
+
   const [measureStations, setMeasureStations] = React.useState([])
   useSocket('measureStations', (newMeasureStations) => {
-    console.log("hello measure stations")
     setReset(false)
     setMeasureStations((current) => [
       ...current,
-      ...newMeasureStations.map(({ id, position }) => ({
+      ...newMeasureStations.map(({ position, ...rest }) => ({
         position: [position.lon, position.lat],
-        id,
+        ...rest,
       })),
     ])
   })
