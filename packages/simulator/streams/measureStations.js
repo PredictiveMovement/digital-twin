@@ -1,5 +1,5 @@
 const { from, shareReplay } = require('rxjs')
-const { map, filter } = require('rxjs/operators')
+const { map } = require('rxjs/operators')
 const { readXlsx } = require('../adapters/xlsx')
 const sweCoords = require('swe-coords')
 
