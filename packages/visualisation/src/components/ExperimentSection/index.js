@@ -82,6 +82,18 @@ const Grid = styled.div`
   gap: 1rem 1.5rem;
 `
 
+const StyledButton = styled.button`
+  width: 220px;
+  height: 40px;
+  background-color: #10c57b;
+  border: none;
+  z-index: 2;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  border-radius: 2px;
+`
+
 const CheckItem = ({ text, setLayer, checked, color, borderOnly = false }) => {
   return (
     <Flex>
@@ -103,27 +115,45 @@ const CheckItem = ({ text, setLayer, checked, color, borderOnly = false }) => {
   )
 }
 
+const openKibana = (experimentId) => {
+  const kibanaDashboardId =
+    process.env.KIBANA_DASHBOARD_ID || '767e6ae0-3ac8-11ed-bade-51cc9f3c8210'
+
+  let experimentUrl =
+    "KIBANA_URL/app/kibana#/dashboard/KIBANA_DASHBOARD_ID?_g=()&_a=(description:'',filters:!(),fullScreenMode:!f,options:(hidePanelTitles:!f,useMargins:!t),panels:!((embeddableConfig:(mapCenter:!n,mapZoom:4),gridData:(h:15,i:'91cb1203-69c3-4398-8253-39ad96a9a9db',w:24,x:0,y:0),id:'65cf5470-3ac8-11ed-bade-51cc9f3c8210',panelIndex:'91cb1203-69c3-4398-8253-39ad96a9a9db',type:visualization,version:'7.5.1'),(embeddableConfig:(),gridData:(h:15,i:bfff9c2e-acd3-412a-a3ff-056b2bc25ddb,w:24,x:24,y:0),id:'57aab970-3ac8-11ed-bade-51cc9f3c8210',panelIndex:bfff9c2e-acd3-412a-a3ff-056b2bc25ddb,type:visualization,version:'7.5.1'),(embeddableConfig:(),gridData:(h:15,i:c47eb77d-b191-4a9b-9a04-127c581b4dcd,w:24,x:0,y:15),id:'9973b280-3ac8-11ed-bade-51cc9f3c8210',panelIndex:c47eb77d-b191-4a9b-9a04-127c581b4dcd,type:visualization,version:'7.5.1'),(embeddableConfig:(isLayerTOCOpen:!f,mapCenter:(lat:66.58123,lon:24.83098,zoom:4.37),openTOCDetails:!()),gridData:(h:15,i:c278a0ec-d11d-49d9-8606-2a9d3fb98342,w:24,x:24,y:15),id:c52ada20-3acd-11ed-bade-51cc9f3c8210,panelIndex:c278a0ec-d11d-49d9-8606-2a9d3fb98342,type:map,version:'7.5.1'),(embeddableConfig:(),gridData:(h:17,i:f2374bbc-382e-4266-be64-09c5def6c71e,w:48,x:0,y:30),id:'3f728310-3c21-11ed-bade-51cc9f3c8210',panelIndex:f2374bbc-382e-4266-be64-09c5def6c71e,type:visualization,version:'7.5.1')),query:(language:kuery,query:EXPERIMENT_ID,timeRestore:!f,title:Overview,viewMode:view)"
+
+  experimentUrl = experimentUrl.replace(
+    /KIBANA_URL/,
+    'https://kibana.predictivemovement.se'
+  )
+  experimentUrl = experimentUrl.replace(
+    /KIBANA_DASHBOARD_ID/,
+    kibanaDashboardId
+  )
+  experimentUrl = experimentUrl.replace(/EXPERIMENT_ID/, experimentId)
+
+  window.open(experimentUrl, '_blank')
+}
+
 const ExperimentSection = ({ activeLayers, currentParameters }) => {
-  const experimentId = currentParameters.id
-  const kibanaDashboardId = '767e6ae0-3ac8-11ed-bade-51cc9f3c8210'
-
-  const kibanaDashboardUrl = `https://kibana.predictivemovement.se/app/kibana#/dashboard/${kibanaDashboardId}`
-  const kibanaQueryParams = `?_g=()&_a=(description:'',filters:!(),fullScreenMode:!f,options:(hidePanelTitles:!f,useMargins:!t),panels:!((embeddableConfig:(mapCenter:!n,mapZoom:4),gridData:(h:15,i:'91cb1203-69c3-4398-8253-39ad96a9a9db',w:24,x:0,y:0),id:'65cf5470-3ac8-11ed-bade-51cc9f3c8210',panelIndex:'91cb1203-69c3-4398-8253-39ad96a9a9db',type:visualization,version:'7.5.1'),(embeddableConfig:(),gridData:(h:15,i:bfff9c2e-acd3-412a-a3ff-056b2bc25ddb,w:24,x:24,y:0),id:'57aab970-3ac8-11ed-bade-51cc9f3c8210',panelIndex:bfff9c2e-acd3-412a-a3ff-056b2bc25ddb,type:visualization,version:'7.5.1'),(embeddableConfig:(),gridData:(h:15,i:c47eb77d-b191-4a9b-9a04-127c581b4dcd,w:24,x:0,y:15),id:'9973b280-3ac8-11ed-bade-51cc9f3c8210',panelIndex:c47eb77d-b191-4a9b-9a04-127c581b4dcd,type:visualization,version:'7.5.1'),(embeddableConfig:(isLayerTOCOpen:!f,mapCenter:(lat:66.58123,lon:24.83098,zoom:4.37),openTOCDetails:!()),gridData:(h:15,i:c278a0ec-d11d-49d9-8606-2a9d3fb98342,w:24,x:24,y:15),id:c52ada20-3acd-11ed-bade-51cc9f3c8210,panelIndex:c278a0ec-d11d-49d9-8606-2a9d3fb98342,type:map,version:'7.5.1'),(embeddableConfig:(),gridData:(h:17,i:f2374bbc-382e-4266-be64-09c5def6c71e,w:48,x:0,y:30),id:'3f728310-3c21-11ed-bade-51cc9f3c8210',panelIndex:f2374bbc-382e-4266-be64-09c5def6c71e,type:visualization,version:'7.5.1')),query:(language:kuery,query:${experimentId}),timeRestore:!f,title:Overview,viewMode:view)`
-
-  const experimentUrl = `${kibanaDashboardUrl}${kibanaQueryParams}`
   return (
     <MenuContainer>
       <H1>Pågående experiment</H1>
       <ParagraphMedium black>
         Experiment-id:&nbsp;
-        <strong>
-          <a href={experimentUrl} target="_blank" rel="noreferrer">
-            {experimentId}
-          </a>
-        </strong>
+        <strong>{currentParameters.id}</strong>
         <br />
         Starttid: <strong>{currentParameters.startDate}</strong>
+        <br />
+        <br />
+        <StyledButton
+          type="submit"
+          onClick={() => openKibana(currentParameters.id)}
+        >
+          Öppna experimentet i Kibana
+        </StyledButton>
       </ParagraphMedium>
+
       <ParagraphMedium black>
         Här kan ändra vad som visas i simuleringen till höger.
       </ParagraphMedium>
