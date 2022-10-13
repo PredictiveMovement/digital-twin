@@ -60,7 +60,7 @@ const NewExperimentSection = ({
   return (
     <MenuContainer>
       <Wrapper>
-        <H1>Nytt experiement</H1>
+        <H1>Nytt experiment</H1>
 
         <Paragraph black>
           Här kan starta ett nytt experiment, välj hur många fasta vs dynamiska
@@ -86,7 +86,7 @@ const NewExperimentSection = ({
             </FlexSpaceBetween>
           </div>
           <StyledButton type="submit" onClick={newExperiment}>
-            Nytt experimentet
+            Nytt experiment
           </StyledButton>
         </Form>
       </Wrapper>
