@@ -20,7 +20,6 @@ const defaultEmitters = [
   'busStops',
   'busLines',
   'passengers',
-  'postombud',
   'kommuner',
 ]
 module.exports = {
