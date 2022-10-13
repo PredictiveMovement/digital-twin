@@ -6,6 +6,7 @@ import DeckGL, {
   ScatterplotLayer,
   ArcLayer,
   LinearInterpolator,
+  IconLayer,
 } from 'deck.gl'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
@@ -439,21 +440,20 @@ const Map = ({
     },
   })
 
-  const measureStationsLayer = new ScatterplotLayer({
+  const ICON_MAPPING = {
+    marker: { x: 0, y: 0, width: 128, height: 128, anchorY: 150, mask: true },
+  }
+  const measureStationsLayer = new IconLayer({
     id: 'measureStations-layer',
     data: measureStations,
-    opacity: 0.4,
-    stroked: false,
-    filled: true,
-    radiusScale: 5,
-    radiusUnits: 'pixels',
-    radiusMinPixels: 2,
-    radiusMaxPixels: 5,
-    getPosition: (c) => {
-      return c.position
-    },
-    // #127DBD
-    getFillColor: [0, 255, 222, 130],
+    iconAtlas:
+      'https://raw.githubusercontent.com/visgl/deck.gl/8.8-release/examples/website/icon/data/location-icon-atlas.png',
+    iconMapping: ICON_MAPPING,
+    getIcon: (d) => 'marker',
+    getPosition: (c) => c.position,
+    sizeScale: 5,
+    getColor: () => [16, 197, 123, 200],
+    getSize: (d) => 5,
     pickable: true,
     onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
