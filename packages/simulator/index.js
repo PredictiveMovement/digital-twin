@@ -49,7 +49,9 @@ const engine = {
       ),
       buses: regions.pipe(mergeMap((region) => region.buses)),
       postombud: kommuner.pipe(mergeMap((kommun) => kommun.postombud)),
-      measureStations: kommuner.pipe(mergeMap((kommun) => kommun.measureStations)),
+      measureStations: kommuner.pipe(
+        mergeMap((kommun) => kommun.measureStations)
+      ),
       kommuner,
       parameters,
       passengers: regions.pipe(mergeMap((region) => region.citizens)),
@@ -95,7 +97,6 @@ const engine = {
       // experiment.taxis // Is this a duplicate property? Doesn't this already exist inside experiment.cars ?
     ).pipe(
       mergeMap((car) => car.movedEvents),
-      tap((e) => console.log('moved events', e)),
       catchError((err) => error('car updates err', err)),
 
       share()

@@ -39,6 +39,12 @@ function getPostombud(kommunName) {
     shareReplay()
   )
 }
+function getMeasureStations(kommunName) {
+  return measureStations.pipe(
+    filter((measureStation) => kommunName.startsWith(measureStation.kommun)),
+    shareReplay()
+  )
+}
 
 function read() {
   return from(data).pipe(
