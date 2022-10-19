@@ -92,9 +92,9 @@ const engine = {
 
     // TODO: Rename to vehicleUpdates
     experiment.carUpdates = merge(
-      experiment.cars
-      // experiment.buses,
-      // experiment.taxis // Is this a duplicate property? Doesn't this already exist inside experiment.cars ?
+      experiment.cars,
+      experiment.buses,
+      experiment.taxis
     ).pipe(
       mergeMap((car) => car.movedEvents),
       catchError((err) => error('car updates err', err)),
