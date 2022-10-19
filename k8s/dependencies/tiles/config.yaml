@@ -14,7 +14,7 @@ data:
           "fonts": "fonts",
           "sprites": "sprites",
           "styles": "styles",
-          "mbtiles": "/data/europe_sweden.mbtiles"
+          "mbtiles": ""
         },
         "domains": [
           "maptiler.iteam.services",
@@ -47,13 +47,6 @@ data:
           "tilejson": {
             "type": "overlay",
             "bounds": [8.44806, 47.32023, 8.62537, 47.43468]
-          }
-        },
-        "hybrid": {
-          "style": "satellite-hybrid.json",
-          "serve_rendered": false,
-          "tilejson": {
-            "format": "webp"
           }
         }
       },

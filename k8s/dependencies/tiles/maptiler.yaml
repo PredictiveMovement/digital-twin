@@ -29,9 +29,6 @@ spec:
     spec:
       containers:
         - name: maptiler
-          # command:
-          #  - "sleep"
-          #  - "2600"
           image: maptiler/tileserver-gl
           volumeMounts:
             - name: maptiler
