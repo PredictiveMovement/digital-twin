@@ -14,7 +14,7 @@ data:
           "fonts": "fonts",
           "sprites": "sprites",
           "styles": "styles",
-          "mbtiles": ""
+          "mbtiles": "/data/europe_sweden.mbtiles"
         },
         "domains": [
           "maptiler.iteam.services",
