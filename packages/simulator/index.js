@@ -18,7 +18,7 @@ const regions = require('./streams/regions')(kommuner)
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
 const statistics = require('./lib/statistics')
-const { info, error } = require('./lib/log')
+const { info, error, debug } = require('./lib/log')
 
 const static = {
   busStops: regions.pipe(mergeMap((region) => region.stops)),
@@ -91,11 +91,7 @@ const engine = {
     )
 
     // TODO: Rename to vehicleUpdates
-    experiment.carUpdates = merge(
-      experiment.cars,
-      experiment.buses,
-      experiment.taxis
-    ).pipe(
+    experiment.carUpdates = merge(experiment.cars, experiment.buses).pipe(
       mergeMap((car) => car.movedEvents),
       catchError((err) => error('car updates err', err)),
 
@@ -103,7 +99,7 @@ const engine = {
     )
 
     experiment.dispatchedBookings.subscribe((booking) =>
-      info(`Booking ${booking?.id} dispatched to car ${booking?.car?.id}`)
+      debug(`Booking ${booking?.id} dispatched to car ${booking?.car?.id}`)
     )
     engine.experiments.push(experiment)
 
