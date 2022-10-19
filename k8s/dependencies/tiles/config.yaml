@@ -42,6 +42,13 @@ data:
             "bounds": [8.44806, 47.32023, 8.62537, 47.43468]
           }
         },
+        "pm": {
+          "style": "pm.json",
+          "tilejson": {
+            "type": "overlay",
+            "bounds": [8.44806, 47.32023, 8.62537, 47.43468]
+          }
+        },
         "hybrid": {
           "style": "satellite-hybrid.json",
           "serve_rendered": false,

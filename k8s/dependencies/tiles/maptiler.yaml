@@ -35,6 +35,8 @@ spec:
           volumeMounts:
             - name: maptiler
               mountPath: /data
+            - name: maptiler-styles
+              mountPath: /styles
           resources:
             requests:
               memory: "2Gi"
@@ -56,6 +58,18 @@ spec:
   resources:
     requests:
       storage: 10Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: maptiler-styles
+  namespace: maptiler
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Mi
 ---
 apiVersion: v1
 kind: Service
