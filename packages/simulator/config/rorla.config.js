@@ -14,7 +14,15 @@ const includedMunicipalities = [
   'Överkalix',
   'Övertorneå',
 ]
-
+const defaultEmitters = [
+  'taxis',
+  'buses',
+  'busStops',
+  'busLines',
+  'passengers',
+  'kommuner',
+]
 module.exports = {
   includedMunicipalities,
+  defaultEmitters,
 }

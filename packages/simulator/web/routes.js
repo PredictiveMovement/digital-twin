@@ -11,13 +11,13 @@ const {
   windowTime,
   groupBy,
   last,
-  bufferCount,
 } = require('rxjs/operators')
 
 const engine = require('../index')
 const { virtualTime } = require('../lib/virtualTime')
 const { saveParameters } = require('../lib/fileUtils')
 const { info } = require('../lib/log')
+const { defaultEmitters } = require('../config')
 
 const count = () => pipe(scan((acc) => acc + 1, 0))
 
@@ -82,9 +82,10 @@ const cleanCars = ({
 })
 
 function register(io) {
-  let emitCars = true
-  let emitTaxiUpdates = true
-  let emitBusUpdates = true
+  let emitCars = defaultEmitters.includes('cars')
+  let emitTaxiUpdates = defaultEmitters.includes('taxis')
+  let emitBusUpdates = defaultEmitters.includes('buses')
+
   let subscriptions = []
   let experiment
 
@@ -127,7 +128,7 @@ function register(io) {
   const setUpSocketListeners = (socket) => {
     socket.on('reset', () => {
       subscriptions.map((e) => e.unsubscribe())
-      experiment = engine.createExperiment()
+      experiment = engine.createExperiment({ defaultEmitters })
       subscriptions = start(experiment)
       virtualTime.reset()
     })
@@ -190,12 +191,9 @@ function register(io) {
         }
       })
 
-    experiment.buses
-      .pipe(map(cleanCars), bufferCount(100))
-      .subscribe((cars) => {
-        // console.log(e)
-        socket.emit('cars', cars)
-      })
+    experiment.cars.pipe(map(cleanCars)).subscribe((cars) => {
+      socket.emit('cars', [cars])
+    })
 
     experiment.passengerUpdates.subscribe((passenger) => {
       socket.emit('passenger', passenger.toObject())
@@ -243,7 +241,7 @@ function register(io) {
     return [carSubscription, bookingSub, passengerSub]
   }
   if (!experiment) {
-    experiment = engine.createExperiment()
+    experiment = engine.createExperiment({ defaultEmitters })
   }
   subscriptions = start(experiment)
 
