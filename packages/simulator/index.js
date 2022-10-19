@@ -1,11 +1,6 @@
 const {
-  from,
-  filter,
   share,
   merge,
-  fromEvent,
-  of,
-  concatMap,
   switchMap,
   shareReplay,
 } = require('rxjs')
@@ -26,7 +21,6 @@ const static = {
 }
 
 const engine = {
-  experiments: [],
   createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
     const savedParams = readParameters()
 
@@ -66,7 +60,11 @@ const engine = {
         shareReplay()
       )
       .subscribe((booking) => {
-        statistics.collectBooking(booking, parameters)
+        try {
+          statistics.collectBooking(booking, parameters)
+        } catch(err) {
+          error('collectBooking err', err)
+        }
       })
 
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(
@@ -81,14 +79,14 @@ const engine = {
       catchError((err) => error('booking updates err', err)),
       share()
     )
-    experiment.passengerUpdates = experiment.passengers.pipe(
-      mergeMap((passenger) =>
-        merge(passenger.deliveredEvents, passenger.pickedUpEvents)
-      ),
-      catchError((err) => error('passenger updates err', err)),
+    // experiment.passengerUpdates = experiment.passengers.pipe(
+    //   mergeMap((passenger) =>
+    //     merge(passenger.deliveredEvents, passenger.pickedUpEvents)
+    //   ),
+    //   catchError((err) => error('passenger updates err', err)),
 
-      share()
-    )
+    //   share()
+    // )
 
     // TODO: Rename to vehicleUpdates
     experiment.carUpdates = merge(experiment.cars, experiment.buses).pipe(
@@ -101,7 +99,6 @@ const engine = {
     experiment.dispatchedBookings.subscribe((booking) =>
       debug(`Booking ${booking?.id} dispatched to car ${booking?.car?.id}`)
     )
-    engine.experiments.push(experiment)
 
     return experiment
   },

@@ -8,7 +8,8 @@ class Booking {
     this.id = 'b-' + safeId()
     this.status = 'New'
     this.co2 = 0 //TODO: initialvärde?
-    this.type = booking.type || booking.passenger ? 'passenger' : 'package'
+    this.passenger = booking.passenger
+    this.type = booking.type
     this.cost = 0 // startkostnad?
     this.distance = 0 //TODO: räkna med sträcka innan?
     this.weight = Math.random() * 10 // kg TODO: find reference kg // TODO: passagerare väger mer..
@@ -24,6 +25,21 @@ class Booking {
       this.deliveredEvents
     )
   }
+
+  set type(bookingType) {
+    this._type = bookingType
+  }
+
+  get type() {
+    if (this._type) {
+      return this._type
+    } else if (booking.passenger) {
+      return 'passenger'
+    } else {
+      return 'package'
+    }
+  }
+
   queued(car) {
     this.queuedDateTime = virtualTime.time()
     this.status = 'Queued'

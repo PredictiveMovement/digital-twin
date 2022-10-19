@@ -14,20 +14,21 @@ const {
 } = require('rxjs')
 const { virtualTime } = require('../virtualTime')
 
-const { safeId } = require('./../id')
+const { safeId } = require('../id')
 const moment = require('moment')
 const Booking = require('./booking')
 const pelias = require('../pelias')
 const { error } = require('../log')
+const Position = require('./position')
 
-class Passenger {
+class Citizen {
   constructor({ name, position, workplace, home, startPosition, kommun }) {
     this.id = 'p-' + safeId()
-    this.workplace = workplace
-    this.home = home
+    this.workplace = { name: workplace.name, position: new Position(workplace.position) }
+    this.home = { name: home.name, position: new Position(home.position) }
     this.name = name
-    this.position = position
-    this.startPosition = startPosition
+    this.position = new Position(position)
+    this.startPosition = new Position(startPosition)
     this.kommun = kommun
     this.distance = 0
     this.cost = 0
@@ -60,9 +61,10 @@ class Passenger {
       })
     )
 
+    const ignoredIntents = ['sleep', 'idle']
     this.bookings = this.intents.pipe(
       distinctUntilChanged(),
-      filter((intent) => intent !== 'idle' && intent !== 'sleep'),
+      filter((intent) => !ignoredIntents.includes(intent)),
       catchError((err) => error('passenger bookings err', err) || of(err)),
       mergeMap((intent) => {
         switch (intent) {
@@ -70,6 +72,7 @@ class Passenger {
             return of(
               new Booking({
                 type: 'passenger',
+                passenger: this,
                 pickup: this.home,
                 destination: {
                   ...this.workplace,
@@ -78,13 +81,13 @@ class Passenger {
                     virtualTime.time() + 60 * 60 * 1000,
                   ],
                 },
-                passenger: this,
               })
             )
           case 'goHome':
             return of(
               new Booking({
                 type: 'passenger',
+                passenger: this,
                 pickup: {
                   ...this.workplace,
                   timeWindow: [
@@ -93,7 +96,6 @@ class Passenger {
                   ],
                 },
                 destination: this.home,
-                passenger: this,
               })
             )
           case 'lunch':
@@ -114,6 +116,7 @@ class Passenger {
                 from([
                   new Booking({
                     type: 'passenger',
+                    passenger: this,
                     // Pickup to go to lunch
                     pickup: {
                       ...this.workplace,
@@ -123,11 +126,11 @@ class Passenger {
                       ],
                     },
                     destination: lunchPlace,
-                    passenger: this,
                   }),
                   new Booking({
                     // Go back from lunch to work
                     type: 'passenger',
+                    passenger: this,
                     pickup: lunchPlace,
                     destination: {
                       ...this.workplace,
@@ -136,7 +139,6 @@ class Passenger {
                         virtualTime.time() + 80 * 60 * 1000,
                       ],
                     },
-                    passenger: this,
                   }),
                 ])
               )
@@ -148,6 +150,13 @@ class Passenger {
       catchError((err) => error('passenger intent err', err) || of(err)),
       shareReplay()
     )
+
+    // this.pickedUpEvents = this.bookings.pipe(
+    //   mergeMap((booking) => booking.pickedUpEvents)
+    // )
+    // this.deliveredEvents = this.bookings.pipe(
+    //   mergeMap((booking) => booking.deliveredEvents)
+    // )
     this.pickedUpEvents = new ReplaySubject()
     this.deliveredEvents = new ReplaySubject()
   }
@@ -168,7 +177,7 @@ class Passenger {
       name: this.name,
       position: this.position,
       waitTime: this.waitTime,
-      kommun: this.kommun,
+      kommun: this.kommun.name,
     }
     return obj
   }
@@ -184,4 +193,4 @@ class Passenger {
   }
 }
 
-module.exports = Passenger
+module.exports = Citizen
