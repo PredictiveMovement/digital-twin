@@ -27,7 +27,7 @@ const App = () => {
   const [busStopLayer, setBusStopLayer] = useState(true)
   const [passengerLayer, setPassengerLayer] = useState(true)
   const [postombudLayer, setPostombudLayer] = useState(false)
-  const [measureStationsLayer, setMeasureStationsLayer] = useState(true)
+  const [measureStationsLayer, setMeasureStationsLayer] = useState(false)
   const [commercialAreasLayer, setCommercialAreasLayer] = useState(false)
   const [busLineLayer, setBusLineLayer] = useState(true)
   const [kommunLayer, setKommunLayer] = useState(true)
@@ -198,7 +198,8 @@ const App = () => {
   })
 
   useSocket('parameters', (currentParameters) => {
-    console.log('new experimentId', currentParameters)
+    console.log('new experimentId', currentParameters.id)
+
     setCurrentParameters(currentParameters)
     const layerSetFunctions = {
       taxis: setTaxiLayer,
