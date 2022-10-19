@@ -10,6 +10,7 @@ const cleanBooking = ({
   pickup: { position: pickup } = {},
   finalDestination: { position: finalDestination } = {},
   destination: { position: destination, name },
+  type,
 }) => ({
   id,
   origin,
@@ -17,6 +18,7 @@ const cleanBooking = ({
   finalDestination:
     (finalDestination && { position: finalDestination }) || undefined,
   destination: { position: destination, name },
+  type
 })
 
 const write = (filename) => (stream) =>

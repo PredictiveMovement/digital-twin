@@ -12,8 +12,8 @@ const measureStations = require('./measureStations')
 const inside = require('point-in-polygon')
 const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const Pelias = require('../lib/pelias')
-const { passengersFromNeeds } = require('../simulator/passengers')
-const { includedMunicipalities } = require('../config')
+const { getCitizens } = require('../simulator/citizens')
+const { includedMunicipalities, defaultEmitters } = require('../config')
 const { generateBookingsInKommun } = require('../simulator/bookings')
 
 function getPopulationSquares({ geometry: { coordinates } }) {
@@ -87,16 +87,20 @@ function read() {
       }
     ),
     tap((kommun) => {
-      passengersFromNeeds(kommun.name).subscribe((passenger) =>
-        kommun.citizens.next(passenger)
-      )
-      kommun.fleets
-        .pipe(take(1)) // We use take(1) to make sure there's atleast one fleet (with a depo) in the kommun. Otherwise bookings shouldn't be generated
-        .subscribe(() =>
-          generateBookingsInKommun(kommun).subscribe((booking) =>
-            kommun.handleBooking(booking)
-          )
+      if (defaultEmitters.includes('passengers')) {
+        getCitizens(kommun).pipe(take(10)).subscribe((citizen) =>
+          kommun.citizens.next(citizen)
         )
+      }
+      if (defaultEmitters.includes('bookings')) {
+        kommun.fleets
+          .pipe(take(1)) // We use take(1) to make sure there's atleast one fleet (with a depo) in the kommun. Otherwise bookings shouldn't be generated
+          .subscribe(() =>
+            generateBookingsInKommun(kommun).subscribe((booking) =>
+              kommun.handleBooking(booking)
+            )
+          )
+      }
     }),
 
     shareReplay()

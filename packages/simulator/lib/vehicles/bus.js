@@ -35,20 +35,23 @@ class Bus extends Vehicle {
     this.kommun = kommun
     this.startPosition = startPosition
     this.co2PerKmKg = 1.3 // NOTE: From a quick google. Needs to be verified.
-    stops
-      .pipe(
-        pairwise(),
-        map(([pickup, destination]) => {
-          this.handleBooking(
-            new Booking({
-              // pickup and destination contains both position and arrival and departure time
-              pickup,
-              destination,
-            })
-          )
-        })
-      )
-      .subscribe(() => {})
+
+    // NEVER USED NO MORE
+    // stops
+    //   .pipe(
+    //     pairwise(),
+    //     map(([pickup, destination]) => {
+    //       const busStop = new Booking({
+    //         // pickup and destination contains both position and arrival and departure time
+    //         pickup,
+    //         destination,
+    //         type: 'busstop',
+    //       })
+    //       console.log("STOPP", busStop.type)
+    //       this.handleBooking(busStop)
+    //     })
+    //   )
+    //   .subscribe(() => {})
   }
 
   async handleBooking(booking) {
@@ -86,7 +89,9 @@ class Bus extends Vehicle {
       : this.lineNumber
 
     this.booking.pickedUp(this.position)
-    this.cargo.push(this.booking)
+    if(this.booking.type !== "busstop") {
+      this.cargo.push(this.booking)
+    }
 
     const departure = moment(
       this.booking.pickup.departureTime,

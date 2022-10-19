@@ -26,10 +26,12 @@ class Taxi extends Vehicle {
   }
   pickup() {
     super.pickup()
+    console.log('Pickup passenger')
     this.currentPassengerCount++
   }
   dropoff() {
     super.dropoff()
+    console.log('dropoff passenger') //TODO: NEVER GETS CALLED
     this.currentPassengerCount--
   }
 }

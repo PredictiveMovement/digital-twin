@@ -87,11 +87,15 @@ const PassengerInfo = ({ data }) => {
       <Paragraph>Namn: {data.name}</Paragraph>
       <Paragraph>Resor:</Paragraph>
       {data.bookings &&
-        data.bookings.map((j) => (
-          <Paragraph>
-            {j.pickup.name} &gt; {j.destination.name} - {j.status}
-          </Paragraph>
-        ))}
+        data.bookings.map((j) => {
+          console.log("RESOR!", j)
+          return (
+            <Paragraph>
+              {j.pickup.name} &gt; {j.destination.name} - {j.status}
+            </Paragraph>
+          )
+        })
+      }
       <Paragraph>
         CO<sub>2</sub>: {Math.ceil((10 * data.co2) / 10) || 0} kg
       </Paragraph>

@@ -22,6 +22,7 @@ const { defaultEmitters } = require('../config')
 const count = () => pipe(scan((acc) => acc + 1, 0))
 
 const cleanBookings = () =>
+  // TODO: Replace cleanBookings with .toObject() on Booking
   pipe(
     map(
       ({
@@ -34,6 +35,7 @@ const cleanBookings = () =>
         cost,
         deliveryTime,
         car,
+        type,
       }) => ({
         id,
         pickup: pickup.position,
@@ -44,11 +46,13 @@ const cleanBookings = () =>
         co2,
         cost,
         carId: car?.id,
+        type,
       })
     )
   )
 
 const cleanCars = ({
+  // TODO: Replace cleanCars with .toObject() on Vehicle
   position: { lon, lat },
   id,
   altitude,
@@ -169,6 +173,7 @@ function register(io) {
    * @param {*} socket
    */
   const replayBaseDataToNewClient = (socket) => {
+    info('Replaying base data to new client')
     experiment.buses
       .pipe(
         map(cleanCars),
@@ -191,17 +196,26 @@ function register(io) {
         }
       })
 
-    experiment.cars.pipe(map(cleanCars)).subscribe((cars) => {
-      socket.emit('cars', [cars])
+    experiment.cars.pipe(map(cleanCars)).subscribe((car) => {
+      socket.emit('cars', [car])
     })
 
-    experiment.passengerUpdates.subscribe((passenger) => {
+    experiment.passengers.subscribe((passenger) => {
+      info('Passenger created and emitted', passenger.name)
       socket.emit('passenger', passenger.toObject())
-      socket.emit(
-        'bookings',
-        passenger.bookings.map((b) => b.toObject())
-      )
     })
+
+    // experiment.passengerUpdates.subscribe((booking) => {
+    //   if(booking.type === 'passenger') {
+    //     info("Passenger update", `${booking.passenger.name}, ${booking.id}, ${booking.status}`)
+    //     socket.emit('passenger', passenger.toObject())
+    //   } else
+    //     info("Booking update", booking.id)
+    //   // socket.emit(
+    //   //   'bookings',
+    //   //   passenger.bookings.map((b) => b.toObject())
+    //   // )
+    // })
 
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
       socket.emit('taxi', { id, position: [lon, lat] })
@@ -226,22 +240,33 @@ function register(io) {
 
     const carSubscription = startCarUpdatesSubscription(experiment, io)
 
-    const passengerSub = experiment.passengerUpdates.subscribe((passenger) => {
-      if (passenger.position) {
-        io.emit('passenger', passenger)
-      }
-    })
+    // UNCOMMENT THIS AND THINGS WILL BURN! 🔥 🔥 🔥 (but it's fun to watch)
+    // const passengerSub = experiment.passengerUpdates.subscribe((passenger) => {
+    //   if (passenger.position) {
+    //     io.emit('passenger', passenger)
+    //   } else {
+    //     console.log("passenger without position:", passenger)
+    //   }
+    // })
 
     const bookingSub = experiment.bookingUpdates
       .pipe(cleanBookings(), bufferTime(100, null, 1000))
       .subscribe((bookings) => {
         if (bookings.length) {
+          bookings.map((booking) => {
+            console.log(
+              'booking update',
+              booking.id,
+              booking.status,
+              booking?.passenger?.name
+            )
+          })
           io.emit('bookings', bookings)
         }
       })
     io.emit('parameters', experiment.parameters)
     replayBaseDataToNewClient(io)
-    return [carSubscription, bookingSub, passengerSub, timeSubscription]
+    return [carSubscription, bookingSub /*, passengerSub*/]
   }
   if (!experiment) {
     experiment = engine.createExperiment({ defaultEmitters })
@@ -252,9 +277,9 @@ function register(io) {
     io.emit('passenger', passenger.toObject())
   })
 
-  experiment.passengers.subscribe((passenger) => {
-    io.emit('passenger', passenger.toObject())
-  })
+  setInterval(() => {
+    io.emit('time', experiment.virtualTime.time())
+  }, 1000)
 
   experiment.kommuner
     .pipe(

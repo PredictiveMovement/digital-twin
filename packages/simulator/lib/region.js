@@ -134,6 +134,7 @@ class Region {
     this.citizens
       .pipe(mergeMap((passenger) => passenger.bookings))
       .subscribe((booking) => {
+        console.log(`Passenger ${booking?.passenger?.name} booked a taxi`)
         this.unhandledBookings.next(booking)
       })
 
@@ -170,6 +171,7 @@ class Region {
             // ),
             // takeNearest(center, 10),
             toArray(),
+            tap(taxis => console.log('dispatching taxis bookings', taxis.length, bookings.length)),
             filter((taxis) => taxis.length),
             mergeMap((taxis) => taxiDispatch(taxis, bookings), 3)
           )
@@ -179,7 +181,6 @@ class Region {
       )
       .subscribe(({ taxi, bookings }) => {
         bookings.forEach((booking) => {
-          console.log('Dispatching booking', booking.id, 'to taxi', taxi.id)
           taxi.handleBooking(booking)
           booking.passenger?.kommun.manualBookings.next(booking) // TODO: dispatch to a fleet instead
           this.dispatchedBookings.next(booking)
@@ -191,7 +192,7 @@ class Region {
       mergeMap((booking) => taxiDispatch(this.taxis, booking)),
       mergeAll()
     ).subscribe(() => {
-
+      console.log("Thing")
     })*/
 
     /*    taxiDispatch(this.taxis, this.passengers).subscribe((e) => {
@@ -219,6 +220,7 @@ const stopsToBooking = ([pickup, destination]) =>
     pickup,
     destination,
     lineNumber: pickup.lineNumber ?? destination.lineNumber,
+    type:'busstop'
   })
 
 module.exports = Region

@@ -9,7 +9,7 @@ const {
 } = require('date-fns')
 
 class VirtualTime {
-  constructor(timeMultiplier = 1, startHour = 2) {
+  constructor(timeMultiplier = 1, startHour = 4.8) {
     this.startHour = startHour
     this.timeMultiplier = timeMultiplier
     this.startHour = startHour
