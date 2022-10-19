@@ -136,6 +136,7 @@ class Kommun {
         const co2perkm = 125 // gram
         const privateCar = new Car({
           position: booking.destination.position,
+          isPrivateCar: true,
           weight,
           capacity: 2,
           co2PerKmKg: co2perkm / 1000 / weight,
