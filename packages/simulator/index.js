@@ -1,11 +1,12 @@
-const { share, merge, switchMap, shareReplay } = require('rxjs')
+const { filter, share, merge, shareReplay } = require('rxjs')
 const {
   mergeMap,
   map,
   scan,
   catchError,
-  distinct,
-  mapTo,
+  distinctUntilChanged,
+  toArray,
+  pairwise,
 } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
@@ -16,6 +17,7 @@ const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
 const statistics = require('./lib/statistics')
 const { info, error, debug } = require('./lib/log')
+const { haversine } = require('./lib/distance')
 
 const static = {
   busStops: regions.pipe(mergeMap((region) => region.stops)),
@@ -100,6 +102,70 @@ const engine = {
       catchError((err) => error('car updates err', err)),
 
       share()
+    )
+
+    experiment.measureStationUpdates = experiment.cars.pipe(
+      filter((car) => car.vehicleType === 'car'),
+      filter((car) => !car.isPrivateCar),
+      mergeMap(({ id, movedEvents }) =>
+        movedEvents.pipe(
+          mergeMap(({ position: carPosition }) =>
+            experiment.measureStations.pipe(
+              map(({ position: mPosition, id: mId }) => ({
+                carPosition: carPosition.toObject(),
+                mPosition,
+                id,
+                mId,
+              })),
+              filter(
+                ({ carPosition, mPosition }) =>
+                  haversine(carPosition, mPosition) < 1000
+              ),
+              toArray(),
+              filter((e) => e.length)
+            )
+          ),
+          distinctUntilChanged(),
+          pairwise(),
+          map(([previousStations, currentStations]) =>
+            previousStations.filter(
+              (p) => !currentStations.some(({ mId }) => p.mId === mId)
+            )
+          )
+        )
+      )
+    )
+    // previousStations:
+    // [
+    // {
+    // carPosition: Position { lon: 12.77932048, lat: 56.01714356 },
+    // mPosition: { lat: 56.01811632664044, lon: 12.766229298474165 },
+    // id: 'v-k4RU-aySd',
+    // mId: 19101
+    // },
+    // {
+    // carPosition: Position { lon: 12.77932048, lat: 56.01714356 },
+    // mPosition: { lat: 56.01830515683855, lon: 12.766234440035447 },
+    // id: 'v-k4RU-aySd',
+    // mId: 19102
+    // }
+    // ]
+    //
+    //
+    //
+    // currentStations:
+    // [
+    // {
+    // carPosition: Position { lon: 12.77932048, lat: 56.01714356 },
+    // mPosition: { lat: 56.01830515683855, lon: 12.766234440035447 },
+    // id: 'v-k4RU-aySd',
+    // mId: 19102
+    // }
+    // ]
+    experiment.measureStationUpdates.subscribe(console.log)
+
+    experiment.dispatchedBookings.subscribe((booking) =>
+      debug(`Booking ${booking?.id} dispatched to car ${booking?.car?.id}`)
     )
 
     return experiment
