@@ -1,10 +1,10 @@
 const elastic = require('@elastic/elasticsearch')
 
 const mappings = require('../data/elasticsearch_mappings.json')
+
 const { error, info } = require('./log')
 
 const host = process.env.ELASTICSEARCH_URL
-
 
 if (!host) {
   info('No elasticsearch url provided, skipping statistics collection')
@@ -70,12 +70,11 @@ const save = (booking, indexName) => {
 }
 
 const search = (searchQuery) => {
-  return client
-    .search(searchQuery)
+  return client.search(searchQuery)
 }
 
 module.exports = {
   createIndices,
   save,
-  search
+  search,
 }

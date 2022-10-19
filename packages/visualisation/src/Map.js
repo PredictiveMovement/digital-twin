@@ -6,6 +6,7 @@ import DeckGL, {
   ScatterplotLayer,
   ArcLayer,
   LinearInterpolator,
+  IconLayer,
 } from 'deck.gl'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
@@ -17,6 +18,7 @@ import Button from './components/Button'
 
 import mapboxgl from 'mapbox-gl'
 import HoverInfoBox from './components/HoverInfoBox'
+
 // @ts-ignore
 mapboxgl.workerClass =
   // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -30,7 +32,8 @@ const Map = ({
   passengers,
   cars,
   bookings,
-  hubs,
+  postombud,
+  measureStations,
   busStops,
   lineShapes,
   kommuner,
@@ -409,9 +412,9 @@ const Map = ({
     },
   })
 
-  const hubLayer = new ScatterplotLayer({
-    id: 'hub-layer',
-    data: hubs,
+  const postombudLayer = new ScatterplotLayer({
+    id: 'postombud-layer',
+    data: postombud,
     opacity: 0.4,
     stroked: false,
     filled: true,
@@ -428,8 +431,35 @@ const Map = ({
     onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
-        type: 'hub',
+        type: 'postombud',
         title: 'Paketombud för ' + object.operator,
+        x,
+        y,
+        viewport,
+      })
+    },
+  })
+
+  const ICON_MAPPING = {
+    marker: { x: 0, y: 0, width: 128, height: 128, anchorY: 150, mask: true },
+  }
+  const measureStationsLayer = new IconLayer({
+    id: 'measureStations-layer',
+    data: measureStations,
+    iconAtlas:
+      'https://raw.githubusercontent.com/visgl/deck.gl/8.8-release/examples/website/icon/data/location-icon-atlas.png',
+    iconMapping: ICON_MAPPING,
+    getIcon: (d) => 'marker',
+    getPosition: (c) => c.position,
+    sizeScale: 5,
+    getColor: () => [16, 197, 123, 200],
+    getSize: (d) => 5,
+    pickable: true,
+    onHover: ({ object, x, y, viewport }) => {
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        ...object,
+        type: 'measureStation',
         x,
         y,
         viewport,
@@ -541,7 +571,8 @@ const Map = ({
       layers={[
         // The order of these layers matter, roughly equal to increasing z-index by 1
         activeLayers.kommunLayer && kommunLayer, // TODO: This hides some items behind it, sort of
-        activeLayers.postombudLayer && hubLayer,
+        activeLayers.postombudLayer && postombudLayer,
+        activeLayers.measureStationsLayer && measureStationsLayer,
         bookingLayer,
         showArcLayer && arcLayer,
         showQueuedBookings && arcLayerQueuedBookings,

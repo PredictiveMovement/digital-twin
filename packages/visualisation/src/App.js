@@ -27,6 +27,7 @@ const App = () => {
   const [busStopLayer, setBusStopLayer] = useState(true)
   const [passengerLayer, setPassengerLayer] = useState(true)
   const [postombudLayer, setPostombudLayer] = useState(false)
+  const [measureStationsLayer, setMeasureStationsLayer] = useState(false)
   const [commercialAreasLayer, setCommercialAreasLayer] = useState(false)
   const [busLineLayer, setBusLineLayer] = useState(true)
   const [kommunLayer, setKommunLayer] = useState(true)
@@ -42,6 +43,8 @@ const App = () => {
     setBusLayer,
     postombudLayer,
     setPostombudLayer,
+    measureStationsLayer,
+    setMeasureStationsLayer,
     taxiLayer,
     setTaxiLayer,
     passengerLayer,
@@ -68,6 +71,7 @@ const App = () => {
     setCars([])
     setKommuner([])
     setPostombud([])
+    setMeasureStations([])
     setBusStops([])
     setLineShapes([])
     socket.emit('speed', speed) // reset speed on server
@@ -152,6 +156,18 @@ const App = () => {
     ])
   })
 
+  const [measureStations, setMeasureStations] = React.useState([])
+  useSocket('measureStations', (newMeasureStations) => {
+    setReset(false)
+    setMeasureStations((current) => [
+      ...current,
+      ...newMeasureStations.map(({ position, ...rest }) => ({
+        position: [position.lon, position.lat],
+        ...rest,
+      })),
+    ])
+  })
+
   const [busStops, setBusStops] = React.useState([])
   useSocket('busStops', ({ position, name }) => {
     setReset(false)
@@ -183,6 +199,7 @@ const App = () => {
 
   useSocket('parameters', (currentParameters) => {
     console.log('new experimentId', currentParameters.id)
+
     setCurrentParameters(currentParameters)
     const layerSetFunctions = {
       taxis: setTaxiLayer,
@@ -192,6 +209,7 @@ const App = () => {
       busLines: setBusLineLayer,
       passengers: setPassengerLayer,
       postombud: setPostombudLayer,
+      measureStations: setMeasureStationsLayer,
       kommuner: setKommunLayer,
       commercialAreas: setCommercialAreasLayer,
     }
@@ -290,7 +308,8 @@ const App = () => {
         taxis={taxis}
         cars={cars}
         bookings={bookings}
-        hubs={postombud}
+        postombud={postombud}
+        measureStations={measureStations}
         busStops={busStops}
         kommuner={kommuner}
         activeCar={activeCar}
