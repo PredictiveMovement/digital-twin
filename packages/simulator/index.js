@@ -6,7 +6,6 @@ const {
   fromEvent,
   of,
   concatMap,
-  tap,
   switchMap,
   shareReplay,
 } = require('rxjs')
