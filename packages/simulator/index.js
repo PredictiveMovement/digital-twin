@@ -13,7 +13,6 @@ const { mergeMap, map, scan, catchError } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
 
-const postombud = require('./streams/postombud')
 const kommuner = require('./streams/kommuner')
 const regions = require('./streams/regions')(kommuner)
 const { safeId } = require('./lib/id')
@@ -28,7 +27,7 @@ const static = {
 
 const engine = {
   experiments: [],
-  createExperiment: ({ id = safeId() } = {}) => {
+  createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
     const savedParams = readParameters()
 
     info('Starting experiment with params:', savedParams)
@@ -37,6 +36,7 @@ const engine = {
       id,
       startDate: new Date(),
       fixedRoute: savedParams.fixedRoute || 100,
+      emitters: defaultEmitters,
     }
     statistics.collectExperimentMetadata(parameters)
 
@@ -48,14 +48,13 @@ const engine = {
         kommuner.pipe(mergeMap((k) => k.dispatchedBookings))
       ),
       buses: regions.pipe(mergeMap((region) => region.buses)),
-      postombud,
+      postombud: kommuner.pipe(mergeMap((kommun) => kommun.postombud)),
       kommuner,
       parameters,
       passengers: regions.pipe(mergeMap((region) => region.citizens)),
       taxis: regions.pipe(mergeMap((region) => region.taxis)),
       ...static,
     }
-
     experiment.passengers
       .pipe(
         switchMap(({ bookings }) => bookings),

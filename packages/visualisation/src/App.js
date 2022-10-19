@@ -60,18 +60,6 @@ const App = () => {
     socket.emit('experimentParameters', newParameters)
   }
 
-  useEffect(() => {
-    socket.emit('carLayer', activeLayers.carLayer)
-  }, [activeLayers.carLayer, socket])
-
-  useEffect(() => {
-    socket.emit('taxiUpdatesToggle', activeLayers.taxiLayer)
-  }, [activeLayers.taxiLayer, socket])
-
-  useEffect(() => {
-    socket.emit('busUpdatesToggle', activeLayers.busLayer)
-  }, [activeLayers.busLayer, socket])
-
   useSocket('reset', () => {
     console.log('received reset')
     setBookings([])
@@ -196,6 +184,26 @@ const App = () => {
   useSocket('parameters', (currentParameters) => {
     console.log('new experimentId', currentParameters.id)
     setCurrentParameters(currentParameters)
+    const layerSetFunctions = {
+      taxis: setTaxiLayer,
+      buses: setBusLayer,
+      cars: setCarLayer,
+      busStops: setBusStopLayer,
+      busLines: setBusLineLayer,
+      passengers: setPassengerLayer,
+      postombud: setPostombudLayer,
+      kommuner: setKommunLayer,
+      commercialAreas: setCommercialAreasLayer,
+    }
+
+    Object.entries(layerSetFunctions).map(([emitterName, setStateFunction]) => {
+      if (currentParameters.emitters.includes(emitterName)) {
+        setStateFunction(true)
+      } else {
+        setStateFunction(false)
+      }
+    })
+
     setNewParameters(currentParameters)
   })
   const [passengers, setPassengers] = React.useState([])

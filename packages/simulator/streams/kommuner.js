@@ -1,29 +1,20 @@
 /**
  * TODO: Describe the stream that this file exports and what its data means
  */
-const {
-  from,
-  shareReplay,
-  ReplaySubject,
-} = require('rxjs')
-const {
-  map,
-  tap,
-  filter,
-  reduce,
-  mergeMap,
-} = require('rxjs/operators')
+const { from, shareReplay, take, ReplaySubject } = require('rxjs')
+const { map, tap, filter, reduce, mergeMap } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
 const population = require('./population')
 const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
+
 const inside = require('point-in-polygon')
 const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const Pelias = require('../lib/pelias')
 const { passengersFromNeeds } = require('../simulator/passengers')
-const { includedMunicipalities } = require('../lib/setup')
-
+const { includedMunicipalities } = require('../config')
+const { generateBookingsInKommun } = require('../simulator/bookings')
 
 function getPopulationSquares({ geometry: { coordinates } }) {
   return population.pipe(
@@ -89,7 +80,16 @@ function read() {
       }
     ),
     tap((kommun) => {
-      passengersFromNeeds(kommun.name).subscribe((passenger) => kommun.citizens.next(passenger))
+      passengersFromNeeds(kommun.name).subscribe((passenger) =>
+        kommun.citizens.next(passenger)
+      )
+      kommun.fleets
+        .pipe(take(1)) // We use take(1) to make sure there's atleast one fleet (with a depo) in the kommun. Otherwise bookings shouldn't be generated
+        .subscribe(() =>
+          generateBookingsInKommun(kommun).subscribe((booking) =>
+            kommun.handleBooking(booking)
+          )
+        )
     }),
 
     shareReplay()
