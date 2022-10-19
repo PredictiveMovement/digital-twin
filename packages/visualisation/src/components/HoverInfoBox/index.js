@@ -29,7 +29,17 @@ const Wrapper = styled.div`
     border-right: solid 10px transparent;
   }
 `
-
+const MeasurementStationInfo = ({ data }) => {
+  return (
+    <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
+      <div>
+        <Paragraph>Mätpunkt: {data.id}</Paragraph>
+        <Paragraph>Antal tunga fordorn: {data.heavyTraficCount}</Paragraph>
+        <Paragraph>Mäter bilar som kör: {data.direction}</Paragraph>
+      </div>
+    </Wrapper>
+  )
+}
 const CarInfo = ({ data }) => {
   const label =
     data.vehicleType === 'taxi' || data.vehicleType === 'bus'
@@ -117,15 +127,16 @@ const GenericInfo = ({ data }) => {
 }
 
 const HoverInfoBox = ({ data }) => {
-  return (
-    <>
-      {data.type === 'car' && <CarInfo data={data} />}
-      {data.type === 'passenger' && <PassengerInfo data={data} />}
-      {data.type !== 'passenger' && data.type !== 'car' && (
-        <GenericInfo data={data} />
-      )}
-    </>
-  )
+  switch (data.type) {
+    case 'car':
+      return <CarInfo data={data} />
+    case 'passenger':
+      return <PassengerInfo data={data} />
+    case 'measureStation':
+      return <MeasurementStationInfo data={data} />
+    default:
+      return <GenericInfo data={data} />
+  }
 }
 
 export default HoverInfoBox

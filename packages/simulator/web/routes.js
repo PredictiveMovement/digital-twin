@@ -209,6 +209,9 @@ function register(io) {
     experiment.postombud.pipe(toArray()).subscribe((postombud) => {
       socket.emit('postombud', postombud)
     })
+    experiment.measureStations.pipe(toArray()).subscribe((measureStations) => {
+      socket.emit('measureStations', measureStations)
+    })
     experiment.busStops.subscribe((busStops) =>
       socket.emit('busStops', busStops)
     )
