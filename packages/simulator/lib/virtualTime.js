@@ -1,10 +1,22 @@
 const moment = require('moment')
+const { take, interval, toArray, firstValueFrom } = require('rxjs')
+const { scan, share, shareReplay, map } = require('rxjs/operators')
+const { addSeconds, format, getMilliseconds } = require('date-fns')
 
 class VirtualTime {
   constructor(timeMultiplier = 1, startHour = 2) {
     this.startHour = startHour
     this.setTimeMultiplier(timeMultiplier)
     this.reset()
+
+    const startDate = new Date(2022, 9, 20, startHour + 2)
+    this.currentTime = interval(100).pipe(
+      scan((acc, _curr) => addSeconds(acc, 1 * this.timeMultiplier), startDate),
+      map(getMilliseconds),
+      shareReplay(1)
+    )
+
+    this.currentTime.subscribe(() => null)
   }
 
   reset() {
@@ -13,8 +25,7 @@ class VirtualTime {
   }
 
   time() {
-    const diff = Date.now() - this.startDate
-    return Date.now() + this.offset + diff * this.timeMultiplier
+    return firstValueFrom(this.currentTime)
   }
 
   play() {
@@ -43,8 +54,8 @@ class VirtualTime {
 
   // Set the speed in which time should advance
   setTimeMultiplier(timeMultiplier) {
-    this.offset = this.time() - Date.now() // save the current offset before reseting the time multiplier
-    this.startDate = Date.now()
+    // this.offset = this.time() - Date.now() // save the current offset before reseting the time multiplier
+    // this.startDate = Date.now()
     this.timeMultiplier = timeMultiplier - 1 // it makes more sense to have 1 mean realtime and 0 means stop the time.
   }
 }
