@@ -125,7 +125,9 @@ const engine = {
               filter((e) => e.length)
             )
           ),
+          tap((e) => null),
           distinctUntilChanged(),
+          tap((e) => null),
           pairwise(),
           map(([previousStations, currentStations]) =>
             previousStations.filter(
@@ -133,6 +135,10 @@ const engine = {
             )
           )
         )
+      ),
+      tap((events) => console.log('Events!', events)),
+      map((events) =>
+        events.map(({ id: carId, mId: stationId }) => ({ carId, stationId }))
       )
     )
     // previousStations:
