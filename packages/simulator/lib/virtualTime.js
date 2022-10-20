@@ -7,9 +7,14 @@ class VirtualTime {
   constructor(timeMultiplier = 1, startHour = 2) {
     this.startHour = startHour
     this.timeMultiplier = timeMultiplier
+    this.startHour = startHour
     this.reset()
+  }
 
-    const startDate = new Date(2022, 9, 20, startHour + 2)
+  reset() {
+    this.timeSubscription?.unsubscribe()
+    const startDate = new Date(2022, 9, 20, this.startHour + 2)
+    console.log(startDate)
     this.currentTime = interval(100).pipe(
       scan(
         (acc, _curr) => addMilliseconds(acc, 1 * this.timeMultiplier * 100),
@@ -20,12 +25,7 @@ class VirtualTime {
       shareReplay(1)
     )
 
-    this.currentTime.subscribe(() => null)
-  }
-
-  reset() {
-    this.startDate = Date.now()
-    this.offset = moment().startOf('day').add(this.startHour, 'hours').diff()
+    this.timeSubscription = this.currentTime.subscribe(() => null)
   }
 
   time() {
