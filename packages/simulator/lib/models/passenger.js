@@ -11,6 +11,7 @@ const {
   tap,
   retry,
   ReplaySubject,
+  throttleTime,
 } = require('rxjs')
 const { virtualTime } = require('../virtualTime')
 
@@ -44,6 +45,7 @@ class Passenger {
     this.waitTime = 0 // Time waiting for a vehicle.
 
     this.intents = virtualTime.getTimeStream().pipe(
+      throttleTime(1000), // throttleTime 1000ms is used to not use the same update interval as the clock (100 ms)
       map((date) => ({
         hour: getHours(date),
         weekDay: getISODay(date),
