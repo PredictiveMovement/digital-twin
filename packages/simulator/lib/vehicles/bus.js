@@ -93,7 +93,9 @@ class Bus extends Vehicle {
       'hh:mm:ss'
     ).valueOf()
     this.simulate(false) // pause interpolation while we wait
-    const waitingtime = moment(departure).diff(moment(virtualTime.time()))
+    const waitingtime = moment(departure).diff(
+      moment(await virtualTime.getTimeInMillisecondsAsPromise())
+    )
     // TODO: move this logic to vehicle so all bookings can have a departure time
 
     if (waitingtime > 0) await virtualTime.waitUntil(departure)

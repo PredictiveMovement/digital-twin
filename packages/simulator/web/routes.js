@@ -220,9 +220,9 @@ function register(io) {
     )
   }
   const start = (experiment) => {
-    setInterval(() => {
-      io.emit('time', experiment.virtualTime.time())
-    }, 1000)
+    virtualTime
+      .getTimeInMilliseconds()
+      .subscribe((milliseconds) => io.emit('time', milliseconds))
 
     const carSubscription = startCarUpdatesSubscription(experiment, io)
 
@@ -251,10 +251,6 @@ function register(io) {
   experiment.passengers.subscribe((passenger) => {
     io.emit('passenger', passenger.toObject())
   })
-
-  setInterval(() => {
-    io.emit('time', experiment.virtualTime.time())
-  }, 1000)
 
   experiment.passengers.subscribe((passenger) => {
     io.emit('passenger', passenger.toObject())

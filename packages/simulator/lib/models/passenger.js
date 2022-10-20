@@ -19,6 +19,7 @@ const moment = require('moment')
 const Booking = require('./booking')
 const pelias = require('../pelias')
 const { error } = require('../log')
+const { getHours, getISODay } = require('date-fns')
 
 class Passenger {
   constructor({ name, position, workplace, home, startPosition, kommun }) {
@@ -42,10 +43,10 @@ class Passenger {
     this.moveTime = 0 // Time on a vehicle.
     this.waitTime = 0 // Time waiting for a vehicle.
 
-    this.intents = interval(1000).pipe(
-      map(() => ({
-        hour: moment(virtualTime.time()).hour(),
-        weekDay: moment(virtualTime.time()).isoWeekday(),
+    this.intents = virtualTime.getTimeStream().pipe(
+      map((date) => ({
+        hour: getHours(date),
+        weekDay: getISODay(date),
       })),
       //filter(() => Math.random() > 0.5),
       map(({ hour }) => {
@@ -64,7 +65,7 @@ class Passenger {
       distinctUntilChanged(),
       filter((intent) => intent !== 'idle' && intent !== 'sleep'),
       catchError((err) => error('passenger bookings err', err) || of(err)),
-      mergeMap((intent) => {
+      mergeMap(async (intent) => {
         switch (intent) {
           case 'goToWork':
             return of(
@@ -74,8 +75,9 @@ class Passenger {
                 destination: {
                   ...this.workplace,
                   timeWindow: [
-                    virtualTime.time(),
-                    virtualTime.time() + 60 * 60 * 1000,
+                    await virtualTime.getTimeInMillisecondsAsPromise(),
+                    (await virtualTime.getTimeInMillisecondsAsPromise()) +
+                      60 * 60 * 1000,
                   ],
                 },
                 passenger: this,
@@ -88,8 +90,9 @@ class Passenger {
                 pickup: {
                   ...this.workplace,
                   timeWindow: [
-                    virtualTime.time(),
-                    virtualTime.time() + 60 * 60 * 1000,
+                    await virtualTime.getTimeInMillisecondsAsPromise(),
+                    (await virtualTime.getTimeInMillisecondsAsPromise()) +
+                      60 * 60 * 1000,
                   ],
                 },
                 destination: this.home,
@@ -110,7 +113,7 @@ class Passenger {
                   ) || of(null)
               ),
               filter((position) => position != null),
-              mergeMap((lunchPlace) =>
+              mergeMap(async (lunchPlace) =>
                 from([
                   new Booking({
                     type: 'passenger',
@@ -118,8 +121,9 @@ class Passenger {
                     pickup: {
                       ...this.workplace,
                       timeWindow: [
-                        virtualTime.time(),
-                        virtualTime.time() + 60 * 60 * 1000,
+                        await virtualTime.getTimeInMillisecondsAsPromise(),
+                        (await virtualTime.getTimeInMillisecondsAsPromise()) +
+                          60 * 60 * 1000,
                       ],
                     },
                     destination: lunchPlace,
@@ -132,8 +136,10 @@ class Passenger {
                     destination: {
                       ...this.workplace,
                       timeWindow: [
-                        virtualTime.time() + 60 * 60 * 1000,
-                        virtualTime.time() + 80 * 60 * 1000,
+                        (await virtualTime.getTimeInMillisecondsAsPromise()) +
+                          60 * 60 * 1000,
+                        (await virtualTime.getTimeInMillisecondsAsPromise()) +
+                          80 * 60 * 1000,
                       ],
                     },
                     passenger: this,

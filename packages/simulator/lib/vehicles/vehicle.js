@@ -56,7 +56,7 @@ class Vehicle {
   }
 
   time() {
-    return virtualTime.time()
+    return virtualTime.getTimeInMillisecondsAsPromise()
   }
 
   simulate(route) {
