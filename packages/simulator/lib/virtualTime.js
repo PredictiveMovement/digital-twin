@@ -18,9 +18,11 @@ class VirtualTime {
 
   reset() {
     const startDate = addHours(startOfDay(new Date()), 2)
-    this.currentTime = interval(100).pipe(
+    const msUpdateFrequency = 100
+    this.currentTime = interval(msUpdateFrequency).pipe(
       scan(
-        (acc, _curr) => addMilliseconds(acc, 1 * this.timeMultiplier * 100),
+        (acc, _curr) =>
+          addMilliseconds(acc, msUpdateFrequency * this.timeMultiplier),
         startDate
       ),
       shareReplay(1)
