@@ -1,7 +1,12 @@
 const moment = require('moment')
 const { take, interval, toArray, tap, firstValueFrom } = require('rxjs')
 const { scan, share, shareReplay, map } = require('rxjs/operators')
-const { addMilliseconds, format, getUnixTime } = require('date-fns')
+const {
+  addMilliseconds,
+  startOfDay,
+  addHours,
+  getUnixTime,
+} = require('date-fns')
 
 class VirtualTime {
   constructor(timeMultiplier = 1, startHour = 2) {
@@ -12,24 +17,29 @@ class VirtualTime {
   }
 
   reset() {
-    this.timeSubscription?.unsubscribe()
-    const startDate = new Date(2022, 9, 20, this.startHour + 2)
-    console.log(startDate)
+    const startDate = addHours(startOfDay(new Date()), 2)
     this.currentTime = interval(100).pipe(
       scan(
         (acc, _curr) => addMilliseconds(acc, 1 * this.timeMultiplier * 100),
         startDate
       ),
-      map(getUnixTime),
-      map((e) => e * 1000),
       shareReplay(1)
     )
-
-    this.timeSubscription = this.currentTime.subscribe(() => null)
   }
 
-  time() {
-    return firstValueFrom(this.currentTime)
+  getTimeStream() {
+    return this.currentTime()
+  }
+
+  getTimeInMilliseconds() {
+    return this.currentTime.pipe(
+      map(getUnixTime),
+      map((e) => e * 1000)
+    )
+  }
+
+  getTimeInMillisecondsAsPromise() {
+    return firstValueFrom(this.getTimeInMilliseconds())
   }
 
   play() {
