@@ -56,8 +56,7 @@ class Vehicle {
   }
 
   time() {
-    const time = virtualTime.time()
-    return time
+    return virtualTime.time()
   }
 
   simulate(route) {
@@ -65,12 +64,12 @@ class Vehicle {
     if (!route) return
     if (virtualTime.timeMultiplier === Infinity)
       return this.updatePosition(route) // teleport mode
-    this._interval = setInterval(() => {
+    this._interval = setInterval(async () => {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
       const { next, ...position } =
-        interpolate.route(route, this.time()) ?? this.heading
+        interpolate.route(route, await this.time()) ?? this.heading
       const newPosition = new Position(position)
-      if (route.started > this.time()) {
+      if (route.started > (await this.time())) {
         clearInterval(this._interval)
         return
       }
@@ -83,8 +82,8 @@ class Vehicle {
     this.heading = position
     return osrm
       .route(this.position, this.heading)
-      .then((route) => {
-        route.started = this.time()
+      .then(async (route) => {
+        route.started = await this.time()
         this.route = route
         if (!route.legs)
           throw new Error(
@@ -213,6 +212,7 @@ class Vehicle {
   }
 
   async updatePosition(position, date = this.time()) {
+    date = await date
     const lastPosition = this.position || position
     const timeDiff = date - this.lastPositionUpdate
 
