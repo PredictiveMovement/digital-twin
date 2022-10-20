@@ -58,14 +58,11 @@ class VirtualTime {
     if (this.timeMultiplier === Infinity) return // return directly if time is set to infinity
     const waitUntil = time
     return await new Promise((resolve) => {
-      return setInterval(() => {
-        if (this.time() >= waitUntil) return resolve()
+      return setInterval(async () => {
+        if ((await this.getTimeInMillisecondsAsPromise()) >= waitUntil)
+          return resolve()
       }, checkInterval)
     })
-  }
-
-  timeInSeconds(seconds) {
-    return moment(this.time()).add(seconds, 'seconds')
   }
 
   // Set the speed in which time should advance
