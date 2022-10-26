@@ -8,6 +8,7 @@ const {
   of,
   range,
   first,
+  take,
 } = require('rxjs')
 const { map, catchError, toArray, mapTo } = require('rxjs/operators')
 const { error } = require('./log')
@@ -87,7 +88,10 @@ class Kommun {
     this.cars = merge(
       this.privateCars,
       this.taxis,
-      this.fleets.pipe(mergeMap((fleet) => fleet.cars))
+      this.fleets.pipe(
+        mergeMap((fleet) => fleet.cars),
+        take(1)
+      )
     ).pipe(shareReplay())
 
     this.buses = range(0, this.busCount - nrOfTaxis).pipe(
