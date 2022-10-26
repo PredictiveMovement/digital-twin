@@ -114,34 +114,38 @@ const engine = {
       filter((car) => !car.isPrivateCar),
       mergeMap(({ id, movedEvents }) =>
         movedEvents.pipe(
-          mergeMap(({ position: carPosition }) =>
+          mergeMap(({ position: carPosition, pointsPassedSinceLastUpdate }) =>
             experiment.measureStations.pipe(
               map(({ position: mPosition, id: mId }) => ({
                 carPosition: carPosition.toObject(),
+                pointsPassedSinceLastUpdate,
                 mPosition,
                 id,
                 mId,
               })),
               filter(
-                ({ carPosition, mPosition }) =>
-                  haversine(carPosition, mPosition) < 1000
+                ({
+                  carPosition,
+                  mPosition,
+                  pointsPassedSinceLastUpdate = [],
+                }) =>
+                  pointsPassedSinceLastUpdate.some(
+                    (hej) => haversine(hej.position, mPosition) < 15
+                  ) || haversine(carPosition, mPosition) < 15
               ),
-              toArray(),
-              filter((e) => e.length)
+              toArray()
             )
           ),
-          tap((e) => null),
-          distinctUntilChanged(),
-          tap((e) => null),
           pairwise(),
+          filter(([prev, curr]) => prev.length || curr.length),
           map(([previousStations, currentStations]) =>
             previousStations.filter(
               (p) => !currentStations.some(({ mId }) => p.mId === mId)
             )
-          )
+          ),
+          filter((e) => e.length)
         )
       ),
-      tap((events) => console.log('Events!', events)),
       map((events) =>
         events.map(({ id: carId, mId: stationId }) => ({ carId, stationId }))
       )
