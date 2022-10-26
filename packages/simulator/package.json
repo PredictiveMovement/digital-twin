@@ -24,7 +24,6 @@
     "nanoid": "^3.1.23",
     "node-fetch": "^1.5.3",
     "node-kmeans": "^1.1.9",
-    "nodemon": "^2.0.7",
     "perlin-noise": "^0.0.1",
     "point-in-polygon": "^1.0.1",
     "polyline": "^0.2.0",
@@ -49,5 +48,8 @@
     "ignore": [
       "data/pm_bookings*.json"
     ]
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }
