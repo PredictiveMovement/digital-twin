@@ -2,12 +2,11 @@
 
 ## Background
 
-This is a digital twin (agent based model) to both visualise transport data and generate new synthetic data which can be used to perform virtual experiments on transport optimizations such as systems level optimisation, drone deliveries, dynamic routes in public transport, co2 calculations, electric car adaption scenario planning etc.
+This is a digital twin (agent based model) to both visualise transport data and generate new synthetic data. The twin can be used to perform virtual experiments on transport optimizations such as systems level optimisation, drone deliveries, dynamic routes in public transport, co2 emissions, electric car adaption scenario planning etc.
 
 ## Screenshot
 
 <img width="1198" alt="image" src="https://user-images.githubusercontent.com/395843/185745414-f05228a5-d03c-4745-9281-de0fdee414c2.png">
-
 
 ## Goals
 
@@ -30,7 +29,7 @@ This project relies heavily on a set of open source softwares to solve particula
 5. Elasticsearch / Kibana - This is used to gather realtime statistics.
 6. Opentiles - Self hosted tiles server to provide 3d vector maps.
 
-/ TODO: Merge all Elasticsearch instances to one and also all OSM data to one source /
+/ TODO: Merge all OSM data to one source /
 
 ## How to contribute
 
@@ -57,6 +56,23 @@ Add .env with the mapbox token `REACT_APP_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>` - we
 - `main` — is a protected branch and requires PR:s to be changed, this is automatically synced with CI environment.
 - `Releases` - To push a new release - create a new Release in the Github UI and when published, a new build will automatically be pushed to prod.
 
+### Known bugs
+
+- Updates are sent four times per booking
+```
+    booking update b-Vbtb-2thc Delivered undefined
+    booking update b-Vbtb-2thc Delivered undefined
+    booking update b-Vbtb-2thc Delivered undefined
+    booking update b-Vbtb-2thc Delivered undefined
+```
+
+- Passengers do not board/ride buses.
+- Passengers do not board/ride taxis.
+- Taxis do not cluster.
+- Trips are not displayed in passenger's hoverInfoBox.
+- Emitting `passengerUpdates` makes the simulator crash with a `maximum call stack exceeded` error.
+- Generated passengers are clumped togehter, sometiems 1, sometimes 7 or more passengers are on the same spot.
+
 ## License
 
-Predictive Movement is free and open source software licensed by Iteam Solutions AB under the [LICENSE](AGPL license)  
+Predictive Movement is free and open source software licensed by Iteam Solutions AB under the [LICENSE](AGPL license).
