@@ -2,6 +2,7 @@ const { filter, share, merge, shareReplay } = require('rxjs')
 const {
   mergeMap,
   map,
+  tap,
   scan,
   catchError,
   distinctUntilChanged,
