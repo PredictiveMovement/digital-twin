@@ -10,6 +10,7 @@ const { throws } = require('assert')
 const Position = require('../models/position')
 
 const { ReplaySubject } = require('rxjs')
+const { tap, pairwise } = require('rxjs/operators')
 class Vehicle {
   constructor({
     id = 'v-' + safeId(),
@@ -60,22 +61,36 @@ class Vehicle {
   }
 
   simulate(route) {
-    clearInterval(this._interval)
+    if (this.movementSubscription) {
+      this.movementSubscription.unsubscribe()
+    }
+    // clearInterval(this._interval)
     if (!route) return
     if (virtualTime.timeMultiplier === Infinity)
       return this.updatePosition(route) // teleport mode
-    this._interval = setInterval(async () => {
-      if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
-      const { next, ...position } =
-        interpolate.route(route, await this.time()) ?? this.heading
-      const newPosition = new Position(position)
-      if (route.started > (await this.time())) {
-        clearInterval(this._interval)
-        return
-      }
-      this.updatePosition(newPosition)
-      if (!next) this.stopped()
-    }, 200)
+    this.movementSubscription = virtualTime
+      .getTimeInMilliseconds()
+      .pipe(pairwise())
+      .subscribe(([previousTimeInMs, currentTimeInMs]) => {
+        const diffFromLastTime = previousTimeInMs
+          ? currentTimeInMs - previousTimeInMs
+          : 0
+        if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
+        const { next, pointsDiffFromPrevious, ...position } =
+          interpolate.route(route, currentTimeInMs, diffFromLastTime) ??
+          this.heading
+        const newPosition = new Position(position)
+        if (route.started > currentTimeInMs) {
+          this.movementSubscription.unsubscribe()
+          return
+        }
+        this.updatePosition(
+          newPosition,
+          pointsDiffFromPrevious,
+          currentTimeInMs
+        )
+        if (!next) this.stopped()
+      })
   }
 
   navigateTo(position) {
@@ -211,20 +226,19 @@ class Vehicle {
     return this.capacity > this.queue.length + this.cargo.length
   }
 
-  async updatePosition(position, date = this.time()) {
-    date = await date
+  async updatePosition(position, pointsPassedSinceLastUpdate, time) {
     const lastPosition = this.position || position
-    const timeDiff = date - this.lastPositionUpdate
+    const timeDiff = time - this.lastPositionUpdate
 
     const metersMoved =
       (this.route &&
         this.lastPositionUpdate &&
-        interpolate.getDiff(this.route, this.lastPositionUpdate, date)
+        interpolate.getDiff(this.route, this.lastPositionUpdate, time)
           .distance) ||
       haversine(lastPosition, position)
     const [km, h] = [
       metersMoved / 1000,
-      (date - this.lastPositionUpdate) / 1000 / 60 / 60,
+      (time - this.lastPositionUpdate) / 1000 / 60 / 60,
     ]
 
     const co2 = this.updateCarbonDioxide(km)
@@ -235,10 +249,10 @@ class Vehicle {
      * Distance traveled.
      */
     this.distance += km
-
+    this.pointsPassedSinceLastUpdate = pointsPassedSinceLastUpdate
     this.speed = Math.round(km / h || 0)
     this.position = position
-    this.lastPositionUpdate = date
+    this.lastPositionUpdate = time
     this.ema = haversine(this.heading, this.position)
     if (metersMoved > 0) {
       this.bearing = bearing(lastPosition, position) || 0
