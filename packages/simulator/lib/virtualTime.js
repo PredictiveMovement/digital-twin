@@ -1,20 +1,47 @@
 const moment = require('moment')
+const { take, interval, toArray, tap, firstValueFrom } = require('rxjs')
+const { scan, share, shareReplay, map } = require('rxjs/operators')
+const {
+  addMilliseconds,
+  startOfDay,
+  addHours,
+  getUnixTime,
+} = require('date-fns')
 
 class VirtualTime {
   constructor(timeMultiplier = 1, startHour = 2) {
     this.startHour = startHour
-    this.setTimeMultiplier(timeMultiplier)
+    this.timeMultiplier = timeMultiplier
+    this.startHour = startHour
     this.reset()
   }
 
   reset() {
-    this.startDate = Date.now()
-    this.offset = moment().startOf('day').add(this.startHour, 'hours').diff()
+    const startDate = addHours(startOfDay(new Date()), 2)
+    const msUpdateFrequency = 100
+    this.currentTime = interval(msUpdateFrequency).pipe(
+      scan(
+        (acc, _curr) =>
+          addMilliseconds(acc, msUpdateFrequency * this.timeMultiplier),
+        startDate
+      ),
+      shareReplay(1)
+    )
   }
 
-  time() {
-    const diff = Date.now() - this.startDate
-    return Date.now() + this.offset + diff * this.timeMultiplier
+  getTimeStream() {
+    return this.currentTime()
+  }
+
+  getTimeInMilliseconds() {
+    return this.currentTime.pipe(
+      map(getUnixTime),
+      map((e) => e * 1000)
+    )
+  }
+
+  getTimeInMillisecondsAsPromise() {
+    return firstValueFrom(this.getTimeInMilliseconds())
   }
 
   play() {
@@ -31,20 +58,15 @@ class VirtualTime {
     if (this.timeMultiplier === Infinity) return // return directly if time is set to infinity
     const waitUntil = time
     return await new Promise((resolve) => {
-      return setInterval(() => {
-        if (this.time() >= waitUntil) return resolve()
+      return setInterval(async () => {
+        if ((await this.getTimeInMillisecondsAsPromise()) >= waitUntil)
+          return resolve()
       }, checkInterval)
     })
   }
 
-  timeInSeconds(seconds) {
-    return moment(this.time()).add(seconds, 'seconds')
-  }
-
   // Set the speed in which time should advance
   setTimeMultiplier(timeMultiplier) {
-    this.offset = this.time() - Date.now() // save the current offset before reseting the time multiplier
-    this.startDate = Date.now()
     this.timeMultiplier = timeMultiplier - 1 // it makes more sense to have 1 mean realtime and 0 means stop the time.
   }
 }
