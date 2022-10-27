@@ -160,8 +160,6 @@ const engine = {
       )
     )
 
-    experiment.measureStationUpdates.subscribe(console.log)
-
     experiment.dispatchedBookings.subscribe((booking) =>
       debug(`Booking ${booking?.id} dispatched to car ${booking?.car?.id}`)
     )
