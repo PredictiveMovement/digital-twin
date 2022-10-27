@@ -53,7 +53,8 @@ const register = (experiment, socket) => {
             'booking update',
             booking.id,
             booking.status,
-            booking?.passenger?.name
+            booking?.passenger?.name,
+            booking.carId
           )
         })
         socket.emit('bookings', bookings)

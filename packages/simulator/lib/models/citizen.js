@@ -162,14 +162,12 @@ class Citizen {
       shareReplay()
     )
 
-    // this.pickedUpEvents = this.bookings.pipe(
-    //   mergeMap((booking) => booking.pickedUpEvents)
-    // )
-    // this.deliveredEvents = this.bookings.pipe(
-    //   mergeMap((booking) => booking.deliveredEvents)
-    // )
-    this.pickedUpEvents = new ReplaySubject()
-    this.deliveredEvents = new ReplaySubject()
+    this.pickedUpEvents = this.bookings.pipe(
+      mergeMap((booking) => booking.pickedUpEvents)
+    )
+    this.deliveredEvents = this.bookings.pipe(
+      mergeMap((booking) => booking.deliveredEvents)
+    )
   }
 
   reset() {
