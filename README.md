@@ -71,7 +71,7 @@ Add .env with the mapbox token `REACT_APP_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>` - we
 - Taxis do not cluster.
 - Trips are not displayed in passenger's hoverInfoBox.
 - Emitting `passengerUpdates` makes the simulator crash with a `maximum call stack exceeded` error.
-- Generated passengers are clumped togehter, sometiems 1, sometimes 7 or more passengers are on the same spot.
+- Generated passengers are clumped together, sometimes 1, sometimes 7 or more passengers are on the same spot.
 
 ## License
 
