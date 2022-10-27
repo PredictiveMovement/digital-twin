@@ -232,6 +232,10 @@ function register(io) {
       }
     })
 
+    const measureStationSub = experiment.measureStationUpdates.subscribe((measurement) =>
+      io.emit('measureStationUpdates', measurement)
+    )
+
     const bookingSub = experiment.bookingUpdates
       .pipe(cleanBookings(), bufferTime(100, null, 1000))
       .subscribe((bookings) => {
@@ -241,7 +245,7 @@ function register(io) {
       })
     io.emit('parameters', experiment.parameters)
     replayBaseDataToNewClient(io)
-    return [carSubscription, bookingSub, passengerSub, timeSubscription]
+    return [carSubscription, bookingSub, passengerSub, timeSubscription, measureStationSub]
   }
   if (!experiment) {
     experiment = engine.createExperiment({ defaultEmitters })
