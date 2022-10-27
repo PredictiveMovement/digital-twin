@@ -29,7 +29,7 @@ const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
 const statistics = require('./lib/statistics')
 const { info, error, debug } = require('./lib/log')
-const { haversine } = require('./lib/distance')
+const { haversine, getNrOfPointsBetween } = require('./lib/distance')
 
 const static = {
   busStops: regions.pipe(mergeMap((region) => region.stops)),
@@ -129,9 +129,22 @@ const engine = {
                   mPosition,
                   pointsPassedSinceLastUpdate = [],
                 }) =>
-                  pointsPassedSinceLastUpdate.some(
-                    (hej) => haversine(hej.position, mPosition) < 15
-                  ) || haversine(carPosition, mPosition) < 15
+                  [...pointsPassedSinceLastUpdate, { position: carPosition }]
+                    .map(({ position, meters }, index, arr) => {
+                      if (arr.length > index + 1) {
+                        return {
+                          p1: position,
+                          p2: arr[index + 1].position,
+                          meters,
+                        }
+                      }
+                      return null
+                    })
+                    .filter((e) => !!e)
+                    .flatMap(({ p1, p2, meters }) =>
+                      getNrOfPointsBetween(p1, p2, Math.round(meters / 2))
+                    )
+                    .some((position) => haversine(position, mPosition) < 10)
               ),
               toArray()
             )
@@ -150,33 +163,7 @@ const engine = {
         events.map(({ id: carId, mId: stationId }) => ({ carId, stationId }))
       )
     )
-    // previousStations:
-    // [
-    // {
-    // carPosition: Position { lon: 12.77932048, lat: 56.01714356 },
-    // mPosition: { lat: 56.01811632664044, lon: 12.766229298474165 },
-    // id: 'v-k4RU-aySd',
-    // mId: 19101
-    // },
-    // {
-    // carPosition: Position { lon: 12.77932048, lat: 56.01714356 },
-    // mPosition: { lat: 56.01830515683855, lon: 12.766234440035447 },
-    // id: 'v-k4RU-aySd',
-    // mId: 19102
-    // }
-    // ]
-    //
-    //
-    //
-    // currentStations:
-    // [
-    // {
-    // carPosition: Position { lon: 12.77932048, lat: 56.01714356 },
-    // mPosition: { lat: 56.01830515683855, lon: 12.766234440035447 },
-    // id: 'v-k4RU-aySd',
-    // mId: 19102
-    // }
-    // ]
+
     experiment.measureStationUpdates.subscribe(console.log)
 
     experiment.dispatchedBookings.subscribe((booking) =>
