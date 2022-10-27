@@ -1,5 +1,5 @@
 const { share, merge, switchMap, shareReplay } = require('rxjs')
-const { mergeMap, map, scan, catchError } = require('rxjs/operators')
+const { mergeMap, map, scan, catchError, distinct } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
 
@@ -12,7 +12,10 @@ const { info, error, debug } = require('./lib/log')
 
 const static = {
   busStops: regions.pipe(mergeMap((region) => region.stops)),
-  lineShapes: regions.pipe(mergeMap((region) => region.lineShapes)),
+  lineShapes: regions.pipe(
+    mergeMap((region) => region.lineShapes),
+    shareReplay()
+  ),
   postombud: kommuner.pipe(mergeMap((kommun) => kommun.postombud)),
   kommuner,
 }
@@ -46,7 +49,10 @@ const engine = {
         mergeMap((kommun) => kommun.measureStations)
       ),
       parameters,
-      passengers: regions.pipe(mergeMap((region) => region.citizens)),
+      passengers: regions.pipe(
+        mergeMap((region) => region.citizens),
+        shareReplay()
+      ),
       taxis: regions.pipe(mergeMap((region) => region.taxis)),
     }
     experiment.passengers
@@ -65,15 +71,7 @@ const engine = {
       })
 
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(
-      mergeMap((booking) =>
-        merge(
-          booking.queuedEvents,
-          booking.pickedUpEvents,
-          booking.assignedEvents,
-          booking.deliveredEvents
-        )
-      ),
-      catchError((err) => error('booking updates err', err)),
+      mergeMap((booking) => booking.statusEvents),
       share()
     )
 
