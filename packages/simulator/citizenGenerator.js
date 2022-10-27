@@ -57,11 +57,11 @@ const randomPositions = perlin
 
 const generateCitizensForMunicipalities = (municipalities, numberOfCitizens, totalPopulation) => {
   return from(municipalities).pipe(
-    mergeMap(municipality => {
+    mergeMap(async municipality => {
       const numberOfCitizensInMunicipality = Math.ceil(
         (municipality.population / totalPopulation) * numberOfCitizens
       )
-      const citizens = generateCitizensForMunicipality(
+      const citizens = await generateCitizensForMunicipality(
         municipality,
         numberOfCitizensInMunicipality,
       )
@@ -71,7 +71,7 @@ const generateCitizensForMunicipalities = (municipalities, numberOfCitizens, tot
 }
 
 const generateCitizensForMunicipality = async (municipality, numberOfCitizensInMunicipality) => {
-  console.log('generateCitizensForMunicipality(...)', municipality.name)
+  console.log('generateCitizensForMunicipality(...)', municipality.name, municipality.population, numberOfCitizensInMunicipality)
   
   const citizens = await municipality.squares.map(async square => {
     const populationRatio = square.population / municipality.population
@@ -83,13 +83,9 @@ const generateCitizensForMunicipality = async (municipality, numberOfCitizensInM
 }
 
 const generateCitizensInSquare = async (square, numberOfCitizens) => {
-  console.log('generateCitizensInSquare(...)', square)
-  const { population, position } = square
+  console.log('generateCitizensInSquare(...)', square.population, numberOfCitizens)
+  const { position } = square
   const citizens = []
-
-  // randomPositions
-  //           .slice(0, numberOfCitizens)
-  //           .map(({ x, y }) => addMeters(position, { x, y }))
 
   for (let i = 0; i < numberOfCitizens; i++) {
     // TODO: Random position for each citizen (within the square)
@@ -99,6 +95,7 @@ const generateCitizensInSquare = async (square, numberOfCitizens) => {
     citizens.push(citizen)
   }
 
+  console.log('Citizens', citizens)
   return citizens
 }
 
