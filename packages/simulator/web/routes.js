@@ -13,7 +13,7 @@ function subscribe(experiment, socket) {
     require('./routes/passengers').register(experiment, socket),
     require('./routes/postombud').register(experiment, socket),
     require('./routes/time').register(experiment, socket),
-  ]
+  ].flat()
 }
 
 function register(io) {
