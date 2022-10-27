@@ -16,12 +16,16 @@ function subscribe(experiment, socket) {
   ].flat()
 }
 
+function start(socket) {
+  const experiment = engine.createExperiment({ defaultEmitters })
+  experiment.subscriptions = subscribe(experiment, socket)
+  socket.data.experiment = experiment
+}
+
 function register(io) {
   io.on('connection', function (socket) {
     if (!socket.data.experiment) {
-      const experiment = engine.createExperiment({ defaultEmitters })
-      experiment.subscriptions = subscribe(experiment, socket)
-      socket.data.experiment = experiment
+      start(socket)
     }
 
     socket.emit('parameters', socket.data.experiment.parameters)
@@ -32,11 +36,7 @@ function register(io) {
     socket.emit('reset')
     socket.on('reset', () => {
       socket.data.experiment.subscriptions.map((e) => e.unsubscribe())
-      socket.data.experiment = engine.createExperiment({ defaultEmitters })
-      socket.data.experiment.subscriptions = subscribe(
-        socket.data.experiment,
-        socket
-      )
+      start(socket)
     })
 
     socket.on('carLayer', (val) => (socket.data.emitCars = val))
