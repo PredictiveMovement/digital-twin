@@ -10,9 +10,6 @@ const register = (experiment, socket) => {
     experiment.passengers.subscribe((passenger) =>
       socket.emit('passenger', passenger.toObject())
     ),
-    experiment.passengers.subscribe((passenger) =>
-      socket.emit('passenger', passenger.toObject())
-    ),
     experiment.passengerUpdates.subscribe((passenger) =>
       socket.emit('passenger', passenger.toObject())
     ),
