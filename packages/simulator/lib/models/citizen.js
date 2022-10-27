@@ -24,7 +24,10 @@ const Position = require('./position')
 class Citizen {
   constructor({ name, position, workplace, home, startPosition, kommun }) {
     this.id = 'p-' + safeId()
-    this.workplace = { name: workplace.name, position: new Position(workplace.position) }
+    this.workplace = {
+      name: workplace.name,
+      position: new Position(workplace.position),
+    }
     this.home = { name: home.name, position: new Position(home.position) }
     this.name = name
     this.position = new Position(position)
@@ -151,14 +154,12 @@ class Citizen {
       shareReplay()
     )
 
-    // this.pickedUpEvents = this.bookings.pipe(
-    //   mergeMap((booking) => booking.pickedUpEvents)
-    // )
-    // this.deliveredEvents = this.bookings.pipe(
-    //   mergeMap((booking) => booking.deliveredEvents)
-    // )
-    this.pickedUpEvents = new ReplaySubject()
-    this.deliveredEvents = new ReplaySubject()
+    this.pickedUpEvents = this.bookings.pipe(
+      mergeMap((booking) => booking.pickedUpEvents)
+    )
+    this.deliveredEvents = this.bookings.pipe(
+      mergeMap((booking) => booking.deliveredEvents)
+    )
   }
 
   reset() {

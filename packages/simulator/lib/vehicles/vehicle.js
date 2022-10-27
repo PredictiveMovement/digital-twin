@@ -75,7 +75,10 @@ class Vehicle {
         return
       }
       this.updatePosition(newPosition)
-      if (!next) this.stopped()
+      if (!next) {
+        clearInterval(this._interval)
+        this.stopped()
+      }
     }, 200)
   }
 
