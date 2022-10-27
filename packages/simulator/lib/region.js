@@ -27,6 +27,7 @@ const {
   pluck,
   catchError,
   switchMap,
+  bufferTime,
 } = require('rxjs/operators')
 const Booking = require('./models/booking')
 const { busDispatch } = require('./dispatch/busDispatch')
@@ -90,7 +91,6 @@ class Region {
     this.geometry = geometry
     this.name = name
     this.id = id
-    this.unhandledBookings = new Subject()
     this.stops = stops
     this.citizens = citizens
     this.lineShapes = lineShapes
@@ -127,31 +127,23 @@ class Region {
       )
     )
 
-    this.stopAssignments
-      .pipe(mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5))
-      .subscribe(() => {})
-
-    this.citizens
-      .pipe(mergeMap((passenger) => passenger.bookings))
-      .subscribe((booking) => {
-        console.log(`Passenger ${booking?.passenger?.name} booked a taxi`)
-        this.unhandledBookings.next(booking)
-      })
+    this.unhandledBookings = this.citizens.pipe(
+      mergeMap((passenger) => passenger.bookings)
+    )
 
     /*
+    // TODO: Move this to dispatch central:
     // TODO: add kmeans clustering to group bookings and cars by pickup
     // send those to vroom and get back a list of assignments
     // for each assignment, take the booking and dispatch it to the car / fleet */
-    this.dispatchedBookings = new ReplaySubject()
-    this.unhandledBookings
-      .pipe(
-        scan((acc, booking) => [...acc, booking], []),
-        map((bookings) =>
-          bookings.filter((b) => !b.assigned && !b.dispatching)
-        ),
+    this.dispatchedBookings = merge(
+      this.stopAssignments.pipe(
+        mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5)
+      ),
+      this.unhandledBookings.pipe(
+        bufferTime(5000),
         filter((bookings) => bookings.length > 10),
-        tap((bookings) => bookings.forEach((b) => (b.dispatching = true))), // mark all bookings as calculating so we don't include them in the next batch
-        // tap((bookings) => info('Clustering bookings', bookings.length)),
+        tap((bookings) => info('Clustering bookings', bookings.length)),
         // switchMap((bookings) => clusterPositions(bookings)), // continously cluster bookings
         // mergeAll(),
         // map(({ center, items: bookings }) => ({ center, bookings })),
@@ -171,22 +163,25 @@ class Region {
             // ),
             // takeNearest(center, 10),
             toArray(),
-            tap(taxis => console.log('dispatching taxis bookings', taxis.length, bookings.length)),
+            tap((taxis) =>
+              console.log(
+                'dispatching taxis bookings',
+                taxis.length,
+                bookings.length
+              )
+            ),
             filter((taxis) => taxis.length),
             mergeMap((taxis) => taxiDispatch(taxis, bookings), 3)
           )
         ),
         catchError((err) => error('taxi dispatch err', err)),
+        mergeAll(),
+        map(({ taxi, bookings }) =>
+          bookings.map((booking) => taxi.handleBooking(booking))
+        ),
         mergeAll()
       )
-      .subscribe(({ taxi, bookings }) => {
-        bookings.forEach((booking) => {
-          taxi.handleBooking(booking)
-          booking.passenger?.kommun.manualBookings.next(booking) // TODO: dispatch to a fleet instead
-          this.dispatchedBookings.next(booking)
-        })
-      })
-
+    )
     // Move this to passenger instead
     /*this.unhandledBookings.pipe(
       mergeMap((booking) => taxiDispatch(this.taxis, booking)),
@@ -220,7 +215,7 @@ const stopsToBooking = ([pickup, destination]) =>
     pickup,
     destination,
     lineNumber: pickup.lineNumber ?? destination.lineNumber,
-    type:'busstop'
+    type: 'busstop',
   })
 
 module.exports = Region
