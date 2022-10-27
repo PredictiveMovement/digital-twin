@@ -49,6 +49,11 @@ function register(io) {
     })
 
     socket.emit('parameters', socket.data.experiment.parameters)
+
+    socket.on('disconnect', (reason) => {
+      info('Client disconnected', reason)
+      socket.data.experiment.subscriptions.map((e) => e.unsubscribe())
+    })
   })
 }
 module.exports = {
