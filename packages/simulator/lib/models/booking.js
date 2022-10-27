@@ -33,7 +33,7 @@ class Booking {
   get type() {
     if (this._type) {
       return this._type
-    } else if (booking.passenger) {
+    } else if (this.booking?.passenger) {
       return 'passenger'
     } else {
       return 'package'
