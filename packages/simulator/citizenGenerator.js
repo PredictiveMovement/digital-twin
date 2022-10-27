@@ -70,18 +70,21 @@ const generateCitizensForMunicipalities = (municipalities, numberOfCitizens, tot
   )
 }
 
-const generateCitizensForMunicipality = (municipality, numberOfCitizensInMunicipality) => {
+const generateCitizensForMunicipality = async (municipality, numberOfCitizensInMunicipality) => {
   console.log('generateCitizensForMunicipality(...)', municipality.name)
-  const citizens = municipality.squares.map(square => {
+  
+  const citizens = await municipality.squares.map(async square => {
     const populationRatio = square.population / municipality.population
     const numberOfCitizens = populationRatio * numberOfCitizensInMunicipality
-    return generateCitizensInSquare(square, numberOfCitizens)
+    return await generateCitizensInSquare(square, numberOfCitizens)
   })
+
   return citizens
 }
 
-const generateCitizensInSquare = (square, numberOfCitizens) => {
-  const { x, y, population } = square
+const generateCitizensInSquare = async (square, numberOfCitizens) => {
+  console.log('generateCitizensInSquare(...)', square)
+  const { population, position } = square
   const citizens = []
 
   // randomPositions
@@ -90,21 +93,27 @@ const generateCitizensInSquare = (square, numberOfCitizens) => {
 
   for (let i = 0; i < numberOfCitizens; i++) {
     // TODO: Random position for each citizen (within the square)
-    const citizen = generateCitizen(position)
+    const {x,y} = randomPositions[0]
+    const citizenPosition = addMeters(position, { x, y })
+    const citizen = await generateCitizen(citizenPosition)
     citizens.push(citizen)
   }
+
   return citizens
 }
 
-const generateCitizen = (position) => {
-  // const home = getNearestAddressForPosition(position)
+const generateCitizen = async (position) => {
+  const home = await getNearestAddressForPosition(position)
+  const work = null
+  const name = 'Ada'
   // const work = getNearestAddressForPosition(randomize(home.nearestPostalOmbud))
   // const name = randomNames()
-  // return new Citizen(name, home, work)
+  return new Citizen(name, home, work)
 }
 
-const getNearestAddressForPosition = () => {
+const getNearestAddressForPosition = async (position) => {
   // TODO: Lookup nearest address so home/work becomes a real place.
+  return await pelias.nearest(homePosition)
 }
 
 /**
