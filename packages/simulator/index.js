@@ -18,6 +18,7 @@ const static = {
 }
 
 const engine = {
+  subscriptions: [],
   createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
     const savedParams = readParameters()
 
@@ -32,7 +33,9 @@ const engine = {
     statistics.collectExperimentMetadata(parameters)
 
     const experiment = {
-      virtualTime, // TODO: move this from being a static property to being a property of the experiment
+      ...static,
+      subscriptions: [],
+      virtualTime,
       cars: kommuner.pipe(mergeMap((kommun) => kommun.cars)),
       dispatchedBookings: merge(
         regions.pipe(mergeMap((r) => r.dispatchedBookings)),
@@ -45,7 +48,6 @@ const engine = {
       parameters,
       passengers: regions.pipe(mergeMap((region) => region.citizens)),
       taxis: regions.pipe(mergeMap((region) => region.taxis)),
-      ...static,
     }
     experiment.passengers
       .pipe(
@@ -74,14 +76,15 @@ const engine = {
       catchError((err) => error('booking updates err', err)),
       share()
     )
-    // experiment.passengerUpdates = experiment.passengers.pipe(
-    //   mergeMap((passenger) =>
-    //     merge(passenger.deliveredEvents, passenger.pickedUpEvents)
-    //   ),
-    //   catchError((err) => error('passenger updates err', err)),
 
-    //   share()
-    // )
+    experiment.passengerUpdates = experiment.passengers.pipe(
+      mergeMap((passenger) =>
+        merge(passenger.deliveredEvents, passenger.pickedUpEvents)
+      ),
+      catchError((err) => error('passenger updates err', err)),
+
+      share()
+    )
 
     // TODO: Rename to vehicleUpdates
     experiment.carUpdates = merge(
