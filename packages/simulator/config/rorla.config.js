@@ -1,7 +1,7 @@
 const includedMunicipalities = [
   'Arjeplog',
-  // 'Arvidsjaur',
-  // 'Boden',
+  'Arvidsjaur',
+  'Boden',
   // 'Gällivare',
   // 'Haparanda',
   // 'Jokkmokk',

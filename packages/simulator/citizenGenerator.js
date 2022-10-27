@@ -70,37 +70,56 @@ const generateCitizensForMunicipalities = (municipalities, numberOfCitizens, tot
   )
 }
 
+const onlyPopulatedSquares = (square) => square.population > 0
+
 const generateCitizensForMunicipality = async (municipality, numberOfCitizensInMunicipality) => {
   console.log('generateCitizensForMunicipality(...)', municipality.name, municipality.population, numberOfCitizensInMunicipality)
-  
-  const citizens = await municipality.squares.map(async square => {
-    const populationRatio = square.population / municipality.population
-    const numberOfCitizens = populationRatio * numberOfCitizensInMunicipality
-    return await generateCitizensInSquare(square, numberOfCitizens)
+  municipality.squares = municipality.squares.filter(onlyPopulatedSquares)
+  municipality.squares = municipality.squares.map((square, i) => enrichSquare(square, municipality, i, numberOfCitizensInMunicipality))
+  const pickedSquares = pickSquares(municipality, numberOfCitizensInMunicipality)
+  return new Promise((resolve, reject) => {
+    let citizens = []
+    let iteration = 0
+    try {
+      pickedSquares.forEach(async (square) => {
+        const result = await generateCitizenInSquare(square, iteration, municipality.postombud)
+        iteration = result.iteration
+        // if iteration > 10 000, set iteration to 0
+        citizens.push(result.citizen)
+      })
+    } catch (error) {
+      reject(error)
+    }
+    return resolve(citizens)
   })
-
-  return citizens
 }
 
-const generateCitizensInSquare = async (square, numberOfCitizens) => {
-  console.log('generateCitizensInSquare(...)', square.population, numberOfCitizens)
-  const { position } = square
-  const citizens = []
+const onPopulationRatio = (a, b) => b.populationRatio - a.populationRatio
 
-  for (let i = 0; i < numberOfCitizens; i++) {
-    // TODO: Random position for each citizen (within the square)
-    const {x,y} = randomPositions[0]
-    const citizenPosition = addMeters(position, { x, y })
-    const citizen = await generateCitizen(citizenPosition)
-    citizens.push(citizen)
+const pickSquares = (municipality, numberOfCitizens) => {
+  const result = []
+  let squares = municipality.squares
+  for(let i = numberOfCitizens; i > 0; i--) {
+    squares = squares.sort(onPopulationRatio)
+    result.push({...squares[0]})
+    console.log(squares[0].name, squares[0].population)
+    squares[0].populationRatio = squares[0].populationRatio * 0.8333
   }
+  return result
+}
 
-  console.log('Citizens', citizens)
-  return citizens
+const generateCitizenInSquare = async (square, iteration, postombud) => {
+  const result = await getNearestAddressForPosition(square, iteration)
+  iteration = result.iteration
+  const home = result.address
+  console.log("HOME", home)
+  // TODO WORK
+  const citizen = await generateCitizen(home)
+  return { citizen, iteration }
 }
 
 const generateCitizen = async (position) => {
-  const home = await getNearestAddressForPosition(position)
+  const home = position
   const work = null
   const name = 'Ada'
   // const work = getNearestAddressForPosition(randomize(home.nearestPostalOmbud))
@@ -108,9 +127,18 @@ const generateCitizen = async (position) => {
   return new Citizen(name, home, work)
 }
 
-const getNearestAddressForPosition = async (position) => {
-  // TODO: Lookup nearest address so home/work becomes a real place.
-  return await pelias.nearest(homePosition)
+const getNearestAddressForPosition = async (square, iteration) => {
+  let address;
+  while(!address) {
+    try {
+      console.log("trying to get address", square.name, iteration)
+      const position = addMeters(square.position, randomPositions[iteration])
+      address = await pelias.nearest(position)
+    } catch (error) {
+      iteration += 1
+    }
+  }
+  return {address, iteration}
 }
 
 /**
@@ -120,7 +148,7 @@ const simplerGenerator = () => {
   read(config.includedMunicipalities).then(municipalities => {
     const totalPopulation = municipalities.reduce((acc, m) => (acc + m.population), 0)
     console.log(totalPopulation)
-    
+
     return generateCitizensForMunicipalities(municipalities, AT_LEAST_NUMBER_OF_CITIZENS, totalPopulation).subscribe(
       citizenSerializer,
       console.error
@@ -131,12 +159,22 @@ const simplerGenerator = () => {
 const computeSquares = async (geometry) => {
   return new Promise((resolve, reject) => {
     getPopulationSquares(geometry).pipe(
-      toArray(), 
+      toArray(),
       finalize()
-    ).subscribe((squares) => { 
+    ).subscribe((squares) => {
       resolve(squares)
     })
   })
+}
+
+const enrichSquare = (square, municipality, i) => {
+  const populationRatio = square.population / municipality.population
+  const rOffset = Math.random() / 100 // all squares with same population should have different positions
+  return {
+    name: `${municipality.name} ${i + 1}`,
+    populationRatio: populationRatio + rOffset,
+    ...square
+  }
 }
 
 const read = async (includedMunicipalities) => {
@@ -152,7 +190,6 @@ const read = async (includedMunicipalities) => {
           kod,
         }) => {
           const squares = await computeSquares({geometry})
-          // console.log('Squares', squares)
           return {
             geometry,
             name: namn,
