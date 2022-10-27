@@ -5,46 +5,12 @@ const { from, shareReplay, take, ReplaySubject } = require('rxjs')
 const { map, tap, filter, reduce, mergeMap } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
-const population = require('./population')
 const packageVolumes = require('./packageVolumes')
-const postombud = require('./postombud')
-const measureStations = require('./measureStations')
-const inside = require('point-in-polygon')
-const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const Pelias = require('../lib/pelias')
 const { getCitizens } = require('../simulator/citizens')
 const { includedMunicipalities, defaultEmitters } = require('../config')
 const { generateBookingsInKommun } = require('../simulator/bookings')
-
-function getPopulationSquares({ geometry: { coordinates } }) {
-  return population.pipe(
-    filter(({ position: { lon, lat } }) =>
-      coordinates.some((coordinates) => inside([lon, lat], coordinates))
-    ),
-    map(({ position, population }) => ({ position, population })), // only keep the essentials to save memory
-    shareReplay()
-  )
-}
-
-function getCommercialAreas(kommunkod) {
-  return commercialAreas.pipe(
-    filter((area) => area.properties.KOMMUNKOD === kommunkod),
-    shareReplay()
-  )
-}
-
-function getPostombud(kommunName) {
-  return postombud.pipe(
-    filter((ombud) => kommunName.startsWith(ombud.kommun)),
-    shareReplay()
-  )
-}
-function getMeasureStations(kommunName) {
-  return measureStations.pipe(
-    filter((measureStation) => kommunName.startsWith(measureStation.kommun)),
-    shareReplay()
-  )
-}
+const { getPopulationSquares, getCommercialAreas, getPostombud, getMeasureStations} = require('./kommunHelpers')
 
 function read() {
   return from(data).pipe(

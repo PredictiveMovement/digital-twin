@@ -6,10 +6,16 @@ const {
   mergeMap,
   concatMap,
   toArray,
-  zipWith
+  zipWith,
+  tap,
+  reduce,
+  shareReplay,
 } = require('rxjs/operators')
+const { from, map} = require('rxjs')
 const perlin = require('perlin-noise')
 
+const config = require('./config')
+const municipalityData = require('./data/kommuner.json')
 
 const pelias = require('./lib/pelias')
 const { addMeters } = require('./lib/distance')
@@ -19,19 +25,24 @@ const kommuner = require('./streams/kommuner')
 const { safeId } = require('./lib/id')
 const log = require('./lib/log')
 
-const NUMBER_OF_CITIZENS = 3000
+const { getPopulationSquares, getPostombud } = require('./streams/kommunHelpers')
+const population = require('./streams/population')
+
+const AT_LEAST_NUMBER_OF_CITIZENS = 100
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info'
 
 const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
 
 const execute = () => {
   console.log(
-    `Generating and saving ${NUMBER_OF_CITIZENS} citizens`
+    `Generating and saving ${AT_LEAST_NUMBER_OF_CITIZENS} citizens`
   )
-  generatePassengerDetails(kommuner, NUMBER_OF_CITIZENS).subscribe(
-    citizenSerializer,
-    console.error
-  )
+  // generatePassengerDetails(kommuner, AT_LEAST_NUMBER_OF_CITIZENS).subscribe(
+  //   citizenSerializer,
+  //   console.error
+  // )
+
+  simplerGenerator()
 }
 
 // generate a pattern of random positions so we can take x out of these and get a natural pattern of these positions
@@ -43,6 +54,116 @@ const randomPositions = perlin
     probability,
   }))
   .sort((a, b) => b.probability - a.probability) // sort them so we can just pick how many we want
+
+const generateCitizensForMunicipalities = (municipalities, numberOfCitizens, totalPopulation) => {
+  return from(municipalities).pipe(
+    mergeMap(municipality => {
+      const numberOfCitizensInMunicipality = Math.ceil(
+        (municipality.population / totalPopulation) * numberOfCitizens
+      )
+      const citizens = generateCitizensForMunicipality(
+        municipality,
+        numberOfCitizensInMunicipality,
+      )
+      return citizens
+    })
+  )
+}
+
+const generateCitizensForMunicipality = (municipality, numberOfCitizensInMunicipality) => {
+  console.log('generateCitizensForMunicipality(...)', municipality.name)
+  const citizens = municipality.squares.map(square => {
+    const populationRatio = square.population / municipality.population
+    const numberOfCitizens = populationRatio * numberOfCitizensInMunicipality
+    return generateCitizensInSquare(square, numberOfCitizens)
+  })
+  return citizens
+}
+
+const generateCitizensInSquare = (square, numberOfCitizens) => {
+  const { x, y, population } = square
+  const citizens = []
+
+  // randomPositions
+  //           .slice(0, numberOfCitizens)
+  //           .map(({ x, y }) => addMeters(position, { x, y }))
+
+  for (let i = 0; i < numberOfCitizens; i++) {
+    // TODO: Random position for each citizen (within the square)
+    const citizen = generateCitizen(position)
+    citizens.push(citizen)
+  }
+  return citizens
+}
+
+const generateCitizen = (position) => {
+  // const home = getNearestAddressForPosition(position)
+  // const work = getNearestAddressForPosition(randomize(home.nearestPostalOmbud))
+  // const name = randomNames()
+  // return new Citizen(name, home, work)
+}
+
+const getNearestAddressForPosition = () => {
+  // TODO: Lookup nearest address so home/work becomes a real place.
+}
+
+/**
+ * A simpler generator that hopefully does things right.
+ */
+const simplerGenerator = () => {
+  read(config.includedMunicipalities).then(municipalities => {
+    const totalPopulation = municipalities.reduce((acc, m) => (acc + m.population), 0)
+    console.log(totalPopulation)
+    
+    return generateCitizensForMunicipalities(municipalities, AT_LEAST_NUMBER_OF_CITIZENS, totalPopulation).subscribe(
+      citizenSerializer,
+      console.error
+    )
+  });
+}
+
+const computeSquares = async (geometry) => {
+  return new Promise((resolve, reject) => {
+    getPopulationSquares(geometry).pipe(
+      toArray(), 
+      finalize()
+    ).subscribe((squares) => { 
+      resolve(squares)
+    })
+  })
+}
+
+const read = async (includedMunicipalities) => {
+  return new Promise((resolve, reject) => {
+    from(municipalityData).pipe(
+      filter(({ namn }) =>
+        includedMunicipalities.some((name) => namn.startsWith(name))
+      ),
+      mergeMap(
+        async ({
+          geometry,
+          namn,
+          kod,
+        }) => {
+          const squares = await computeSquares({geometry})
+          // console.log('Squares', squares)
+          return {
+            geometry,
+            name: namn,
+            id: kod,
+            // center: await Pelias.search(namn).then((res) => res.position),
+            squares: squares.sort((a, b) => b.population - a.population),
+            postombud: getPostombud(namn),
+            population: squares.reduce((a, b) => a + b.population, 0),
+          }
+        }
+      ),
+      toArray(),
+    ).subscribe(municipalities => {
+      return resolve(municipalities)
+    })
+  })
+}
 
 const generatePassengerDetails = (kommuner, numberOfPassengers) =>
   kommuner.pipe(
