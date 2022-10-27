@@ -22,9 +22,10 @@ class Drone extends Vehicle {
     if (!route) return
     if (virtualTime.timeMultiplier === Infinity)
       return this.updatePosition(route) // teleport mode
-    this._interval = setInterval(() => {
+    this._interval = setInterval(async () => {
       if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
-      const newPosition = interpolate.route(route, this.time()) ?? this.heading
+      const newPosition =
+        interpolate.route(route, await this.time()) ?? this.heading
       this.updatePosition(newPosition)
       const metersFromStart = haversine(this.position, this.startingFrom)
       this.altitude = Math.min(this.maximumAltitude, this.ema, metersFromStart)
@@ -42,7 +43,7 @@ class Drone extends Vehicle {
     return this.capacity > this.queue.length + this.cargo.length
   }
 
-  navigateTo(position) {
+  async navigateTo(position) {
     this.startingFrom = this.position
     this.heading = position
     if (!position) debugger
@@ -51,7 +52,7 @@ class Drone extends Vehicle {
     const h = km / this.maxSpeed
     const duration = h * 60 * 60
     this.route = {
-      started: this.time(),
+      started: await this.time(),
       distance,
       duration,
       geometry: {
@@ -68,7 +69,7 @@ class Drone extends Vehicle {
     }
     this.simulate(this.route)
 
-    return Promise.resolve(this.heading)
+    return this.heading
   }
 }
 

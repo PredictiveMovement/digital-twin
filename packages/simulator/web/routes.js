@@ -129,8 +129,8 @@ function register(io) {
     socket.on('reset', () => {
       subscriptions.map((e) => e.unsubscribe())
       experiment = engine.createExperiment({ defaultEmitters })
-      subscriptions = start(experiment)
       virtualTime.reset()
+      subscriptions = start(experiment)
     })
 
     socket.on('play', () => {
@@ -220,9 +220,9 @@ function register(io) {
     )
   }
   const start = (experiment) => {
-    setInterval(() => {
-      io.emit('time', experiment.virtualTime.time())
-    }, 1000)
+    const timeSubscription = virtualTime
+      .getTimeInMilliseconds()
+      .subscribe((milliseconds) => io.emit('time', milliseconds))
 
     const carSubscription = startCarUpdatesSubscription(experiment, io)
 
@@ -241,7 +241,7 @@ function register(io) {
       })
     io.emit('parameters', experiment.parameters)
     replayBaseDataToNewClient(io)
-    return [carSubscription, bookingSub, passengerSub]
+    return [carSubscription, bookingSub, passengerSub, timeSubscription]
   }
   if (!experiment) {
     experiment = engine.createExperiment({ defaultEmitters })
@@ -251,10 +251,6 @@ function register(io) {
   experiment.passengers.subscribe((passenger) => {
     io.emit('passenger', passenger.toObject())
   })
-
-  setInterval(() => {
-    io.emit('time', experiment.virtualTime.time())
-  }, 1000)
 
   experiment.passengers.subscribe((passenger) => {
     io.emit('passenger', passenger.toObject())

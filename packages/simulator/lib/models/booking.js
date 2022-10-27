@@ -24,42 +24,52 @@ class Booking {
       this.deliveredEvents
     )
   }
-  queued(car) {
-    this.queuedDateTime = virtualTime.time()
+  async queued(car) {
+    this.queuedDateTime = await virtualTime.getTimeInMillisecondsAsPromise()
     this.status = 'Queued'
     this.car = car
     this.queuedEvents.next(this)
   }
 
-  assign(car) {
-    this.assigned = this.assigned || virtualTime.time()
+  async assign(car) {
+    this.assigned =
+      this.assigned || (await virtualTime.getTimeInMillisecondsAsPromise())
     this.car = car
     this.status = 'Assigned'
     this.assignedEvents.next(this)
   }
 
-  moved(position, metersMoved, co2, cost) {
+  async moved(position, metersMoved, co2, cost) {
     this.position = position
     this.passenger?.moved(
       position,
       metersMoved,
       co2,
       cost,
-      virtualTime.time() - this.pickedUpDateTime
+      (await virtualTime.getTimeInMillisecondsAsPromise()) -
+        this.pickedUpDateTime
     )
     this.distance += metersMoved
     this.cost += cost
     this.co2 += co2
   }
 
-  pickedUp(position, date = virtualTime.time()) {
+  async pickedUp(
+    position,
+    date = virtualTime.getTimeInMillisecondsAsPromise()
+  ) {
+    date = await date
     this.pickupDateTime = date
     this.pickupPosition = position
     this.status = 'Picked up'
     this.pickedUpEvents.next(this)
   }
 
-  delivered(position, date = virtualTime.time()) {
+  async delivered(
+    position,
+    date = virtualTime.getTimeInMillisecondsAsPromise()
+  ) {
+    date = await date
     this.deliveredDateTime = date
     this.deliveredPosition = position
     this.deliveryTime = (date - (this.assigned || this.queued)) / 1000
