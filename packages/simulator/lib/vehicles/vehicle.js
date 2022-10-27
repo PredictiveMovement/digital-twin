@@ -64,7 +64,6 @@ class Vehicle {
     if (this.movementSubscription) {
       this.movementSubscription.unsubscribe()
     }
-    // clearInterval(this._interval)
     if (!route) return
     if (virtualTime.timeMultiplier === Infinity)
       return this.updatePosition(route) // teleport mode
