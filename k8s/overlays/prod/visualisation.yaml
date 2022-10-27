@@ -6,20 +6,9 @@ metadata:
 spec:
   tls:
     - hosts:
-        - rorla.iteam.services
         - rorla.predictivemovement.se
       secretName: rorla-prod-tls
   rules:
-    - host: rorla.iteam.services
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service: 
-                name: visualisation
-                port:
-                  number: 80
     - host: rorla.predictivemovement.se
       http:
         paths:

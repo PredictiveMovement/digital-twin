@@ -5,21 +5,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - rorla.iteam.services
         - rorla.predictivemovement.se
       secretName: rorla-prod-tls
   rules:
     - host: rorla.predictivemovement.se
-      http:
-        paths:
-          - path: /socket.io/.*
-            pathType: Prefix
-            backend:
-              service:
-                name: simulator
-                port:
-                  number: 4000
-    - host: rorla.iteam.services
       http:
         paths:
           - path: /socket.io/.*
