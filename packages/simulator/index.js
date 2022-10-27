@@ -1,9 +1,4 @@
-const {
-  share,
-  merge,
-  switchMap,
-  shareReplay,
-} = require('rxjs')
+const { share, merge, switchMap, shareReplay } = require('rxjs')
 const { mergeMap, map, scan, catchError } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
@@ -18,6 +13,8 @@ const { info, error, debug } = require('./lib/log')
 const static = {
   busStops: regions.pipe(mergeMap((region) => region.stops)),
   lineShapes: regions.pipe(mergeMap((region) => region.lineShapes)),
+  postombud: kommuner.pipe(mergeMap((kommun) => kommun.postombud)),
+  kommuner,
 }
 
 const engine = {
@@ -42,11 +39,9 @@ const engine = {
         kommuner.pipe(mergeMap((k) => k.dispatchedBookings))
       ),
       buses: regions.pipe(mergeMap((region) => region.buses)),
-      postombud: kommuner.pipe(mergeMap((kommun) => kommun.postombud)),
       measureStations: kommuner.pipe(
         mergeMap((kommun) => kommun.measureStations)
       ),
-      kommuner,
       parameters,
       passengers: regions.pipe(mergeMap((region) => region.citizens)),
       taxis: regions.pipe(mergeMap((region) => region.taxis)),
@@ -62,7 +57,7 @@ const engine = {
       .subscribe((booking) => {
         try {
           statistics.collectBooking(booking, parameters)
-        } catch(err) {
+        } catch (err) {
           error('collectBooking err', err)
         }
       })
@@ -89,7 +84,11 @@ const engine = {
     // )
 
     // TODO: Rename to vehicleUpdates
-    experiment.carUpdates = merge(experiment.cars, experiment.buses).pipe(
+    experiment.carUpdates = merge(
+      experiment.cars,
+      experiment.taxis,
+      experiment.buses
+    ).pipe(
       mergeMap((car) => car.movedEvents),
       catchError((err) => error('car updates err', err)),
 
