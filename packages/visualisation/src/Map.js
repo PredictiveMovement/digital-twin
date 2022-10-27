@@ -350,7 +350,7 @@ const Map = ({
 
   const passengerLayer = new ScatterplotLayer({
     id: 'passenger-layer',
-    data: passengers,
+    data: passengers.filter((p) => !p.inVehicle),
     //opacity: 0.7,
     stroked: false,
     filled: true,
