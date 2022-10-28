@@ -10,6 +10,7 @@ const {
   tap,
   reduce,
   shareReplay,
+  mergeAll,
 } = require('rxjs/operators')
 const { from, map } = require('rxjs')
 const perlin = require('perlin-noise')
@@ -73,7 +74,8 @@ const generateCitizensForMunicipalities = (
 
       // TODO: There is a problem with this mergeMap, we return empty citizens _before_ the generation is executed.
       return citizens
-    })
+    }),
+    mergeAll()
   )
 }
 
