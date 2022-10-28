@@ -34,24 +34,8 @@ class Bus extends Vehicle {
     this.heading = heading
     this.kommun = kommun
     this.startPosition = startPosition
+    this.capacity = 50 // TODO: fill this from the workshop poll
     this.co2PerKmKg = 1.3 // NOTE: From a quick google. Needs to be verified.
-
-    // NEVER USED NO MORE
-    // stops
-    //   .pipe(
-    //     pairwise(),
-    //     map(([pickup, destination]) => {
-    //       const busStop = new Booking({
-    //         // pickup and destination contains both position and arrival and departure time
-    //         pickup,
-    //         destination,
-    //         type: 'busstop',
-    //       })
-    //       console.log("STOPP", busStop.type)
-    //       this.handleBooking(busStop)
-    //     })
-    //   )
-    //   .subscribe(() => {})
   }
 
   async handleBooking(booking) {
@@ -84,28 +68,22 @@ class Bus extends Vehicle {
       return
     }
 
+    await this.waitAtPickup()
+
     this.lineNumber = this.booking.lineNumber
       ? this.booking.lineNumber
       : this.lineNumber
 
     this.booking.pickedUp(this.position)
-    if(this.booking.type !== "busstop") {
+    if (this.booking.type !== 'busstop') {
       this.cargo.push(this.booking)
     }
 
-    const departure = moment(
-      this.booking.pickup.departureTime,
-      'hh:mm:ss'
-    ).valueOf()
-    this.simulate(false) // pause interpolation while we wait
-    const waitingtime = moment(departure).diff(moment(virtualTime.time()))
-    // TODO: move this logic to vehicle so all bookings can have a departure time
-
-    if (waitingtime > 0) await virtualTime.waitUntil(departure)
     if (!this.booking) {
       this.simulate(false)
       return
     }
+    this.status = 'Delivery'
     return this.navigateTo(this.booking.destination.position) // resume simulation
   }
 }

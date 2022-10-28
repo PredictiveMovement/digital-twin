@@ -4,10 +4,10 @@ const interpolate = require('../interpolate')
 const Booking = require('../models/booking')
 const { safeId } = require('../id')
 const { assert } = require('console')
-const { error, info } = require('../log')
+const { error } = require('../log')
 const { virtualTime } = require('../virtualTime')
-const { throws } = require('assert')
 const Position = require('../models/position')
+const moment = require('moment')
 
 const { ReplaySubject } = require('rxjs')
 class Vehicle {
@@ -122,16 +122,25 @@ class Vehicle {
     return booking
   }
 
-  pickup() {
+  async waitAtPickup() {
+    const departure = moment(
+      this.booking.pickup.departureTime,
+      'hh:mm:ss'
+    ).valueOf()
+    const waitingtime = moment(departure).diff(moment(virtualTime.time()))
+
+    if (waitingtime > 0) {
+      this.simulate(false) // pause interpolation while we wait
+      await virtualTime.waitUntil(departure)
+    }
+  }
+  async pickup() {
     if (this._disposed) return
 
-    // this.queue.sort(
-    //   (a, b) =>
-    //     haversine(this.position, a.pickup.position) -
-    //     haversine(this.position, b.pickup.position)
-    // )
+    await this.waitAtPickup()
 
     // wait one tick so the pickup event can be parsed before changing status
+    // eslint-disable-next-line no-undef
     setImmediate(() => {
       if (this.booking) this.booking.pickedUp(this.position)
       this.cargo.push(this.booking)
@@ -152,9 +161,9 @@ class Vehicle {
         this.statusEvents.next(this)
 
         // should we first pickup more bookings before going to the destination?
+        // TODO: call Vroom here instead of trying to do this manually..
         if (
-          this.queue.length < this.capacity &&
-          this.queue.length &&
+          this.queue.length > 0 &&
           haversine(this.queue[0].pickup.position, this.position) <
             haversine(this.booking.destination.position, this.position)
         ) {
@@ -172,6 +181,7 @@ class Vehicle {
       this.booking.delivered(this.position)
       this.delivered.push(this.booking)
     }
+    this.statusEvents.next(this)
 
     this.pickNextFromCargo()
   }
@@ -264,8 +274,8 @@ class Vehicle {
     this.statusEvents.next(this)
     if (this.booking) {
       this.simulate(false)
-      if (this.status === 'Pickup') this.pickup()
-      if (this.status === 'Delivery') this.dropOff()
+      if (this.status === 'Pickup') return this.pickup()
+      if (this.status === 'Delivery') return this.dropOff()
     }
   }
 
