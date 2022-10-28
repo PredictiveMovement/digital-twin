@@ -1,15 +1,12 @@
+const { share, merge, switchMap, shareReplay } = require('rxjs')
 const {
-  from,
-  filter,
-  share,
-  merge,
-  fromEvent,
-  of,
-  concatMap,
-  switchMap,
-  shareReplay,
-} = require('rxjs')
-const { mergeMap, map, scan, catchError } = require('rxjs/operators')
+  mergeMap,
+  map,
+  scan,
+  catchError,
+  distinct,
+  mapTo,
+} = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
 
@@ -22,11 +19,16 @@ const { info, error, debug } = require('./lib/log')
 
 const static = {
   busStops: regions.pipe(mergeMap((region) => region.stops)),
-  lineShapes: regions.pipe(mergeMap((region) => region.lineShapes)),
+  lineShapes: regions.pipe(
+    mergeMap((region) => region.lineShapes),
+    shareReplay()
+  ),
+  postombud: kommuner.pipe(mergeMap((kommun) => kommun.postombud)),
+  kommuner: kommuner.pipe(shareReplay()),
 }
 
 const engine = {
-  experiments: [],
+  subscriptions: [],
   createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
     const savedParams = readParameters()
 
@@ -41,73 +43,67 @@ const engine = {
     statistics.collectExperimentMetadata(parameters)
 
     const experiment = {
-      virtualTime, // TODO: move this from being a static property to being a property of the experiment
+      ...static,
+      subscriptions: [],
+      virtualTime,
       cars: kommuner.pipe(mergeMap((kommun) => kommun.cars)),
       dispatchedBookings: merge(
         regions.pipe(mergeMap((r) => r.dispatchedBookings)),
         kommuner.pipe(mergeMap((k) => k.dispatchedBookings))
       ),
       buses: regions.pipe(mergeMap((region) => region.buses)),
-      postombud: kommuner.pipe(mergeMap((kommun) => kommun.postombud)),
       measureStations: kommuner.pipe(
         mergeMap((kommun) => kommun.measureStations)
       ),
-      kommuner,
       parameters,
-      passengers: regions.pipe(mergeMap((region) => region.citizens)),
+      passengers: regions.pipe(
+        mergeMap((region) => region.citizens),
+        shareReplay()
+      ),
       taxis: regions.pipe(mergeMap((region) => region.taxis)),
-      ...static,
     }
     experiment.passengers
       .pipe(
-        switchMap(({ bookings }) => bookings),
-        mergeMap((booking) => booking.statusEvents),
-        catchError((err) => error('passenger bookings err', err)),
+        catchError((err) => error('passenger statistics err', err)),
         shareReplay()
       )
+      // TODO:take care of this subscription so we know how to unsubscribe
       .subscribe((booking) => {
-        statistics.collectBooking(booking, parameters)
+        try {
+          statistics.collectBooking(booking, parameters)
+        } catch (err) {
+          error('collectBooking err', err)
+        }
       })
 
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(
-      mergeMap((booking) =>
-        merge(
-          booking.queuedEvents,
-          booking.pickedUpEvents,
-          booking.assignedEvents,
-          booking.deliveredEvents
-        )
-      ),
-      catchError((err) => error('booking updates err', err)),
+      mergeMap((booking) => booking.statusEvents),
+      catchError((err) => error('bookingUpdates', err)),
       share()
     )
-    experiment.passengerUpdates = experiment.passengers.pipe(
-      mergeMap((passenger) =>
-        merge(passenger.deliveredEvents, passenger.pickedUpEvents)
-      ),
-      catchError((err) => error('passenger updates err', err)),
 
+    experiment.passengerUpdates = experiment.passengers.pipe(
+      mergeMap(({ deliveredEvents, pickedUpEvents }) =>
+        merge(deliveredEvents, pickedUpEvents)
+      ),
+      catchError((err) => error('passengerUpdates', err)),
       share()
     )
 
     // TODO: Rename to vehicleUpdates
-    experiment.carUpdates = merge(experiment.cars, experiment.buses).pipe(
+    experiment.carUpdates = merge(
+      experiment.cars,
+      experiment.taxis,
+      experiment.buses
+    ).pipe(
       mergeMap((car) => car.movedEvents),
       catchError((err) => error('car updates err', err)),
 
       share()
     )
 
-    experiment.dispatchedBookings.subscribe((booking) =>
-      debug(`Booking ${booking?.id} dispatched to car ${booking?.car?.id}`)
-    )
-    engine.experiments.push(experiment)
-
     return experiment
   },
 }
-
-// TODO: see if we can remove this
-process.setMaxListeners(0)
 
 module.exports = engine

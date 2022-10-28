@@ -29,11 +29,19 @@ or just once:
 
     npm test
 
-## Generate passenger needs
+## Generate citizens
+To have repeatable experiments we need to have a fixed amount of citizens with predictable needs. To achieve this we store our citizens in a file
+`data/citizens.json`. If we want more or less we need to modify and re-run this script which will create more or less citizens by overwriting the
+`citizens` data-file.
+
+A bit about the nomeclature: We call a person a citizen when it is not in a vehicle or have any travel intentions. When the citizen has travel plans
+or is traveling we call him/her a passenger.
+
+    node scripts/generateCitizens.js
 
 Run:
 
-    node passengerGenerator.js
+    node citizenGenerator.js
 
 ## Concepts
 

@@ -1,10 +1,11 @@
 const fetch = require('node-fetch')
+// eslint-disable-next-line no-undef
 const vroomUrl = process.env.VROOM_URL || 'https://vroom.predictivemovement.se/'
 const { info } = require('./log')
 
 module.exports = {
   async plan({ jobs, shipments, vehicles }) {
-    const result = await fetch(vroomUrl, {
+    return await fetch(vroomUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -15,9 +16,9 @@ module.exports = {
         vehicles,
       }),
     })
-      .then((res) => (!res.ok ? Promise.reject(res.text()) : res))
+      .then(async (res) =>
+        !res.ok ? Promise.reject('Vroom error:' + (await res.text())) : res
+      )
       .then((res) => res.json())
-    info('Results from vroom, computing_times:', result.summary.computing_times)
-    return result
   },
 }

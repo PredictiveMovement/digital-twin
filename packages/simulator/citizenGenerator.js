@@ -1,3 +1,4 @@
+const fs = require('fs')
 const {
   finalize,
   take,
@@ -9,39 +10,27 @@ const {
 } = require('rxjs/operators')
 const perlin = require('perlin-noise')
 
+
 const pelias = require('./lib/pelias')
 const { addMeters } = require('./lib/distance')
 const { randomNames } = require('./lib/personNames')
 const { randomize } = require('./simulator/address')
 const kommuner = require('./streams/kommuner')
-const { save } = require('./lib/elastic')
 const { safeId } = require('./lib/id')
 const log = require('./lib/log')
 
-const NUMBER_OF_PASSENGERS = 100
-const GENERATION_ID = safeId()
+const NUMBER_OF_CITIZENS = 3000
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info'
 
 const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
 
 const execute = () => {
   console.log(
-    `Generating and saving ${NUMBER_OF_PASSENGERS} passengers to elasticSearch as group ${GENERATION_ID}`
+    `Generating and saving ${NUMBER_OF_CITIZENS} citizens`
   )
-  generatePassengerDetails(kommuner, NUMBER_OF_PASSENGERS).subscribe(
-    passengerSerializer,
-    console.error,
-    finalLogger
-  )
-}
-
-const finalLogger = () => {
-  save(
-    { needs: 'to_and_from_work', size: 50, GENERATION_ID },
-      'passenger_generation'
-    )
-  console.log(
-    `\n\nGenerated and saved ${NUMBER_OF_PASSENGERS} passengers to elasticSearch as group ${GENERATION_ID}`
+  generatePassengerDetails(kommuner, NUMBER_OF_CITIZENS).subscribe(
+    citizenSerializer,
+    console.error
   )
 }
 
@@ -73,7 +62,9 @@ const generatePassengerDetails = (kommuner, numberOfPassengers) =>
             toArray(),
             mergeMap(async (allPostombudInKommun) => {
               const randomPostombud =
-                allPostombudInKommun[Math.floor(Math.random() * allPostombudInKommun.length)]
+                allPostombudInKommun[
+                  Math.floor(Math.random() * allPostombudInKommun.length)
+                ]
               try {
                 const workPosition = await randomize(randomPostombud.position)
                 return { homePosition, workPosition }
@@ -108,47 +99,61 @@ const generatePassengerDetails = (kommuner, numberOfPassengers) =>
         }),
         filter((p) => p),
         zipWith(
-          randomNames.pipe(take(Math.min(100, Math.ceil(kommun.population * 0.01))))
+          randomNames.pipe(
+            take(Math.min(100, Math.ceil(kommun.population * 0.01)))
+          )
         ), // for some reason we need to limit the randomNames stream here, otherwise it will never end
         concatMap(async (zipf) => {
-          const [{ home, work }, { firstName, lastName, name }] = zipf
+          const [{ home, work }, { firstName, lastName }] = zipf
           if (LOG_LEVEL === 'debug') process.stdout.write('📦')
+          if (!home || !work || !firstName || !lastName) {
+            return Promise.resolve(null)
+          }
           return Promise.resolve({
             position: home.position,
             home: {
               name: `${home.name}, ${home.localadmin}`,
-              ...home.position,
+              position: home.position,
             },
             workplace: {
               name: `${work.name}, ${work.localadmin}`,
-              ...work.position,
+              position: work.position,
             },
             kommun: kommun.name,
-            name,
-            firstName,
-            lastName,
+            name: `${firstName} ${lastName}`,
           })
-        })
+        }),
+        filter((p) => p)
       )
     }),
     take(numberOfPassengers),
+    toArray(),
     finalize()
   )
-const passengerSerializer = ({ name, firstName, lastName, home, workplace, kommun }) => {
-  const saveablePassenger = {
-    id: safeId(),
-    name,
-    firstName,
-    lastName,
-    home,
-    workplace,
-    kommun,
-    source: 'generated',
-    generationGroupSize: NUMBER_OF_PASSENGERS,
-    generationId: GENERATION_ID,
+const saveFile = (citizens) => {
+  try {
+    const currentDirectory = __dirname
+    const filePath = `${currentDirectory}/data/citizens.json`
+    const jsonOutput = JSON.stringify(citizens, null, 2)
+    fs.writeFileSync(filePath, jsonOutput)
+    console.log(`\n\nSaved ${citizens.length} citizens to ${filePath}`)
+  } catch (error) {
+
   }
-  save(saveablePassenger, 'passengers')
-  if (LOG_LEVEL === 'info') process.stdout.write('💾')
+}
+const citizenSerializer = (citizens) => {
+  serializedPassengers = citizens.map((citizen) => {
+    const { name, home, workplace, kommun } = citizen
+    if (LOG_LEVEL === 'info') process.stdout.write('💾')
+    return {
+      id: safeId(),
+      name,
+      home,
+      workplace,
+      kommun,
+    }
+  })
+  saveFile(serializedPassengers, 'citizens.json')
 }
 
 execute()

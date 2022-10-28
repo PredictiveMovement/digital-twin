@@ -350,7 +350,7 @@ const Map = ({
 
   const passengerLayer = new ScatterplotLayer({
     id: 'passenger-layer',
-    data: passengers,
+    data: passengers.filter((p) => !p.inVehicle),
     //opacity: 0.7,
     stroked: false,
     filled: true,
@@ -469,7 +469,7 @@ const Map = ({
 
   const [showQueuedBookings, setShowQueuedBookings] = useState(false)
 
-  const arcDataWithQueuedBookings =
+  const routesData =
     showQueuedBookings &&
     bookings
       //.filter((booking) => booking.status === 'Queued')
@@ -507,14 +507,16 @@ const Map = ({
       })
       .filter((b) => b) // remove null values
 
-  const arcData = cars.map((car) => {
-    return {
-      inbound: [167, 55, 255],
-      outbound: [167, 55, 255],
-      from: car.position,
-      to: car.heading,
-    }
-  })
+  const arcData = cars
+    .map((car) => {
+      return {
+        inbound: [167, 55, 255],
+        outbound: [167, 55, 255],
+        from: car.position,
+        to: car.heading,
+      }
+    })
+    .filter(({ from, to }) => from && to)
   const [showArcLayer, setShowArcLayer] = useState(false)
 
   const arcLayer = new ArcLayer({
@@ -528,11 +530,11 @@ const Map = ({
     getTargetColor: (d) => d.outbound,
   })
 
-  const arcLayerQueuedBookings = new ArcLayer({
-    id: 'arc-layer-queued-bookings',
-    data: arcDataWithQueuedBookings,
+  const routesLayer = new ArcLayer({
+    id: 'routesLayer',
+    data: routesData,
     pickable: true,
-    getWidth: 1,
+    getWidth: 0.5,
     getSourcePosition: (d) => d.from,
     getTargetPosition: (d) => d.to,
     getSourceColor: (d) => d.inbound,
@@ -553,8 +555,8 @@ const Map = ({
 
   return (
     <DeckGL
-      mapLib={maplibregl}
-      // mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+      //mapLib={maplibregl}
+      mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
       // initialViewState={mapState.viewport}
       viewState={mapState}
       // onLoad={rotateCamera}
@@ -575,7 +577,7 @@ const Map = ({
         activeLayers.measureStationsLayer && measureStationsLayer,
         bookingLayer,
         showArcLayer && arcLayer,
-        showQueuedBookings && arcLayerQueuedBookings,
+        showQueuedBookings && routesLayer,
         activeLayers.busLineLayer && busLineLayer,
         activeLayers.busStopLayer && busStopLayer,
         activeLayers.carLayer && carLayer,
@@ -617,9 +619,9 @@ const Map = ({
       <StaticMap
         reuseMaps
         preventStyleDiffing={true}
-        mapLib={maplibregl}
-        mapStyle="https://maptiler.iteam.services/styles/basic-preview/style.json"
-        //        mapStyle="https://maptiler.iteam.services/styles/mapbox/dark-v10"
+        //mapLib={maplibregl}
+        //mapStyle="https://maptiler.iteam.services/styles/basic-preview/style.json"
+        mapStyle="mapbox://styles/mapbox/dark-v10"
       />
       {hoverInfo && mapState.zoom > 6 && <HoverInfoBox data={hoverInfo} />}
       <TimeProgressBar time={time} />

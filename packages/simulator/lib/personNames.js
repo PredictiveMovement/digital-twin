@@ -70,5 +70,3 @@ const randomNames = zip(randomFirstName(), randomLastName()).pipe(
 module.exports = {
   randomNames,
 }
-
-// randomNames.pipe(take(10)).subscribe(console.log)
