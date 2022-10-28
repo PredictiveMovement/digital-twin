@@ -22,18 +22,25 @@ const register = (experiment, socket) => {
         mergeMap(({ id, dispatchedBookings, name, cars }) => {
           const totalBookings = dispatchedBookings.pipe(count(), startWith(0))
 
-          const averageDeliveryTime = dispatchedBookings.pipe(
+          const deliveryStatistics = dispatchedBookings.pipe(
             mergeMap((booking) => booking.deliveredEvents),
+            filter((b) => b.cost),
             scan(
-              ({ total, deliveryTimeTotal }, { deliveryTime }) => ({
+              (
+                { total, deliveryTimeTotal, totalCost },
+                { deliveryTime, cost }
+              ) => ({
                 total: total + 1,
+                totalCost: totalCost + cost,
                 deliveryTimeTotal: deliveryTimeTotal + deliveryTime,
               }),
-              { total: 0, deliveryTimeTotal: 0 }
+              { total: 0, totalCost: 0, deliveryTimeTotal: 0 }
             ),
-            startWith({ total: 0, deliveryTimeTotal: 0 }),
-            map(({ total, deliveryTimeTotal }) => ({
+            startWith({ total: 0, totalCost: 0, deliveryTimeTotal: 0 }),
+            map(({ total, totalCost, deliveryTimeTotal }) => ({
               totalDelivered: total,
+              totalCost,
+              averageCost: totalCost / total,
               averageDeliveryTime: deliveryTimeTotal / total / 60 / 60,
             }))
           )
@@ -86,7 +93,7 @@ const register = (experiment, socket) => {
             totalBookings,
             totalCars,
             averageUtilization,
-            averageDeliveryTime,
+            deliveryStatistics,
             totalCapacity,
           ]).pipe(
             map(
@@ -100,7 +107,7 @@ const register = (experiment, socket) => {
                   averageQueued,
                   averageUtilization,
                 },
-                { totalDelivered, averageDeliveryTime },
+                { totalDelivered, averageDeliveryTime, averageCost, totalCost },
                 totalCapacity,
               ]) => ({
                 id,
@@ -110,10 +117,12 @@ const register = (experiment, socket) => {
                 totalCargo,
                 totalCo2,
                 totalCapacity,
+                totalCost,
                 averageDeliveryTime,
                 totalDelivered,
                 totalQueued,
                 averageQueued,
+                averageCost,
                 averageUtilization,
               })
             ),
