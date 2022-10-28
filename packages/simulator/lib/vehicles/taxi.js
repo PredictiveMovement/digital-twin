@@ -1,5 +1,6 @@
 const moment = require('moment')
 const { safeId } = require('../id')
+const { info } = require('../log')
 const Vehicle = require('../vehicles/vehicle')
 const { virtualTime } = require('../virtualTime')
 const fleet = {
@@ -26,12 +27,12 @@ class Taxi extends Vehicle {
   }
   pickup() {
     super.pickup()
-    console.log('Pickup passenger')
+    info('Pickup passenger', this.booking?.passenger?.name)
     this.currentPassengerCount++
   }
   dropoff() {
     super.dropoff()
-    console.log('dropoff passenger') //TODO: NEVER GETS CALLED
+    info('dropoff passenger') //TODO: NEVER GETS CALLED
     this.currentPassengerCount--
   }
 }
