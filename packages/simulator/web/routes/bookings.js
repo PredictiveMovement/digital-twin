@@ -41,6 +41,7 @@ const register = (experiment, socket) => {
       .subscribe((bookings) => {
         socket.emit('bookings', bookings)
       }),
+
     experiment.bookingUpdates
       .pipe(
         cleanBookings(),
@@ -48,15 +49,6 @@ const register = (experiment, socket) => {
         filter((e) => e.length)
       )
       .subscribe((bookings) => {
-        bookings.map((booking) => {
-          console.log(
-            'booking update',
-            booking.id,
-            booking.status,
-            booking?.passenger?.name,
-            booking.carId
-          )
-        })
         socket.emit('bookings', bookings)
       }),
   ]
