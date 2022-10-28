@@ -1,5 +1,12 @@
 const { share, merge, switchMap, shareReplay } = require('rxjs')
-const { mergeMap, map, scan, catchError, distinct } = require('rxjs/operators')
+const {
+  mergeMap,
+  map,
+  scan,
+  catchError,
+  distinct,
+  mapTo,
+} = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
 
@@ -17,7 +24,7 @@ const static = {
     shareReplay()
   ),
   postombud: kommuner.pipe(mergeMap((kommun) => kommun.postombud)),
-  kommuner,
+  kommuner: kommuner.pipe(shareReplay()),
 }
 
 const engine = {
@@ -76,11 +83,9 @@ const engine = {
     )
 
     experiment.passengerUpdates = experiment.passengers.pipe(
-      mergeMap((passenger) =>
-        merge(passenger.deliveredEvents, passenger.pickedUpEvents)
+      mergeMap(({ deliveredEvents, pickedUpEvents }) =>
+        merge(deliveredEvents, pickedUpEvents)
       ),
-      catchError((err) => error('passenger updates err', err)),
-
       share()
     )
 

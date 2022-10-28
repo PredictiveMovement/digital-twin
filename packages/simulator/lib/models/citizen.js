@@ -1,5 +1,4 @@
 const {
-  interval,
   map,
   filter,
   shareReplay,
@@ -8,10 +7,9 @@ const {
   of,
   from,
   catchError,
-  tap,
   retry,
-  ReplaySubject,
   throttleTime,
+  mapTo,
 } = require('rxjs')
 const { virtualTime } = require('../virtualTime')
 
@@ -128,11 +126,11 @@ class Citizen {
                     // Pickup to go to lunch
                     pickup: {
                       ...this.workplace,
-                      timeWindow: [
-                        await virtualTime.getTimeInMillisecondsAsPromise(),
-                        (await virtualTime.getTimeInMillisecondsAsPromise()) +
-                          60 * 60 * 1000,
-                      ],
+                      departureTime: moment(
+                        await virtualTime.getTimeInMillisecondsAsPromise()
+                      )
+                        .add(1, 'hour')
+                        .format('hh:mm:ss'),
                     },
                     destination: lunchPlace,
                   }),
@@ -140,16 +138,15 @@ class Citizen {
                     // Go back from lunch to work
                     type: 'passenger',
                     passenger: this,
-                    pickup: lunchPlace,
-                    destination: {
-                      ...this.workplace,
-                      timeWindow: [
-                        (await virtualTime.getTimeInMillisecondsAsPromise()) +
-                          60 * 60 * 1000,
-                        (await virtualTime.getTimeInMillisecondsAsPromise()) +
-                          80 * 60 * 1000,
-                      ],
+                    pickup: {
+                      ...lunchPlace,
+                      departureTime: moment(
+                        await virtualTime.getTimeInMillisecondsAsPromise()
+                      )
+                        .add(2, 'hour')
+                        .format('hh:mm:ss'),
                     },
+                    destination: this.workplace,
                   }),
                 ])
               )
@@ -163,10 +160,12 @@ class Citizen {
     )
 
     this.pickedUpEvents = this.bookings.pipe(
-      mergeMap((booking) => booking.pickedUpEvents)
+      mergeMap((booking) => booking.pickedUpEvents),
+      mapTo(this)
     )
     this.deliveredEvents = this.bookings.pipe(
-      mergeMap((booking) => booking.deliveredEvents)
+      mergeMap((booking) => booking.deliveredEvents),
+      mapTo(this)
     )
   }
 

@@ -1,18 +1,6 @@
-const {
-  pipe,
-  from,
-  shareReplay,
-  Subject,
-  mergeMap,
-  ReplaySubject,
-  merge,
-  lastValueFrom,
-  of,
-} = require('rxjs')
+const { pipe, from, shareReplay, mergeMap, merge } = require('rxjs')
 const {
   map,
-  last,
-  first,
   groupBy,
   tap,
   filter,
@@ -20,10 +8,6 @@ const {
   mergeAll,
   share,
   toArray,
-  bufferCount,
-  takeUntil,
-  take,
-  scan,
   pluck,
   catchError,
   switchMap,
@@ -124,11 +108,13 @@ class Region {
           map(stopsToBooking),
           map((booking) => ({ bus, booking }))
         )
-      )
+      ),
+      share()
     )
 
     this.unhandledBookings = this.citizens.pipe(
-      mergeMap((passenger) => passenger.bookings)
+      mergeMap((passenger) => passenger.bookings),
+      share()
     )
 
     /*
@@ -142,27 +128,22 @@ class Region {
       ),
       this.unhandledBookings.pipe(
         bufferTime(5000),
-        filter((bookings) => bookings.length > 10),
+        filter((bookings) => bookings.length > 0),
         tap((bookings) => info('Clustering bookings', bookings.length)),
-        // switchMap((bookings) => clusterPositions(bookings)), // continously cluster bookings
-        // mergeAll(),
-        // map(({ center, items: bookings }) => ({ center, bookings })),
-        // catchError((err) => error('taxi cluster err', err)),
-        // filter(({ bookings }) => bookings.length > 5), // wait until we have at least 10 bookings in a cluster
-        mergeMap((bookings) =>
+        switchMap((bookings) => clusterPositions(bookings)),
+        mergeAll(),
+        map(({ center, items: bookings }) => ({ center, bookings })),
+        catchError((err) => error('taxi cluster err', err)),
+        mergeMap(({ center, bookings }) =>
           this.taxis.pipe(
-            // map((taxi) => ({
-            //   taxi,
-            //   distance: haversine(taxi.position, center),
-            // })),
-            // filter(({ distance }) => distance < 100_000),
-            // pluck('taxi'),
-            // filter(
-            //   ({ queue, cargo, capacity }) =>
-            //     queue.length + cargo.length < capacity
-            // ),
-            // takeNearest(center, 10),
-            toArray(),
+            map((taxi) => ({
+              taxi,
+              distance: haversine(taxi.position, center),
+            })),
+            filter(({ distance }) => distance < 100_000),
+            pluck('taxi'),
+            filter(({ cargo, capacity }) => cargo.length + 1 < capacity),
+            takeNearest(center, 10),
             tap((taxis) =>
               console.log(
                 'dispatching taxis bookings',
@@ -171,15 +152,16 @@ class Region {
               )
             ),
             filter((taxis) => taxis.length),
-            mergeMap((taxis) => taxiDispatch(taxis, bookings), 3)
+            mergeMap((taxis) => taxiDispatch(taxis, bookings), 3),
+            catchError((err) => error('taxi dispatch err', err))
           )
         ),
-        catchError((err) => error('taxi dispatch err', err)),
         mergeAll(),
         map(({ taxi, bookings }) =>
           bookings.map((booking) => taxi.handleBooking(booking))
         ),
-        mergeAll()
+        mergeAll(),
+        share()
       )
     )
     // Move this to passenger instead
