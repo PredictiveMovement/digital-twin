@@ -109,11 +109,13 @@ class Region {
           map((booking) => ({ bus, booking }))
         )
       ),
+      catchError((err) => error('stopAssignments', err)),
       share()
     )
 
     this.unhandledBookings = this.citizens.pipe(
       mergeMap((passenger) => passenger.bookings),
+      catchError((err) => error('unhandledBookings', err)),
       share()
     )
 
@@ -161,6 +163,7 @@ class Region {
           bookings.map((booking) => taxi.handleBooking(booking))
         ),
         mergeAll(),
+        catchError((err) => error('dispatchedBookings', err)),
         share()
       )
     )

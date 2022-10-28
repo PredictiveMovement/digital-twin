@@ -64,11 +64,10 @@ const engine = {
     }
     experiment.passengers
       .pipe(
-        switchMap(({ bookings }) => bookings),
-        mergeMap((booking) => booking.statusEvents),
-        catchError((err) => error('passenger bookings err', err)),
+        catchError((err) => error('passenger statistics err', err)),
         shareReplay()
       )
+      // TODO:take care of this subscription so we know how to unsubscribe
       .subscribe((booking) => {
         try {
           statistics.collectBooking(booking, parameters)
@@ -79,6 +78,7 @@ const engine = {
 
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(
       mergeMap((booking) => booking.statusEvents),
+      catchError((err) => error('bookingUpdates', err)),
       share()
     )
 
@@ -86,6 +86,7 @@ const engine = {
       mergeMap(({ deliveredEvents, pickedUpEvents }) =>
         merge(deliveredEvents, pickedUpEvents)
       ),
+      catchError((err) => error('passengerUpdates', err)),
       share()
     )
 
@@ -101,15 +102,8 @@ const engine = {
       share()
     )
 
-    experiment.dispatchedBookings.subscribe((booking) =>
-      debug(`Booking ${booking?.id} dispatched to car ${booking?.car?.id}`)
-    )
-
     return experiment
   },
 }
-
-// TODO: see if we can remove this
-process.setMaxListeners(0)
 
 module.exports = engine
