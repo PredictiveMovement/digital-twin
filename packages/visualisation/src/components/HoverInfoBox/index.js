@@ -40,22 +40,49 @@ const MeasurementStationInfo = ({ data }) => {
     </Wrapper>
   )
 }
+
+const vehicleName = (vehicleType) => {
+  switch (vehicleType) {
+    case 'bus':
+      return 'Buss'
+    case 'taxi':
+      return 'Taxi'
+    case 'car':
+      return 'Bil'
+    case 'truck':
+      return 'Lastbil'
+    default:
+      return 'Fordon'
+  }
+}
+
+const cargoName = (vehicleType) => {
+  switch (vehicleType) {
+    case 'bus':
+      return 'passagerare'
+    case 'taxi':
+      return 'passagerare'
+    case 'car':
+      return 'passagerare'
+    case 'truck':
+      return 'kollin'
+    default:
+      return 'paket'
+  }
+}
+
 const CarInfo = ({ data }) => {
-  const label =
-    data.vehicleType === 'taxi' || data.vehicleType === 'bus'
-      ? 'Passagerare'
-      : 'Paket'
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <div>
-        <Paragraph>{`Fordon ${data.id}`}</Paragraph>
+        <Paragraph>{`${vehicleName(data.vehicleType)} ${data.id}`}</Paragraph>
         {data.lineNumber !== undefined && (
           <Paragraph>Linje: {data.lineNumber}</Paragraph>
         )}
         <Paragraph>Hastighet {data.speed}</Paragraph>
         <Paragraph>Kör för {data.fleet}</Paragraph>
         <Paragraph>
-          Köat: {data.queue || 0} {label}
+          Köat: {data.queue || 0} {cargoName(data.vehicleType)}
         </Paragraph>
         <Paragraph>
           CO<sub>2</sub>: {Math.ceil(10 * data.co2) / 10 || 0} kg
@@ -64,10 +91,10 @@ const CarInfo = ({ data }) => {
           Körsträcka: {Math.ceil(10 * data.distance) / 10 || 0} km
         </Paragraph>
         <Paragraph>
-          Lastat: {data.cargo} {label}
+          Lastat: {data.cargo} {cargoName(data.vehicleType)}
         </Paragraph>
         <Paragraph>
-          Kapacitet: {data.capacity} {label}
+          Kapacitet: {data.capacity} {cargoName(data.vehicleType)}
         </Paragraph>
       </div>
       <div>
@@ -88,14 +115,13 @@ const PassengerInfo = ({ data }) => {
       <Paragraph>Resor:</Paragraph>
       {data.bookings &&
         data.bookings.map((j) => {
-          console.log("RESOR!", j)
+          console.log('RESOR!', j)
           return (
             <Paragraph>
               {j.pickup.name} &gt; {j.destination.name} - {j.status}
             </Paragraph>
           )
-        })
-      }
+        })}
       <Paragraph>
         CO<sub>2</sub>: {Math.ceil((10 * data.co2) / 10) || 0} kg
       </Paragraph>
