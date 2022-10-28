@@ -1,18 +1,6 @@
-const {
-  pipe,
-  from,
-  shareReplay,
-  Subject,
-  mergeMap,
-  ReplaySubject,
-  merge,
-  lastValueFrom,
-  of,
-} = require('rxjs')
+const { pipe, from, shareReplay, mergeMap, merge } = require('rxjs')
 const {
   map,
-  last,
-  first,
   groupBy,
   tap,
   filter,
@@ -20,13 +8,10 @@ const {
   mergeAll,
   share,
   toArray,
-  bufferCount,
-  takeUntil,
-  take,
-  scan,
   pluck,
   catchError,
   switchMap,
+  bufferTime,
 } = require('rxjs/operators')
 const Booking = require('./models/booking')
 const { busDispatch } = require('./dispatch/busDispatch')
@@ -90,7 +75,6 @@ class Region {
     this.geometry = geometry
     this.name = name
     this.id = id
-    this.unhandledBookings = new Subject()
     this.stops = stops
     this.citizens = citizens
     this.lineShapes = lineShapes
@@ -124,74 +108,71 @@ class Region {
           map(stopsToBooking),
           map((booking) => ({ bus, booking }))
         )
-      )
+      ),
+      catchError((err) => error('stopAssignments', err)),
+      share()
     )
 
-    this.stopAssignments
-      .pipe(mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5))
-      .subscribe(() => {})
-
-    this.citizens
-      .pipe(mergeMap((passenger) => passenger.bookings))
-      .subscribe((booking) => {
-        this.unhandledBookings.next(booking)
-      })
+    this.unhandledBookings = this.citizens.pipe(
+      mergeMap((passenger) => passenger.bookings),
+      catchError((err) => error('unhandledBookings', err)),
+      share()
+    )
 
     /*
+    // TODO: Move this to dispatch central:
     // TODO: add kmeans clustering to group bookings and cars by pickup
     // send those to vroom and get back a list of assignments
     // for each assignment, take the booking and dispatch it to the car / fleet */
-    this.dispatchedBookings = new ReplaySubject()
-    this.unhandledBookings
-      .pipe(
-        scan((acc, booking) => [...acc, booking], []),
-        map((bookings) =>
-          bookings.filter((b) => !b.assigned && !b.dispatching)
-        ),
-        filter((bookings) => bookings.length > 10),
-        tap((bookings) => bookings.forEach((b) => (b.dispatching = true))), // mark all bookings as calculating so we don't include them in the next batch
-        // tap((bookings) => info('Clustering bookings', bookings.length)),
-        // switchMap((bookings) => clusterPositions(bookings)), // continously cluster bookings
-        // mergeAll(),
-        // map(({ center, items: bookings }) => ({ center, bookings })),
-        // catchError((err) => error('taxi cluster err', err)),
-        // filter(({ bookings }) => bookings.length > 5), // wait until we have at least 10 bookings in a cluster
-        mergeMap((bookings) =>
+    this.dispatchedBookings = merge(
+      this.stopAssignments.pipe(
+        mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5)
+      ),
+      this.unhandledBookings.pipe(
+        bufferTime(5000),
+        filter((bookings) => bookings.length > 0),
+        tap((bookings) => info('Clustering bookings', bookings.length)),
+        switchMap((bookings) => clusterPositions(bookings)),
+        mergeAll(),
+        map(({ center, items: bookings }) => ({ center, bookings })),
+        catchError((err) => error('taxi cluster err', err)),
+        mergeMap(({ center, bookings }) =>
           this.taxis.pipe(
-            // map((taxi) => ({
-            //   taxi,
-            //   distance: haversine(taxi.position, center),
-            // })),
-            // filter(({ distance }) => distance < 100_000),
-            // pluck('taxi'),
-            // filter(
-            //   ({ queue, cargo, capacity }) =>
-            //     queue.length + cargo.length < capacity
-            // ),
-            // takeNearest(center, 10),
-            toArray(),
+            map((taxi) => ({
+              taxi,
+              distance: haversine(taxi.position, center),
+            })),
+            filter(({ distance }) => distance < 100_000),
+            pluck('taxi'),
+            filter(({ cargo, capacity }) => cargo.length + 1 < capacity),
+            takeNearest(center, 10),
+            tap((taxis) =>
+              console.log(
+                'dispatching taxis bookings',
+                taxis.length,
+                bookings.length
+              )
+            ),
             filter((taxis) => taxis.length),
-            mergeMap((taxis) => taxiDispatch(taxis, bookings), 3)
+            mergeMap((taxis) => taxiDispatch(taxis, bookings), 3),
+            catchError((err) => error('taxi dispatch err', err))
           )
         ),
-        catchError((err) => error('taxi dispatch err', err)),
-        mergeAll()
+        mergeAll(),
+        map(({ taxi, bookings }) =>
+          bookings.map((booking) => taxi.handleBooking(booking))
+        ),
+        mergeAll(),
+        catchError((err) => error('dispatchedBookings', err)),
+        share()
       )
-      .subscribe(({ taxi, bookings }) => {
-        bookings.forEach((booking) => {
-          console.log('Dispatching booking', booking.id, 'to taxi', taxi.id)
-          taxi.handleBooking(booking)
-          booking.passenger?.kommun.manualBookings.next(booking) // TODO: dispatch to a fleet instead
-          this.dispatchedBookings.next(booking)
-        })
-      })
-
+    )
     // Move this to passenger instead
     /*this.unhandledBookings.pipe(
       mergeMap((booking) => taxiDispatch(this.taxis, booking)),
       mergeAll()
     ).subscribe(() => {
-
+      console.log("Thing")
     })*/
 
     /*    taxiDispatch(this.taxis, this.passengers).subscribe((e) => {
@@ -219,6 +200,7 @@ const stopsToBooking = ([pickup, destination]) =>
     pickup,
     destination,
     lineNumber: pickup.lineNumber ?? destination.lineNumber,
+    type: 'busstop',
   })
 
 module.exports = Region

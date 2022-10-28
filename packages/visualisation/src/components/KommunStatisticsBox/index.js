@@ -35,6 +35,7 @@ const KommunStatisticsBox = ({
   totalCo2,
   totalCapacity,
   averageDeliveryTime,
+  averageCost,
   totalDelivered,
   totalQueued,
   averageQueued,
@@ -60,7 +61,7 @@ const KommunStatisticsBox = ({
         </Grid>
         <Grid>
           <ParagraphBold black>Genomsnittskostnad</ParagraphBold>
-          <Paragraph black>xxxx kr/resenär</Paragraph>
+          <Paragraph black>{averageCost} kr/resenär</Paragraph>
         </Grid>
         <Grid>
           <ParagraphBold black>Medelfyllnadsgrad per bil</ParagraphBold>

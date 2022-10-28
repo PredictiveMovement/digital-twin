@@ -115,31 +115,11 @@ const App = () => {
       ...bookings.filter(
         (booking) => !newBookings.some((nb) => nb.id === booking.id)
       ),
-      ...newBookings.map(
-        ({
-          name,
-          id,
-          pickup,
-          destination,
-          status,
-          isCommercial,
-          deliveryTime,
-          carId,
-          co2,
-          cost,
-        }) => ({
-          id,
-          address: name,
-          status,
-          co2,
-          cost,
-          isCommercial,
-          pickup: [pickup.lon, pickup.lat],
-          destination: [destination.lon, destination.lat],
-          carId,
-          deliveryTime,
-        })
-      ),
+      ...newBookings.map(({ pickup, destination, ...rest }) => ({
+        pickup: [pickup.lon, pickup.lat],
+        destination: [destination.lon, destination.lat],
+        ...rest,
+      })),
     ])
   })
 
@@ -148,10 +128,9 @@ const App = () => {
     setReset(false)
     setPostombud((current) => [
       ...current,
-      ...newPostombud.map(({ id, operator, position }) => ({
+      ...newPostombud.map(({ position, ...rest }) => ({
         position: [position.lon, position.lat],
-        operator,
-        id,
+        ...rest,
       })),
     ])
   })
@@ -169,26 +148,19 @@ const App = () => {
   })
 
   const [busStops, setBusStops] = React.useState([])
-  useSocket('busStops', ({ position, name }) => {
+  useSocket('busStops', (busStops) => {
     setReset(false)
-    setBusStops((current) => [
-      ...current,
-      {
-        name,
+    setBusStops(
+      busStops.map(({ position, ...rest }) => ({
         position: [position.lon, position.lat].map((s) => parseFloat(s)),
-      },
-    ])
+        ...rest,
+      }))
+    )
   })
 
   const [lineShapes, setLineShapes] = React.useState([])
-  useSocket('lineShapes', ({ stops, lineNumber }) => {
-    setLineShapes((current) => [
-      ...current,
-      {
-        lineNumber,
-        stops,
-      },
-    ])
+  useSocket('lineShapes', (lineShapes) => {
+    setLineShapes(lineShapes)
   })
 
   const [kommuner, setKommuner] = React.useState([])
