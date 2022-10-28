@@ -8,11 +8,11 @@ const bookingToShipment = ({ id, pickup, destination }, i) => {
     description: id,
     amount: [1],
     pickup: {
-      time_windows: pickup.timeWindow?.length
+      time_windows: pickup.departureTime?.length
         ? [
             [
-              moment(pickup.timeWindow[0]).unix(),
-              moment(pickup.timeWindow[1]).unix() + 1,
+              moment(pickup.departureTime, 'hh:mm:ss').unix(),
+              moment(pickup.departureTime, 'hh:mm:ss').add(5, 'minutes').unix(),
             ],
           ]
         : undefined,
@@ -22,11 +22,13 @@ const bookingToShipment = ({ id, pickup, destination }, i) => {
     delivery: {
       id: i,
       location: [destination.position.lon, destination.position.lat],
-      time_windows: destination.timeWindow?.length
+      time_windows: destination.arrivalTime?.length
         ? [
             [
-              moment(destination.timeWindow[0]).unix(),
-              moment(destination.timeWindow[1]).unix() + 1,
+              moment(destination.arrivalTime, 'hh:mm:ss').unix(),
+              moment(destination.arrivalTime, 'hh:mm:ss')
+                .add(5, 'minutes')
+                .unix(),
             ],
           ]
         : undefined,
@@ -52,7 +54,11 @@ const taxiDispatch = async (taxis, bookings) => {
       taxi: taxis.find(({ id }) => id === route.description),
       bookings: route.steps
         .filter((s) => s.type === 'pickup')
-        .flatMap((step) => bookings[step.id]),
+        .flatMap((step) => {
+          const booking = bookings[step.id]
+          booking.pickup.departureTime = moment(step.arrival).format('hh:mm:ss')
+          return booking
+        }),
     }
   })
 }

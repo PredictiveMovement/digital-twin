@@ -11,6 +11,7 @@ const {
   tap,
   retry,
   ReplaySubject,
+  mapTo,
 } = require('rxjs')
 const { virtualTime } = require('../virtualTime')
 
@@ -123,10 +124,9 @@ class Citizen {
                     // Pickup to go to lunch
                     pickup: {
                       ...this.workplace,
-                      timeWindow: [
-                        virtualTime.time(),
-                        virtualTime.time() + 60 * 60 * 1000,
-                      ],
+                      departureTime: moment(virtualTime.time())
+                        .add(1, 'hour')
+                        .format('hh:mm:ss'),
                     },
                     destination: lunchPlace,
                   }),
@@ -134,14 +134,13 @@ class Citizen {
                     // Go back from lunch to work
                     type: 'passenger',
                     passenger: this,
-                    pickup: lunchPlace,
-                    destination: {
-                      ...this.workplace,
-                      timeWindow: [
-                        virtualTime.time() + 60 * 60 * 1000,
-                        virtualTime.time() + 80 * 60 * 1000,
-                      ],
+                    pickup: {
+                      ...lunchPlace,
+                      departureTime: moment(virtualTime.time())
+                        .add(2, 'hour')
+                        .format('hh:mm:ss'),
                     },
+                    destination: this.workplace,
                   }),
                 ])
               )
@@ -155,10 +154,12 @@ class Citizen {
     )
 
     this.pickedUpEvents = this.bookings.pipe(
-      mergeMap((booking) => booking.pickedUpEvents)
+      mergeMap((booking) => booking.pickedUpEvents),
+      mapTo(this)
     )
     this.deliveredEvents = this.bookings.pipe(
-      mergeMap((booking) => booking.deliveredEvents)
+      mergeMap((booking) => booking.deliveredEvents),
+      mapTo(this)
     )
   }
 
