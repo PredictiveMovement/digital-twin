@@ -1,6 +1,5 @@
-const moment = require('moment')
-const { take, interval, toArray, tap, firstValueFrom } = require('rxjs')
-const { scan, share, shareReplay, map } = require('rxjs/operators')
+const { interval, firstValueFrom } = require('rxjs')
+const { scan, shareReplay, map, filter } = require('rxjs/operators')
 const {
   addMilliseconds,
   startOfDay,
@@ -17,7 +16,7 @@ class VirtualTime {
   }
 
   reset() {
-    const startDate = addHours(startOfDay(new Date()), 2)
+    const startDate = addHours(startOfDay(new Date()), this.startHour)
     const msUpdateFrequency = 100
     this.currentTime = interval(msUpdateFrequency).pipe(
       scan(
@@ -30,7 +29,7 @@ class VirtualTime {
   }
 
   getTimeStream() {
-    return this.currentTime()
+    return this.currentTime
   }
 
   getTimeInMilliseconds() {
@@ -53,16 +52,11 @@ class VirtualTime {
     this.setTimeMultiplier(0)
   }
 
-  async waitUntil(time, checkInterval = 100) {
+  async waitUntil(time) {
     if (this.timeMultiplier === 0) return // don't wait when time is stopped
     if (this.timeMultiplier === Infinity) return // return directly if time is set to infinity
     const waitUntil = time
-    return await new Promise((resolve) => {
-      return setInterval(async () => {
-        if ((await this.getTimeInMillisecondsAsPromise()) >= waitUntil)
-          return resolve()
-      }, checkInterval)
-    })
+    return firstValueFrom(this.currentTime.pipe(filter((e) => e >= waitUntil)))
   }
 
   // Set the speed in which time should advance
