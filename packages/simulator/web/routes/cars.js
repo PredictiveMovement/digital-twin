@@ -74,7 +74,7 @@ const register = (experiment, socket) => {
       )
       .subscribe((cars) => {
         if (!cars.length) return
-        socket.emit('cars', cars)
+        socket.volatile.emit('cars', cars)
       }),
     experiment.buses
       .pipe(
@@ -85,10 +85,10 @@ const register = (experiment, socket) => {
         }))
       )
       .subscribe((car) => {
-        socket.emit('cars', [car])
+        socket.volatile.emit('cars', [car])
       }),
     experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
-      socket.emit('taxi', { id, position: [lon, lat] })
+      socket.volatile.emit('taxi', { id, position: [lon, lat] })
     }),
   ]
 }
