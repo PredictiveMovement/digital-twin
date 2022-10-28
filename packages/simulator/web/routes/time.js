@@ -1,7 +1,7 @@
+const { throttleTime } = require('rxjs')
+
 const register = (experiment, socket) => {
-  setInterval(() => {
-    socket.emit('time', experiment.virtualTime.time())
-  }, 1000)
+  const virtualTime = experiment.virtualTime
 
   socket.on('reset', () => {
     experiment.virtualTime.reset()
@@ -18,7 +18,14 @@ const register = (experiment, socket) => {
   socket.on('speed', (speed) => {
     experiment.virtualTime.setTimeMultiplier(speed)
   })
-  return []
+  return [
+    virtualTime
+      .getTimeStream()
+      .pipe(
+        throttleTime(1000) // throttleTime 1000ms is used to not use the same update interval as the clock (100 ms)
+      )
+      .subscribe((time) => socket.emit('time', time)),
+  ]
 }
 
 module.exports = {

@@ -10,6 +10,8 @@ const {
   retry,
   throttleTime,
   mapTo,
+  tap,
+  mergeAll,
 } = require('rxjs')
 const { virtualTime } = require('../virtualTime')
 
@@ -69,7 +71,7 @@ class Citizen {
     this.bookings = this.intents.pipe(
       distinctUntilChanged(),
       filter((intent) => !ignoredIntents.includes(intent)),
-      catchError((err) => error('passenger bookings err', err) || of(err)),
+      catchError((err) => error('passenger bookings err', err)),
       mergeMap(async (intent) => {
         switch (intent) {
           case 'goToWork':
@@ -154,17 +156,27 @@ class Citizen {
         }
         return of(null)
       }),
-      filter((f) => f !== null),
-      catchError((err) => error('passenger intent err', err) || of(err)),
+      mergeAll(), // since previous step retruns an promise, we need to resolve "one step deeper"
+      catchError((err) => error('passenger intent err', err)),
+      filter((f) => f instanceof Booking),
       shareReplay()
     )
 
     this.pickedUpEvents = this.bookings.pipe(
       mergeMap((booking) => booking.pickedUpEvents),
+      tap((booking) => {
+        this.inVehicle = true
+        this.position = booking.pickup.position
+      }),
       mapTo(this)
     )
+
     this.deliveredEvents = this.bookings.pipe(
       mergeMap((booking) => booking.deliveredEvents),
+      tap((booking) => {
+        this.inVehicle = false
+        this.position = booking.destination.position
+      }),
       mapTo(this)
     )
   }

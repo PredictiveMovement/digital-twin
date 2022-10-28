@@ -126,7 +126,9 @@ class Vehicle {
       this.booking.pickup.departureTime,
       'hh:mm:ss'
     ).valueOf()
-    const waitingtime = moment(departure).diff(moment(virtualTime.time()))
+    const waitingtime = moment(departure).diff(
+      moment(await virtualTime.getTimeInMillisecondsAsPromise())
+    )
 
     if (waitingtime > 0) {
       this.simulate(false) // pause interpolation while we wait
