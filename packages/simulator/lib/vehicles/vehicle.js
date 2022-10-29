@@ -10,6 +10,8 @@ const Position = require('../models/position')
 const moment = require('moment')
 
 const { ReplaySubject } = require('rxjs')
+const { plan } = require('../vroom')
+const { taxiDispatch } = require('../dispatch/taxiDispatch')
 class Vehicle {
   constructor({
     id = 'v-' + safeId(),
@@ -116,6 +118,8 @@ class Vehicle {
     } else {
       // TODO: switch places with current booking if it makes more sense to pick this package up before picking up current
       this.queue.push(booking)
+      // TODO: use vroom to optimize the queue
+
       booking.queued(this)
     }
     return booking
