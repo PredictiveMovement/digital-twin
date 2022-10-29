@@ -82,11 +82,11 @@ class Citizen {
                 pickup: this.home,
                 destination: {
                   ...this.workplace,
-                  timeWindow: [
-                    await virtualTime.getTimeInMillisecondsAsPromise(),
-                    (await virtualTime.getTimeInMillisecondsAsPromise()) +
-                      60 * 60 * 1000,
-                  ],
+                  departureTime: moment(
+                    await virtualTime.getTimeInMillisecondsAsPromise()
+                  )
+                    .add(1, 'hour')
+                    .format('hh:mm:ss'),
                 },
               })
             )
@@ -97,11 +97,11 @@ class Citizen {
                 passenger: this,
                 pickup: {
                   ...this.workplace,
-                  timeWindow: [
-                    await virtualTime.getTimeInMillisecondsAsPromise(),
-                    (await virtualTime.getTimeInMillisecondsAsPromise()) +
-                      60 * 60 * 1000,
-                  ],
+                  departureTime: moment(
+                    await virtualTime.getTimeInMillisecondsAsPromise()
+                  )
+                    .add(1, 'hour')
+                    .format('hh:mm:ss'),
                 },
                 destination: this.home,
               })
