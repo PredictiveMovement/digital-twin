@@ -111,7 +111,7 @@ class Vehicle {
       this.busy = true
       this.booking = booking
       booking.assign(this)
-      this.status = 'Pickup'
+      this.status = 'pickup'
       this.statusEvents.next(this)
 
       this.navigateTo(booking.pickup.position)
@@ -162,7 +162,7 @@ class Vehicle {
       }
       if (this.booking && this.booking.destination) {
         this.booking.pickedUp(this.position)
-        this.status = 'Delivery'
+        this.status = 'delivery'
         this.statusEvents.next(this)
 
         // should we first pickup more bookings before going to the destination?
@@ -215,7 +215,7 @@ class Vehicle {
       if (nextBooking) {
         this.handleBooking(nextBooking)
       } else {
-        this.status = 'Ready'
+        this.status = 'ready'
         this.navigateTo(this.origin)
       }
     }
@@ -280,8 +280,8 @@ class Vehicle {
     this.statusEvents.next(this)
     if (this.booking) {
       this.simulate(false)
-      if (this.status === 'Pickup') return this.pickup()
-      if (this.status === 'Delivery') return this.dropOff()
+      if (this.status === 'pickup') return this.pickup()
+      if (this.status === 'delivery') return this.dropOff()
     }
   }
 

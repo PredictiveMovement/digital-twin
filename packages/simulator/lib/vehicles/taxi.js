@@ -1,13 +1,8 @@
-const moment = require('moment')
-const {
-  taxiDispatch,
-  findBestRouteToPickupBookings,
-} = require('../dispatch/taxiDispatch')
+const { findBestRouteToPickupBookings } = require('../dispatch/taxiDispatch')
 const { safeId } = require('../id')
 const { info } = require('../log')
 const Vehicle = require('../vehicles/vehicle')
 const { virtualTime } = require('../virtualTime')
-const { plan, taxiToVehicle, bookingToShipment } = require('../vroom')
 const fleet = {
   name: 'taxi',
 }
@@ -36,32 +31,29 @@ class Taxi extends Vehicle {
 
   stopped() {
     super.stopped()
+    this.pickNextInstructionFromPlan()
+  }
+
+  async pickNextInstructionFromPlan() {
     this.instruction = this.plan.shift()
     this.booking = this.instruction?.booking
-    this.status = this.instruction?.action || 'Ready'
+    this.status = this.instruction?.action || 'ready'
     this.statusEvents.next(this)
-
-    if (this.booking) {
-      switch (this.action) {
-        case 'Pickup':
-          return this.navigateTo(this.booking.pickup.position)
-        case 'Delivery':
-          return this.navigateTo(this.booking.destination.position)
-        default:
-          return this.navigateTo(this.startPosition)
-      }
+    switch (this.status) {
+      case 'pickup':
+        await virtualTime.waitUntil(this.instruction.arrival)
+        return this.navigateTo(this.booking.pickup.position)
+      case 'delivery':
+        await virtualTime.waitUntil(this.instruction.arrival)
+        return this.navigateTo(this.booking.destination.position)
+      default:
+        return this.navigateTo(this.startPosition)
     }
   }
 
   async pickup() {
-    await this.waitAtPickup()
-    info(
-      'Pickup passenger',
-      this.id,
-      this.booking?.passenger?.name,
-      this.currentPassengerCount
-    )
-    this.passengers = [...this.passengers, this.booking.passenger]
+    info('Pickup passenger', this.id, this.booking?.passenger?.name)
+    this.passengers = [...this.passengers, this.booking?.passenger]
     this.currentPassengerCount++
     this.passengers.push(this.booking.passenger)
     this.cargoEvents.next(this)
@@ -69,12 +61,7 @@ class Taxi extends Vehicle {
   }
 
   async dropOff() {
-    info(
-      'Dropoff passenger',
-      this.id,
-      this.booking?.passenger?.name,
-      this.currentPassengerCount
-    ) //TODO: NEVER GETS CALLED
+    info('Dropoff passenger', this.id, this.booking?.passenger?.name)
     this.passengers = this.passengers.filter(
       (p) => p !== this.booking.passenger
     )
@@ -84,16 +71,11 @@ class Taxi extends Vehicle {
     this.currentPassengerCount--
   }
 
-  handleBooking(booking) {
+  async handleBooking(booking) {
     super.handleBooking(booking)
     if (this.queue.length > 0) {
-      findBestRouteToPickupBookings(this, this.queue).then((plan) => {
-        this.plan = plan
-        if (!this.instruction) {
-          this.instruction = this.plan.shift()
-          this.navigateTo(this.instruction.booking.pickup.position)
-        }
-      })
+      this.plan = await findBestRouteToPickupBookings(this, this.queue)
+      if (!this.instruction) this.pickNextInstructionFromPlan()
     }
     return booking
   }

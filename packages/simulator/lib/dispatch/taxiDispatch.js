@@ -28,11 +28,11 @@ const findBestRouteToPickupBookings = async (taxi, bookings) => {
   const result = await plan({ shipments, vehicles })
 
   return result.routes[0]?.steps
-    .filter(({ type }) => ['pickup', 'delivery'].includes(type))
+    .filter(({ type }) => ['pickup', 'delivery', 'start'].includes(type))
     .map(({ id, type, arrival, departure }) => {
       const booking = bookings[id]
       const instruction = {
-        action: type === 'pickup' ? 'Pickup' : 'Delivery',
+        action: type,
         arrival,
         departure,
         booking,
