@@ -6,6 +6,7 @@ kind: Kustomization
 resources:
   - simulator.yaml
   - simulator-helsingborg.yaml
+  - visualisation-helsingborg.yaml
   - visualisation.yaml
 
 # namespace to deploy all Resources to
