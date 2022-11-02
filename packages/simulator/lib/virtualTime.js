@@ -22,7 +22,10 @@ class VirtualTime {
     this.currentTime = interval(msUpdateFrequency).pipe(
       scan(
         (acc, _curr) =>
-          addMilliseconds(acc, msUpdateFrequency * this.timeMultiplier * this.internalTimeScale),
+          addMilliseconds(
+            acc,
+            msUpdateFrequency * this.timeMultiplier * this.internalTimeScale
+          ),
         startDate
       ),
       shareReplay(1)

@@ -36,6 +36,7 @@ const MeasurementStationInfo = ({ data }) => {
         <Paragraph>Mätpunkt: {data.id}</Paragraph>
         <Paragraph>Antal tunga fordorn: {data.heavyTraficCount}</Paragraph>
         <Paragraph>Mäter bilar som kör: {data.direction}</Paragraph>
+        <Paragraph>Antal passerade fordon: {data.count}</Paragraph>
       </div>
     </Wrapper>
   )
