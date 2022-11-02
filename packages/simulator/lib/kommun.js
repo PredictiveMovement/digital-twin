@@ -90,7 +90,6 @@ class Kommun {
       this.taxis,
       this.fleets.pipe(
         mergeMap((fleet) => fleet.cars),
-        take(1)
       )
     ).pipe(shareReplay())
 
