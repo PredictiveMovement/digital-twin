@@ -37,8 +37,6 @@ spec:
           env:
             - name: VROOM_URL
               value: https://vroom.predictivemovement.se
-            - name: PROJECT_NAME
-              value: helsingborg
             - name: ELASTICSEARCH_URL
               value: http://elasticsearch.elasticsearch:9200
           volumeMounts:
