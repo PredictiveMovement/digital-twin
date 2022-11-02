@@ -13,6 +13,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: simulator-helsingborg
+  namespace: helsingborg-stad
 spec:
   selector:
     matchLabels:
