@@ -65,5 +65,33 @@ function addMeters(p1, { x, y }) {
 
   return { lon, lat }
 }
+function getNrOfPointsBetween(p1, p2, quantity) {
+  var points = new Array()
+  var latDiff = p2.lat - p1.lat,
+    lonDiff = p2.lon - p1.lon
+  var slope = (p2.lat - p1.lat) / (p2.lon - p1.lon)
+  var lon, lat
 
-module.exports = { pythagoras, haversine, bearing, convertPosition, addMeters }
+  for (var i = 0; i <= quantity; i++) {
+    if (slope == 0) {
+      lat = 0
+      lon = lonDiff * (i / quantity)
+    }
+    if (slope != 0) {
+      lat = latDiff * (i / quantity)
+      lon = lat / slope
+    }
+
+    points.push({ lon: lon + p1.lon, lat: lat + p1.lat })
+  }
+
+  return points
+}
+module.exports = {
+  pythagoras,
+  haversine,
+  bearing,
+  convertPosition,
+  addMeters,
+  getNrOfPointsBetween,
+}
