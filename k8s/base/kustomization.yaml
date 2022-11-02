@@ -5,6 +5,7 @@ kind: Kustomization
 # list of Resource Config to be Applied
 resources:
   - simulator.yaml
+  - simulator-helsingborg.yaml
   - visualisation.yaml
 
 # namespace to deploy all Resources to

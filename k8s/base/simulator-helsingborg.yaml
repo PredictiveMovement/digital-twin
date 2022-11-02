@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: simulator-helsingborg
+spec:
+  ports:
+    - port: 4000
+      targetPort: 4000
+  selector:
+    app: simulator-helsingborg
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulator-helsingborg
+spec:
+  selector:
+    matchLabels:
+      app: simulator-helsingborg
+  template:
+    metadata:
+      labels:
+        app: simulator-helsingborg
+    spec:
+      containers:
+        - name: simulator-helsingborg
+          image: iteam1337/pm-digital-twin-simulation-engine
+          resources:
+            requests:
+              cpu: "0.3"
+              memory: "512Mi"
+            limits:
+              cpu: "0.5"
+              memory: "2Gi"
+          ports:
+            - containerPort: 4000
+          env:
+            - name: VROOM_URL
+              value: https://vroom.predictivemovement.se
+            - name: ELASTICSEARCH_URL
+              value: http://elasticsearch.elasticsearch:9200
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: simulator-ingress-helsingborg
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.org/websocket-services: "simulator-helsingborg"
+spec:
+  tls:
+    - hosts:
+        - helsingborg.predictivemovement.se
+      secretName: helsingborg-tls
+  rules:
+    - host: helsingborg.predictivemovement.se
+      http:
+        paths:
+          - path: /socket.io/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: simulator-helsingborg
+                port:
+                  number: 4000
