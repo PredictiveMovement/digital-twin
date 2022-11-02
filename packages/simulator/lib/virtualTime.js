@@ -61,7 +61,7 @@ class VirtualTime {
 
   // Set the speed in which time should advance
   setTimeMultiplier(timeMultiplier) {
-    this.timeMultiplier = timeMultiplie
+    this.timeMultiplier = timeMultiplier
   }
 }
 
