@@ -28,10 +28,9 @@ spec:
           image: iteam1337/pm-digital-twin-simulation-engine
           resources:
             requests:
-              cpu: "0.3"
+              cpu: "0.5"
               memory: "512Mi"
             limits:
-              cpu: "0.5"
               memory: "2Gi"
           ports:
             - containerPort: 4000
