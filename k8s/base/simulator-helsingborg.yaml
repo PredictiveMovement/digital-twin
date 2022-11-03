@@ -28,7 +28,7 @@ spec:
           image: iteam1337/pm-digital-twin-simulation-engine
           resources:
             requests:
-              cpu: "0.5"
+              cpu: "1"
               memory: "512Mi"
             limits:
               memory: "2Gi"
