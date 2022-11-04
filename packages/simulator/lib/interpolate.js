@@ -1,5 +1,5 @@
-function interpolatePositionFromRoute(route, time) {
-  const currentTime = (time - route.started) / 1000
+function interpolatePositionFromRoute(route, time, diffFromLastTime) {
+  const timeSinceRouteStarted = (time - route.started) / 1000
   const points = extractPoints(route)
 
   if (route.started > time) {
@@ -12,8 +12,16 @@ function interpolatePositionFromRoute(route, time) {
       next: points[0],
     }
   }
+  const pointsDiffFromPrevious = points.filter((point) => {
+    const whenPointShouldBePassed = point.passed + point.duration
+    return (
+      whenPointShouldBePassed < timeSinceRouteStarted &&
+      whenPointShouldBePassed > timeSinceRouteStarted - diffFromLastTime / 1000
+    )
+  })
+
   const futurePoints = points.filter(
-    (point) => point.passed + point.duration > currentTime
+    (point) => point.passed + point.duration > timeSinceRouteStarted
   )
   const current = futurePoints[0]
   const next = futurePoints[1]
@@ -29,9 +37,9 @@ function interpolatePositionFromRoute(route, time) {
       next: null,
     }
 
-  const progress = (currentTime - current.passed) / current.duration
+  const progress = (timeSinceRouteStarted - current.passed) / current.duration
   // or
-  // var progress = (currentTime - start.passed) / (end.passed - start.passed)
+  // var progress = (timeSinceRouteStarted - start.passed) / (end.passed - start.passed)
   const speed = Math.round(current.meters / 1000 / (current.duration / 60 / 60))
 
   const interpolatedPosition = {
@@ -48,6 +56,7 @@ function interpolatePositionFromRoute(route, time) {
       lon: next.position.lon,
       instruction: next,
     },
+    pointsDiffFromPrevious,
   }
   return interpolatedPosition
 }

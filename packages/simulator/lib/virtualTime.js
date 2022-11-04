@@ -12,6 +12,7 @@ class VirtualTime {
     this.startHour = startHour
     this.timeMultiplier = timeMultiplier
     this.startHour = startHour
+    this.internalTimeScale = 1
     this.reset()
   }
 
@@ -21,7 +22,10 @@ class VirtualTime {
     this.currentTime = interval(msUpdateFrequency).pipe(
       scan(
         (acc, _curr) =>
-          addMilliseconds(acc, msUpdateFrequency * this.timeMultiplier),
+          addMilliseconds(
+            acc,
+            msUpdateFrequency * this.timeMultiplier * this.internalTimeScale
+          ),
         startDate
       ),
       shareReplay(1)
@@ -44,12 +48,11 @@ class VirtualTime {
   }
 
   play() {
-    this.setTimeMultiplier(this.oldTimeMultiplier + 1)
+    this.internalTimeScale = 1
   }
 
   pause() {
-    this.oldTimeMultiplier = this.timeMultiplier
-    this.setTimeMultiplier(0)
+    this.internalTimeScale = 0
   }
 
   async waitUntil(time) {
@@ -61,7 +64,7 @@ class VirtualTime {
 
   // Set the speed in which time should advance
   setTimeMultiplier(timeMultiplier) {
-    this.timeMultiplier = timeMultiplier - 1 // it makes more sense to have 1 mean realtime and 0 means stop the time.
+    this.timeMultiplier = timeMultiplier
   }
 }
 

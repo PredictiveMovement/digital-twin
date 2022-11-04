@@ -1,36 +1,36 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: simulator
+  name: simulator-helsingborg
 spec:
   ports:
     - port: 4000
       targetPort: 4000
   selector:
-    app: simulator
+    app: simulator-helsingborg
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: simulator
+  name: simulator-helsingborg
+  namespace: helsingborg-stad
 spec:
   selector:
     matchLabels:
-      app: simulator
+      app: simulator-helsingborg
   template:
     metadata:
       labels:
-        app: simulator
+        app: simulator-helsingborg
     spec:
       containers:
-        - name: simulator
+        - name: simulator-helsingborg
           image: iteam1337/pm-digital-twin-simulation-engine
           resources:
             requests:
-              cpu: "0.5"
+              cpu: "1"
               memory: "512Mi"
             limits:
-              cpu: "0.5"
               memory: "2Gi"
           ports:
             - containerPort: 4000
@@ -39,48 +39,32 @@ spec:
               value: https://vroom.predictivemovement.se
             - name: ELASTICSEARCH_URL
               value: http://elasticsearch.elasticsearch:9200
-          volumeMounts:
-            - name: cache
-              mountPath: /app/.cache
+            - name: PROJECT_NAME
+              value: helsingborg
 
-      volumes:
-        - name: cache
-          hostPath:
-            path: /storage/predictivemovement/rorla
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: simulator-ingress
+  name: simulator-ingress-helsingborg
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.org/websocket-services: "simulator"
+    nginx.org/websocket-services: "simulator-helsingborg"
 spec:
   tls:
     - hosts:
-        - rorla-stage.iteam.services
-        - rorla-stage.predictivemovement.se
-      secretName: rorla-stage-tls
+        - helsingborg.predictivemovement.se
+      secretName: helsingborg-tls
   rules:
-    - host: rorla-stage.iteam.services
+    - host: helsingborg.predictivemovement.se
       http:
         paths:
           - path: /socket.io/.*
             pathType: Prefix
             backend:
               service:
-                name: simulator
-                port:
-                  number: 4000
-    - host: rorla-stage.predictivemovement.se
-      http:
-        paths:
-          - path: /socket.io/.*
-            pathType: Prefix
-            backend:
-              service:
-                name: simulator
+                name: simulator-helsingborg
                 port:
                   number: 4000
