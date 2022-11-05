@@ -146,13 +146,6 @@ class Region {
             pluck('taxi'),
             filter(({ cargo, capacity }) => cargo.length + 1 < capacity),
             takeNearest(center, 10),
-            tap((taxis) =>
-              console.log(
-                'dispatching taxis bookings',
-                taxis.length,
-                bookings.length
-              )
-            ),
             filter((taxis) => taxis.length),
             mergeMap((taxis) => taxiDispatch(taxis, bookings), 3),
             catchError((err) => error('taxi dispatch err', err))
