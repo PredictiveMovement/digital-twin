@@ -460,37 +460,7 @@
     "telefon": "0961-14000",
     "epost": "arjeplogs.kommun@arjeplog.se",
     "namn": "Arjeplogs kommun",
-    "fleets": [
-      {
-        "name": "Postnord",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 4,
-          "lättLastbil": 1,
-          "bil": 0
-        },
-        "marketshare": 0.6,
-        "hub": [21.034263, 64.746704]
-      },
-      {
-        "name": "Röd",
-        "vehicles": { "tungLastbil": 0, "medeltungLastbil": 2 },
-        "marketshare": 0.18,
-        "hub": [21.034263, 64.746704]
-      },
-      {
-        "name": "Gul",
-        "vehicles": { "medeltungLastbil": 1 },
-        "marketshare": 0.06,
-        "hub": [21.034263, 64.746704]
-      },
-      {
-        "name": "Brun",
-        "vehicles": { "medeltungLastbil": 1 },
-        "marketshare": 0.06,
-        "hub": [21.034263, 64.746704]
-      }
-    ],
+
     "geometry": {
       "coordinates": [
         [
@@ -558,37 +528,7 @@
     "telefon": "0960-15500",
     "epost": "kommun@arvidsjaur.se",
     "namn": "Arvidsjaurs kommun",
-    "fleets": [
-      {
-        "name": "Postnord",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 5,
-          "lättLastbil": 1,
-          "bil": 0
-        },
-        "marketshare": 60,
-        "hub": [21.034263, 64.746704]
-      },
-      {
-        "name": "Röd",
-        "vehicles": { "tungLastbil": 0, "medeltungLastbil": 3 },
-        "marketshare": 18,
-        "hub": [21.034263, 64.746704]
-      },
-      {
-        "name": "Gul",
-        "vehicles": { "lättLastbil": 1 },
-        "marketshare": 6,
-        "hub": [21.034263, 64.746704]
-      },
-      {
-        "name": "Brun",
-        "vehicles": { "lättLastbil": 1 },
-        "marketshare": 6,
-        "hub": [21.034263, 64.746704]
-      }
-    ],
+
     "geometry": {
       "coordinates": [
         [
@@ -1452,19 +1392,6 @@
     "telefon": "0921-62000",
     "epost": "kommunen@boden.se",
     "namn": "Bodens kommun",
-    "fleets": [
-      {
-        "name": "Postnord",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 2,
-          "lättLastbil": 2,
-          "bil": 0
-        },
-        "marketshare": 0.6,
-        "hub": [22.045246, 65.614869]
-      }
-    ],
     "geometry": {
       "coordinates": [
         [
@@ -6898,37 +6825,6 @@
     "telefon": "042-105000",
     "epost": "helsingborg@helsingborg.se",
     "namn": "Helsingborgs stad",
-    "fleets": [
-      {
-        "name": "Postnord",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 4,
-          "lättLastbil": 1,
-          "bil": 0
-        },
-        "marketshare": 0.6,
-        "hub": [13.016601, 55.622044]
-      },
-      {
-        "name": "Röd",
-        "vehicles": { "tungLastbil": 0, "medeltungLastbil": 2 },
-        "marketshare": 0.18,
-        "hub": [13.050474, 55.622348]
-      },
-      {
-        "name": "Gul",
-        "vehicles": { "lättLastbil": 2 },
-        "marketshare": 0.06,
-        "hub": [12.6395, 55.606284]
-      },
-      {
-        "name": "Brun",
-        "vehicles": { "lättLastbil": 2 },
-        "marketshare": 0.06,
-        "hub": [13.199527, 55.688823]
-      }
-    ],
     "geometry": {
       "coordinates": [
         [
@@ -10070,7 +9966,6 @@
     "telefon": "0980-70000",
     "epost": "kommun@kommun.kiruna.se",
     "namn": "Kiruna kommun",
-    "fleets": [],
     "geometry": {
       "coordinates": [
         [
@@ -12796,64 +12691,7 @@
       "type": "Polygon"
     },
     "url": "http://www.ljusdal.se/",
-    "postort": "LJUSDAL",
-    "fleets": [
-      {
-        "name": "Postnord",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 3,
-          "lättLastbil": 1,
-          "bil": 0
-        },
-        "marketshare": 60,
-        "hub": [17.08409, 61.741754]
-      },
-      {
-        "name": "Röd",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 1,
-          "lättLastbil": 1,
-          "bil": 0
-        },
-        "marketshare": 12,
-        "hub": [17.08409, 61.741754]
-      },
-      {
-        "name": "Gul",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 1,
-          "lättLastbil": 1,
-          "bil": 0
-        },
-        "marketshare": 6,
-        "hub": [17.08409, 61.741754]
-      },
-      {
-        "name": "Brun",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 0,
-          "lättLastbil": 1,
-          "bil": 0
-        },
-        "marketshare": 6,
-        "hub": [17.085194, 61.741017]
-      },
-      {
-        "name": "SNX",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 2,
-          "lättLastbil": 1,
-          "bil": 0
-        },
-        "marketshare": 6,
-        "hub": [16.058036, 61.820841]
-      }
-    ]
+    "postort": "LJUSDAL"
   },
   {
     "kod": "1864",
@@ -13101,19 +12939,7 @@
     "telefon": "0920-453000",
     "epost": "lulea.kommun@lulea.se",
     "namn": "Luleå kommun",
-    "fleets": [
-      {
-        "name": "Postnord",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 4,
-          "lättLastbil": 1,
-          "bil": 0
-        },
-        "marketshare": 0.6,
-        "hub": [13.016601, 55.622044]
-      }
-    ],
+
     "geometry": {
       "coordinates": [
         [
@@ -16923,52 +16749,7 @@
     "telefon": "0978-12000",
     "epost": "kommun@pajala.se",
     "namn": "Pajala kommun",
-    "fleets": [
-      {
-        "name": "Postnord",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 1,
-          "lättLastbil": 3,
-          "bil": 0
-        },
-        "marketshare": 60,
-        "hub": [22.050702, 65.610326]
-      },
-      {
-        "name": "Röd",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 0,
-          "lättLastbil": 2,
-          "bil": 0
-        },
-        "marketshare": 18,
-        "hub": [22.050702, 65.610326]
-      },
-      {
-        "name": "Gul",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 0,
-          "lättLastbil": 1,
-          "bil": 0
-        },
-        "marketshare": 6,
-        "hub": [22.050702, 65.610326]
-      },
-      {
-        "name": "Brun",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 0,
-          "lättLastbil": 1,
-          "bil": 0
-        },
-        "marketshare": 6,
-        "hub": [22.050702, 65.610326]
-      }
-    ],
+
     "geometry": {
       "coordinates": [
         [
@@ -20207,52 +19988,7 @@
     "telefon": "0951-14000",
     "epost": "ks@storuman.se",
     "namn": "Storumans kommun",
-    "fleets": [
-      {
-        "name": "Postnord",
-        "vehicles": {
-          "tungLastbil": 1,
-          "medeltungLastbil": 2,
-          "lättLastbil": 1,
-          "bil": 0
-        },
-        "marketshare": 60,
-        "hub": [14.640025, 63.222212]
-      },
-      {
-        "name": "Röd",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 1,
-          "lättLastbil": 2,
-          "bil": 0
-        },
-        "marketshare": 18,
-        "hub": [20.136678, 63.85036]
-      },
-      {
-        "name": "Gul",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 1,
-          "lättLastbil": 1,
-          "bil": 0
-        },
-        "marketshare": 6,
-        "hub": [20.136678, 63.85036]
-      },
-      {
-        "name": "Brun",
-        "vehicles": {
-          "tungLastbil": 0,
-          "medeltungLastbil": 1,
-          "lättLastbil": 0,
-          "bil": 0
-        },
-        "marketshare": 6,
-        "hub": [20.136678, 63.85036]
-      }
-    ],
+
     "geometry": {
       "coordinates": [
         [
@@ -26534,15 +26270,7 @@
     "telefon": "0490-254000",
     "epost": "vasterviks.kommun@vastervik.se",
     "namn": "Västerviks kommun",
-    "fleets": [
-      {
-        "name": "Drönarleverans AB",
-        "vehicles": { "drönare": 200 },
-        "percentageHomeDelivery": 100,
-        "marketshare": 20,
-        "hub": [16.528936, 57.776915]
-      }
-    ],
+
     "geometry": {
       "coordinates": [
         [
