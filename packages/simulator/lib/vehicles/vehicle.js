@@ -1,3 +1,6 @@
+const { ReplaySubject } = require('rxjs')
+const { tap, pairwise } = require('rxjs/operators')
+
 const osrm = require('../osrm')
 const { haversine, bearing } = require('../distance')
 const interpolate = require('../interpolate')
@@ -9,8 +12,9 @@ const { virtualTime } = require('../virtualTime')
 const Position = require('../models/position')
 const moment = require('moment')
 
-const { ReplaySubject } = require('rxjs')
-const { tap, pairwise } = require('rxjs/operators')
+const { plan } = require('../vroom')
+const { taxiDispatch } = require('../dispatch/taxiDispatch')
+
 class Vehicle {
   constructor({
     id = 'v-' + safeId(),
@@ -120,13 +124,15 @@ class Vehicle {
       this.busy = true
       this.booking = booking
       booking.assign(this)
-      this.status = 'Pickup'
+      this.status = 'pickup'
       this.statusEvents.next(this)
 
       this.navigateTo(booking.pickup.position)
     } else {
       // TODO: switch places with current booking if it makes more sense to pick this package up before picking up current
       this.queue.push(booking)
+      // TODO: use vroom to optimize the queue
+
       booking.queued(this)
     }
     return booking
@@ -169,7 +175,7 @@ class Vehicle {
       }
       if (this.booking && this.booking.destination) {
         this.booking.pickedUp(this.position)
-        this.status = 'Delivery'
+        this.status = 'delivery'
         this.statusEvents.next(this)
 
         // should we first pickup more bookings before going to the destination?
@@ -222,7 +228,7 @@ class Vehicle {
       if (nextBooking) {
         this.handleBooking(nextBooking)
       } else {
-        this.status = 'Ready'
+        this.status = 'ready'
         this.navigateTo(this.origin)
       }
     }
@@ -286,8 +292,8 @@ class Vehicle {
     this.statusEvents.next(this)
     if (this.booking) {
       this.simulate(false)
-      if (this.status === 'Pickup') return this.pickup()
-      if (this.status === 'Delivery') return this.dropOff()
+      if (this.status === 'pickup') return this.pickup()
+      if (this.status === 'delivery') return this.dropOff()
     }
   }
 
