@@ -88,7 +88,7 @@ function read() {
     ),
     tap((kommun) => {
       if (defaultEmitters.includes('passengers')) {
-        getCitizens(kommun).pipe(take(10)).subscribe((citizen) =>
+        getCitizens(kommun).subscribe((citizen) =>
           kommun.citizens.next(citizen)
         )
       }

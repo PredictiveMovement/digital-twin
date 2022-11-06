@@ -47,6 +47,8 @@ class Vehicle {
     this.created = this.time()
     this.co2PerKmKg = co2PerKmKg
     this.vehicleType = 'default'
+
+    // TODO: rename these to events.moved, events.cargo, events.status
     this.movedEvents = new ReplaySubject()
     this.cargoEvents = new ReplaySubject()
     this.statusEvents = new ReplaySubject()
