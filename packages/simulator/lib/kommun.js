@@ -101,9 +101,8 @@ class Kommun {
 
     this.dispatchedBookings = this.fleets.pipe(
       mergeMap((fleet) => fleet.dispatchedBookings),
-      catchError((error) => {
-        error(error)
-        return of(false)
+      catchError((err) => {
+        error('kommun dispatched booking', err)
       }),
       shareReplay()
     )

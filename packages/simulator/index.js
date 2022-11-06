@@ -80,7 +80,10 @@ const engine = {
       })
 
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(
-      mergeMap((booking) => booking.statusEvents),
+      mergeMap((booking) => {
+        if (!booking.statusEvents) throw error('no booking stream', booking)
+        return booking.statusEvents
+      }),
       catchError((err) => error('bookingUpdates', err)),
       share()
     )

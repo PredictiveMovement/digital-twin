@@ -1,4 +1,12 @@
-const { pipe, from, shareReplay, mergeMap, merge } = require('rxjs')
+const {
+  pipe,
+  from,
+  shareReplay,
+  mergeMap,
+  merge,
+  Subject,
+  of,
+} = require('rxjs')
 const {
   map,
   groupBy,
@@ -119,12 +127,15 @@ class Region {
       share()
     )
 
+    this.manualBookings = new Subject()
+
     /*
     // TODO: Move this to dispatch central:
     // TODO: add kmeans clustering to group bookings and cars by pickup
     // send those to vroom and get back a list of assignments
     // for each assignment, take the booking and dispatch it to the car / fleet */
     this.dispatchedBookings = merge(
+      this.manualBookings,
       this.stopAssignments.pipe(
         mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5)
       ),
@@ -132,7 +143,9 @@ class Region {
         bufferTime(5000),
         filter((bookings) => bookings.length > 0),
         tap((bookings) => info('Clustering bookings', bookings.length)),
-        switchMap((bookings) => clusterPositions(bookings)),
+        switchMap((bookings) =>
+          clusterPositions(bookings, Math.max(5, bookings.length / 10))
+        ),
         mergeAll(),
         map(({ center, items: bookings }) => ({ center, bookings })),
         catchError((err) => error('taxi cluster err', err)),
@@ -148,7 +161,13 @@ class Region {
             takeNearest(center, 10),
             filter((taxis) => taxis.length),
             mergeMap((taxis) => taxiDispatch(taxis, bookings), 3),
-            catchError((err) => error('taxi dispatch err', err))
+            catchError((err) => {
+              // retry these bookings in a new cluster
+              bookings.forEach((booking) => this.manualBookings.next(booking))
+              error('taxiDispatch', err)
+              return of([])
+            }),
+            filter((bookings) => bookings.length)
           )
         ),
         mergeAll(),
