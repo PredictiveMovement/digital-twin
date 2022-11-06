@@ -1,9 +1,53 @@
 const fetch = require('node-fetch')
 // eslint-disable-next-line no-undef
 const vroomUrl = process.env.VROOM_URL || 'https://vroom.predictivemovement.se/'
-const { info } = require('./log')
+const moment = require('moment')
 
 module.exports = {
+  bookingToShipment({ id, pickup, destination }, i) {
+    return {
+      id: i,
+      description: id,
+      amount: [1],
+      pickup: {
+        time_windows: pickup.departureTime?.length
+          ? [
+              [
+                moment(pickup.departureTime, 'hh:mm:ss').unix(),
+                moment(pickup.departureTime, 'hh:mm:ss')
+                  .add(5, 'minutes')
+                  .unix(),
+              ],
+            ]
+          : undefined,
+        id: i,
+        location: [pickup.position.lon, pickup.position.lat],
+      },
+      delivery: {
+        id: i,
+        location: [destination.position.lon, destination.position.lat],
+        time_windows: destination.arrivalTime?.length
+          ? [
+              [
+                moment(destination.arrivalTime, 'hh:mm:ss').unix(),
+                moment(destination.arrivalTime, 'hh:mm:ss')
+                  .add(5, 'minutes')
+                  .unix(),
+              ],
+            ]
+          : undefined,
+      },
+    }
+  },
+  taxiToVehicle({ id, position, capacity, heading, bookings }, i) {
+    return {
+      id: i,
+      description: id,
+      capacity: [capacity],
+      start: [position.lon, position.lat],
+      end: heading ? [heading.lon, heading.lat] : undefined,
+    }
+  },
   async plan({ jobs, shipments, vehicles }) {
     return await fetch(vroomUrl, {
       method: 'POST',

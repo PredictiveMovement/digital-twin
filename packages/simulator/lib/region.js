@@ -159,10 +159,11 @@ class Region {
           )
         ),
         mergeAll(),
-        map(({ taxi, bookings }) =>
-          bookings.map((booking) => taxi.handleBooking(booking))
+        mergeMap(({ taxi, bookings }) =>
+          from(bookings).pipe(
+            mergeMap((booking) => taxi.handleBooking(booking), 5)
+          )
         ),
-        mergeAll(),
         catchError((err) => error('dispatchedBookings', err)),
         share()
       )
