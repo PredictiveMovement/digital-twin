@@ -149,7 +149,7 @@ class Region {
         filter((bookings) => bookings.length > 0),
         tap((bookings) => info('Clustering bookings', bookings.length)),
         switchMap((bookings) =>
-          clusterPositions(bookings, Math.max(5, bookings.length / 10))
+          clusterPositions(bookings, Math.max(5, Math.ceil(bookings.length / 10)))
         ),
         mergeAll(),
         map(({ center, items: bookings }) => ({ center, bookings })),
