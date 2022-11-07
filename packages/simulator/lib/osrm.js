@@ -28,7 +28,11 @@ module.exports = {
       fetch(
         `${osrmUrl}/route/v1/driving/${coordinates}?steps=true&alternatives=false&overview=full&annotations=true`
       )
-        .then((response) => response.json())
+        .then(
+          (res) =>
+            (res.ok && res.json()) ||
+            res.text().then((text) => Promise.reject(text)) // sometimes we get a text error message, instead of trying to parse it as json we just return a rejected promise
+        )
 
         // fastest route
         .then(

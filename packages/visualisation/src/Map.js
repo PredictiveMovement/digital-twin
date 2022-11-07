@@ -378,7 +378,7 @@ const Map = ({
 
   const bookingLayer = new ScatterplotLayer({
     id: 'booking-layer',
-    data: bookings,
+    data: bookings.filter((b) => !b.assigned),
     opacity: 1,
     stroked: false,
     filled: true,
@@ -472,7 +472,7 @@ const Map = ({
   const routesData =
     showQueuedBookings &&
     bookings
-      //.filter((booking) => booking.status === 'Queued')
+      .filter((b) => b.type !== 'busstop')
       .map((booking) => {
         if (!cars) return null
         const car = cars.find((car) => car.id === booking.carId)
@@ -481,6 +481,13 @@ const Map = ({
         switch (booking.status) {
           case 'Picked up':
             return {
+              inbound: [169, 178, 237, 255],
+              outbound: getColorBasedOnFleet(car),
+              from: car.position,
+              to: booking.destination,
+            }
+          case 'Assigned':
+            return {
               inbound: getColorBasedOnFleet(car),
               outbound: getColorBasedOnFleet(car),
               from: car.position,
@@ -488,8 +495,8 @@ const Map = ({
             }
           case 'Queued':
             return {
-              inbound: [178, 169, 2, 20],
-              outbound: [178, 169, 2, 20],
+              inbound: getColorBasedOnFleet(car),
+              outbound: [90, 40, 200, 100],
               from: car.position,
               to: booking.pickup,
             }
@@ -498,8 +505,8 @@ const Map = ({
 
           default:
             return {
-              inbound: [237, 178, 169, 20],
-              outbound: [237, 178, 169, 100],
+              inbound: [90, 200, 200, 200],
+              outbound: [90, 40, 200, 100],
               from: booking.pickup,
               to: booking.destination,
             }
