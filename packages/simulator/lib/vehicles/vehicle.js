@@ -297,6 +297,7 @@ class Vehicle {
   }
 
   stopped() {
+    this.speed = 0
     this.statusEvents.next(this)
     if (this.booking) {
       this.simulate(false)
