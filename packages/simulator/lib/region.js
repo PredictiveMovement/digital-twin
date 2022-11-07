@@ -20,6 +20,8 @@ const {
   catchError,
   switchMap,
   bufferTime,
+  retryWhen,
+  delay,
 } = require('rxjs/operators')
 const Booking = require('./models/booking')
 const { busDispatch } = require('./dispatch/busDispatch')
@@ -123,6 +125,7 @@ class Region {
 
     this.unhandledBookings = this.citizens.pipe(
       mergeMap((passenger) => passenger.bookings),
+      filter((booking) => !booking.assigned),
       catchError((err) => error('unhandledBookings', err)),
       share()
     )
@@ -137,7 +140,9 @@ class Region {
     this.dispatchedBookings = merge(
       this.manualBookings,
       this.stopAssignments.pipe(
-        mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5)
+        mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5),
+        filter((booking) => !booking.assigned),
+        catchError((err) => error('region stopAssignments', err))
       ),
       this.unhandledBookings.pipe(
         bufferTime(5000),
@@ -149,26 +154,30 @@ class Region {
         mergeAll(),
         map(({ center, items: bookings }) => ({ center, bookings })),
         catchError((err) => error('taxi cluster err', err)),
-        mergeMap(({ center, bookings }) =>
-          this.taxis.pipe(
-            map((taxi) => ({
-              taxi,
-              distance: haversine(taxi.position, center),
-            })),
-            filter(({ distance }) => distance < 100_000),
-            pluck('taxi'),
-            filter(({ cargo, capacity }) => cargo.length + 1 < capacity),
-            takeNearest(center, 10),
-            filter((taxis) => taxis.length),
-            mergeMap((taxis) => taxiDispatch(taxis, bookings), 3),
-            catchError((err) => {
-              // retry these bookings in a new cluster
-              bookings.forEach((booking) => this.manualBookings.next(booking))
-              error('taxiDispatch', err)
-              return of([])
-            }),
-            filter((bookings) => bookings.length)
-          )
+        mergeMap(
+          ({ center, bookings }) =>
+            this.taxis.pipe(
+              map((taxi) => ({
+                taxi,
+                distance: haversine(taxi.position, center),
+              })),
+              filter(({ distance }) => distance < 100_000),
+              pluck('taxi'),
+              filter(
+                ({ passengers, capacity }) => passengers.length + 1 < capacity
+              ),
+              takeNearest(center, 10),
+              filter((taxis) => taxis.length),
+              mergeMap((taxis) => taxiDispatch(taxis, bookings), 1),
+              catchError((err) => {
+                // retry these bookings in a new cluster
+                bookings.forEach((booking) => this.manualBookings.next(booking))
+                error('taxiDispatch', err)
+                return of([])
+              }),
+              filter((bookings) => bookings.length)
+            ),
+          1 // one cluster at a time
         ),
         mergeAll(),
         mergeMap(({ taxi, bookings }) =>
@@ -176,7 +185,12 @@ class Region {
             mergeMap((booking) => taxi.handleBooking(booking), 5)
           )
         ),
-        catchError((err) => error('dispatchedBookings', err)),
+        retryWhen((errors) =>
+          errors.pipe(
+            tap((err) => error('region taxi error, retrying in 1s...', err)),
+            delay(1000)
+          )
+        ),
         share()
       )
     )

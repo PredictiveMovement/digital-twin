@@ -1,10 +1,11 @@
 const fetch = require('node-fetch')
 const polyline = require('polyline')
 const osrmUrl =
+  // eslint-disable-next-line no-undef
   process.env.OSRM_URL ||
   'https://osrm.predictivemovement.se' ||
   'http://localhost:5000'
-const { error } = require('./log')
+const { warn } = require('./log')
 
 const decodePolyline = function (geometry) {
   return polyline.decode(geometry).map((point) => ({
@@ -56,7 +57,7 @@ module.exports = {
         return response.json()
       },
       (err) => {
-        console.warn('OSRM fetch err', error.message, url)
+        warn('OSRM fetch err', err.message, url)
       }
     )
 
