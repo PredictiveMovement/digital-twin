@@ -166,7 +166,7 @@ describe('A car', () => {
     // åk till Ljusdal och hämta paket som ska tillbaka till arjeplog
     car.handleBooking(
       new Booking({
-        id: 1,
+        id: 'b-1',
         ...ljusdalToArjeplog,
       })
     )
@@ -174,34 +174,35 @@ describe('A car', () => {
     // men ta med dig ett paket när du ändå åker till Ljusdal
     car.handleBooking(
       new Booking({
-        id: 2,
+        id: 'b-2',
         ...arjeplogToLjusdal,
       })
     )
 
     // sen har vi flera paket som ska till till Arjeplog
     range(10).map((id) =>
-      car.handleBooking(new Booking({ id, ...ljusdalToArjeplog }))
+      car.handleBooking(new Booking({ id: `b-${id+2}`, ...ljusdalToArjeplog }))
     )
 
     const log = await car.statusEvents
-      .pipe(
-        map(
-          ({ status, position, queue }) =>
-            `${status}:${positionName(position)}:${queue.length}`
-        ),
-        take(15),
-        toArray()
-      )
-      .toPromise()
+    .pipe(
+      map(
+        ({ status, position, id }) =>
+          `${status}:${positionName(position)}:${id}`
+      ),
+      take(7),
+      toArray()
+    ).toPromise()
 
-    expect(log).toEqual([
-      'Pickup:Arjeplog:11',
-      'Pickup:Ljusdal:11', // TODO: vilken ordning är mest logisk?
-      'AtPickup:Ljusdal:1',
-      'DropOff:Arjeplog:1',
-      'AtDropOff:Arjeplog:1',
-      'Pickup:Arjeplog:11',
+    expect(log).toEqual([ // TODO: vilken ordning är mest logisk?
+      'Pickup:Arjeplog:v-1',
+      'Pickup:Ljusdal:v-1',
+      'AtPickup:Ljusdal:v-1',
+      'Delivery:Ljusdal:v-1',
+      'Delivery:Arjeplog:v-1',
+      'AtDropOff:Arjeplog:v-1',
+      'AtDropOff:Arjeplog:v-1',
+
     ])
 
     expect(car.queue).toHaveLength(11)
