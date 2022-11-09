@@ -97,18 +97,7 @@ function extractPoints(route) {
   return points
 }
 
-function getDiff(route, timeA, timeB) {
-  const a = interpolatePositionFromRoute(route.started, timeA, points)
-  const b = interpolatePositionFromRoute(route.started, timeB, points)
-
-  return {
-    distance: b.instruction.distance - a.instruction.distance,
-    duration: b.instruction.passed - a.instruction.passed,
-  }
-}
-
 module.exports = {
   route: interpolatePositionFromRoute,
-  getDiff: getDiff,
   points: extractPoints,
 }
