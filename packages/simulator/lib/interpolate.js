@@ -1,31 +1,32 @@
-function interpolatePositionFromRoute(route, time, diffFromLastTime) {
-  const timeSinceRouteStarted = (time - route.started) / 1000
-  const points = extractPoints(route)
+function interpolatePositionFromRoute(
+  routeStarted,
+  time,
+  remainingPointsInRoute
+) {
+  const timeSinceRouteStarted = (time - routeStarted) / 1000
 
-  if (route.started > time) {
+  if (routeStarted > time) {
     // route.started > time happens when a "reset" is triggered
     return {
-      lat: points[0].position.lat,
-      lon: points[0].position.lon,
+      lat: remainingPointsInRoute[0].position.lat,
+      lon: remainingPointsInRoute[0].position.lon,
       speed: 0,
-      instruction: points[0],
-      next: points[0],
+      instruction: remainingPointsInRoute[0],
+      next: remainingPointsInRoute[0],
+      remainingPoints: [],
+      skippedPoints: [],
     }
   }
-  const pointsDiffFromPrevious = points.filter((point) => {
-    const whenPointShouldBePassed = point.passed + point.duration
-    return (
-      whenPointShouldBePassed < timeSinceRouteStarted &&
-      whenPointShouldBePassed > timeSinceRouteStarted - diffFromLastTime / 1000
-    )
-  })
 
-  const futurePoints = points.filter(
+  const futurePoints = remainingPointsInRoute.filter(
     (point) => point.passed + point.duration > timeSinceRouteStarted
   )
+  const nrOfPointsSkipped = remainingPointsInRoute.indexOf(futurePoints[0]) + 1
+  const skippedPoints = remainingPointsInRoute.slice(0, nrOfPointsSkipped)
   const current = futurePoints[0]
   const next = futurePoints[1]
-  const lastPoint = points[points.length - 1]
+  const lastPoint = remainingPointsInRoute[remainingPointsInRoute.length - 1]
+  const remainingPoints = futurePoints
 
   // when we reach the end
   if (!current || !next)
@@ -35,6 +36,8 @@ function interpolatePositionFromRoute(route, time, diffFromLastTime) {
       speed: 0,
       instruction: lastPoint,
       next: null,
+      remainingPoints,
+      skippedPoints: [],
     }
 
   const progress = (timeSinceRouteStarted - current.passed) / current.duration
@@ -56,7 +59,8 @@ function interpolatePositionFromRoute(route, time, diffFromLastTime) {
       lon: next.position.lon,
       instruction: next,
     },
-    pointsDiffFromPrevious,
+    skippedPoints,
+    remainingPoints,
   }
   return interpolatedPosition
 }
@@ -93,18 +97,7 @@ function extractPoints(route) {
   return points
 }
 
-function getDiff(route, timeA, timeB) {
-  const a = interpolatePositionFromRoute(route, timeA)
-  const b = interpolatePositionFromRoute(route, timeB)
-
-  return {
-    distance: b.instruction.distance - a.instruction.distance,
-    duration: b.instruction.passed - a.instruction.passed,
-  }
-}
-
 module.exports = {
   route: interpolatePositionFromRoute,
-  getDiff: getDiff,
   points: extractPoints,
 }

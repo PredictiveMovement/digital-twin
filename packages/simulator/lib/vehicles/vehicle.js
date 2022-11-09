@@ -1,6 +1,3 @@
-const { ReplaySubject } = require('rxjs')
-const { tap, pairwise } = require('rxjs/operators')
-
 const osrm = require('../osrm')
 const { haversine, bearing } = require('../distance')
 const interpolate = require('../interpolate')
@@ -12,8 +9,8 @@ const { virtualTime } = require('../virtualTime')
 const Position = require('../models/position')
 const moment = require('moment')
 
-const { plan } = require('../vroom')
-const { taxiDispatch } = require('../dispatch/taxiDispatch')
+const { ReplaySubject } = require('rxjs')
+const { scan, takeWhile } = require('rxjs/operators')
 
 class Vehicle {
   constructor({
@@ -69,31 +66,33 @@ class Vehicle {
       this.movementSubscription.unsubscribe()
     }
     if (!route) return
-    if (virtualTime.timeMultiplier === Infinity)
+    if (virtualTime.timeMultiplier === Infinity) {
       return this.updatePosition(route) // teleport mode
+    }
+
     this.movementSubscription = virtualTime
       .getTimeInMilliseconds()
-      .pipe(pairwise())
-      .subscribe(([previousTimeInMs, currentTimeInMs]) => {
-        const diffFromLastTime = previousTimeInMs
-          ? currentTimeInMs - previousTimeInMs
-          : 0
-        if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
-        const { next, pointsDiffFromPrevious, ...position } =
-          interpolate.route(route, currentTimeInMs, diffFromLastTime) ??
-          this.heading
-        const newPosition = new Position(position)
-        if (route.started > currentTimeInMs) {
-          this.movementSubscription.unsubscribe()
-          return
-        }
-        this.updatePosition(
-          newPosition,
-          pointsDiffFromPrevious,
-          currentTimeInMs
-        )
-        if (!next) this.stopped()
-      })
+      .pipe(
+        scan((prevRemainingPointsInRoute, currentTimeInMs) => {
+          const { next, skippedPoints, remainingPoints, ...position } =
+            interpolate.route(
+              route.started,
+              currentTimeInMs,
+              prevRemainingPointsInRoute
+            ) ?? this.heading
+          const newPosition = new Position(position)
+          if (route.started > currentTimeInMs) {
+            return []
+          }
+          this.updatePosition(newPosition, skippedPoints, currentTimeInMs)
+          if (remainingPoints.length < 5) {
+            this.stopped()
+          }
+          return remainingPoints
+        }, interpolate.points(route)),
+        takeWhile((e) => e?.length > 4)
+      )
+      .subscribe((e) => null)
   }
 
   navigateTo(position) {
@@ -248,23 +247,22 @@ class Vehicle {
     const timeDiff = time - this.lastPositionUpdate
 
     const metersMoved =
-      (this.route &&
-        this.lastPositionUpdate &&
-        interpolate.getDiff(this.route, this.lastPositionUpdate, time)
-          .distance) ||
-      haversine(lastPosition, position)
-    const [km, h] = [
-      metersMoved / 1000,
-      (time - this.lastPositionUpdate) / 1000 / 60 / 60,
-    ]
+      pointsPassedSinceLastUpdate.reduce(
+        (acc, { meters }) => acc + meters,
+        0
+      ) || haversine(lastPosition, position)
+
+    const seconds = pointsPassedSinceLastUpdate.reduce(
+      (acc, { duration }) => acc + duration,
+      0
+    )
+
+    const [km, h] = [metersMoved / 1000, seconds / 60 / 60]
 
     const co2 = this.updateCarbonDioxide(km)
 
     // TODO: Find which kommun the vehicle is moving in now and add the co2 for this position change to that kommun
 
-    /*
-     * Distance traveled.
-     */
     this.distance += km
     this.pointsPassedSinceLastUpdate = pointsPassedSinceLastUpdate
     this.speed = Math.round(km / h || 0)
