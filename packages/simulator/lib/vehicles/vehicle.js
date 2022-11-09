@@ -10,7 +10,7 @@ const Position = require('../models/position')
 const moment = require('moment')
 
 const { ReplaySubject } = require('rxjs')
-const { tap, pairwise } = require('rxjs/operators')
+const { scan, takeWhile } = require('rxjs/operators')
 class Vehicle {
   constructor({
     id = 'v-' + safeId(),
@@ -65,31 +65,33 @@ class Vehicle {
       this.movementSubscription.unsubscribe()
     }
     if (!route) return
-    if (virtualTime.timeMultiplier === Infinity)
+    if (virtualTime.timeMultiplier === Infinity) {
       return this.updatePosition(route) // teleport mode
+    }
+
     this.movementSubscription = virtualTime
       .getTimeInMilliseconds()
-      .pipe(pairwise())
-      .subscribe(([previousTimeInMs, currentTimeInMs]) => {
-        const diffFromLastTime = previousTimeInMs
-          ? currentTimeInMs - previousTimeInMs
-          : 0
-        if (virtualTime.timeMultiplier === 0) return // don't update position when time is stopped
-        const { next, pointsDiffFromPrevious, ...position } =
-          interpolate.route(route, currentTimeInMs, diffFromLastTime) ??
-          this.heading
-        const newPosition = new Position(position)
-        if (route.started > currentTimeInMs) {
-          this.movementSubscription.unsubscribe()
-          return
-        }
-        this.updatePosition(
-          newPosition,
-          pointsDiffFromPrevious,
-          currentTimeInMs
-        )
-        if (!next) this.stopped()
-      })
+      .pipe(
+        scan((prevRemainingPointsInRoute, currentTimeInMs) => {
+          const { next, skippedPoints, remainingPoints, ...position } =
+            interpolate.route(
+              route.started,
+              currentTimeInMs,
+              prevRemainingPointsInRoute
+            ) ?? this.heading
+          const newPosition = new Position(position)
+          if (route.started > currentTimeInMs) {
+            return []
+          }
+          this.updatePosition(newPosition, skippedPoints, currentTimeInMs)
+          if (remainingPoints.length < 5) {
+            this.stopped()
+          }
+          return remainingPoints
+        }, interpolate.points(route)),
+        takeWhile((e) => e?.length > 4)
+      )
+      .subscribe((e) => null)
   }
 
   navigateTo(position) {
@@ -241,12 +243,11 @@ class Vehicle {
     const lastPosition = this.position || position
     const timeDiff = time - this.lastPositionUpdate
 
-    const metersMoved =
-      (this.route &&
-        this.lastPositionUpdate &&
-        interpolate.getDiff(this.route, this.lastPositionUpdate, time)
-          .distance) ||
-      haversine(lastPosition, position)
+    const metersMoved = pointsPassedSinceLastUpdate.reduce(
+      (acc, { meters }) => acc + meters,
+      0
+    )
+    haversine(lastPosition, position)
     const [km, h] = [
       metersMoved / 1000,
       (time - this.lastPositionUpdate) / 1000 / 60 / 60,

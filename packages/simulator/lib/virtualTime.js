@@ -1,5 +1,15 @@
-const { interval, firstValueFrom } = require('rxjs')
-const { scan, shareReplay, map, filter } = require('rxjs/operators')
+const { interval, firstValueFrom, from } = require('rxjs')
+const {
+  scan,
+  share,
+  shareReplay,
+  map,
+  tap,
+  filter,
+  distinctUntilChanged,
+  mergeMap,
+  mergeMapTo,
+} = require('rxjs/operators')
 const {
   addMilliseconds,
   startOfDay,
@@ -28,6 +38,7 @@ class VirtualTime {
           ),
         startDate
       ),
+      distinctUntilChanged(),
       shareReplay(1)
     )
   }
@@ -39,7 +50,8 @@ class VirtualTime {
   getTimeInMilliseconds() {
     return this.currentTime.pipe(
       map(getUnixTime),
-      map((e) => e * 1000)
+      map((e) => e * 1000),
+      distinctUntilChanged()
     )
   }
 
