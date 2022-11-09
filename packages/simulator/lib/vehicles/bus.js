@@ -43,7 +43,7 @@ class Bus extends Vehicle {
       this.busy = true
       this.booking = booking
       booking.assign(this)
-      this.status = 'Pickup'
+      this.status = 'pickup'
       await this.navigateTo(booking.destination.position)
       this.movedEvents.next(this)
     } else {
@@ -83,7 +83,7 @@ class Bus extends Vehicle {
       this.simulate(false)
       return
     }
-    this.status = 'Delivery'
+    this.status = 'delivery'
     return this.navigateTo(this.booking.destination.position) // resume simulation
   }
 }
