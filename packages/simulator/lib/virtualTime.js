@@ -1,14 +1,10 @@
-const { interval, firstValueFrom, from } = require('rxjs')
+const { interval, firstValueFrom } = require('rxjs')
 const {
   scan,
-  share,
   shareReplay,
   map,
-  tap,
   filter,
   distinctUntilChanged,
-  mergeMap,
-  mergeMapTo,
 } = require('rxjs/operators')
 const {
   addMilliseconds,
@@ -38,7 +34,6 @@ class VirtualTime {
           ),
         startDate
       ),
-      distinctUntilChanged(),
       shareReplay(1)
     )
   }
