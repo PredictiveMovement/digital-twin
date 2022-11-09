@@ -16,7 +16,6 @@ const once = (eventsStream, status, fn) =>
 describe('A car', () => {
   const arjeplog = { lon: 17.886855, lat: 66.041054 }
   const ljusdal = { lon: 14.44681991219, lat: 61.59465992477 }
-  let car
 
   const ljusdalToArjeplog = {
     pickup: {
@@ -52,19 +51,19 @@ describe('A car', () => {
   })
 
   it('should initialize correctly', function (done) {
-    car = new Car()
+    const car = new Car()
     expect(car.id).toHaveLength(11)
     done()
   })
 
   it('should have initial position', function (done) {
-    car = new Car({ id: 1, position: arjeplog })
+    const car = new Car({ id: 1, position: arjeplog })
     expect(car.position).toEqual(arjeplog)
     done()
   })
 
   it('should be able to teleport', function (done) {
-    car = new Car({ id: 1, position: arjeplog })
+    const car = new Car({ id: 1, position: arjeplog })
     car.navigateTo(ljusdal)
     car.statusEvents.pipe(filter((car) => !car.moving)).subscribe((car) => {
       expect(car.position.lon).toEqual(ljusdal.lon)
@@ -74,7 +73,7 @@ describe('A car', () => {
   })
 
   it('should be able to handle one booking and navigate to pickup', function (done) {
-    car = new Car({ id: 1, position: arjeplog })
+    const car = new Car({ id: 1, position: arjeplog })
     car.handleBooking(
       new Booking({
         id: 1,
@@ -91,7 +90,7 @@ describe('A car', () => {
   })
 
   it('should be able to handle one booking and emit correct events', function (done) {
-    car = new Car({ id: 1, position: arjeplog })
+    const car = new Car({ id: 1, position: arjeplog })
     car.handleBooking(
       new Booking({
         id: 1,
@@ -112,7 +111,7 @@ describe('A car', () => {
   })
 
   it('should be able to pickup a booking and deliver it to its destination', function (done) {
-    car = new Car({ id: 1, position: arjeplog })
+    const car = new Car({ id: 1, position: arjeplog })
     car.handleBooking(
       new Booking({
         id: 1,
@@ -138,7 +137,7 @@ describe('A car', () => {
   })
 
   it('should be able to pickup multiple bookings and queue the all except the first', function () {
-    car = new Car({ id: 1, position: arjeplog })
+    const car = new Car({ id: 1, position: arjeplog })
     car.handleBooking(
       new Booking({
         id: 1,
@@ -159,7 +158,7 @@ describe('A car', () => {
   })
 
   it('should be able to handle the bookings from the same place in the queue', async () => {
-    car = new Car({ id: 1, position: arjeplog })
+    const car = new Car({ id: 'v-1', position: arjeplog })
     // börja i Arjeplog
 
     expect(car.queue).toHaveLength(0)
