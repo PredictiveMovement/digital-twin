@@ -140,6 +140,7 @@ const engine = {
                     .flatMap(({ p1, p2, meters }) =>
                       getNrOfPointsBetween(p1, p2, Math.round(meters / 2))
                     )
+                    .filter((e) => e.lat && e.lon)
                     .some((position) => haversine(position, mPosition) < 10)
               ),
               toArray()
