@@ -246,23 +246,23 @@ class Vehicle {
     const lastPosition = this.position || position
     const timeDiff = time - this.lastPositionUpdate
 
-    const metersMoved = pointsPassedSinceLastUpdate.reduce(
-      (acc, { meters }) => acc + meters,
+    const metersMoved =
+      pointsPassedSinceLastUpdate.reduce(
+        (acc, { meters }) => acc + meters,
+        0
+      ) || haversine(lastPosition, position)
+
+    const seconds = pointsPassedSinceLastUpdate.reduce(
+      (acc, { duration }) => acc + duration,
       0
     )
-    haversine(lastPosition, position)
-    const [km, h] = [
-      metersMoved / 1000,
-      (time - this.lastPositionUpdate) / 1000 / 60 / 60,
-    ]
+
+    const [km, h] = [metersMoved / 1000, seconds / 60 / 60]
 
     const co2 = this.updateCarbonDioxide(km)
 
     // TODO: Find which kommun the vehicle is moving in now and add the co2 for this position change to that kommun
 
-    /*
-     * Distance traveled.
-     */
     this.distance += km
     this.pointsPassedSinceLastUpdate = pointsPassedSinceLastUpdate
     this.speed = Math.round(km / h || 0)
