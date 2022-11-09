@@ -1,5 +1,3 @@
-const { ReplaySubject } = require('rxjs')
-
 const osrm = require('../osrm')
 const { haversine, bearing } = require('../distance')
 const interpolate = require('../interpolate')
