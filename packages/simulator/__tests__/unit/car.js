@@ -77,9 +77,7 @@ describe('A car', () => {
     car.handleBooking(
       new Booking({
         id: 1,
-        pickup: {
-          position: ljusdal,
-        },
+        ...ljusdalToArjeplog,
       })
     )
     once(car.statusEvents, 'AtPickup', (car) => {
@@ -141,17 +139,12 @@ describe('A car', () => {
     car.handleBooking(
       new Booking({
         id: 1,
-        pickup: {
-          position: ljusdal,
-        },
-        destination: {
-          position: arjeplog,
-        },
+        ...ljusdalToArjeplog
       })
     )
 
-    const bookings = range(10).map((id) =>
-      car.handleBooking(new Booking({ id }))
+    range(10).map((id) =>
+      car.handleBooking(new Booking({ id, ...arjeplogToLjusdal }))
     )
 
     expect(car.queue).toHaveLength(10)

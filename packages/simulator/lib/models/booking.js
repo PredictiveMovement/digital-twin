@@ -24,6 +24,16 @@ class Booking {
       this.pickedUpEvents,
       this.deliveredEvents
     )
+    this.validate()
+  }
+
+  validate() {
+    if (!this?.pickup?.position?.lat || !this?.pickup?.position?.lon) {
+      throw new Error('Invalid booking - Missing pickup position', JSON.stringify(this.pickup))
+    }
+    if (!this?.destination?.position?.lat || !this?.destination?.position?.lon) {
+      throw new Error('Invalid booking - Missing destination position', JSON.stringify(this.destination))
+    }
   }
 
   async queued(car) {
