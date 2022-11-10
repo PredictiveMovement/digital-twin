@@ -136,7 +136,7 @@ class Kommun {
           position: booking.destination.position,
           isPrivateCar: true,
           weight,
-          capacity: 2,
+          parcelCapacity: 2,
           co2PerKmKg: co2perkm / 1000 / weight,
         })
         privateCar.handleBooking(booking)

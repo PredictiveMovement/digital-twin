@@ -20,8 +20,6 @@ const register = (experiment, socket) => {
           socket.emit('kommun', { id, name, geometry, co2 })
         ),
         mergeMap(({ id, dispatchedBookings, name, cars }) => {
-          const totalBookings = dispatchedBookings.pipe(count(), startWith(0))
-
           const deliveryStatistics = dispatchedBookings.pipe(
             mergeMap((booking) => booking.deliveredEvents),
             filter((b) => b.cost),
@@ -48,82 +46,94 @@ const register = (experiment, socket) => {
           const averageUtilization = cars.pipe(
             mergeMap((car) => car.cargoEvents),
             scan((acc, car) => ({ ...acc, [car.id]: car }), {}),
-            map((cars) => {
-              const result = {
-                totalCapacity: 0,
-                totalCargo: 0,
-                totalCo2: 0,
-                totalQueued: 0,
-              }
-              Object.values(cars).forEach((car) => {
-                result.totalCargo += car.cargo.length
-                result.totalCapacity += car.capacity
-                result.totalQueued += car.queue.length
-                result.totalCo2 += car.co2
+            map((cars) =>
+              Object.values(cars).reduce(
+                (acc, car) => ({
+                  totalCargo: acc.totalCargo + car.cargo.length,
+                  totalParcelCapacity:
+                    acc.totalParcelCapacity + (car.parcelCapacity || 0),
+                  totalPassengerCapacity:
+                    acc.totalPassengerCapacity + (car.PassengerCapacity || 0),
+                  totalCo2: (acc.totalCo2 += car.co2),
+                }),
+                {
+                  totalCargo: 0,
+                  totalParcelCapacity: 0,
+                  totalPassengerCapacity: 0,
+                  totalCo2: 0,
+                }
+              )
+            ),
+            map(
+              ({
+                totalCargo,
+                totalParcelCapacity,
+                totalPassengerCapacity,
+                totalCo2,
+              }) => ({
+                totalCargo,
+                totalParcelCapacity,
+                totalPassengerCapacity,
+                averagePassengerLoad: totalCargo / totalPassengerCapacity,
+                averageParcelLoad: totalCargo / totalParcelCapacity,
+                totalCo2: totalCo2,
               })
-              return result
-            }),
-            map(({ totalCargo, totalCapacity, totalQueued, totalCo2 }) => ({
-              totalCargo,
-              totalCapacity,
-              totalQueued,
-              averageUtilization: totalCargo / totalCapacity,
-              averageQueued: totalQueued / totalCapacity,
-              totalCo2: totalCo2,
-            })),
+            ),
             startWith({
               totalCargo: 0,
-              totalCapacity: 0,
-              totalQueued: 0,
-              averageUtilization: 0,
-              averageQueued: 0,
+              totalParcelCapacity: 0,
+              totalPassengerCapacity: 0,
+              averageParcelLoad: 0,
+              averagePassengerLoad: 0,
               totalCo2: 0,
             })
           )
 
           const totalCars = cars.pipe(count(), startWith(0))
 
-          const totalCapacity = cars.pipe(
-            filter((car) => car.capacity),
-            scan((a, car) => a + car.capacity, 0),
+          const totalPassengerCapacity = cars.pipe(
+            filter((car) => car.passengerCapacity),
+            scan((a, car) => a + car.passengerCapacity, 0),
+            startWith(0)
+          )
+
+          const totalParcelCapacity = cars.pipe(
+            filter((car) => car.parcelCapacity),
+            scan((a, car) => a + car.parcelCapacity, 0),
             startWith(0)
           )
 
           return combineLatest([
-            totalBookings,
             totalCars,
             averageUtilization,
             deliveryStatistics,
-            totalCapacity,
+            totalPassengerCapacity,
+            totalParcelCapacity,
           ]).pipe(
             map(
               ([
-                totalBookings,
                 totalCars,
                 {
                   totalCargo,
-                  totalQueued,
                   totalCo2,
-                  averageQueued,
-                  averageUtilization,
+                  averagePassengerLoad,
+                  averageParcelLoad,
                 },
-                { totalDelivered, averageDeliveryTime, averageCost, totalCost },
-                totalCapacity,
+                { averageDeliveryTime, averageCost },
+                totalPassengerCapacity,
+                totalParcelCapacity,
               ]) => ({
                 id,
                 name,
-                totalBookings,
                 totalCars,
                 totalCargo,
                 totalCo2,
-                totalCapacity,
-                totalCost,
+                totalPassengerCapacity,
+                totalParcelCapacity,
                 averageDeliveryTime,
-                totalDelivered,
-                totalQueued,
-                averageQueued,
                 averageCost,
-                averageUtilization,
+                averagePassengerLoad,
+                averageParcelLoad,
               })
             ),
             // Do not emit more than 1 event per kommun per second

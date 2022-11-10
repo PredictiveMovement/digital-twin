@@ -64,7 +64,7 @@ const cargoName = (vehicleType) => {
     case 'taxi':
       return 'passagerare'
     case 'car':
-      return 'passagerare'
+      return 'paket'
     case 'truck':
       return 'kollin'
     default:

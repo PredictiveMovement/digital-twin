@@ -149,13 +149,14 @@ const App = () => {
   })
   useSocket('measureStationUpdates', (stationUpdates) => {
     setMeasureStations((current) =>
-      current.map(station => {
-        const stationIds = stationUpdates.map(({stationId}) => stationId)
+      current.map((station) => {
+        const stationIds = stationUpdates.map(({ stationId }) => stationId)
         if (stationIds.includes(station.id)) {
-          return {...station, count: station.count + 1}
+          return { ...station, count: station.count + 1 }
         }
         return station
-      }))
+      })
+    )
   })
 
   const [busStops, setBusStops] = React.useState([])
