@@ -2,7 +2,6 @@ const Vehicle = require('./vehicle')
 
 class Truck extends Vehicle {
   constructor(args) {
-    console.log('Creating truuck', args.capacity)
     super(args)
     this.vehicleType = 'car'
     this.isPrivateCar = false
