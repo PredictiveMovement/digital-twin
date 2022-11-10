@@ -70,37 +70,35 @@ const getUnit = (key) => {
       return '%'
   }
 }
-const KommunStatisticsBox = (stats) => {
-  return (
-    <Wrapper>
-      <H4>{stats.name}</H4>
-      <GridWrapper>
-        {[
-          'totalCars',
-          'totalCo2',
-          'totalParcelCapacity',
-          'totalPassengerCapacity',
-          'averagePassengerDeliveryTime',
-          'averageParcelDeliveryTime',
-          'averagePassengerCost',
-          'averageParcelCost',
-          'averagePassengerLoad',
-          'averageParcelLoad',
-        ].map((key) =>
-          stats[key] ? (
-            <Grid>
-              <ParagraphBold black>{getTitle(key)}</ParagraphBold>
-              <Paragraph black>
-                {Math.round(stats[key] * 100) / 100} {getUnit(key)}
-              </Paragraph>
-            </Grid>
-          ) : (
-            <> </>
-          )
-        )}
-      </GridWrapper>
-    </Wrapper>
-  )
-}
+const KommunStatisticsBox = (stats) => (
+  <Wrapper>
+    <H4>{stats.name}</H4>
+    <GridWrapper>
+      {[
+        'totalCars',
+        'totalCo2',
+        'totalParcelCapacity',
+        'totalPassengerCapacity',
+        'averagePassengerDeliveryTime',
+        'averageParcelDeliveryTime',
+        'averagePassengerCost',
+        'averageParcelCost',
+        'averagePassengerLoad',
+        'averageParcelLoad',
+      ].map((key) =>
+        stats[key] ? (
+          <Grid>
+            <ParagraphBold black>{getTitle(key)}</ParagraphBold>
+            <Paragraph black>
+              {Math.round(stats[key] * 100) / 100} {getUnit(key)}
+            </Paragraph>
+          </Grid>
+        ) : (
+          <> </>
+        )
+      )}
+    </GridWrapper>
+  </Wrapper>
+)
 
 export default KommunStatisticsBox

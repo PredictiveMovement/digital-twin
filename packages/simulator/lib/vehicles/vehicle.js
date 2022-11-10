@@ -17,7 +17,7 @@ class Vehicle {
     id = 'v-' + safeId(),
     position,
     status = 'Ready',
-    capacity ,
+    capacity,
     weight = 10000,
     fleet,
 
