@@ -20,8 +20,9 @@ const register = (experiment, socket) => {
           socket.emit('kommun', { id, name, geometry, co2 })
         ),
         mergeMap(({ id, dispatchedBookings, name, cars }) => {
-          const deliveryStatistics = dispatchedBookings.pipe(
+          const passengerDeliveryStatistics = dispatchedBookings.pipe(
             mergeMap((booking) => booking.deliveredEvents),
+            filter((booking) => booking.type === 'passenger'),
             filter((b) => b.cost),
             scan(
               (
@@ -35,11 +36,35 @@ const register = (experiment, socket) => {
               { total: 0, totalCost: 0, deliveryTimeTotal: 0 }
             ),
             startWith({ total: 0, totalCost: 0, deliveryTimeTotal: 0 }),
-            map(({ total, totalCost, deliveryTimeTotal }) => ({
+            map(({ type, total, totalCost, deliveryTimeTotal }) => ({
               totalDelivered: total,
               totalCost,
-              averageCost: totalCost / total,
-              averageDeliveryTime: deliveryTimeTotal / total / 60 / 60,
+              averagePassengerCost: totalCost / total,
+              averagePassengerDeliveryTime: deliveryTimeTotal / total / 60 / 60,
+            }))
+          )
+
+          const parcelDeliveryStatistics = dispatchedBookings.pipe(
+            mergeMap((booking) => booking.deliveredEvents),
+            filter((booking) => booking.type !== 'passenger'),
+            filter((b) => b.cost),
+            scan(
+              (
+                { total, deliveryTimeTotal, totalCost },
+                { deliveryTime, cost }
+              ) => ({
+                total: total + 1,
+                totalCost: totalCost + cost,
+                deliveryTimeTotal: deliveryTimeTotal + deliveryTime,
+              }),
+              { total: 0, totalCost: 0, deliveryTimeTotal: 0 }
+            ),
+            startWith({ total: 0, totalCost: 0, deliveryTimeTotal: 0 }),
+            map(({ type, total, totalCost, deliveryTimeTotal }) => ({
+              totalDelivered: total,
+              totalCost,
+              averageParcelCost: totalCost / total,
+              averageParcelDeliveryTime: deliveryTimeTotal / total / 60 / 60,
             }))
           )
 
@@ -106,7 +131,8 @@ const register = (experiment, socket) => {
           return combineLatest([
             totalCars,
             averageUtilization,
-            deliveryStatistics,
+            passengerDeliveryStatistics,
+            parcelDeliveryStatistics,
             totalPassengerCapacity,
             totalParcelCapacity,
           ]).pipe(
@@ -119,7 +145,8 @@ const register = (experiment, socket) => {
                   averagePassengerLoad,
                   averageParcelLoad,
                 },
-                { averageDeliveryTime, averageCost },
+                { averagePassengerDeliveryTime, averagePassengerCost },
+                { averageParcelDeliveryTime, averageParcelCost },
                 totalPassengerCapacity,
                 totalParcelCapacity,
               ]) => ({
@@ -130,10 +157,12 @@ const register = (experiment, socket) => {
                 totalCo2,
                 totalPassengerCapacity,
                 totalParcelCapacity,
-                averageDeliveryTime,
-                averageCost,
+                averagePassengerDeliveryTime,
+                averagePassengerCost,
                 averagePassengerLoad,
                 averageParcelLoad,
+                averageParcelDeliveryTime,
+                averageParcelCost,
               })
             ),
             // Do not emit more than 1 event per kommun per second

@@ -38,7 +38,10 @@ const getTitle = (key) => {
       return 'Total kapacitet'
     case 'averageDeliveryTime':
       return 'Genomsnittlig restid'
+    case 'averageParcelDeliveryTime':
+      return 'Genomsnittlig leveranstid'
     case 'averageCost':
+    case 'averageParcelCost':
       return 'Genomsnittskostnad'
     case 'averagePassengerLoad':
     case 'averageParcelLoad':
@@ -55,10 +58,13 @@ const getUnit = (key) => {
       return 'personer'
     case 'totalParcelCapacity':
       return 'paket'
-    case 'averageDeliveryTime':
+    case 'averagePassengerDeliveryTime':
+    case 'averageParcelDeliveryTime':
       return 'min'
-    case 'averageCost':
+    case 'averagePassengerCost':
       return 'kr/resenär'
+    case 'averageParcelCost':
+      return 'kr/paket'
     case 'averagePassengerLoad':
     case 'averageParcelLoad':
       return '%'
@@ -74,8 +80,10 @@ const KommunStatisticsBox = (stats) => {
           'totalCo2',
           'totalParcelCapacity',
           'totalPassengerCapacity',
-          'averageDeliveryTime',
-          'averageCost',
+          'averagePassengerDeliveryTime',
+          'averageParcelDeliveryTime',
+          'averagePassengerCost',
+          'averageParcelCost',
           'averagePassengerLoad',
           'averageParcelLoad',
         ].map((key) =>
@@ -95,5 +103,4 @@ const KommunStatisticsBox = (stats) => {
   )
 }
 
-// {Math.ceil(averageDeliveryTime / 60) || 0} min
 export default KommunStatisticsBox
