@@ -1,16 +1,18 @@
+const { ReplaySubject } = require('rxjs')
+const { scan, takeWhile } = require('rxjs/operators')
+const moment = require('moment')
+const { assert } = require('console')
+
 const osrm = require('../osrm')
 const { haversine, bearing } = require('../distance')
 const interpolate = require('../interpolate')
 const Booking = require('../models/booking')
 const { safeId } = require('../id')
-const { assert } = require('console')
 const { error } = require('../log')
 const { virtualTime } = require('../virtualTime')
 const Position = require('../models/position')
-const moment = require('moment')
 
-const { ReplaySubject } = require('rxjs')
-const { scan, takeWhile } = require('rxjs/operators')
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 class Vehicle {
   constructor({
@@ -47,6 +49,8 @@ class Vehicle {
     this.created = this.time()
     this.co2PerKmKg = co2PerKmKg
     this.vehicleType = 'default'
+
+    // TODO: rename these to events.moved, events.cargo, events.status
     this.movedEvents = new ReplaySubject()
     this.cargoEvents = new ReplaySubject()
     this.statusEvents = new ReplaySubject()
@@ -113,7 +117,11 @@ class Vehicle {
         this.simulate(this.route)
         return this.heading
       })
-      .catch((err) => error('Route error', err))
+      .catch(
+        (err) =>
+          error('Route error, retrying in 1s...', err) ||
+          wait(1000).then(() => this.navigateTo(position))
+      )
   }
 
   handleBooking(booking) {
@@ -131,6 +139,7 @@ class Vehicle {
       // TODO: switch places with current booking if it makes more sense to pick this package up before picking up current
       this.queue.push(booking)
       // TODO: use vroom to optimize the queue
+      booking.assign(this)
 
       booking.queued(this)
     }
@@ -272,9 +281,10 @@ class Vehicle {
     if (metersMoved > 0) {
       this.bearing = bearing(lastPosition, position) || 0
       this.movedEvents.next(this)
-
       // NOTE: cargo is passengers or packages.
-      this.cargo.map((booking) => {
+      // eslint-disable-next-line no-unexpected-multiline
+      const cargoAndPassengers = [...this.cargo, ...(this.passengers || [])]
+      cargoAndPassengers.map((booking) => {
         booking.moved(
           this.position,
           metersMoved,
@@ -287,6 +297,7 @@ class Vehicle {
   }
 
   stopped() {
+    this.speed = 0
     this.statusEvents.next(this)
     if (this.booking) {
       this.simulate(false)

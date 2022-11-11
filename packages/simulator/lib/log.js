@@ -31,4 +31,14 @@ module.exports = {
       ...rest
     )
   },
+  warn: (message, data = '', ...rest) => {
+    if (LOG_LEVEL !== 'info' && LOG_LEVEL !== 'DEBUG') {
+      return
+    }
+    console.log(
+      `${chalk.whiteBright.bold('INFO')} ${chalk.white(message)}`,
+      data,
+      ...rest
+    )
+  },
 }

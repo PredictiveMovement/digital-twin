@@ -1,4 +1,12 @@
-const { pipe, from, shareReplay, mergeMap, merge } = require('rxjs')
+const {
+  pipe,
+  from,
+  shareReplay,
+  mergeMap,
+  merge,
+  Subject,
+  of,
+} = require('rxjs')
 const {
   map,
   groupBy,
@@ -12,6 +20,8 @@ const {
   catchError,
   switchMap,
   bufferTime,
+  retryWhen,
+  delay,
 } = require('rxjs/operators')
 const Booking = require('./models/booking')
 const { busDispatch } = require('./dispatch/busDispatch')
@@ -115,9 +125,12 @@ class Region {
 
     this.unhandledBookings = this.citizens.pipe(
       mergeMap((passenger) => passenger.bookings),
+      filter((booking) => !booking.assigned),
       catchError((err) => error('unhandledBookings', err)),
       share()
     )
+
+    this.manualBookings = new Subject()
 
     /*
     // TODO: Move this to dispatch central:
@@ -125,38 +138,46 @@ class Region {
     // send those to vroom and get back a list of assignments
     // for each assignment, take the booking and dispatch it to the car / fleet */
     this.dispatchedBookings = merge(
+      this.manualBookings,
       this.stopAssignments.pipe(
-        mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5)
+        mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5),
+        filter((booking) => !booking.assigned),
+        catchError((err) => error('region stopAssignments', err))
       ),
       this.unhandledBookings.pipe(
         bufferTime(5000),
         filter((bookings) => bookings.length > 0),
         tap((bookings) => info('Clustering bookings', bookings.length)),
-        switchMap((bookings) => clusterPositions(bookings)),
+        switchMap((bookings) =>
+          clusterPositions(bookings, Math.max(5, Math.ceil(bookings.length / 10)))
+        ),
         mergeAll(),
         map(({ center, items: bookings }) => ({ center, bookings })),
         catchError((err) => error('taxi cluster err', err)),
-        mergeMap(({ center, bookings }) =>
-          this.taxis.pipe(
-            map((taxi) => ({
-              taxi,
-              distance: haversine(taxi.position, center),
-            })),
-            filter(({ distance }) => distance < 100_000),
-            pluck('taxi'),
-            filter(({ cargo, capacity }) => cargo.length + 1 < capacity),
-            takeNearest(center, 10),
-            tap((taxis) =>
-              console.log(
-                'dispatching taxis bookings',
-                taxis.length,
-                bookings.length
-              )
+        mergeMap(
+          ({ center, bookings }) =>
+            this.taxis.pipe(
+              map((taxi) => ({
+                taxi,
+                distance: haversine(taxi.position, center),
+              })),
+              filter(({ distance }) => distance < 100_000),
+              pluck('taxi'),
+              filter(
+                ({ passengers, capacity }) => passengers.length + 1 < capacity
+              ),
+              takeNearest(center, 10),
+              filter((taxis) => taxis.length),
+              mergeMap((taxis) => taxiDispatch(taxis, bookings), 1),
+              catchError((err) => {
+                // retry these bookings in a new cluster
+                bookings.forEach((booking) => this.manualBookings.next(booking))
+                error('taxiDispatch', err)
+                return of([])
+              }),
+              filter((bookings) => bookings.length)
             ),
-            filter((taxis) => taxis.length),
-            mergeMap((taxis) => taxiDispatch(taxis, bookings), 3),
-            catchError((err) => error('taxi dispatch err', err))
-          )
+          1 // one cluster at a time
         ),
         mergeAll(),
         mergeMap(({ taxi, bookings }) =>
@@ -164,7 +185,12 @@ class Region {
             mergeMap((booking) => taxi.handleBooking(booking), 5)
           )
         ),
-        catchError((err) => error('dispatchedBookings', err)),
+        retryWhen((errors) =>
+          errors.pipe(
+            tap((err) => error('region taxi error, retrying in 1s...', err)),
+            delay(1000)
+          )
+        ),
         share()
       )
     )

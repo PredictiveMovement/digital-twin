@@ -24,7 +24,6 @@ const register = (experiment, socket) => {
 
           const deliveryStatistics = dispatchedBookings.pipe(
             mergeMap((booking) => booking.deliveredEvents),
-            filter((b) => b.cost),
             scan(
               (
                 { total, deliveryTimeTotal, totalCost },

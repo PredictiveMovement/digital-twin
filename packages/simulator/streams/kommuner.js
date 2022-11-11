@@ -5,6 +5,7 @@ const { from, shareReplay, take, ReplaySubject } = require('rxjs')
 const { map, tap, filter, reduce, mergeMap } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
+const fleets = require('../data/fleets.json')
 const population = require('./population')
 const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
@@ -51,6 +52,10 @@ function read() {
     filter(({ namn }) =>
       includedMunicipalities.some((name) => namn.startsWith(name))
     ),
+    map((kommun) => ({
+      ...kommun,
+      fleets: fleets[kommun.namn].length ? fleets[kommun.namn] : [],
+    })),
     mergeMap(
       async ({
         geometry,
@@ -88,7 +93,7 @@ function read() {
     ),
     tap((kommun) => {
       if (defaultEmitters.includes('passengers')) {
-        getCitizens(kommun).pipe(take(10)).subscribe((citizen) =>
+        getCitizens(kommun).subscribe((citizen) =>
           kommun.citizens.next(citizen)
         )
       }
