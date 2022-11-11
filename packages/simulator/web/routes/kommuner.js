@@ -46,8 +46,6 @@ const register = (experiment, socket) => {
 
           const parcelDeliveryStatistics = dispatchedBookings.pipe(
             mergeMap((booking) => booking.deliveredEvents),
-            filter((booking) => booking.type !== 'passenger'),
-            filter((b) => b.cost),
             scan(
               (
                 { total, deliveryTimeTotal, totalCost },

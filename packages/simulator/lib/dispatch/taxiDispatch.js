@@ -1,10 +1,11 @@
 const { plan, taxiToVehicle, bookingToShipment } = require('../vroom')
 const moment = require('moment')
+const { info } = require('../log')
 
 const taxiDispatch = async (taxis, bookings) => {
   const vehicles = taxis.map(taxiToVehicle)
   const shipments = bookings.map(bookingToShipment) // TODO: concat bookings from existing vehicles with previous assignments
-  console.log('calling vroom for taxi', vehicles.length, shipments.length)
+  info('Calling vroom for taxi', vehicles.length, shipments.length)
   const result = await plan({ shipments, vehicles })
 
   return result.routes.map((route) => {

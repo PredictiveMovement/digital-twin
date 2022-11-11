@@ -6,6 +6,7 @@ const Truck = require('./vehicles/truck')
 const Drone = require('./vehicles/drone')
 const { convertPosition } = require('../lib/distance')
 const { randomize } = require('../simulator/address')
+const pelias = require('./pelias')
 
 const packagesPerPallet = 30 // this is a guesstimate
 const vehicleTypes = {
@@ -40,13 +41,17 @@ class Fleet {
   constructor({ name, marketshare, percentageHomeDelivery, vehicles, hub }) {
     this.name = name
     this.marketshare = marketshare
-    this.hub = { position: convertPosition(hub) }
+    this.hub = {
+      position: hub.length
+        ? convertPosition(hub)
+        : pelias.search(hub).then((position) => (this.hub = position)),
+    }
     this.percentageHomeDelivery = (percentageHomeDelivery || 0) / 100 || 0.15 // based on guestimates from workshop with transport actors in oct 2021
     this.percentageReturnDelivery = 0.1
     this.cars = from(Object.entries(vehicles)).pipe(
       mergeMap(([type, count]) =>
         range(0, count).pipe(
-          mergeMap((i) =>
+          mergeMap(() =>
             randomize(this.hub.position).then((position) => {
               const Vehicle = vehicleTypes[type].class
               return new Vehicle({

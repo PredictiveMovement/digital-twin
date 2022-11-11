@@ -26,20 +26,6 @@ class Booking {
     )
   }
 
-  set type(bookingType) {
-    this._type = bookingType
-  }
-
-  get type() {
-    if (this._type) {
-      return this._type
-    } else if (this.booking?.passenger) {
-      return 'passenger'
-    } else {
-      return 'package'
-    }
-  }
-
   async queued(car) {
     this.queuedDateTime = await virtualTime.getTimeInMillisecondsAsPromise()
     this.status = 'Queued'

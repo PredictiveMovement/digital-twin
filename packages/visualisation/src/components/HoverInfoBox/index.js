@@ -92,7 +92,7 @@ const CarInfo = ({ data }) => {
           Körsträcka: {Math.ceil(10 * data.distance) / 10 || 0} km
         </Paragraph>
         <Paragraph>
-          Lastat: {data.cargo} {cargoName(data.vehicleType)}
+          Lastat: {data.cargo + data.passengers} {cargoName(data.vehicleType)}
         </Paragraph>
         <Paragraph>
           Kapacitet: {data.capacity} {cargoName(data.vehicleType)}
@@ -101,7 +101,9 @@ const CarInfo = ({ data }) => {
       <div>
         <Paragraph>Fyllnadsgrad:</Paragraph>
         <ProgressBar
-          completed={Math.round((data.cargo / data.capacity) * 100)}
+          completed={Math.round(
+            ((data.cargo + data.passengers) / data.capacity) * 100
+          )}
         />
       </div>
     </Wrapper>
