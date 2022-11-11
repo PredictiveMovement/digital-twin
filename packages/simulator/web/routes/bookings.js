@@ -7,6 +7,7 @@ const cleanBookings = () =>
       ({
         pickup,
         destination,
+        assigned,
         id,
         status,
         isCommercial,
@@ -18,6 +19,7 @@ const cleanBookings = () =>
       }) => ({
         id,
         pickup: pickup.position,
+        assigned,
         destination: destination.position,
         status,
         isCommercial,

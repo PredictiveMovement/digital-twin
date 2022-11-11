@@ -1,10 +1,11 @@
 const fetch = require('node-fetch')
 const polyline = require('polyline')
 const osrmUrl =
+  // eslint-disable-next-line no-undef
   process.env.OSRM_URL ||
   'https://osrm.predictivemovement.se' ||
   'http://localhost:5000'
-const { error } = require('./log')
+const { warn } = require('./log')
 
 const decodePolyline = function (geometry) {
   return polyline.decode(geometry).map((point) => ({
@@ -28,7 +29,11 @@ module.exports = {
       fetch(
         `${osrmUrl}/route/v1/driving/${coordinates}?steps=true&alternatives=false&overview=full&annotations=true`
       )
-        .then((response) => response.json())
+        .then(
+          (res) =>
+            (res.ok && res.json()) ||
+            res.text().then((text) => Promise.reject(text)) // sometimes we get a text error message, instead of trying to parse it as json we just return a rejected promise
+        )
 
         // fastest route
         .then(
@@ -52,7 +57,7 @@ module.exports = {
         return response.json()
       },
       (err) => {
-        console.warn('OSRM fetch err', error.message, url)
+        warn('OSRM fetch err', err.message, url)
       }
     )
 

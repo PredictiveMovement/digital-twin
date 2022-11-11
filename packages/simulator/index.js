@@ -161,10 +161,6 @@ const engine = {
       )
     )
 
-    experiment.dispatchedBookings.subscribe((booking) =>
-      debug(`Booking ${booking?.id} dispatched to car ${booking?.car?.id}`)
-    )
-
     return experiment
   },
 }

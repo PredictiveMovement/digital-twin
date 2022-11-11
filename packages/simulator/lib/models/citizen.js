@@ -12,6 +12,7 @@ const {
   mapTo,
   tap,
   mergeAll,
+  share,
 } = require('rxjs')
 const { virtualTime } = require('../virtualTime')
 
@@ -159,7 +160,7 @@ class Citizen {
       mergeAll(), // since previous step retruns an promise, we need to resolve "one step deeper"
       catchError((err) => error('passenger intent err', err)),
       filter((f) => f instanceof Booking),
-      shareReplay()
+      share()
     )
 
     this.pickedUpEvents = this.bookings.pipe(
