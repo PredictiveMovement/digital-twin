@@ -8,10 +8,6 @@ const { haversine, bearing } = require('../distance')
 const interpolate = require('../interpolate')
 const Booking = require('../models/booking')
 const { safeId } = require('../id')
-<<<<<<< HEAD
-=======
-const { assert } = require('console')
->>>>>>> d940a94 (Fix car test in isolation, somehow it leaks between tests)
 const { error } = require('../log')
 const { virtualTime } = require('../virtualTime')
 const Position = require('../models/position')
@@ -86,7 +82,7 @@ class Vehicle {
       .getTimeInMilliseconds()
       .pipe(
         scan((prevRemainingPointsInRoute, currentTimeInMs) => {
-          const { next, skippedPoints, remainingPoints, ...position } =
+          const { skippedPoints, remainingPoints, ...position } =
             interpolate.route(
               route.started,
               currentTimeInMs,
@@ -105,7 +101,7 @@ class Vehicle {
         }, interpolate.points(route)),
         takeWhile((e) => e?.length > 4)
       )
-      .subscribe((e) => null)
+      .subscribe(() => null)
   }
 
   navigateTo(position) {

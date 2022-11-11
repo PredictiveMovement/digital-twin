@@ -11,13 +11,13 @@ jest.mock('../../lib/dispatch/dispatchCentral')
 const range = (length) => Array.from({ length }).map((_, i) => i)
 
 describe('A kommun', () => {
-  const arjeplog = { lon: 17.886855, lat: 66.041054 }
-  const ljusdal = { lon: 14.44681991219, lat: 61.59465992477 }
+  const arjeplog = { position: { lon: 17.886855, lat: 66.041054 } }
+  const ljusdal = { position: { lon: 14.44681991219, lat: 61.59465992477 } }
   const squares = from([])
   let fleets
   let kommun
 
-  let testBooking = new Booking({
+  let arjeplogToLjusdal = new Booking({
     pickup: arjeplog,
     destination: ljusdal,
   })
@@ -48,7 +48,7 @@ describe('A kommun', () => {
 
   it('dispatches handled bookings', function () {
     kommun = new Kommun({ name: 'stockholm', squares, fleets })
-    kommun.handleBooking(testBooking)
+    kommun.handleBooking(arjeplogToLjusdal)
 
     expect(dispatch.dispatch.mock.calls.length).toBe(1)
   })
@@ -65,11 +65,11 @@ describe('A kommun', () => {
       )
     )
 
-    kommun.handleBooking(testBooking)
+    kommun.handleBooking(arjeplogToLjusdal)
 
     kommun.dispatchedBookings.pipe(first()).subscribe(({ booking }) => {
       expect(booking.fleet.name).toBe('bring')
-      expect(booking.id).toBe(testBooking.id)
+      expect(booking.id).toBe(arjeplogToLjusdal.id)
       done()
     })
   })

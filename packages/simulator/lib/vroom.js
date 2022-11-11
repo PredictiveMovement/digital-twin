@@ -3,6 +3,18 @@ const fetch = require('node-fetch')
 const vroomUrl = process.env.VROOM_URL || 'https://vroom.predictivemovement.se/'
 const moment = require('moment')
 
+const computeTimeWindow = (location) => {
+    if (!location?.timeWindow?.length) {
+      return undefined
+    }
+    return [
+      [
+        moment(location.timeWindow[0]).unix(),
+        moment(location.timeWindow[1]).add(5, 'minutes').unix(),
+      ],
+    ]
+  }
+
 module.exports = {
   bookingToShipment({ id, pickup, destination }, i) {
     return {
@@ -10,32 +22,14 @@ module.exports = {
       description: id,
       amount: [1],
       pickup: {
-        time_windows: pickup.departureTime?.length
-          ? [
-              [
-                moment(pickup.departureTime, 'hh:mm:ss').unix(),
-                moment(pickup.departureTime, 'hh:mm:ss')
-                  .add(5, 'minutes')
-                  .unix(),
-              ],
-            ]
-          : undefined,
         id: i,
         location: [pickup.position.lon, pickup.position.lat],
+        time_windows: computeTimeWindow(pickup),
       },
       delivery: {
         id: i,
         location: [destination.position.lon, destination.position.lat],
-        time_windows: destination.arrivalTime?.length
-          ? [
-              [
-                moment(destination.arrivalTime, 'hh:mm:ss').unix(),
-                moment(destination.arrivalTime, 'hh:mm:ss')
-                  .add(5, 'minutes')
-                  .unix(),
-              ],
-            ]
-          : undefined,
+        time_windows: computeTimeWindow(destination),
       },
     }
   },

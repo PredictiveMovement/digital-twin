@@ -14,32 +14,24 @@ const once = (eventsStream, status, fn) =>
     .subscribe(fn)
 
 describe('A car', () => {
-  const arjeplog = { lon: 17.886855, lat: 66.041054 }
-  const ljusdal = { lon: 14.44681991219, lat: 61.59465992477 }
+  const arjeplog = { position: { lon: 17.886855, lat: 66.041054 } }
+  const ljusdal = { position: { lon: 14.44681991219, lat: 61.59465992477 } }
 
   const ljusdalToArjeplog = {
-    pickup: {
-      position: ljusdal,
-    },
-    destination: {
-      position: arjeplog,
-    },
+    pickup: ljusdal,
+    destination: arjeplog,
   }
 
   const arjeplogToLjusdal = {
-    pickup: {
-      position: arjeplog,
-    },
-    destination: {
-      position: ljusdal,
-    },
+    pickup: arjeplog,
+    destination: ljusdal,
   }
 
   const positionName = ({ lon, lat }) => {
     switch (`${lon} ${lat}`) {
-      case `${ljusdal.lon} ${ljusdal.lat}`:
+      case `${ljusdal.position.lon} ${ljusdal.position.lat}`:
         return 'Ljusdal'
-      case `${arjeplog.lon} ${arjeplog.lat}`:
+      case `${arjeplog.position.lon} ${arjeplog.position.lat}`:
         return 'Arjeplog'
       default:
         return 'Unknown'
@@ -57,23 +49,23 @@ describe('A car', () => {
   })
 
   it('should have initial position', function (done) {
-    const car = new Car({ id: 1, position: arjeplog })
-    expect(car.position).toEqual(arjeplog)
+    const car = new Car({ id: 1, position: arjeplog.position })
+    expect(car.position).toEqual(arjeplog.position)
     done()
   })
 
   it('should be able to teleport', function (done) {
-    const car = new Car({ id: 1, position: arjeplog })
+    const car = new Car({ id: 1, position: arjeplog.position })
     car.navigateTo(ljusdal)
     car.statusEvents.pipe(filter((car) => !car.moving)).subscribe((car) => {
-      expect(car.position.lon).toEqual(ljusdal.lon)
-      expect(car.position.lat).toEqual(ljusdal.lat)
+      expect(car.position.lon).toEqual(ljusdal.position.lon)
+      expect(car.position.lat).toEqual(ljusdal.position.lat)
       done()
     })
   })
 
   it('should be able to handle one booking and navigate to pickup', function (done) {
-    const car = new Car({ id: 1, position: arjeplog })
+    const car = new Car({ id: 1, position: arjeplog.position })
     car.handleBooking(
       new Booking({
         id: 1,
@@ -81,14 +73,14 @@ describe('A car', () => {
       })
     )
     once(car.statusEvents, 'AtPickup', (car) => {
-      expect(car.position.lon).toEqual(ljusdal.lon)
-      expect(car.position.lat).toEqual(ljusdal.lat)
+      expect(car.position.lon).toEqual(ljusdal.position.lon)
+      expect(car.position.lat).toEqual(ljusdal.position.lat)
       done()
     })
   })
 
   it('should be able to handle one booking and emit correct events', function (done) {
-    const car = new Car({ id: 1, position: arjeplog })
+    const car = new Car({ id: 1, position: arjeplog.position })
     car.handleBooking(
       new Booking({
         id: 1,
@@ -102,14 +94,14 @@ describe('A car', () => {
     )
     expect(car.status).toEqual('Pickup')
     once(car.statusEvents, 'AtPickup', () => {
-      expect(car.position.lon).toEqual(ljusdal.lon)
-      expect(car.position.lat).toEqual(ljusdal.lat)
+      expect(car.position.lon).toEqual(ljusdal.position.lon)
+      expect(car.position.lat).toEqual(ljusdal.position.lat)
       done()
     })
   })
 
   it('should be able to pickup a booking and deliver it to its destination', function (done) {
-    const car = new Car({ id: 1, position: arjeplog })
+    const car = new Car({ id: 1, position: arjeplog.position })
     car.handleBooking(
       new Booking({
         id: 1,
@@ -123,19 +115,19 @@ describe('A car', () => {
     )
 
     once(car.statusEvents, 'AtPickup', () => {
-      expect(car.position.lon).toEqual(ljusdal.lon)
-      expect(car.position.lat).toEqual(ljusdal.lat)
+      expect(car.position.lon).toEqual(ljusdal.position.lon)
+      expect(car.position.lat).toEqual(ljusdal.position.lat)
     })
 
     once(car.statusEvents, 'AtDropOff', () => {
-      expect(car.position.lon).toEqual(arjeplog.lon)
-      expect(car.position.lat).toEqual(arjeplog.lat)
+      expect(car.position.lon).toEqual(arjeplog.position.lon)
+      expect(car.position.lat).toEqual(arjeplog.position.lat)
       done()
     })
   })
 
   it('should be able to pickup multiple bookings and queue the all except the first', function () {
-    const car = new Car({ id: 1, position: arjeplog })
+    const car = new Car({ id: 1, position: arjeplog.position })
     car.handleBooking(
       new Booking({
         id: 1,
@@ -151,7 +143,7 @@ describe('A car', () => {
   })
 
   it('should be able to handle the bookings from the same place in the queue', async () => {
-    const car = new Car({ id: 'v-1', position: arjeplog })
+    const car = new Car({ id: 'v-1', position: arjeplog.position })
     // börja i Arjeplog
 
     expect(car.queue).toHaveLength(0)
