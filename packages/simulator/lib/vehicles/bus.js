@@ -34,7 +34,7 @@ class Bus extends Vehicle {
     this.heading = heading
     this.kommun = kommun
     this.startPosition = startPosition
-    this.capacity = 50 // TODO: fill this from the workshop poll
+    this.passengerCapacity = 50 // TODO: fill this from the workshop poll
     this.co2PerKmKg = 1.3 // NOTE: From a quick google. Needs to be verified.
   }
 
