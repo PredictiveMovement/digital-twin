@@ -2,6 +2,7 @@ const { Subject, ReplaySubject, range, from } = require('rxjs')
 const { map, shareReplay, toArray, mergeMap } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
 const Car = require('./vehicles/car')
+const Truck = require('./vehicles/truck')
 const Drone = require('./vehicles/drone')
 const { convertPosition } = require('../lib/distance')
 const { randomize } = require('../simulator/address')
@@ -12,17 +13,17 @@ const vehicleTypes = {
   tungLastbil: {
     weight: 26 * 1000,
     capacity: 48 * packagesPerPallet,
-    class: Car,
+    class: Truck,
   },
   medeltungLastbil: {
     weight: 16.5 * 1000,
     capacity: 18 * packagesPerPallet,
-    class: Car,
+    class: Truck,
   },
   lättLastbil: {
     weight: 3.5 * 1000,
     capacity: 8 * packagesPerPallet, // TODO: is this number of pallets reasonable?
-    class: Car,
+    class: Truck,
   },
   bil: {
     weight: 1.5 * 1000,

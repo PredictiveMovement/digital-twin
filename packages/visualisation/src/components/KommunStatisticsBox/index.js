@@ -27,55 +27,78 @@ const GridWrapper = styled.div`
   margin-top: 1.5rem;
 `
 
-const KommunStatisticsBox = ({
-  name,
-  totalBookings,
-  totalCars,
-  totalCargo,
-  totalCo2,
-  totalCapacity,
-  averageDeliveryTime,
-  averageCost,
-  totalDelivered,
-  totalQueued,
-  averageQueued,
-  averageUtilization,
-}) => {
-  return (
-    <Wrapper>
-      <H4>{name}</H4>
-      <GridWrapper>
-        <Grid>
-          <ParagraphBold black>Antal fordon</ParagraphBold>
-          <Paragraph black>{totalCars} fordon</Paragraph>
-        </Grid>
-        <Grid>
-          <ParagraphBold black>Total kapacitet</ParagraphBold>
-          <Paragraph black>{totalCapacity} personer</Paragraph>
-        </Grid>
-        <Grid>
-          <ParagraphBold black>
-            CO<sub>2</sub>
-          </ParagraphBold>
-          <Paragraph black>{totalCo2} kg</Paragraph>
-        </Grid>
-        <Grid>
-          <ParagraphBold black>Genomsnittskostnad</ParagraphBold>
-          <Paragraph black>{averageCost} kr/resenär</Paragraph>
-        </Grid>
-        <Grid>
-          <ParagraphBold black>Medelfyllnadsgrad per bil</ParagraphBold>
-          <Paragraph black>{averageUtilization}%</Paragraph>
-        </Grid>
-        <Grid>
-          <ParagraphBold black>Genomsnittlig restid</ParagraphBold>
-          <Paragraph black>
-            {Math.ceil(averageDeliveryTime / 60) || 0} min
-          </Paragraph>
-        </Grid>
-      </GridWrapper>
-    </Wrapper>
-  )
+const getTitle = (key) => {
+  switch (key) {
+    case 'totalCars':
+      return 'Antal fordon'
+    case 'totalCo2':
+      return 'CO₂'
+    case 'totalPassengerCapacity':
+    case 'totalParcelCapacity':
+      return 'Total kapacitet'
+    case 'averageDeliveryTime':
+      return 'Genomsnittlig restid'
+    case 'averageParcelDeliveryTime':
+      return 'Genomsnittlig leveranstid'
+    case 'averageCost':
+    case 'averageParcelCost':
+      return 'Genomsnittskostnad'
+    case 'averagePassengerLoad':
+    case 'averageParcelLoad':
+      return 'Medelfyllnadsgrad per fordon'
+  }
 }
+const getUnit = (key) => {
+  switch (key) {
+    case 'totalCars':
+      return 'fordon'
+    case 'totalCo2':
+      return 'kg'
+    case 'totalPassengerCapacity':
+      return 'personer'
+    case 'totalParcelCapacity':
+      return 'paket'
+    case 'averagePassengerDeliveryTime':
+    case 'averageParcelDeliveryTime':
+      return 'min'
+    case 'averagePassengerCost':
+      return 'kr/resenär'
+    case 'averageParcelCost':
+      return 'kr/paket'
+    case 'averagePassengerLoad':
+    case 'averageParcelLoad':
+      return '%'
+  }
+}
+const KommunStatisticsBox = (stats) => (
+  <Wrapper>
+    <H4>{stats.name}</H4>
+    <GridWrapper>
+      {[
+        'totalCars',
+        'totalCo2',
+        'totalParcelCapacity',
+        'totalPassengerCapacity',
+        'averagePassengerDeliveryTime',
+        'averageParcelDeliveryTime',
+        'averagePassengerCost',
+        'averageParcelCost',
+        'averagePassengerLoad',
+        'averageParcelLoad',
+      ].map((key) =>
+        stats[key] ? (
+          <Grid>
+            <ParagraphBold black>{getTitle(key)}</ParagraphBold>
+            <Paragraph black>
+              {Math.round(stats[key] * 100) / 100} {getUnit(key)}
+            </Paragraph>
+          </Grid>
+        ) : (
+          <> </>
+        )
+      )}
+    </GridWrapper>
+  </Wrapper>
+)
 
 export default KommunStatisticsBox
