@@ -54,7 +54,9 @@ function read() {
     ),
     map((kommun) => ({
       ...kommun,
-      fleets: fleets[kommun.namn].length ? fleets[kommun.namn] : [],
+      fleets: fleets[kommun.namn]?.fleets.length
+        ? fleets[kommun.namn].fleets
+        : [],
     })),
     mergeMap(
       async ({
