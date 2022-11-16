@@ -32,7 +32,7 @@ const getTitle = (key) => {
     case 'totalCars':
       return 'Antal fordon'
     case 'totalCo2':
-      return 'co2'
+      return 'CO₂'
     case 'totalPassengerCapacity':
     case 'totalParcelCapacity':
       return 'Total kapacitet'
