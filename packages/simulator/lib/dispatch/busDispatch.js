@@ -25,10 +25,10 @@ const tripToShipment = ({ tripId, firstStop, lastStop }, i) => ({
   },
 })
 
-const busToVehicle = ({ id, position, capacity, heading }, i) => ({
+const busToVehicle = ({ id, position, passengerCapacity, heading }, i) => ({
   id: i,
   description: id,
-  capacity: [capacity],
+  capacity: [passengerCapacity],
   start: [position.lon, position.lat],
   speed_factor: 1.2,
   end: heading ? [heading.lon, heading.lat] : undefined,
