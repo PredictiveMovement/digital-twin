@@ -123,7 +123,8 @@ const CarInfo = ({ data }) => {
         <Paragraph>
           Kapacitet:{' '}
           <strong>
-            {data.capacity} {cargoName(data.vehicleType)}
+            {data.parcelCapacity || data.passengerCapacity}{' '}
+            {cargoName(data.vehicleType)}
           </strong>
         </Paragraph>
       </div>
@@ -133,7 +134,9 @@ const CarInfo = ({ data }) => {
           completed={Math.round(
             Math.min(
               100,
-              ((data.cargo + data.passengers) / data.capacity) * 100
+              ((data.cargo + data.passengers) /
+                (data.parcelCapacity || data.passengerCapacity)) *
+                100
             )
           )}
         />

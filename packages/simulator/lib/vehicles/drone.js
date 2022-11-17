@@ -40,7 +40,7 @@ class Drone extends Vehicle {
     )
     if (this.weight + booking.weight > this.maximumWeight) return false
     if (pickupDistance + deliveryDistance > this.range) return false
-    return this.capacity > this.queue.length + this.cargo.length
+    return this.parcelCapacity > this.queue.length + this.cargo.length
   }
 
   async navigateTo(position) {
