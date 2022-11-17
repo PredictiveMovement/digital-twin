@@ -640,7 +640,7 @@ const Map = ({
           textAlign: 'right',
         }}
       >
-        <ParagraphLarge>
+        <ParagraphLarge white>
           Just nu är klockan{' '}
           <b>
             {new Date(time).toLocaleTimeString([], {
