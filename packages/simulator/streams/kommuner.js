@@ -54,7 +54,7 @@ function read() {
     ),
     map((kommun) => ({
       ...kommun,
-      fleets: fleets[kommun.namn]?.fleets.length
+      fleets: fleets[kommun.namn]?.fleets?.length
         ? fleets[kommun.namn].fleets
         : [],
     })),
