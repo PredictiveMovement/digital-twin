@@ -19,7 +19,8 @@ class Vehicle {
     id = 'v-' + safeId(),
     position,
     status = 'Ready',
-    capacity,
+    parcelCapacity,
+    passengerCapacity,
     weight = 10000,
     fleet,
 
@@ -39,7 +40,8 @@ class Vehicle {
     this.queue = []
     this.cargo = []
     this.delivered = []
-    this.capacity = capacity // bookings
+    this.parcelCapacity = parcelCapacity
+    this.passengerCapacity = passengerCapacity
     this.weight = weight // http://www.lastbilsteori.se/lastvikt.html
     this.costPerHour = 3000 / 12 // ?
     this.co2 = 0
@@ -172,7 +174,7 @@ class Vehicle {
       this.cargo.push(this.booking)
       // see if we have more packages to pickup from this position
       while (
-        this.queue.length < this.capacity &&
+        this.queue.length < (this.passengerCapacity || this.parcelCapacity) &&
         this.queue.length &&
         haversine(this.position, this.queue[0].pickup.position) < 200
       ) {
@@ -245,10 +247,6 @@ class Vehicle {
 
   cargoWeight() {
     return this.cargo.reduce((total, booking) => total + booking.weight, 0)
-  }
-
-  canPickupBooking(booking) {
-    return this.capacity > this.queue.length + this.cargo.length
   }
 
   async updatePosition(position, pointsPassedSinceLastUpdate, time) {

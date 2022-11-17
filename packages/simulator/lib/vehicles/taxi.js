@@ -20,7 +20,7 @@ class Taxi extends Vehicle {
     this.cargo = []
     this.passengers = []
     this.queue = []
-    this.capacity = 4
+    this.passengerCapacity = 4
     this.booking = true
     this.vehicleType = 'taxi'
     this.startPosition = startPosition

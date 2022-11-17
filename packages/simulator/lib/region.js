@@ -167,7 +167,8 @@ class Region {
               filter(({ distance }) => distance < 100_000),
               pluck('taxi'),
               filter(
-                ({ passengers, capacity }) => passengers.length + 1 < capacity
+                ({ passengers, passengerCapacity }) =>
+                  passengers.length + 1 < passengerCapacity
               ),
               takeNearest(center, 10),
               filter((taxis) => taxis.length),

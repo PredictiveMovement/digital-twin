@@ -39,11 +39,11 @@ module.exports = {
       },
     }
   },
-  taxiToVehicle({ id, position, capacity, heading, bookings }, i) {
+  taxiToVehicle({ id, position, passengerCapacity, heading, bookings }, i) {
     return {
       id: i,
       description: id,
-      capacity: [capacity],
+      capacity: [passengerCapacity],
       start: [position.lon, position.lat],
       end: heading ? [heading.lon, heading.lat] : undefined,
     }
