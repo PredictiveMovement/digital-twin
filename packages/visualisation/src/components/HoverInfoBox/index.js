@@ -7,7 +7,8 @@ const Wrapper = styled.div`
   position: absolute;
   left: ${(props) => props.left - 50}px;
   bottom: ${(props) => props.top}px;
-  background-color: #10c57b;
+  background-color: #fff;
+  color: #000;
   min-width: 200px;
   min-height: 60px;
   padding: 1.1rem;
@@ -24,7 +25,7 @@ const Wrapper = styled.div`
     content: '';
     width: 0;
     height: 0;
-    border-top: solid 10px #10c57b;
+    border-top: solid 10px white;
     border-left: solid 10px transparent;
     border-right: solid 10px transparent;
   }
@@ -33,10 +34,18 @@ const MeasurementStationInfo = ({ data }) => {
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <div>
-        <Paragraph>Mätpunkt: {data.id}</Paragraph>
-        <Paragraph>Antal tunga fordorn: {data.heavyTraficCount}</Paragraph>
-        <Paragraph>Mäter bilar som kör: {data.direction}</Paragraph>
-        <Paragraph>Antal passerade fordon: {data.count}</Paragraph>
+        <Paragraph>
+          Mätpunkt: <strong>{data.id}</strong>
+        </Paragraph>
+        <Paragraph>
+          Antal tunga fordorn: <strong>{data.heavyTraficCount}</strong>
+        </Paragraph>
+        <Paragraph>
+          Mäter bilar som kör: <strong>{data.direction}</strong>
+        </Paragraph>
+        <Paragraph>
+          Antal passerade fordon: <strong>{data.count}</strong>
+        </Paragraph>
       </div>
     </Wrapper>
   )
@@ -76,33 +85,56 @@ const CarInfo = ({ data }) => {
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <div>
-        <Paragraph>{`${vehicleName(data.vehicleType)} ${data.id}`}</Paragraph>
+        <Paragraph>
+          <strong>{`${vehicleName(data.vehicleType)} ${data.id}`}</strong>
+        </Paragraph>
         {data.lineNumber !== undefined && (
-          <Paragraph>Linje: {data.lineNumber}</Paragraph>
+          <Paragraph>
+            Linje: <strong>{data.lineNumber}</strong>
+          </Paragraph>
         )}
-        <Paragraph>Hastighet {data.speed}</Paragraph>
-        <Paragraph>Kör för {data.fleet}</Paragraph>
         <Paragraph>
-          Köat: {data.queue || 0} {cargoName(data.vehicleType)}
+          Hastighet <strong>{data.speed} km/h</strong>
         </Paragraph>
         <Paragraph>
-          CO<sub>2</sub>: {Math.ceil(10 * data.co2) / 10 || 0} kg
+          Kör för <strong></strong>
+          {data.fleet}
         </Paragraph>
         <Paragraph>
-          Körsträcka: {Math.ceil(10 * data.distance) / 10 || 0} km
+          Köat:{' '}
+          <strong>
+            {data.queue || 0} {cargoName(data.vehicleType)}
+          </strong>
         </Paragraph>
         <Paragraph>
-          Lastat: {data.cargo + data.passengers} {cargoName(data.vehicleType)}
+          CO<sub>2</sub>:{' '}
+          <strong>{Math.ceil(10 * data.co2) / 10 || 0} kg</strong>
         </Paragraph>
         <Paragraph>
-          Kapacitet: {data.capacity} {cargoName(data.vehicleType)}
+          Körsträcka:{' '}
+          <strong>{Math.ceil(10 * data.distance) / 10 || 0} km</strong>
+        </Paragraph>
+        <Paragraph>
+          Lastat:{' '}
+          <strong>
+            {data.cargo + data.passengers} {cargoName(data.vehicleType)}
+          </strong>
+        </Paragraph>
+        <Paragraph>
+          Kapacitet:{' '}
+          <strong>
+            {data.capacity} {cargoName(data.vehicleType)}
+          </strong>
         </Paragraph>
       </div>
       <div>
         <Paragraph>Fyllnadsgrad:</Paragraph>
         <ProgressBar
           completed={Math.round(
-            ((data.cargo + data.passengers) / data.capacity) * 100
+            Math.min(
+              100,
+              ((data.cargo + data.passengers) / data.capacity) * 100
+            )
           )}
         />
       </div>
@@ -113,8 +145,12 @@ const CarInfo = ({ data }) => {
 const PassengerInfo = ({ data }) => {
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
-      <Paragraph>Passagerare {data.id}</Paragraph>
-      <Paragraph>Namn: {data.name}</Paragraph>
+      <Paragraph>
+        Passagerare: <strong>{data.id}</strong>
+      </Paragraph>
+      <Paragraph>
+        Namn: <strong>{data.name}</strong>
+      </Paragraph>
       <Paragraph>Resor:</Paragraph>
       {data.bookings &&
         data.bookings.map((j) => {
@@ -126,11 +162,18 @@ const PassengerInfo = ({ data }) => {
           )
         })}
       <Paragraph>
-        CO<sub>2</sub>: {Math.ceil((10 * data.co2) / 10) || 0} kg
+        CO<sub>2</sub>:{' '}
+        <strong>{Math.ceil((10 * data.co2) / 10) || 0} kg</strong>
       </Paragraph>
-      <Paragraph>Distans: {Math.ceil(data.distance / 1000) || 0} km</Paragraph>
-      <Paragraph>Restid: {Math.ceil(data.moveTime / 60) || 0} min</Paragraph>
-      <Paragraph>Väntetid: {Math.ceil(data.waitTime / 60) || 0} min</Paragraph>
+      <Paragraph>
+        Distans: <strong>{Math.ceil(data.distance / 1000) || 0} km</strong>
+      </Paragraph>
+      <Paragraph>
+        Restid: <strong>{Math.ceil(data.moveTime / 60) || 0} min</strong>
+      </Paragraph>
+      <Paragraph>
+        Väntetid: <strong>{Math.ceil(data.waitTime / 60) || 0} min</strong>
+      </Paragraph>
     </Wrapper>
   )
 }

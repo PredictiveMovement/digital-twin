@@ -110,7 +110,9 @@ const CheckItem = ({ text, setLayer, checked, color, borderOnly = false }) => {
       ) : (
         <Circle backgroundColor={color} />
       )}
-      <ParagraphMedium black> {text}</ParagraphMedium>
+      <ParagraphMedium>
+        <strong> {text}</strong>
+      </ParagraphMedium>
     </Flex>
   )
 }
@@ -128,7 +130,7 @@ const ExperimentSection = ({ activeLayers, currentParameters }) => {
   return (
     <MenuContainer>
       <H1>Pågående experiment</H1>
-      <ParagraphMedium black>
+      <ParagraphMedium>
         Experiment-id: <strong>{currentParameters.id}</strong>
         <br />
         Starttid: <strong>{currentParameters.startDate}</strong>
@@ -142,7 +144,7 @@ const ExperimentSection = ({ activeLayers, currentParameters }) => {
         </StyledButton>
       </ParagraphMedium>
 
-      <ParagraphMedium black>
+      <ParagraphMedium>
         Här kan ändra vad som visas i simuleringen till höger.
       </ParagraphMedium>
 

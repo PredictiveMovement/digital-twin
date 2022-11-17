@@ -10,7 +10,7 @@ const Wrapper = styled.div`
 const Percentage = styled.p`
   padding-left: 0.5rem;
   margin: 0;
-  color: white;
+  color: black;
 `
 
 const Container = styled.div`
@@ -18,13 +18,13 @@ const Container = styled.div`
   width: 170px;
   background-color: '#e0e0de';
   border-radius: 6px;
-  border: 1px solid white;
+  border: 1px solid #13c57b;
 `
 
 const Filler = styled.div`
   height: '100%';
   width: ${(props) => `${props.completed}%`};
-  background-color: white;
+  background-color: #13c57b;
   text-align: 'right';
   border-radius: 4px;
   transition: 'width 1s ease-in-out';

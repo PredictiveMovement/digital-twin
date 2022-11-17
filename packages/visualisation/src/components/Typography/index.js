@@ -5,7 +5,7 @@ const Paragraph = styled.p`
   font-weight: ${(props) => (props.thin ? 300 : 400)};
   font-size: 12px;
   font-family: 'Roboto', sans-serif;
-  color: ${(props) => (props.black ? 'black' : 'white')};
+  color: ${(props) => (props.white ? 'white' : 'black')};
 `
 
 const ParagraphBold = styled(Paragraph)`
@@ -13,7 +13,7 @@ const ParagraphBold = styled(Paragraph)`
 `
 
 const ParagraphLarge = styled.p`
-  color: ${(props) => (props.black ? 'black' : 'white')};
+  color: ${(props) => (props.white ? 'white' : 'black')};
   font-family: 'Roboto', sans-serif;
   margin: 0;
   font-size: 16px;
@@ -37,13 +37,13 @@ const H3 = styled.h3`
 const H4 = styled.h4`
   color: white;
   margin: 0;
-  color: black;
+  color: white;
   font-size: 14px;
 `
 
 const H5 = styled.h5`
   margin: 0;
-  color: black;
+  color: white;
 `
 
 export { Paragraph, ParagraphBold, ParagraphLarge, H1, H2, H3, H4, H5 }
