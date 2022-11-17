@@ -30,6 +30,7 @@ const { clusterPositions } = require('./kmeans')
 const { haversine } = require('./distance')
 const { taxiDispatch } = require('./dispatch/taxiDispatch')
 const { error, info } = require('./log')
+const Taxi = require('./vehicles/taxi')
 
 const flattenProperty = (property) => (stream) =>
   stream.pipe(
@@ -90,8 +91,8 @@ class Region {
     this.lineShapes = lineShapes
 
     this.taxis = kommuner.pipe(
-      map((kommun) => kommun.taxis),
-      mergeAll(),
+      mergeMap((kommun) => kommun.cars),
+      filter((car) => car instanceof Taxi),
       shareReplay()
     )
 
@@ -138,13 +139,12 @@ class Region {
     // send those to vroom and get back a list of assignments
     // for each assignment, take the booking and dispatch it to the car / fleet */
     this.dispatchedBookings = merge(
-      this.manualBookings,
       this.stopAssignments.pipe(
         mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5),
         filter((booking) => !booking.assigned),
         catchError((err) => error('region stopAssignments', err))
       ),
-      this.unhandledBookings.pipe(
+      merge(this.manualBookings, this.unhandledBookings).pipe(
         bufferTime(5000),
         filter((bookings) => bookings.length > 0),
         tap((bookings) => info('Clustering bookings', bookings.length)),
@@ -171,7 +171,9 @@ class Region {
                   passengers.length + 1 < passengerCapacity
               ),
               takeNearest(center, 10),
-              filter((taxis) => taxis.length),
+              tap((taxis) => {
+                if (taxis.length === 0) throw new Error('No taxis found') // retry bookings
+              }),
               mergeMap((taxis) => taxiDispatch(taxis, bookings), 1),
               catchError((err) => {
                 // retry these bookings in a new cluster
@@ -186,7 +188,7 @@ class Region {
         mergeAll(),
         mergeMap(({ taxi, bookings }) =>
           from(bookings).pipe(
-            mergeMap((booking) => taxi.handleBooking(booking), 5)
+            mergeMap((booking) => taxi.fleet.handleBooking(booking, taxi), 5)
           )
         ),
         retryWhen((errors) =>
@@ -214,7 +216,9 @@ class Region {
 
 const takeNearest = (center, count) =>
   pipe(
-    toArray(),
+    bufferTime(1000),
+    filter((taxis) => taxis.length > 0),
+    tap((taxis) => info('takeNearest', taxis.length)),
     map((taxis) =>
       taxis
         .sort((a, b) => {

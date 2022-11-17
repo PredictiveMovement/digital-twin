@@ -103,6 +103,12 @@
         },
         "marketshare": 0.6,
         "hub": [22.045246, 65.614869]
+      },
+      {
+        "name": "Taxi",
+        "vehicles": {
+          "taxi": 5
+        }
       }
     ]
   },
@@ -332,6 +338,12 @@
         },
         "marketshare": 0.6,
         "hub": [13.016601, 55.622044]
+      },
+      {
+        "name": "Taxi",
+        "vehicles": {
+          "taxi": 5
+        }
       }
     ]
   },
@@ -598,6 +610,15 @@
   "Österåkers kommun": {},
   "Östhammars kommun": {},
   "Östra Göinge kommun": {},
-  "Överkalix kommun": {},
+  "Överkalix kommun": {
+    "fleets": [
+      {
+        "name": "Taxi",
+        "vehicles": {
+          "taxi": 5
+        }
+      }
+    ]
+  },
   "Övertorneå kommun": {}
 }
