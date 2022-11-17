@@ -10,6 +10,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   background-color: #f5f5f5;
   padding: 1.5rem;
+  color: #000;
   border-radius: 6px;
   z-index: 1;
 `

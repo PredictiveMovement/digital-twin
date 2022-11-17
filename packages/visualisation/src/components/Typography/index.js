@@ -35,15 +35,12 @@ const H3 = styled.h3`
 `
 
 const H4 = styled.h4`
-  color: white;
   margin: 0;
-  color: white;
   font-size: 14px;
 `
 
 const H5 = styled.h5`
   margin: 0;
-  color: white;
 `
 
 export { Paragraph, ParagraphBold, ParagraphLarge, H1, H2, H3, H4, H5 }
