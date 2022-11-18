@@ -73,10 +73,11 @@ class Taxi extends Vehicle {
 
   async handleBooking(booking) {
     super.handleBooking(booking)
-    if (this.queue.length > 0) {
-      this.plan = await findBestRouteToPickupBookings(this, this.queue)
-      if (!this.instruction) this.pickNextInstructionFromPlan()
-    }
+    this.plan = await findBestRouteToPickupBookings(this, [
+      this.booking,
+      ...this.queue,
+    ])
+    if (!this.instruction) this.pickNextInstructionFromPlan()
     return booking
   }
 }

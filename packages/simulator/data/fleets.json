@@ -52,6 +52,12 @@
   "Arjeplogs kommun": {
     "fleets": [
       {
+        "name": "Taxi",
+        "vehicles": {
+          "taxi": 5
+        }
+      },
+      {
         "name": "Postnord",
         "vehicles": {
           "tungLastbil": 0,
@@ -91,6 +97,12 @@
   },
   "Arvidsjaurs kommun": {
     "fleets": [
+      {
+        "name": "Taxi",
+        "vehicles": {
+          "taxi": 5
+        }
+      },
       {
         "name": "Postnord",
         "vehicles": {

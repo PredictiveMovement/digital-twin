@@ -169,7 +169,8 @@ class Citizen {
         this.inVehicle = true
         this.position = booking.pickup.position
       }),
-      mapTo(this)
+      mapTo(this),
+      share()
     )
 
     this.deliveredEvents = this.bookings.pipe(
@@ -178,7 +179,8 @@ class Citizen {
         this.inVehicle = false
         this.position = booking.destination.position
       }),
-      mapTo(this)
+      mapTo(this),
+      share()
     )
   }
 
