@@ -9,14 +9,11 @@ const {
   range,
   first,
 } = require('rxjs')
-const { map, catchError, toArray, mapTo } = require('rxjs/operators')
+const { map, catchError, toArray, mapTo, filter } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
-const Taxi = require('./vehicles/taxi')
-const { randomize } = require('../simulator/address')
-const dynamicRatio = 0.2
-// expand fleets so that a fleet with marketshare 12% has 12 cars to choose from
+const { error } = require('./log')
 const expandFleets = () => (fleets) =>
   fleets.pipe(
     mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(mapTo(fleet)))
@@ -70,25 +67,16 @@ class Kommun {
     this.citizens = citizens
     this.bookings = bookings
 
-    this.fleets = from(fleets.map((fleet) => new Fleet(fleet)))
-
-    const nrOfTaxis = Math.floor(dynamicRatio * this.busCount)
-    this.taxis = range(0, nrOfTaxis).pipe(
-      mergeMap(() => Promise.all([randomize(center), randomize(center)]), 5),
-      // wander around until a booking comes along
-      map(
-        ([position, heading]) =>
-          new Taxi({ position, startPosition: position, heading })
-      )
+    this.fleets = from(
+      fleets.map((fleet) => new Fleet({ hub: center, ...fleet }))
     )
 
     this.cars = merge(
       this.privateCars,
-      this.taxis,
       this.fleets.pipe(mergeMap((fleet) => fleet.cars))
     ).pipe(shareReplay())
 
-    this.buses = range(0, this.busCount - nrOfTaxis).pipe(
+    this.buses = range(0, this.busCount).pipe(
       map(() => ({
         startPosition: center,
         position: center,

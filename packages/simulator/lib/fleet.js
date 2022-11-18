@@ -1,4 +1,4 @@
-const { Subject, ReplaySubject, range, from } = require('rxjs')
+const { Subject, ReplaySubject, range, from, merge } = require('rxjs')
 const { map, shareReplay, toArray, mergeMap } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
 const Car = require('./vehicles/car')
@@ -7,6 +7,8 @@ const Drone = require('./vehicles/drone')
 const { convertPosition } = require('../lib/distance')
 const { randomize } = require('../simulator/address')
 const pelias = require('./pelias')
+const Taxi = require('./vehicles/taxi')
+const Position = require('./models/position')
 
 const packagesPerPallet = 30 // this is a guesstimate
 const vehicleTypes = {
@@ -35,17 +37,18 @@ const vehicleTypes = {
     capacity: 1,
     class: Drone,
   },
+  taxi: {
+    weight: 1.5 * 1000,
+    capacity: 4,
+    class: Taxi,
+  },
 }
 
 class Fleet {
   constructor({ name, marketshare, percentageHomeDelivery, vehicles, hub }) {
     this.name = name
     this.marketshare = marketshare
-    this.hub = {
-      position: hub.length
-        ? convertPosition(hub)
-        : pelias.search(hub).then((position) => (this.hub = position)),
-    }
+    this.hub = { position: new Position(hub) }
     this.percentageHomeDelivery = (percentageHomeDelivery || 0) / 100 || 0.15 // based on guestimates from workshop with transport actors in oct 2021
     this.percentageReturnDelivery = 0.1
     this.cars = from(Object.entries(vehicles)).pipe(
@@ -66,14 +69,23 @@ class Fleet {
       shareReplay()
     )
     this.unhandledBookings = new Subject()
-    this.dispatchedBookings = dispatch(this.cars, this.unhandledBookings).pipe(
-      map(({ booking }) => booking)
+    this.manualDispatchedBookings = new Subject()
+    this.dispatchedBookings = merge(
+      this.manualDispatchedBookings,
+      dispatch(this.cars, this.unhandledBookings).pipe(
+        map(({ booking }) => booking)
+      )
     )
   }
 
-  handleBooking(booking) {
+  async handleBooking(booking, car) {
     booking.fleet = this
-    this.unhandledBookings.next(booking)
+    if (car) {
+      this.manualDispatchedBookings.next(booking)
+      return car.handleBooking(booking)
+    } else {
+      this.unhandledBookings.next(booking)
+    }
     return booking
   }
 }
