@@ -28,7 +28,7 @@ spec:
           image: iteam1337/pm-digital-twin-simulation-engine
           resources:
             requests:
-              cpu: "1"
+              cpu: 500m
               memory: "512Mi"
             limits:
               memory: "2Gi"
@@ -55,10 +55,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - helsingborg.predictivemovement.se
-      secretName: helsingborg-tls
+        - helsingborg-stage.predictivemovement.se
+      secretName: helsingborg-stage-tls
   rules:
-    - host: helsingborg.predictivemovement.se
+    - host: helsingborg-stage.predictivemovement.se
       http:
         paths:
           - path: /socket.io/.*
