@@ -91,9 +91,6 @@ const register = (experiment, socket) => {
       .subscribe((car) => {
         socket.volatile.emit('cars', [car])
       }),
-    experiment.taxis.subscribe(({ id, position: { lon, lat } }) => {
-      socket.volatile.emit('taxi', { id, position: [lon, lat] })
-    }),
   ]
 }
 

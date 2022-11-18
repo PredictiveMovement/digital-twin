@@ -23,7 +23,7 @@ class Taxi extends Vehicle {
     this.passengerCapacity = 4
     this.booking = true
     this.vehicleType = 'taxi'
-    this.startPosition = startPosition
+    this.startPosition = startPosition || position
     this.co2PerKmKg = 0.1201 // NOTE: From a quick google. Needs to be verified.
     this.plan = []
     this.instruction = null
