@@ -207,17 +207,16 @@ const App = () => {
     setNewParameters(currentParameters)
   })
   const [passengers, setPassengers] = React.useState([])
-  useSocket('passenger', ({ position, ...passenger }) => {
-    setPassengers((currentPassengers) =>
-      upsert(
-        currentPassengers,
-        {
-          ...passenger,
-          position: [position.lon, position.lat].map((s) => parseFloat(s)),
-        },
-        'id'
-      )
-    )
+  useSocket('passengers', (passengers) => {
+    setPassengers((currentPassengers) => [
+      ...currentPassengers.filter(
+        (cp) => !passengers.some((p) => p.id === cp.id)
+      ),
+      ...passengers.map(({ position, ...p }) => ({
+        ...p,
+        position: [position.lon, position.lat].map((s) => parseFloat(s)),
+      })),
+    ])
   })
 
   const onPause = () => {

@@ -149,9 +149,6 @@ const PassengerInfo = ({ data }) => {
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <Paragraph>
-        Passagerare: <strong>{data.id}</strong>
-      </Paragraph>
-      <Paragraph>
         Namn: <strong>{data.name}</strong>
       </Paragraph>
       <Paragraph>Resor:</Paragraph>
