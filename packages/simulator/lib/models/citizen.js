@@ -157,10 +157,10 @@ class Citizen {
         }
         return of(null)
       }),
-      mergeAll(), // since previous step retruns an promise, we need to resolve "one step deeper"
+      mergeAll(), // since previous step returns a promise, we need to resolve "one step deeper"
       catchError((err) => error('passenger intent err', err)),
       filter((f) => f instanceof Booking),
-      share()
+      shareReplay()
     )
 
     this.pickedUpEvents = this.bookings.pipe(
