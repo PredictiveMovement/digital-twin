@@ -28,7 +28,6 @@ const transitionInterpolator = new LinearInterpolator(['bearing'])
 
 const Map = ({
   activeLayers,
-  taxis,
   passengers,
   cars,
   bookings,

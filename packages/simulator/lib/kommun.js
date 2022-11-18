@@ -13,6 +13,7 @@ const { map, catchError, toArray, mapTo, filter } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
+const { error } = require('./log')
 const expandFleets = () => (fleets) =>
   fleets.pipe(
     mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(mapTo(fleet)))
@@ -70,17 +71,6 @@ class Kommun {
       fleets.map((fleet) => new Fleet({ hub: center, ...fleet }))
     )
 
-    /*
-    const nrOfTaxis = Math.floor(dynamicRatio * this.busCount)
-    this.taxis = range(0, nrOfTaxis).pipe(
-      mergeMap(() => Promise.all([randomize(center), randomize(center)]), 5),
-      // wander around until a booking comes along
-      map(
-        ([position, heading]) =>
-          new Taxi({ position, startPosition: position, heading })
-      )
-    )
-*/
     this.cars = merge(
       this.privateCars,
       this.fleets.pipe(mergeMap((fleet) => fleet.cars))

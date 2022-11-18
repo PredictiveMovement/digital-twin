@@ -1,4 +1,4 @@
-const { Subject, ReplaySubject, range, from } = require('rxjs')
+const { Subject, ReplaySubject, range, from, merge } = require('rxjs')
 const { map, shareReplay, toArray, mergeMap } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
 const Car = require('./vehicles/car')
@@ -69,15 +69,20 @@ class Fleet {
       shareReplay()
     )
     this.unhandledBookings = new Subject()
-    this.dispatchedBookings = dispatch(this.cars, this.unhandledBookings).pipe(
-      map(({ booking }) => booking)
+    this.manualDispatchedBookings = new Subject()
+    this.dispatchedBookings = merge(
+      this.manualDispatchedBookings,
+      dispatch(this.cars, this.unhandledBookings).pipe(
+        map(({ booking }) => booking)
+      )
     )
   }
 
-  handleBooking(booking, car) {
+  async handleBooking(booking, car) {
     booking.fleet = this
     if (car) {
-      car.handleBooking(booking)
+      this.manualDispatchedBookings.next(booking)
+      return car.handleBooking(booking)
     } else {
       this.unhandledBookings.next(booking)
     }

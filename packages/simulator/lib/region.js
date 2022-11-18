@@ -92,7 +92,7 @@ class Region {
 
     this.taxis = kommuner.pipe(
       mergeMap((kommun) => kommun.cars),
-      filter((car) => car instanceof Taxi),
+      filter((car) => car.vehicleType === 'taxi'),
       shareReplay()
     )
 
@@ -188,7 +188,7 @@ class Region {
         mergeAll(),
         mergeMap(({ taxi, bookings }) =>
           from(bookings).pipe(
-            map((booking) => taxi.fleet.handleBooking(booking, taxi))
+            mergeMap((booking) => taxi.fleet.handleBooking(booking, taxi))
           )
         ),
         retryWhen((errors) =>
