@@ -188,7 +188,7 @@ class Region {
         mergeAll(),
         mergeMap(({ taxi, bookings }) =>
           from(bookings).pipe(
-            mergeMap((booking) => taxi.fleet.handleBooking(booking, taxi), 5)
+            map((booking) => taxi.fleet.handleBooking(booking, taxi))
           )
         ),
         retryWhen((errors) =>
