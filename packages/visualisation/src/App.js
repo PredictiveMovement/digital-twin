@@ -66,7 +66,6 @@ const App = () => {
   useSocket('reset', () => {
     console.log('received reset')
     setBookings([])
-    setTaxis([])
     setPassengers([])
     setCars([])
     setKommuner([])
@@ -186,7 +185,6 @@ const App = () => {
 
     setCurrentParameters(currentParameters)
     const layerSetFunctions = {
-      taxis: setTaxiLayer,
       buses: setBusLayer,
       cars: setCarLayer,
       busStops: setBusStopLayer,
@@ -209,32 +207,16 @@ const App = () => {
     setNewParameters(currentParameters)
   })
   const [passengers, setPassengers] = React.useState([])
-  useSocket('passenger', ({ position, ...passenger }) => {
-    setPassengers((currentPassengers) =>
-      upsert(
-        currentPassengers,
-        {
-          ...passenger,
-          position: [position.lon, position.lat].map((s) => parseFloat(s)),
-        },
-        'id'
-      )
-    )
-  })
-  const [taxis, setTaxis] = React.useState([])
-  useSocket('taxi', ({ name, position, id }) => {
-    setReset(false)
-    setTaxis((currenttaxis) =>
-      upsert(
-        currenttaxis,
-        {
-          id,
-          name,
-          position,
-        },
-        'id'
-      )
-    )
+  useSocket('passengers', (passengers) => {
+    setPassengers((currentPassengers) => [
+      ...currentPassengers.filter(
+        (cp) => !passengers.some((p) => p.id === cp.id)
+      ),
+      ...passengers.map(({ position, ...p }) => ({
+        ...p,
+        position: [position.lon, position.lat].map((s) => parseFloat(s)),
+      })),
+    ])
   })
 
   const onPause = () => {
@@ -258,7 +240,6 @@ const App = () => {
     socket.emit('reset')
     setBookings([])
     setPassengers([])
-    setTaxis([])
     setCars([])
     setActiveCar(null)
   }
@@ -289,7 +270,6 @@ const App = () => {
       <Map
         activeLayers={activeLayers}
         passengers={passengers}
-        taxis={taxis}
         cars={cars}
         bookings={bookings}
         postombud={postombud}

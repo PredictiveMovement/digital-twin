@@ -2,20 +2,20 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: visualisation-ingress
+  name: visualisation-helsingborg-ingress
 spec:
   tls:
     - hosts:
-        - rorla.predictivemovement.se
-      secretName: rorla-prod-tls
+        - helsingborg.predictivemovement.se
+      secretName: helsingborg-prod-tls
   rules:
-    - host: rorla.predictivemovement.se
+    - host: helsingborg.predictivemovement.se
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service: 
-                name: visualisation
+                name: visualisation-helsingborg
                 port:
                   number: 80

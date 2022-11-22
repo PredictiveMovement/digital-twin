@@ -23,7 +23,7 @@ class Taxi extends Vehicle {
     this.passengerCapacity = 4
     this.booking = true
     this.vehicleType = 'taxi'
-    this.startPosition = startPosition
+    this.startPosition = startPosition || position
     this.co2PerKmKg = 0.1201 // NOTE: From a quick google. Needs to be verified.
     this.plan = []
     this.instruction = null
@@ -73,10 +73,11 @@ class Taxi extends Vehicle {
 
   async handleBooking(booking) {
     super.handleBooking(booking)
-    if (this.queue.length > 0) {
-      this.plan = await findBestRouteToPickupBookings(this, this.queue)
-      if (!this.instruction) this.pickNextInstructionFromPlan()
-    }
+    this.plan = await findBestRouteToPickupBookings(
+      this,
+      [this.booking, ...this.queue].filter((f) => f)
+    )
+    if (!this.instruction) this.pickNextInstructionFromPlan()
     return booking
   }
 }

@@ -25,6 +25,10 @@ spec:
       containers:
         - name: visualisation-helsingborg
           image: iteam1337/pm-digital-twin-visualisation
+          resources:
+            requests:
+              cpu: 100m
+              memory: "512Mi"
           ports:
             - containerPort: 80
 
@@ -39,10 +43,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - helsingborg.predictivemovement.se
-      secretName: helsingborg-tls
+        - helsingborg-stage.predictivemovement.se
+      secretName: helsingborg-stage-tls
   rules:
-    - host: helsingborg.predictivemovement.se
+    - host: helsingborg-stage.predictivemovement.se
       http:
         paths:
           - path: /

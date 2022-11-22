@@ -91,8 +91,9 @@ class Vehicle {
             return []
           }
           this.updatePosition(newPosition, skippedPoints, currentTimeInMs)
-          if (remainingPoints.length < 5) {
+          if (!next || remainingPoints.length < 5) {
             this.stopped()
+            return []
           }
           return remainingPoints
         }, interpolate.points(route)),
@@ -173,16 +174,13 @@ class Vehicle {
       if (this.booking) this.booking.pickedUp(this.position)
       this.cargo.push(this.booking)
       // see if we have more packages to pickup from this position
-      while (
-        this.queue.length < (this.passengerCapacity || this.parcelCapacity) &&
-        this.queue.length &&
-        haversine(this.position, this.queue[0].pickup.position) < 200
-      ) {
-        const booking = this.queue.shift()
-        booking.pickedUp(this.position)
-        this.cargo.push(booking)
-        this.cargoEvents.next(this)
-      }
+      this.queue
+        .filter((b) => this.position.distanceTo(b.pickup.position) < 200)
+        .forEach((booking) => {
+          this.cargo.push(booking)
+          booking.pickedUp(this.position)
+          this.cargoEvents.next(this)
+        })
       if (this.booking && this.booking.destination) {
         this.booking.pickedUp(this.position)
         this.status = 'delivery'
