@@ -1,11 +1,13 @@
+const { ReplaySubject, merge } = require('rxjs')
+const moment = require('moment')
+
 const { virtualTime } = require('../virtualTime')
 const { safeId } = require('../id')
 
-const { ReplaySubject, merge } = require('rxjs')
 class Booking {
-  constructor(booking) {
+  constructor({ id, ...booking }) {
     Object.assign(this, booking)
-    this.id = 'b-' + safeId()
+    this.id = id || 'b-' + safeId()
     this.status = 'New'
     this.co2 = 0 //TODO: initialvärde?
     this.passenger = booking.passenger
@@ -24,6 +26,20 @@ class Booking {
       this.pickedUpEvents,
       this.deliveredEvents
     )
+    this.validate()
+  }
+
+  validate() {
+    const pickPos = this.pickup?.position
+    const destPos = this.destination?.position
+    if (!pickPos?.lat || !pickPos?.lon) {
+      const msg = 'Invalid booking - Missing pickup position'
+      throw new Error(msg, JSON.stringify(this.pickup))
+    }
+    if (!destPos?.lat || !destPos?.lon) {
+      const msg = 'Invalid booking - Missing destination position'
+      throw new Error(msg, JSON.stringify(this.pickup))
+    }
   }
 
   async queued(car) {

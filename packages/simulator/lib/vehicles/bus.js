@@ -1,8 +1,7 @@
+const { pairwise, map } = require('rxjs/operators')
+
 const Booking = require('../models/booking')
 const Vehicle = require('./vehicle')
-const { pairwise, map } = require('rxjs/operators')
-const moment = require('moment')
-const { virtualTime } = require('../virtualTime')
 
 // TODO: create this somewhere else as real fleet
 const lanstrafiken = {
@@ -34,9 +33,28 @@ class Bus extends Vehicle {
     this.heading = heading
     this.kommun = kommun
     this.passengers = []
-    this.startPosition = startPosition
     this.passengerCapacity = 60 // TODO: fill this from the workshop poll
+    this.startPosition = startPosition || position
+    this.capacity = 50 // TODO: fill this from the workshop poll
     this.co2PerKmKg = 1.3 // NOTE: From a quick google. Needs to be verified.
+    this.stopsSubscription = stops
+      .pipe(
+        pairwise(),
+        map(([pickup, destination]) => {
+          this.handleBooking(
+            new Booking({
+              // pickup and destination contains both position and arrival and departure time
+              pickup,
+              destination,
+            })
+          )
+        })
+      )
+      .subscribe(() => {})
+  }
+
+  unsubscribe() {
+    this.stopsSubscription.unsubscribe()
   }
 
   async handleBooking(booking) {

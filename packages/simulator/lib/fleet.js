@@ -45,7 +45,13 @@ const vehicleTypes = {
 }
 
 class Fleet {
-  constructor({ name, marketshare, percentageHomeDelivery, vehicles, hub }) {
+  constructor({
+    name,
+    marketshare,
+    percentageHomeDelivery,
+    vehicles = {},
+    hub,
+  }) {
     this.name = name
     this.marketshare = marketshare
     this.hub = { position: new Position(hub) }

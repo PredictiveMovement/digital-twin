@@ -1,7 +1,7 @@
 const Kommun = require('../../lib/Kommun')
-const { from, lastValueFrom } = require('rxjs')
+const { from, lastValueFrom, ReplaySubject } = require('rxjs')
 const { first, map } = require('rxjs/operators')
-const Booking = require('../../lib/booking')
+const Booking = require('../../lib/models/booking')
 const { virtualTime } = require('../../lib/virtualTime')
 
 const dispatch = require('../../lib/dispatch/dispatchCentral')
@@ -11,13 +11,13 @@ jest.mock('../../lib/dispatch/dispatchCentral')
 const range = (length) => Array.from({ length }).map((_, i) => i)
 
 describe('A kommun', () => {
-  const arjeplog = { lon: 17.886855, lat: 66.041054 }
-  const ljusdal = { lon: 14.44681991219, lat: 61.59465992477 }
+  const arjeplog = { position: { lon: 17.886855, lat: 66.041054 } }
+  const ljusdal = { position: { lon: 14.44681991219, lat: 61.59465992477 } }
   const squares = from([])
   let fleets
   let kommun
 
-  let testBooking = new Booking({
+  let arjeplogToLjusdal = new Booking({
     pickup: arjeplog,
     destination: ljusdal,
   })
@@ -25,7 +25,13 @@ describe('A kommun', () => {
   beforeEach(() => {
     virtualTime.setTimeMultiplier(Infinity)
     fleets = [
-      { name: 'postnord', marketshare: 1, numberOfCars: 1, hub: arjeplog },
+      {
+        name: 'postnord',
+        marketshare: 1,
+        numberOfCars: 1,
+        hub: arjeplog,
+        dispatchedBookings: new ReplaySubject(),
+      },
     ]
     jest.clearAllMocks()
   })
@@ -42,12 +48,14 @@ describe('A kommun', () => {
 
   it('dispatches handled bookings', function () {
     kommun = new Kommun({ name: 'stockholm', squares, fleets })
-    kommun.handleBooking(testBooking)
+    kommun.handleBooking(arjeplogToLjusdal)
 
     expect(dispatch.dispatch.mock.calls.length).toBe(1)
   })
 
   it.only('handled bookings are dispatched', function (done) {
+    kommun = new Kommun({ name: 'stockholm', squares, fleets })
+
     dispatch.dispatch.mockImplementation((cars, bookings) =>
       bookings.pipe(
         map((booking) => ({
@@ -57,12 +65,11 @@ describe('A kommun', () => {
       )
     )
 
-    kommun = new Kommun({ name: 'stockholm', squares, fleets })
-    kommun.handleBooking(testBooking)
+    kommun.handleBooking(arjeplogToLjusdal)
 
     kommun.dispatchedBookings.pipe(first()).subscribe(({ booking }) => {
       expect(booking.fleet.name).toBe('bring')
-      expect(booking.id).toBe(testBooking.id)
+      expect(booking.id).toBe(arjeplogToLjusdal.id)
       done()
     })
   })

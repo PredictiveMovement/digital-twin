@@ -9,11 +9,21 @@ const {
   concatAll,
   windowTime,
   shareReplay,
+  filter,
+  first,
 } = require('rxjs/operators')
 const { dispatch } = require('../../lib/dispatch/dispatchCentral')
-const Car = require('../../lib/car')
-const Booking = require('../../lib/booking')
+const Car = require('../../lib/vehicles/car')
+const Booking = require('../../lib/models/booking')
 const { virtualTime } = require('../../lib/virtualTime')
+
+const once = (eventsStream, status, fn) =>
+  eventsStream
+    .pipe(
+      filter((car) => car.status === status),
+      take(1)
+    )
+    .subscribe(fn)
 
 describe('dispatch', () => {
   const arjeplog = { lon: 17.886855, lat: 66.041054 }
@@ -145,20 +155,22 @@ describe('dispatch', () => {
     ])
     dispatch(cars, bookings)
       .pipe(toArray())
-      .subscribe(([assignment1, assignment2]) => {
+      .subscribe(async ([assignment1, assignment2]) => {
         jest.setTimeout(10000)
 
         expect(assignment1.car.id).toEqual(1)
         expect(assignment1.booking.id).toEqual(1337)
         expect(assignment2.car.id).toEqual(1)
         expect(assignment2.booking.id).toEqual(1338)
-        assignment1.booking.once('delivered', (booking) => {
-          expect(booking.id).toEqual(1337)
-        })
-        assignment2.booking.once('delivered', (booking) => {
-          expect(booking.id).toEqual(1338)
-          done()
-        })
+        const booking1 = await assignment1.booking.deliveredEvents
+          .pipe(first())
+          .toPromise()
+        expect(booking1.id).toEqual(1337)
+        const booking2 = await assignment2.booking.deliveredEvents
+          .pipe(first())
+          .toPromise()
+        expect(booking2.id).toEqual(1338)
+        done()
       })
   })
 

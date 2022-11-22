@@ -51,6 +51,7 @@ class Vehicle {
     this.created = this.time()
     this.co2PerKmKg = co2PerKmKg
     this.vehicleType = 'default'
+    this.moving = false
 
     // TODO: rename these to events.moved, events.cargo, events.status
     this.movedEvents = new ReplaySubject()
@@ -73,14 +74,15 @@ class Vehicle {
     }
     if (!route) return
     if (virtualTime.timeMultiplier === Infinity) {
-      return this.updatePosition(route) // teleport mode
+      this.updatePosition(route) // teleport mode
+      this.stopped()
+      return
     }
-
     this.movementSubscription = virtualTime
       .getTimeInMilliseconds()
       .pipe(
         scan((prevRemainingPointsInRoute, currentTimeInMs) => {
-          const { next, skippedPoints, remainingPoints, ...position } =
+          const { skippedPoints, remainingPoints, ...position } =
             interpolate.route(
               route.started,
               currentTimeInMs,
@@ -99,7 +101,7 @@ class Vehicle {
         }, interpolate.points(route)),
         takeWhile((e) => e?.length > 4)
       )
-      .subscribe((e) => null)
+      .subscribe(() => null)
   }
 
   navigateTo(position) {
@@ -173,6 +175,9 @@ class Vehicle {
     setImmediate(() => {
       if (this.booking) this.booking.pickedUp(this.position)
       this.cargo.push(this.booking)
+      this.status = 'AtPickup'
+      this.statusEvents.next(this)
+      // should we first pickup more bookings before going to the
       // see if we have more packages to pickup from this position
       this.queue
         .filter((b) => this.position.distanceTo(b.pickup.position) < 200)
@@ -207,6 +212,10 @@ class Vehicle {
       this.booking.delivered(this.position)
       this.delivered.push(this.booking)
     }
+    this.status = 'AtDropOff'
+    this.statusEvents.next(this)
+
+    this.status = 'AtDropOff'
     this.statusEvents.next(this)
 
     this.pickNextFromCargo()
@@ -277,6 +286,8 @@ class Vehicle {
     if (metersMoved > 0) {
       this.bearing = bearing(lastPosition, position) || 0
       this.movedEvents.next(this)
+      this.moving = true
+
       // NOTE: cargo is passengers or packages.
       // eslint-disable-next-line no-unexpected-multiline
       const cargoAndPassengers = [...this.cargo, ...(this.passengers || [])]
@@ -294,6 +305,7 @@ class Vehicle {
 
   stopped() {
     this.speed = 0
+    this.moving = false
     this.statusEvents.next(this)
     if (this.booking) {
       this.simulate(false)

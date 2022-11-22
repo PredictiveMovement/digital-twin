@@ -5,6 +5,7 @@
   "main": "web/index.js",
   "scripts": {
     "dev": "nodemon web/index.js",
+    "jest": "jest",
     "test": "jest __tests__",
     "watch": "jest --watch __tests__",
     "preboot": "node preboot.js",
