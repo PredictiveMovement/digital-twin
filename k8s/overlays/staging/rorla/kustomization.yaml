@@ -1,6 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+namespace: rorla-stage
 #nameSuffix: -stage
 
 # patchesStrategicMerge:
@@ -8,6 +9,5 @@ kind: Kustomization
 # - simulator.yaml
 
 resources:
-  - helsingborg
-  - rorla
+  - ../../../base/rorla
 
