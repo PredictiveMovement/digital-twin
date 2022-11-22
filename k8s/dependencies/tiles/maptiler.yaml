@@ -83,20 +83,9 @@ metadata:
 spec:
   tls:
     - hosts:
-        - opentiles.iteam.services
         - opentiles.predictivemovement.se
       secretName: opentiles-prod-tls
   rules:
-    - host: maptiler.iteam.services
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: maptiler
-                port:
-                  number: 80
     - host: opentiles.predictivemovement.se
       http:
         paths:
