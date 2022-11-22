@@ -4,5 +4,8 @@ kind: Kustomization
 
 # list of Resource Config to be Applied
 resources:
-  - helsingborg
-  - rorla
+  - simulator.yaml
+  - visualisation.yaml
+
+# namespace to deploy all Resources to
+namespace: rorla-stage
