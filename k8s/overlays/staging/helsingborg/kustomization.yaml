@@ -9,5 +9,5 @@ namespace: helsingborg-stage
 # - simulator.yaml
 
 resources:
-  - ../../base/helsingborg
+  - ../../../base/helsingborg
 
