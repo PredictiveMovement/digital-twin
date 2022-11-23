@@ -9,4 +9,4 @@ patchesStrategicMerge:
   - simulator.yaml
 
 resources:
-  - ../../../base
+  - ../../../base/rorla
