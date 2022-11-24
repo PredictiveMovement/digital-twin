@@ -8,6 +8,7 @@ import { SocketIOProvider } from './context/socketIOProvider'
 ReactDOM.render(
   <SocketIOProvider
     url={process.env.REACT_APP_SIMULATOR_URL || 'http://localhost:4000'}
+    opts={{ withCredentials: true }}
   >
     <App />
   </SocketIOProvider>,
