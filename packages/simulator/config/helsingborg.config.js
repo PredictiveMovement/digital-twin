@@ -1,4 +1,5 @@
 const includedMunicipalities = ['Helsingborg']
+const ignoreWelcomeMessage = true
 const defaultEmitters = [
   'cars',
   'postombud',
@@ -9,4 +10,5 @@ const defaultEmitters = [
 module.exports = {
   includedMunicipalities,
   defaultEmitters,
+  ignoreWelcomeMessage,
 }
