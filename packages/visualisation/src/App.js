@@ -244,6 +244,8 @@ const App = () => {
     setActiveCar(null)
   }
 
+  useEffect(resetSimulation, []) // Reset simulation on refresh
+
   return (
     <>
       <WelcomeBox />
