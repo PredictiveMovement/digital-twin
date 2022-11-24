@@ -4,22 +4,22 @@ metadata:
   name: pm-digital-twin
 build:
   artifacts:
-    # - image: iteam1337/otp-sweden
-    #   context: k8s/dependencies/opentripplanner
-    #   docker:
-    #     buildArgs:
-    #       apikey: "{{.TRAFIKLAB_KEY}}"
-    #       operator: norrbotten
-    - image: iteam1337/sampleAddresses
+    - image: iteam1337/otp-sweden
+      context: k8s/dependencies/opentripplanner
+      docker:
+        buildArgs:
+          apikey: "{{.TRAFIKLAB_KEY}}"
+          operator: norrbotten
+    - image: iteam1337/sample-address
       context: packages/sampleAddresses
 deploy:
   kubectl:
     manifests:
-    # - k8s/dependencies/pelias/*.yaml
-    # - k8s/dependencies/osrm/*.yaml
-    # - k8s/dependencies/vroom/*.yaml
-    # - k8s/dependencies/opentripplanner/*.yaml
-    - k8s/dependencies/sampleAddresses/*.yaml
+      - k8s/dependencies/pelias/*.yaml
+      - k8s/dependencies/osrm/*.yaml
+      - k8s/dependencies/vroom/*.yaml
+      - k8s/dependencies/opentripplanner/*.yaml
+      - k8s/dependencies/sampleAddresses/*.yaml
 portForward:
   - resourceType: deployment
     resourceName: kibana

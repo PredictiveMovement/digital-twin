@@ -1,46 +1,46 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: sampleAddresses
+  name: sample-address
   namespace: pm-streams
 spec:
   ports:
     - port: 6000
       targetPort: 6000
   selector:
-    app: sampleAddresses
+    app: sample-address
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sampleAddresses
+  name: sample-address
   namespace: pm-streams
 spec:
   selector:
     matchLabels:
-      app: sampleAddresses
+      app: sample-address
   template:
     metadata:
       labels:
-        app: sampleAddresses
+        app: sample-address
     spec:
       containers:
-        - name: sampleAddresses
-          image: sampleAddresses
+        - name: sample-address
+          image: iteam1337/sample-address
           ports:
             - containerPort: 6000
-          resources: 
+          resources:
             requests:
               cpu: "0.1"
               memory: "100Mi"
           env:
             - name: PELIAS_HOSTNAME
-              value: elasticsearch.cluster.local:9200
+              value: elasticsearch.elasticsearch.svc.cluster.local:9200
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: sampleAddresses-ingress
+  name: sample-address-ingress
   namespace: pm-streams
   annotations:
     kubernetes.io/ingress.class: "nginx"
@@ -48,6 +48,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "360"
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "360"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "360"
+    nginx.ingress.kubernetes.io/rewrite-target: "/$1"
 spec:
   tls:
     - hosts:
@@ -57,10 +58,10 @@ spec:
     - host: streams.predictivemovement.se
       http:
         paths:
-          - path: /addresses
+          - path: /addresses/(.*)
             pathType: Prefix
             backend:
-              service: 
-                name: sampleAddresses
+              service:
+                name: sample-address
                 port:
                   number: 6000

@@ -1,11 +1,14 @@
 const express = require('express')
 const app = express()
 const fetch = require('node-fetch')
+const assert = require('assert')
 
 app.get('/zip/:zipnr', (req, res) => {
   const seed = req.query.seed || 1337
   const zipnr = req.params.zipnr
   const size = req.query.size || 10
+  assert(size <= 10000, 'Maximum size 10000')
+
   const peliasHostname = process.env.PELIAS_HOSTNAME || 'localhost:9200'
   const url = `http://${peliasHostname}/pelias/_search`
   const query = {
@@ -32,6 +35,9 @@ app.get('/zip/:zipnr', (req, res) => {
   })
     .then((res) => res.json())
     .then((json) => {
+      if (json.error) {
+        throw new Error(json.error)
+      }
       const hits = json.hits.hits
       const addresses = hits
         .map((hit) => hit)
@@ -46,6 +52,10 @@ app.get('/zip/:zipnr', (req, res) => {
           })
         )
       res.json(addresses)
+    })
+    .catch((error) => {
+      console.log(error)
+      res.status(500).json(error.message)
     })
 })
 
