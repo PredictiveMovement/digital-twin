@@ -10,13 +10,16 @@ build:
         buildArgs:
           apikey: "{{.TRAFIKLAB_KEY}}"
           operator: norrbotten
+    - image: iteam1337/sample-address
+      context: packages/sampleAddresses
 deploy:
   kubectl:
     manifests:
-    - k8s/dependencies/pelias/*.yaml
-    - k8s/dependencies/osrm/*.yaml
-    - k8s/dependencies/vroom/*.yaml
-    - k8s/dependencies/opentripplanner/*.yaml
+      - k8s/dependencies/pelias/*.yaml
+      - k8s/dependencies/osrm/*.yaml
+      - k8s/dependencies/vroom/*.yaml
+      - k8s/dependencies/opentripplanner/*.yaml
+      - k8s/dependencies/sampleAddresses/*.yaml
 portForward:
   - resourceType: deployment
     resourceName: kibana
