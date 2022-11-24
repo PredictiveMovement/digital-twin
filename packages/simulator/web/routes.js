@@ -1,7 +1,8 @@
 const engine = require('../index')
 const { saveParameters } = require('../lib/fileUtils')
 const { info } = require('../lib/log')
-const { defaultEmitters } = require('../config')
+const { defaultEmitters, ignoreWelcomeMessage } = require('../config')
+const cookie = require('cookie')
 
 function subscribe(experiment, socket) {
   return [
@@ -23,6 +24,14 @@ function start(socket) {
 }
 
 function register(io) {
+  if (ignoreWelcomeMessage) {
+    io.engine.on('initial_headers', (headers) => {
+      headers['set-cookie'] = cookie.serialize('hideWelcomeBox', 'true', {
+        path: '/',
+      })
+    })
+  }
+
   io.on('connection', function (socket) {
     if (!socket.data.experiment) {
       start(socket)
