@@ -27,3 +27,5 @@ function read() {
 }
 
 module.exports = read()
+
+read().subscribe((p) => console.log(p))
