@@ -15,8 +15,8 @@ app.get('/', (req, res) => {
     },
     examples: [
       'GET /zip/11646?size=10&seed=1337',
-      'GET /box/?topleft=55.5,12.5&bottomright=55.4,12.4',
-      'GET /box/?tl=55.5,12.5&br=55.4,12.4',
+      'GET /box/?topleft=13.085098058715708,57.96539874381225&bottomright=13.025098058715708,57.91539874381225',
+      'GET /box/?tl=13.085098058715708,57.96539874381225&br=13.025098058715708,57.91539874381225',
     ],
     options: {
       seed: 'Random seed',
