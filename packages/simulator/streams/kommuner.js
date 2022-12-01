@@ -114,4 +114,4 @@ function read() {
   )
 }
 
-const kommuner = (module.exports = read())
+module.exports = { read }
