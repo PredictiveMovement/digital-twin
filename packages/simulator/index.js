@@ -13,7 +13,8 @@ const {
 const { virtualTime } = require('./lib/virtualTime')
 
 const kommuner = require('./streams/kommuner')
-const regions = require('./streams/regions')(kommuner)
+let kommunerStream = kommuner.read()
+const regions = require('./streams/regions')(kommunerStream)
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
 const statistics = require('./lib/statistics')
@@ -26,13 +27,14 @@ const static = {
     mergeMap((region) => region.lineShapes),
     shareReplay()
   ),
-  postombud: kommuner.pipe(mergeMap((kommun) => kommun.postombud)),
-  kommuner: kommuner.pipe(shareReplay()),
+  postombud: kommunerStream.pipe(mergeMap((kommun) => kommun.postombud)),
+  kommuner: kommunerStream.pipe(shareReplay()),
 }
 
 const engine = {
   subscriptions: [],
   createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
+    kommunerStream = kommuner.read()
     const savedParams = readParameters()
 
     info('Starting experiment with params:', savedParams)
@@ -49,13 +51,13 @@ const engine = {
       ...static,
       subscriptions: [],
       virtualTime,
-      cars: kommuner.pipe(mergeMap((kommun) => kommun.cars)),
+      cars: kommunerStream.pipe(mergeMap((kommun) => kommun.cars)),
       dispatchedBookings: merge(
         regions.pipe(mergeMap((r) => r.dispatchedBookings)),
-        kommuner.pipe(mergeMap((k) => k.dispatchedBookings))
+        kommunerStream.pipe(mergeMap((k) => k.dispatchedBookings))
       ),
       buses: regions.pipe(mergeMap((region) => region.buses)),
-      measureStations: kommuner.pipe(
+      measureStations: kommunerStream.pipe(
         mergeMap((kommun) => kommun.measureStations)
       ),
       parameters,
