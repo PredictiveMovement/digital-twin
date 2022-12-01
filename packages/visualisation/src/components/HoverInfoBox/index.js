@@ -82,10 +82,7 @@ const cargoName = (vehicleType) => {
 }
 
 const CarInfo = ({ data }) => {
-  const fill =
-    data.cargo / data.parcelCapacity ||
-    data.passengers / data.passengerCapacity ||
-    0
+  console.log(Number.isInteger(data.passengers))
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <div>
@@ -118,24 +115,49 @@ const CarInfo = ({ data }) => {
           Körsträcka:{' '}
           <strong>{Math.ceil(10 * data.distance) / 10 || 0} km</strong>
         </Paragraph>
-        <Paragraph>
-          Lastat:{' '}
-          <strong>
-            {data.cargo || data.passengers} {cargoName(data.vehicleType)}
-          </strong>
-        </Paragraph>
-        <Paragraph>
-          Kapacitet:{' '}
-          <strong>
-            {data.parcelCapacity || data.passengerCapacity}{' '}
-            {cargoName(data.vehicleType)}
-          </strong>
-        </Paragraph>
+        {data.passengerCapacity && (
+          <Paragraph>
+            Lastat: <strong>{data.passengers} passagerare</strong>
+          </Paragraph>
+        )}
+        {data.parcelCapacity && (
+          <Paragraph>
+            Lastat: <strong>{data.cargo} paket</strong>
+          </Paragraph>
+        )}
+        {data.passengerCapacity && (
+          <Paragraph>
+            Passagerarkapacitet:{' '}
+            <strong>{data.passengerCapacity} passagerare</strong>
+          </Paragraph>
+        )}
+        {data.parcelCapacity && (
+          <Paragraph>
+            Paketkapacitet: <strong>{data.parcelCapacity} paket</strong>
+          </Paragraph>
+        )}
       </div>
-      <div>
-        <Paragraph>Fyllnadsgrad:</Paragraph>
-        <ProgressBar completed={Math.round(Math.min(100, fill * 100))} />
-      </div>
+      {data.passengerCapacity && (
+        <div>
+          <Paragraph>Passagerarfyllnadsgrad:</Paragraph>
+          <ProgressBar
+            completed={Math.round(
+              Math.min(100, (data.passengers / data.passengerCapacity) * 100) ||
+                0
+            )}
+          />
+        </div>
+      )}
+      {data.parcelCapacity && (
+        <div>
+          <Paragraph>Paketfyllnadsgrad:</Paragraph>
+          <ProgressBar
+            completed={Math.round(
+              Math.min(100, (data.cargo / data.parcelCapacity) * 100) || 0
+            )}
+          />
+        </div>
+      )}
     </Wrapper>
   )
 }
