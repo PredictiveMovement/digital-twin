@@ -82,6 +82,10 @@ const cargoName = (vehicleType) => {
 }
 
 const CarInfo = ({ data }) => {
+  const fill =
+    data.cargo / data.parcelCapacity ||
+    data.passengers / data.passengerCapacity ||
+    0
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <div>
@@ -117,7 +121,7 @@ const CarInfo = ({ data }) => {
         <Paragraph>
           Lastat:{' '}
           <strong>
-            {data.cargo + data.passengers} {cargoName(data.vehicleType)}
+            {data.cargo || data.passengers} {cargoName(data.vehicleType)}
           </strong>
         </Paragraph>
         <Paragraph>
@@ -130,16 +134,7 @@ const CarInfo = ({ data }) => {
       </div>
       <div>
         <Paragraph>Fyllnadsgrad:</Paragraph>
-        <ProgressBar
-          completed={Math.round(
-            Math.min(
-              100,
-              ((data.cargo + data.passengers) /
-                (data.parcelCapacity || data.passengerCapacity)) *
-                100
-            )
-          )}
-        />
+        <ProgressBar completed={Math.round(Math.min(100, fill * 100))} />
       </div>
     </Wrapper>
   )
