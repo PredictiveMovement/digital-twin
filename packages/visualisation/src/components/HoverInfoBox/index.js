@@ -82,7 +82,6 @@ const cargoName = (vehicleType) => {
 }
 
 const CarInfo = ({ data }) => {
-  console.log(Number.isInteger(data.passengers))
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <div>
