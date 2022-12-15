@@ -48,7 +48,7 @@ class Fleet {
     this.name = name
     this.marketshare = marketshare
     const hubPos = new Position(hub)
-    if(hubPos.valid) {
+    if(!hubPos.valid) {
       error(`Invalid hub position for fleet ${name}: ${hub}\n\n${new Error().stack}\n\n`)
     }
     this.hub = { position: (hubPos.valid ? hubPos : { lat: 0, lon: 0 }) }
