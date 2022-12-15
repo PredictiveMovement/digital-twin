@@ -1,13 +1,11 @@
-const chalk = require('chalk')
 const fetch = require('node-fetch')
+const key = process.env.TRAFIKLAB_KEY // log in to trafiklab.se and get a key
 const fs = require('fs')
 const path = require('path')
 const { virtualTime } = require('../lib/virtualTime')
 const moment = require('moment')
-const key = process.env.TRAFIKLAB_KEY // log in to trafiklab.se and get a key
-const operator = 'norrbotten'
 
-const url = "https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${key}"
+//const url = `https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${key}`
 const request = require('request')
 const { shareReplay, from, of, firstValueFrom, groupBy, take } = require('rxjs')
 const {
@@ -31,20 +29,7 @@ const {
 
 // stop_times.trip_id -> trips.service_id -> calendar_dates.service_id
 const todaysDate = moment().format('YYYYMMDD')
-const todaysServiceList = serviceDatesMap[todaysDate]
-if(!todaysServiceList) {
-  const pre = chalk.red('=== ')
-  const errMsg =
-    'Most likely we need to update the GTFS-data by downloading from the link below'
-  console.error(chalk.red("\n\n\n=== ERROR: NO SERVICE TODAY"))
-  console.error(`${pre}${errMsg}\n${pre}`)
-  console.error(`${pre}GTFS-data: ${chalk.blue(url)}\n${pre}`)
-  console.error(`${pre}Operator should be ${chalk.yellow(operator)}`)
-  console.error(`${pre}The key can be fetched from ${chalk.blue("https://developer.trafiklab.se/node/32644/keys")}\n\n\n`)
-  throw(new Error())
-}
-
-const todaysServiceIds = todaysServiceList.map(
+const todaysServiceIds = serviceDatesMap[todaysDate].map(
   ({ serviceId }) => serviceId
 )
 
