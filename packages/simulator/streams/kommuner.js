@@ -47,6 +47,19 @@ function getMeasureStations(kommunName) {
   )
 }
 
+async function centerPoint(namn, retries = 0) {
+  try {
+    return await Pelias.search(namn).then((res) => res.position)
+  } catch(err) {
+    if (retries < 3) {
+      console.log("Couldn't find center point for", namn, `retrying ${retries + 1}/3...`)
+      return centerPoint(namn, retries + 1)
+    }
+    console.error('Could not find center point for', namn)
+    return { lat: 0, lon: 0 }
+  }
+}
+
 function read() {
   return from(data).pipe(
     filter(({ namn }) =>
@@ -78,7 +91,7 @@ function read() {
           zip: postnummer,
           telephone: telefon,
           fleets: fleets || [],
-          center: await Pelias.search(namn).then((res) => res.position),
+          center: await centerPoint(namn),
           pickupPositions: pickupPositions || [],
           squares,
           bookings: new ReplaySubject(), // will be set later
