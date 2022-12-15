@@ -37,16 +37,21 @@ module.exports = {
           }),
         })
       ).catch((e) => {
-        console.error('Error in pelias', e)
+        const error = new Error().stack
+        console.error(`Error in pelias nearest\n${error}\n${e}\n\n`)
       })
 
     return promise
   },
   search(name, near = null, layers = 'address,venue') {
     const focus = near
-      ? `&focus.point.lat=${near.lat}&focus.point.lon=${near.lon}}&layers=${layers}`
+      ? `&focus.point.lat=${encodeURIComponent(
+          near.lat
+        )}&focus.point.lon=${encodeURIComponent(
+          near.lon
+        )}}&layers=${encodeURIComponent(layers)}`
       : ''
-    const url = `${peliasUrl}/v1/search?text=${name}${focus}&size=1`
+    const url = `${peliasUrl}/v1/search?text=${encodeURIComponent(name)}${focus}&size=1`
     return fetch(url)
       .then((response) => {
         if (!response.ok) throw 'pelias error: ' + response.statusText
@@ -64,5 +69,9 @@ module.exports = {
           lat: geometry.coordinates[1],
         }),
       }))
+      .catch((e) => {
+        const error = new Error().stack
+        console.error(`Error in pelias search\n${error}\n${e}\n\n`)
+      })
   },
 }

@@ -1,14 +1,13 @@
-const { Subject, ReplaySubject, range, from, merge } = require('rxjs')
-const { map, shareReplay, toArray, mergeMap } = require('rxjs/operators')
+const { Subject, range, from, merge } = require('rxjs')
+const { map, shareReplay, mergeMap } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
 const Car = require('./vehicles/car')
 const Truck = require('./vehicles/truck')
 const Drone = require('./vehicles/drone')
-const { convertPosition } = require('../lib/distance')
 const { randomize } = require('../simulator/address')
-const pelias = require('./pelias')
 const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')
+const {error} = require('./log')
 
 const packagesPerPallet = 30 // this is a guesstimate
 const vehicleTypes = {
@@ -48,7 +47,11 @@ class Fleet {
   constructor({ name, marketshare, percentageHomeDelivery, vehicles, hub }) {
     this.name = name
     this.marketshare = marketshare
-    this.hub = { position: new Position(hub) }
+    const hubPos = new Position(hub)
+    if(hubPos.valid) {
+      error(`Invalid hub position for fleet ${name}: ${hub}\n\n${new Error().stack}\n\n`)
+    }
+    this.hub = { position: (hubPos.valid ? hubPos : { lat: 0, lon: 0 }) }
     this.percentageHomeDelivery = (percentageHomeDelivery || 0) / 100 || 0.15 // based on guestimates from workshop with transport actors in oct 2021
     this.percentageReturnDelivery = 0.1
     this.cars = from(Object.entries(vehicles)).pipe(
@@ -62,6 +65,8 @@ class Fleet {
                 fleet: this,
                 position,
               })
+            }).catch((err) => {
+              error(`Error creating vehicle for fleet ${name}: ${err}\n\n${new Error().stack}\n\n`)
             })
           )
         )
