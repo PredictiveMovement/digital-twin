@@ -9,7 +9,10 @@ const {
   toArray,
   pairwise,
 } = require('rxjs/operators')
-
+var evilDns = require('evil-dns')
+evilDns.add('pelias.predictivemovement.se', '185.189.30.241')
+evilDns.add('osrm.predictivemovement.se', '185.189.30.129')
+evilDns.add('vroom.predictivemovement.se', '185.189.30.129')
 const { virtualTime } = require('./lib/virtualTime')
 
 const kommuner = require('./streams/kommuner')
