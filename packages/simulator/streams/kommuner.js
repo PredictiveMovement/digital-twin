@@ -50,9 +50,13 @@ function getMeasureStations(kommunName) {
 async function centerPoint(namn, retries = 0) {
   try {
     return await Pelias.search(namn).then((res) => res.position)
-  } catch(err) {
+  } catch (err) {
     if (retries < 3) {
-      console.log("Couldn't find center point for", namn, `retrying ${retries + 1}/3...`)
+      console.log(
+        "Couldn't find center point for",
+        namn,
+        `retrying ${retries + 1}/3...`
+      )
       return centerPoint(namn, retries + 1)
     }
     console.error('Could not find center point for', namn)
@@ -94,7 +98,6 @@ function read() {
           center: await centerPoint(namn),
           pickupPositions: pickupPositions || [],
           squares,
-          bookings: new ReplaySubject(), // will be set later
           citizens: new ReplaySubject(), // will be set later
           postombud: getPostombud(namn),
           measureStations: getMeasureStations(namn),
@@ -111,15 +114,6 @@ function read() {
         getCitizens(kommun).subscribe((citizen) =>
           kommun.citizens.next(citizen)
         )
-      }
-      if (defaultEmitters.includes('bookings')) {
-        kommun.fleets
-          .pipe(take(1)) // We use take(1) to make sure there's atleast one fleet (with a depo) in the kommun. Otherwise bookings shouldn't be generated
-          .subscribe(() =>
-            generateBookingsInKommun(kommun).subscribe((booking) =>
-              kommun.handleBooking(booking)
-            )
-          )
       }
     }),
 
