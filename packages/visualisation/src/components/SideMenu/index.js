@@ -48,6 +48,10 @@ const MenuItem = styled.li`
   display: flex;
   align-items: center;
   z-index: 4;
+
+  img {
+    width: 32px;
+  }
 `
 
 const ActiveMenu = styled.div`
