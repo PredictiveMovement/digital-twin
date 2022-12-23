@@ -16,10 +16,10 @@ const Booking = require('../../lib/models/booking')
 
 const origins = {
   CDC031: {
-    name: 'Iteam Solutions',
+    name: 'Trelleborg Hamn', // TODO: Get the right location.
   },
   CDC405: {
-    name: 'Iteam Solutions',
+    name: 'Trelleborg Hamn', // TODO: Get the right location.
   },
   STO012: {
     name: 'Ikea Kungens Kurva',
@@ -40,22 +40,22 @@ const origins = {
     name: 'Ikea Kalmar',
   },
   SUP22216: {
-    name: 'Iteam Solutions',
+    name: 'Trelleborg Hamn', // TODO: Get the right location.
   },
   SUP22677: {
-    name: 'Iteam Solutions',
+    name: 'Trelleborg Hamn', // TODO: Get the right location.
   },
   SUP22844: {
-    name: 'Iteam Solutions',
+    name: 'Trelleborg Hamn', // TODO: Get the right location.
   },
   SUP23329: {
-    name: 'Iteam Solutions',
+    name: 'Trelleborg Hamn', // TODO: Get the right location.
   },
   SUP50029: {
-    name: 'Iteam Solutions',
+    name: 'Trelleborg Hamn', // TODO: Get the right location.
   },
   None: {
-    name: 'Iteam Solutions',
+    name: 'Trelleborg Hamn', // TODO: Get the right location.
   },
 }
 
