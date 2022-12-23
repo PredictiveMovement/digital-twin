@@ -19,6 +19,8 @@ const expandFleets = () => (fleets) =>
     mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(mapTo(fleet)))
   )
 
+const ikeaBookings = require('../streams/orders/ikea.js')
+
 // pick a random item in an array-like stream
 const pickRandom = () => (stream) =>
   stream.pipe(
@@ -94,6 +96,9 @@ class Kommun {
       }),
       shareReplay()
     )
+
+    // NOTE: This is just a temporary way of getting the bookings in.
+    ikeaBookings.pipe(map((booking) => this.handleBooking(booking))).subscribe()
   }
 
   handleBooking(booking) {
