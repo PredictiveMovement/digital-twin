@@ -218,6 +218,12 @@ const ExperimentSection = ({ activeLayers, currentParameters }) => {
           color="#13C57BAA"
           borderOnly
         />
+        <CheckItem
+          text="Mätpunkter"
+          setLayer={activeLayers.setMeasureStationsLayer}
+          checked={activeLayers.measureStationsLayer}
+          color="#13C57BAA"
+        />
       </Container>
 
       <Container>
