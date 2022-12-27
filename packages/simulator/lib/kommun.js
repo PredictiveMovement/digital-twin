@@ -1,7 +1,6 @@
 const {
   from,
   shareReplay,
-  Subject,
   ReplaySubject,
   mergeMap,
   merge,
@@ -9,16 +8,7 @@ const {
   range,
   first,
 } = require('rxjs')
-const {
-  map,
-  catchError,
-  toArray,
-  mapTo,
-  filter,
-  switchMap,
-  groupBy,
-  tap,
-} = require('rxjs/operators')
+const { map, toArray, mapTo, groupBy, tap } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
@@ -27,6 +17,7 @@ const expandFleets = () => (fleets) =>
   fleets.pipe(
     mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(mapTo(fleet)))
   )
+
 const ikeaBookings = require('../streams/orders/ikea.js')
 
 // pick a random item in an array-like stream
