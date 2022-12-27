@@ -12,7 +12,7 @@ const { map, toArray, mapTo, groupBy, tap } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
-const { error, info } = require('./log')
+const { info } = require('./log')
 const expandFleets = () => (fleets) =>
   fleets.pipe(
     mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(mapTo(fleet)))
