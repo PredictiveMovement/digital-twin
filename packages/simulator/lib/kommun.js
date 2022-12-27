@@ -12,7 +12,7 @@ const { map, toArray, mapTo, groupBy, tap } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
-const { error } = require('./log')
+const { error, info } = require('./log')
 const expandFleets = () => (fleets) =>
   fleets.pipe(
     mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(mapTo(fleet)))
@@ -97,11 +97,16 @@ class Kommun {
           pickRandom(),
           map((fleet) => fleet.handleBooking(booking)),
           tap((booking) => {
-            console.log(booking)
+            info(
+              `Booking ${booking.id} dispatched to fleet ${booking.fleet.name}`
+            )
           }),
           groupBy((booking) => booking.fleet.name), // NOTE: Booking is a Promise.
-          map((group) => group.pipe(first())),
-          mergeMap((booking) => booking.fleet.dispatchedBookings)
+          mergeMap((group) => {
+            return group.pipe(
+              map((booking) => booking.fleet.dispatchedBookings)
+            )
+          })
         )
       ),
       shareReplay()
