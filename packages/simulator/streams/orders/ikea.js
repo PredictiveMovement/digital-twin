@@ -17,10 +17,10 @@ const { error } = require('../../lib/log')
 
 const origins = {
   CDC031: {
-    name: 'Trelleborg Hamn', // TODO: Get the right location.
+    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
   },
   CDC405: {
-    name: 'Trelleborg Hamn', // TODO: Get the right location.
+    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
   },
   STO012: {
     name: 'Ikea Kungens Kurva',
@@ -41,22 +41,22 @@ const origins = {
     name: 'Ikea Kalmar',
   },
   SUP22216: {
-    name: 'Trelleborg Hamn', // TODO: Get the right location.
+    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
   },
   SUP22677: {
-    name: 'Trelleborg Hamn', // TODO: Get the right location.
+    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
   },
   SUP22844: {
-    name: 'Trelleborg Hamn', // TODO: Get the right location.
+    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
   },
   SUP23329: {
-    name: 'Trelleborg Hamn', // TODO: Get the right location.
+    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
   },
   SUP50029: {
-    name: 'Trelleborg Hamn', // TODO: Get the right location.
+    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
   },
   None: {
-    name: 'Trelleborg Hamn', // TODO: Get the right location.
+    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
   },
 }
 
@@ -86,7 +86,7 @@ function read() {
       })
     ),
     filter((row) => moment(row.created).isSame('2022-09-17', 'day')),
-    groupBy((row) => row.deliveryZip),
+    groupBy((row) => row.id),
     mergeMap((group) =>
       group.pipe(
         toArray(),
@@ -96,7 +96,7 @@ function read() {
     mergeMap(
       ({ key, rows }) =>
         fetch(
-          `https://streams.predictivemovement.se/addresses/zip/${key}?size=${rows.length}`
+          `https://streams.predictivemovement.se/addresses/zip/${rows[0].deliveryZip}?size=1&seed=${key}`
         )
           .then((res) => res.json())
           .then((addresses) =>
