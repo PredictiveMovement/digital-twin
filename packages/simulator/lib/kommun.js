@@ -110,11 +110,13 @@ class Kommun {
             return group.pipe(
               map((booking) => booking.fleet.dispatchedBookings)
             )
-          })
-          // catchError((err) => error('dispatchedBookings', err))
+          }),
+          catchError((err) => error('dispatchedBookings -> fleets.pipe', err))
         )
       ),
-      // catchError((err) => error('dispatchedBookings', err)),
+      catchError((err) =>
+        error('dispatchedBookings -> unhandledBookings.pipe', err)
+      ),
       shareReplay()
     )
 
