@@ -8,4 +8,4 @@ resources:
   - visualisation.yaml
 
 # namespace to deploy all Resources to
-namespace: digital-twin
+namespace: drone
