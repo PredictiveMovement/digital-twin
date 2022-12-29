@@ -108,7 +108,7 @@ class Kommun {
           groupBy((booking) => booking.fleet.name),
           mergeMap((group) => {
             return group.pipe(
-              map((booking) => booking.fleet.dispatchedBookings)
+              mergeMap((booking) => booking.fleet.dispatchedBookings)
             )
           }),
           catchError((err) => error('dispatchedBookings -> fleets.pipe', err))
