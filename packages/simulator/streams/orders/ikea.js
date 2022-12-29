@@ -3,9 +3,9 @@ const {
   map,
   toArray,
   mergeMap,
-  take,
   groupBy,
   mergeAll,
+  catchError,
 } = require('rxjs/operators')
 const moment = require('moment')
 const { readCsv } = require('../../adapters/csv')
@@ -13,6 +13,7 @@ const { default: fetch } = require('node-fetch')
 const { search } = require('../../lib/pelias')
 const Position = require('../../lib/models/position')
 const Booking = require('../../lib/models/booking')
+const { error } = require('../../lib/log')
 
 const origins = {
   CDC031: {
@@ -123,6 +124,9 @@ function read() {
     ),
     mergeAll(),
     map((row) => new Booking(row)),
+    catchError((err) => {
+      error('IKEA -> from CSV', err)
+    }),
     shareReplay()
   )
 }
