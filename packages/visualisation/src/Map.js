@@ -377,7 +377,7 @@ const Map = ({
 
   const bookingLayer = new ScatterplotLayer({
     id: 'booking-layer',
-    data: bookings.filter((b) => !b.assigned),
+    data: bookings, //.filter((b) => !b.assigned), // TODO: revert change
     opacity: 1,
     stroked: false,
     filled: true,
@@ -388,7 +388,9 @@ const Map = ({
     },
     getRadius: () => 4,
     // #fab
-    getFillColor: ({ status }) =>
+    getFillColor: (
+      { status } // TODO: Different colors for IKEA & HM
+    ) =>
       status === 'Delivered'
         ? [170, 255, 187]
         : status === 'Picked up'

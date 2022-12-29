@@ -23,7 +23,10 @@ const expandFleets = () => (fleets) =>
     mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(mapTo(fleet)))
   )
 
-const ikeaBookings = require('../streams/orders/ikea.js')
+const bookings = {
+  hm: require('../streams/orders/hm.js'),
+  ikea: require('../streams/orders/ikea.js'),
+}
 
 // pick a random item in an array-like stream
 const pickRandom = () => (stream) =>
@@ -90,9 +93,10 @@ class Kommun {
       map((props) => new Bus(props))
     )
 
-    this.unhandledBookings = merge(
-      this.name === 'Helsingborgs stad' ? ikeaBookings : of()
-    )
+    this.unhandledBookings =
+      this.name === 'Helsingborgs stad'
+        ? merge(bookings.hm, bookings.ikea)
+        : of()
 
     this.dispatchedBookings = this.unhandledBookings.pipe(
       mergeMap((booking) =>
