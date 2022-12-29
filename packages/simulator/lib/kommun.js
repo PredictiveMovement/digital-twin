@@ -123,8 +123,12 @@ class Kommun {
     this.handledBookings = this.dispatchedBookings.pipe(
       map((booking) => {
         booking.kommun = this
-      })
+      }),
+      catchError((err) =>
+        error('handledBookings -> dispatchedBookings.pipe', err)
+      )
     )
+
     //   this.handledBookings = this.unhandledBookings.pipe(
     //     map((booking) => {
     //       booking.kommun = this
