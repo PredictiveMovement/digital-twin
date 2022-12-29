@@ -5,8 +5,8 @@ metadata:
   namespace: pm-streams
 spec:
   ports:
-    - port: 6000
-      targetPort: 6000
+    - port: 4001
+      targetPort: 4001
   selector:
     app: sample-address
 ---
@@ -28,7 +28,7 @@ spec:
         - name: sample-address
           image: iteam1337/sample-address
           ports:
-            - containerPort: 6000
+            - containerPort: 4001
           resources:
             requests:
               cpu: "0.1"
@@ -64,4 +64,4 @@ spec:
               service:
                 name: sample-address
                 port:
-                  number: 6000
+                  number: 4001
