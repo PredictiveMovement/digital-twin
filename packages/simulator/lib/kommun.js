@@ -6,13 +6,18 @@ const {
   merge,
   of,
   range,
-  first,
 } = require('rxjs')
-const { map, toArray, mapTo, groupBy, tap } = require('rxjs/operators')
+const {
+  catchError,
+  map,
+  toArray,
+  mapTo,
+  groupBy,
+  tap,
+} = require('rxjs/operators')
 const Fleet = require('./fleet')
-const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
-const { info } = require('./log')
+const { error, info } = require('./log')
 const expandFleets = () => (fleets) =>
   fleets.pipe(
     mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(mapTo(fleet)))
@@ -56,7 +61,6 @@ class Kommun {
     this.postombud = postombud
     this.measureStations = measureStations
     this.packageVolumes = packageVolumes
-    // this.unhandledBookings = new Subject()
     this.busesPerCapita = 100 / 80_000
     this.population = population
     this.privateCars = new ReplaySubject()
@@ -101,50 +105,57 @@ class Kommun {
               `Booking ${booking.id} dispatched to fleet ${booking.fleet.name}`
             )
           }),
-          groupBy((booking) => booking.fleet.name), // NOTE: Booking is a Promise.
+          groupBy((booking) => booking.fleet.name),
           mergeMap((group) => {
             return group.pipe(
               map((booking) => booking.fleet.dispatchedBookings)
             )
           })
+          // catchError((err) => error('dispatchedBookings', err))
         )
       ),
+      // catchError((err) => error('dispatchedBookings', err)),
       shareReplay()
     )
 
-    this.handledBookings = this.unhandledBookings.pipe(
+    this.handledBookings = this.dispatchedBookings.pipe(
       map((booking) => {
         booking.kommun = this
-        this.fleets
-          .pipe(
-            expandFleets(), // otherwise pick one at random
-            pickRandom()
-          )
-          .subscribe((fleet) => fleet.handleBooking(booking))
-
-        if (booking.finalDestination?.position) {
-          booking.deliveredEvents.pipe(first()).subscribe(() => {
-            booking.pickup = booking.destination
-            booking.destination = booking.finalDestination
-
-            // Create a private car to pickup the package from the nearestOmbud
-            // https://transportstyrelsen.se/sv/vagtrafik/statistik/Statistik-over-koldioxidutslapp/statistik-over-koldioxidutslapp-2020/
-            const weight = 1500
-            const co2perkm = 125 // gram
-            const privateCar = new Car({
-              position: booking.destination.position,
-              isPrivateCar: true,
-              weight,
-              parcelCapacity: 2,
-              co2PerKmKg: co2perkm / 1000 / weight,
-            })
-            privateCar.handleBooking(booking)
-            this.privateCars.next(privateCar)
-          })
-        }
-        return booking
       })
     )
+    //   this.handledBookings = this.unhandledBookings.pipe(
+    //     map((booking) => {
+    //       booking.kommun = this
+    //       this.fleets
+    //         .pipe(
+    //           expandFleets(), // otherwise pick one at random
+    //           pickRandom()
+    //         )
+    //         .subscribe((fleet) => fleet.handleBooking(booking))
+
+    //       if (booking.finalDestination?.position) {
+    //         booking.deliveredEvents.pipe(first()).subscribe(() => {
+    //           booking.pickup = booking.destination
+    //           booking.destination = booking.finalDestination
+
+    //           // Create a private car to pickup the package from the nearestOmbud
+    //           // https://transportstyrelsen.se/sv/vagtrafik/statistik/Statistik-over-koldioxidutslapp/statistik-over-koldioxidutslapp-2020/
+    //           const weight = 1500
+    //           const co2perkm = 125 // gram
+    //           const privateCar = new Car({
+    //             position: booking.destination.position,
+    //             isPrivateCar: true,
+    //             weight,
+    //             parcelCapacity: 2,
+    //             co2PerKmKg: co2perkm / 1000 / weight,
+    //           })
+    //           privateCar.handleBooking(booking)
+    //           this.privateCars.next(privateCar)
+    //         })
+    //       }
+    //       return booking
+    //     })
+    //   )
   }
 }
 
