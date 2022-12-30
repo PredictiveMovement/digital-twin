@@ -1,5 +1,5 @@
 const { Subject, range, from, merge } = require('rxjs')
-const { map, shareReplay, mergeMap } = require('rxjs/operators')
+const { map, shareReplay, mergeMap, tap } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
 const Car = require('./vehicles/car')
 const Truck = require('./vehicles/truck')
@@ -87,9 +87,7 @@ class Fleet {
     this.manualDispatchedBookings = new Subject()
     this.dispatchedBookings = merge(
       this.manualDispatchedBookings,
-      dispatch(this.cars, this.unhandledBookings).pipe(
-        map(({ booking }) => booking)
-      )
+      dispatch(this.cars, this.unhandledBookings)
     )
   }
 

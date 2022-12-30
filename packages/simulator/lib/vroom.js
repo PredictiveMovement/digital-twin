@@ -39,11 +39,20 @@ module.exports = {
       },
     }
   },
-  taxiToVehicle({ id, position, passengerCapacity, heading, bookings }, i) {
+  taxiToVehicle({ id, position, passengerCapacity, heading, passengers }, i) {
     return {
       id: i,
       description: id,
-      capacity: [passengerCapacity],
+      capacity: [passengerCapacity - passengers.length],
+      start: [position.lon, position.lat],
+      end: heading ? [heading.lon, heading.lat] : undefined,
+    }
+  },
+  truckToVehicle({ id, position, parcelCapacity, heading, cargo }, i) {
+    return {
+      id: i,
+      description: id,
+      capacity: [parcelCapacity - cargo.length],
       start: [position.lon, position.lat],
       end: heading ? [heading.lon, heading.lat] : undefined,
     }
