@@ -9,8 +9,8 @@ class Truck extends Vehicle {
     this.parcelCapacity = args.capacity
   }
 
-  canPickupBooking(booking) {
-    return this.parcelCapacity > this.queue.length + this.cargo.length
+  async waitAtPickup() {
+    return // NOTE: Trucks don't wait at pickup
   }
 }
 
