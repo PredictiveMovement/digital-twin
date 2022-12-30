@@ -14,6 +14,7 @@ const {
   mapTo,
   groupBy,
   tap,
+  mergeAll,
 } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Bus = require('./vehicles/bus')
@@ -104,11 +105,6 @@ class Kommun {
           expandFleets(),
           pickRandom(),
           map((fleet) => fleet.handleBooking(booking)),
-          tap((booking) => {
-            info(
-              `Booking ${booking.id} dispatched to fleet ${booking.fleet.name}`
-            )
-          }),
           groupBy((booking) => booking.fleet.name),
           mergeMap((group) => {
             return group.pipe(
