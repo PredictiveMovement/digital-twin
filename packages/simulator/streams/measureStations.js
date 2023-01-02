@@ -21,7 +21,7 @@ function execute() {
         Mätår: year,
         Månad: month,
         Rikt: directionInSwedish,
-        'VaDT Tung': heavyTraficCount,
+        'VaDT Tung': heavyTrafficCount,
       }) => ({
         kommun: 'Helsingborg',
         position: sweCoords.toLatLng(
@@ -30,7 +30,7 @@ function execute() {
         ),
         year,
         month,
-        heavyTraficCount,
+        heavyTrafficCount,
         id: hbgNr,
         direction: directionInSwedish,
       })

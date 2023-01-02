@@ -13,12 +13,11 @@ const {
   toArray,
   mapTo,
   groupBy,
-  tap,
-  mergeAll,
+  first,
 } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Bus = require('./vehicles/bus')
-const { error, info } = require('./log')
+const { error } = require('./log')
 const expandFleets = () => (fleets) =>
   fleets.pipe(
     mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(mapTo(fleet)))
@@ -108,6 +107,7 @@ class Kommun {
           groupBy((booking) => booking.fleet.name),
           mergeMap((group) => {
             return group.pipe(
+              first(),
               mergeMap((booking) => booking.fleet.dispatchedBookings)
             )
           }),
