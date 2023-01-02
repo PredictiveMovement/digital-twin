@@ -76,7 +76,7 @@ const register = (experiment, socket) => {
                   totalParcelCapacity:
                     acc.totalParcelCapacity + (car.parcelCapacity || 0),
                   totalPassengerCapacity:
-                    acc.totalPassengerCapacity + (car.PassengerCapacity || 0),
+                    acc.totalPassengerCapacity + (car.passengerCapacity || 0),
                   totalCo2: (acc.totalCo2 += car.co2),
                 }),
                 {
