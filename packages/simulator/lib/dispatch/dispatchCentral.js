@@ -19,8 +19,8 @@ const { haversine } = require('../distance')
 const { truckToVehicle, bookingToShipment, plan } = require('../vroom')
 const moment = require('moment')
 
-const takeNearest = (taxis, center, count) =>
-  taxis
+const takeNearest = (cars, center, count) =>
+  cars
     .sort((a, b) => {
       const aDistance = haversine(a.position, center)
       const bDistance = haversine(b.position, center)
@@ -50,11 +50,11 @@ const getVroomPlan = async (cars, bookings) => {
 
 const dispatch = (cars, bookings) => {
   return cars.pipe(
-    scan((acc, taxi) => acc.push(taxi) && acc, []),
+    scan((acc, car) => acc.push(car) && acc, []),
     debounceTime(1000),
-    tap((cars) => info('dispatch cars', cars.length)),
-    filter((taxis) => taxis.length > 0),
-    mergeMap((taxis) =>
+    tap((cars) => info('dispatch cars', cars.length, cars[0].fleet.name)),
+    filter((cars) => cars.length > 0),
+    mergeMap((cars) =>
       bookings.pipe(
         bufferTime(5000),
         filter((bookings) => bookings.length > 0),
@@ -75,8 +75,8 @@ const dispatch = (cars, bookings) => {
         tap(({ center, bookings }) => info('cluster', center, bookings.length)),
         catchError((err) => error('dispatch cluster err', err)),
         concatMap(({ center, bookings }) => {
-          const nearestTaxis = takeNearest(taxis, center, 10)
-          return getVroomPlan(nearestTaxis, bookings)
+          const nearestcars = takeNearest(cars, center, 10)
+          return getVroomPlan(nearestcars, bookings)
         }),
         catchError((err) => error('vroom plan err', err)),
         mergeAll(),

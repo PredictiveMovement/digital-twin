@@ -38,7 +38,7 @@ const MeasurementStationInfo = ({ data }) => {
           Mätpunkt: <strong>{data.id}</strong>
         </Paragraph>
         <Paragraph>
-          Antal tunga fordorn: <strong>{data.heavyTraficCount}</strong>
+          Antal tunga fordorn: <strong>{data.heavyTrafficCount}</strong>
         </Paragraph>
         <Paragraph>
           Mäter bilar som kör: <strong>{data.direction}</strong>
