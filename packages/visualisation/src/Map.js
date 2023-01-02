@@ -453,8 +453,9 @@ const Map = ({
     getIcon: (d) => 'marker',
     getPosition: (c) => c.position,
     sizeScale: 5,
-    getColor: () => [16, 197, 123, 200],
+    getColor: (d) => [16, 255 * (d.heavyTrafficCount / d.count), 123, 200],
     getSize: (d) => 5,
+    sizeMaxPixels: 15,
     pickable: true,
     onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
