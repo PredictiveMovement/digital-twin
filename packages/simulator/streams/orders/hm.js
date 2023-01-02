@@ -1,4 +1,4 @@
-const { from, shareReplay, filter } = require('rxjs')
+const { from, shareReplay, filter, of } = require('rxjs')
 const {
   map,
   toArray,
@@ -6,7 +6,6 @@ const {
   groupBy,
   mergeAll,
   catchError,
-  tap,
 } = require('rxjs/operators')
 const moment = require('moment')
 const { readCsv } = require('../../adapters/csv')
@@ -15,51 +14,6 @@ const { search } = require('../../lib/pelias')
 const Position = require('../../lib/models/position')
 const Booking = require('../../lib/models/booking')
 const { error } = require('../../lib/log')
-
-const origins = {
-  CDC031: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
-  },
-  CDC405: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
-  },
-  STO012: {
-    name: 'Ikea Kungens Kurva',
-  },
-  STO014: {
-    name: 'Ikea Kållered',
-  },
-  STO017: {
-    name: 'Ikea Linköping',
-  },
-  STO445: {
-    name: 'Ikea Malmö',
-  },
-  STO468: {
-    name: 'Ikea Helsingborg',
-  },
-  STO469: {
-    name: 'Ikea Kalmar',
-  },
-  SUP22216: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
-  },
-  SUP22677: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
-  },
-  SUP22844: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
-  },
-  SUP23329: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
-  },
-  SUP50029: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
-  },
-  None: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
-  },
-}
 
 function read() {
   return from(readCsv(process.cwd() + '/data/helsingborg/hm.csv')).pipe(
@@ -71,22 +25,18 @@ function read() {
         ShippedDate: deliveryDate,
         WarehouseCode: origin,
         ShippedDate: created,
-        1: volume,
         Weight: weight,
-        1: length,
       }) => ({
         id,
-        quantity,
+        quantity: +quantity,
         deliveryZip,
-        deliveryDate,
+        deliveryDate: moment(deliveryDate, 'YYYY/MM/DD HH:mm').valueOf(),
         origin,
-        created,
-        volume,
-        weight,
-        length,
+        created: moment(created, 'YYYY/MM/DD HH:mm').valueOf(),
+        weight: weight / 1000, // g -> kg
       })
     ),
-    filter((row) => moment(row.created).isSame('2022/09/05', 'day')),
+    filter((row) => moment(row.created).isSame('2022-09-05', 'day')),
     mergeMap((hmBooking) => {
       return fetch(
         `https://streams.predictivemovement.se/addresses/zip/${hmBooking.deliveryZip}?size=1&seed=${hmBooking.id}`
@@ -94,6 +44,8 @@ function read() {
         .then((res) => res.json())
         .then((addresses) => {
           const address = addresses[0]
+          if (!address)
+            throw new Error('No address found for ' + hmBooking.deliveryZip)
           return {
             destination: {
               address,
@@ -103,30 +55,32 @@ function read() {
           }
         })
     }),
-    tap((aha) => {
-      console.log('sssss', aha)
+    catchError((err) => {
+      error('parse zip', err)
+      return of({})
     }),
-    // groupBy((row) => row.id),
-    // mergeMap((group) =>
-    //   group.pipe(
-    //     toArray(),
-    //     map((rows) => ({ key: group.key, rows }))
-    //   )
-    // ),
-    // mergeMap(
-    //   ({ key, rows }) =>
-    //     fetch(
-    //       `https://streams.predictivemovement.se/addresses/zip/${rows[0].deliveryZip}?size=1&seed=${key}`
-    //     )
-    //       .then((res) => res.json())
-    //       .then((addresses) =>
-    //         addresses.map(({ address, position }, i) => ({
-    //           destination: { address, position: new Position(position) },
-    //           ...rows[i],
-    //         }))
-    //       ),
-    //   5
-    // ),
+    filter((hm) => hm.destination),
+    groupBy((row) => row.id),
+    mergeMap((group) =>
+      group.pipe(
+        toArray(),
+        map((rows) => ({ key: group.key, rows }))
+      )
+    ),
+    mergeMap(
+      ({ key, rows }) =>
+        fetch(
+          `https://streams.predictivemovement.se/addresses/zip/${rows[0].deliveryZip}?size=1&seed=${key}`
+        )
+          .then((res) => res.json())
+          .then((addresses) =>
+            addresses.map(({ address, position }, i) => ({
+              destination: { address, position: new Position(position) },
+              ...rows[i],
+            }))
+          ),
+      5
+    ),
     mergeAll(),
     groupBy((row) => row.origin),
     mergeMap((group) =>
@@ -137,7 +91,7 @@ function read() {
     ),
     mergeMap(
       ({ key, rows }) =>
-        search(origins[key].name).then(({ name, position }) =>
+        search(key).then(({ name, position }) =>
           rows.map((row) => ({ pickup: { name, position }, ...row }))
         ),
       1
@@ -147,7 +101,6 @@ function read() {
     catchError((err) => {
       error('HM -> from CSV', err)
     }),
-    tap((hm) => console.log(hm)),
     shareReplay()
   )
 }
