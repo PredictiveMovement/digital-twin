@@ -72,6 +72,7 @@ class Vehicle {
       this.movementSubscription.unsubscribe()
     }
     if (!route) return
+
     if (virtualTime.timeMultiplier === Infinity) {
       return this.updatePosition(route) // teleport mode
     }
@@ -104,6 +105,9 @@ class Vehicle {
 
   navigateTo(position) {
     this.heading = position
+    if (this.position.distanceTo(position) < 100) {
+      return this.stopped()
+    }
     return osrm
       .route(this.position, this.heading)
       .then(async (route) => {
