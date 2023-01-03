@@ -1,5 +1,6 @@
 const { findBestRouteToPickupBookings } = require('../dispatch/truckDispatch')
 const { info } = require('../log')
+const { virtualTime } = require('../virtualTime')
 const Vehicle = require('./vehicle')
 
 class Truck extends Vehicle {
@@ -29,6 +30,11 @@ class Truck extends Vehicle {
       default:
         return this.navigateTo(this.startPosition)
     }
+  }
+
+  stopped() {
+    super.stopped()
+    if (this.plan) this.pickNextInstructionFromPlan()
   }
 
   async pickup() {
