@@ -1,65 +1,37 @@
 const express = require('express')
 const app = express()
-const fetch = require('node-fetch')
-const assert = require('assert')
+const zip = require('./routes/zip')
+const box = require('./routes/box')
 
-app.get('/zip/:zipnr', (req, res) => {
-  const seed = req.query.seed || 1337
-  const zipnr = req.params.zipnr
-  const size = req.query.size || 10
-  assert(size <= 10000, 'Maximum size 10000')
-
-  const peliasHostname = process.env.PELIAS_HOSTNAME || 'localhost:9200'
-  const url = `http://${peliasHostname}/pelias/_search`
-  const query = {
-    query: {
-      function_score: {
-        query: {
-          wildcard: {
-            'address_parts.zip': zipnr,
-          },
-        },
-        random_score: {
-          seed: seed,
-          field: '_seq_no',
-        },
-      },
+app.use('/zip', zip)
+app.use('/box', box)
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Welcome to the PM sample addresses API',
+    routes: {
+      'GET /zip/:zipnr': 'Get addresses from a zip code',
+      'GET /box/?topleft=lat,lon&bottomright=lat,lon':
+        'Get addresses from a bounding box',
     },
-    size: size,
-  }
-
-  fetch(url, {
-    method: 'POST',
-    body: JSON.stringify(query),
-    headers: { 'Content-Type': 'application/json' },
+    examples: [
+      'GET /zip/11646?size=10&seed=1337',
+      'GET /box/?topleft=13.085098058715708,57.96539874381225&bottomright=13.025098058715708,57.91539874381225',
+      'GET /box/?tl=13.085098058715708,57.96539874381225&br=13.025098058715708,57.91539874381225',
+    ],
+    options: {
+      seed: 'Random seed',
+      size: 'Number of addresses to return',
+    },
   })
-    .then((res) => res.json())
-    .then((json) => {
-      if (json.error) {
-        throw new Error(json.error)
-      }
-      const hits = json.hits.hits
-      const addresses = hits
-        .map((hit) => hit)
-        .map(
-          ({
-            _id: id,
-            _source: { center_point: position, address_parts: address },
-          }) => ({
-            address,
-            position,
-            id,
-          })
-        )
-      res.json(addresses)
-    })
-    .catch((error) => {
-      console.log(error)
-      res.status(500).json(error.message)
-    })
 })
 
-const port = process.env.PORT || 6000
+// generic error handler in json format
+app.use((err, req, res, next) => {
+  console.error(err)
+  res.status(500).json({ error: err.message })
+})
+
+const port = process.env.PORT || 4001
 app.listen(port, () =>
   console.log(`Sample Addresses service listening on port ${port}!`)
 )

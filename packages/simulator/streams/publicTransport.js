@@ -29,7 +29,6 @@ const {
 
 // stop_times.trip_id -> trips.service_id -> calendar_dates.service_id
 const todaysDate = moment().format('20221130')
-console.log('todaysDate', todaysDate)
 const todaysServiceIds = serviceDatesMap[todaysDate].map(
   ({ serviceId }) => serviceId
 )
