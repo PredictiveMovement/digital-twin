@@ -12,6 +12,7 @@ const {
   switchMap,
   concatMap,
   retryWhen,
+  toArray,
 } = require('rxjs/operators')
 const { info, error } = require('../log')
 const { clusterPositions } = require('../kmeans')
@@ -50,8 +51,7 @@ const getVroomPlan = async (cars, bookings) => {
 
 const dispatch = (cars, bookings) => {
   return cars.pipe(
-    scan((acc, car) => acc.push(car) && acc, []),
-    debounceTime(1000),
+    toArray(),
     tap((cars) => info('dispatch cars', cars.length, cars[0].fleet.name)),
     filter((cars) => cars.length > 0),
     mergeMap((cars) =>
