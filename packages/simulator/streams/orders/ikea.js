@@ -85,7 +85,7 @@ function read() {
         length,
       })
     ),
-    filter((row) => moment(row.created).isSame('2022-09-17', 'day')),
+    filter((row) => moment(row.created).isSame('2022-09-05', 'day')),
     groupBy((row) => row.id),
     mergeMap((group) =>
       group.pipe(
