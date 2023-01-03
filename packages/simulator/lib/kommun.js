@@ -14,6 +14,7 @@ const {
   mapTo,
   groupBy,
   first,
+  tap,
 } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Bus = require('./vehicles/bus')
@@ -98,20 +99,20 @@ class Kommun {
         ? merge(bookings.hm, bookings.ikea)
         : of()
 
+    this.pickNextFleet = () =>
+      this.fleets.pipe(
+        expandFleets(),
+        pickRandom(),
+        catchError((err) => error('pickNextFleet', err))
+      )
+
     this.dispatchedBookings = this.unhandledBookings.pipe(
       mergeMap((booking) =>
-        this.fleets.pipe(
-          expandFleets(),
-          pickRandom(),
-          map((fleet) => fleet.handleBooking(booking)),
-          groupBy((booking) => booking.fleet.name),
-          mergeMap((group) => {
-            return group.pipe(
-              first(),
-              mergeMap((booking) => booking.fleet.dispatchedBookings)
-            )
-          }),
-          catchError((err) => error('dispatchedBookings -> fleets.pipe', err))
+        this.pickNextFleet().pipe(
+          mergeMap(
+            (fleet) => fleet.handleBooking(booking) && fleet.dispatchedBookings,
+            1
+          )
         )
       ),
       catchError((err) =>

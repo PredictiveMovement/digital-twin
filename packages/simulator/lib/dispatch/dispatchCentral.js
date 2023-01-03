@@ -13,6 +13,7 @@ const {
   concatMap,
   retryWhen,
   toArray,
+  bufferCount,
 } = require('rxjs/operators')
 const { info, error } = require('../log')
 const { clusterPositions } = require('../kmeans')
@@ -59,44 +60,30 @@ const dispatch = (cars, bookings) => {
     filter((cars) => cars.length > 0),
     mergeMap((cars) =>
       bookings.pipe(
+        tap((b) => console.log('booking', b.id)),
         bufferTime(5000),
-        filter((bookings) => bookings.length > 0),
-        tap((bookings) =>
-          info('Clustering dispatch bookings', bookings.length)
-        ),
-        switchMap((bookings) =>
-          bookings.length <= 5
-            ? of([{ center: bookings[0].pickup.position, items: bookings }])
-            : clusterPositions(
-                bookings,
-                Math.max(5, Math.ceil(bookings.length / 10))
-              )
-        ),
-        mergeAll(),
-        map(({ center, items: bookings }) => ({ center, bookings })),
-        filter(({ bookings }) => bookings.length > 0),
-        tap(({ center, bookings }) => info('cluster', center, bookings.length)),
-        catchError((err) => error('dispatch cluster err', err)),
-        concatMap(({ center, bookings }) => {
-          const nearestcars = takeNearest(cars, center, 10)
-          return getVroomPlan(nearestcars, bookings)
+        filter((b) => b.length > 0),
+        concatMap((bookings) => {
+          return getVroomPlan(cars, bookings)
         }),
         catchError((err) => error('vroom plan err', err)),
         mergeAll(),
         tap(({ car, bookings }) => info('plan', car.id, bookings.length)),
-        map(({ car, bookings }) =>
-          bookings.map((booking) => car.handleBooking(booking))
+        mergeMap(({ car, bookings }) =>
+          from(bookings).pipe(
+            mergeMap((booking) => car.handleBooking(booking), 1)
+          )
         ),
-        tap((bookings) => info('dispatched', bookings.length)),
+        // tap((bookings) => info('dispatched', bookings)),
         retryWhen((errors) =>
           errors.pipe(
             tap((err) => error('dispatch error, retrying in 1s...', err)),
             delay(1000)
           )
-        ),
-        mergeAll()
+        )
       )
-    )
+    ),
+    catchError((err) => error('dispatchCentral -> dispatch', err))
   )
 }
 

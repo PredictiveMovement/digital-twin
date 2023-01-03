@@ -1,5 +1,5 @@
 const { Subject, range, from, merge } = require('rxjs')
-const { map, shareReplay, mergeMap, tap } = require('rxjs/operators')
+const { map, shareReplay, mergeMap, tap, share } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
 const Car = require('./vehicles/car')
 const Truck = require('./vehicles/truck')
@@ -88,15 +88,16 @@ class Fleet {
     this.dispatchedBookings = merge(
       this.manualDispatchedBookings,
       dispatch(this.cars, this.unhandledBookings)
-    )
+    ).pipe(share())
   }
 
-  handleBooking(booking, car) {
+  async handleBooking(booking, car) {
     booking.fleet = this
     if (car) {
       this.manualDispatchedBookings.next(booking)
-      return car.handleBooking(booking)
+      return await car.handleBooking(booking)
     } else {
+      console.log('dispatching', booking.id, 'to', this.name)
       this.unhandledBookings.next(booking)
     }
     return booking
