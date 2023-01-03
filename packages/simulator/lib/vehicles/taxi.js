@@ -20,7 +20,7 @@ class Taxi extends Vehicle {
     this.cargo = []
     this.passengers = []
     this.queue = []
-    this.passengerCapacity = 4
+    this.passengerCapacity = 4 // TODO: Set this when constructing the vehicle
     this.booking = true
     this.vehicleType = 'taxi'
     this.startPosition = startPosition || position
@@ -72,7 +72,7 @@ class Taxi extends Vehicle {
   }
 
   async handleBooking(booking) {
-    super.handleBooking(booking)
+    await super.handleBooking(booking)
     this.plan = await findBestRouteToPickupBookings(
       this,
       [this.booking, ...this.queue].filter((f) => f)

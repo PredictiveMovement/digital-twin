@@ -131,7 +131,7 @@ class Vehicle {
       )
   }
 
-  handleBooking(booking) {
+  async handleBooking(booking) {
     assert(booking instanceof Booking, 'Booking needs to be of type Booking')
 
     if (!this.busy) {
