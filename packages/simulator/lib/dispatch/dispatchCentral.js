@@ -52,7 +52,10 @@ const getVroomPlan = async (cars, bookings) => {
 const dispatch = (cars, bookings) => {
   return cars.pipe(
     toArray(),
-    tap((cars) => info('dispatch cars', cars.length, cars[0].fleet.name)),
+    tap((cars) => {
+      const fleet = cars[0].fleet.name
+      info(`Dispatch ${cars.length} vehicles in ${fleet}`)
+    }),
     filter((cars) => cars.length > 0),
     mergeMap((cars) =>
       bookings.pipe(
