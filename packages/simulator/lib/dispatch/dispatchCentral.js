@@ -62,9 +62,7 @@ const dispatch = (cars, bookings) => {
       bookings.pipe(
         bufferTime(5000),
         filter((b) => b.length > 0),
-        concatMap((bookings) => {
-          return getVroomPlan(cars, bookings)
-        }),
+        mergeMap((bookings) => getVroomPlan(cars, bookings)),
         catchError((err) => error('vroom plan err', err)),
         mergeAll(),
         tap(({ car, bookings }) =>
