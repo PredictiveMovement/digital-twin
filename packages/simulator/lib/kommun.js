@@ -7,15 +7,7 @@ const {
   of,
   range,
 } = require('rxjs')
-const {
-  catchError,
-  map,
-  toArray,
-  mapTo,
-  groupBy,
-  first,
-  tap,
-} = require('rxjs/operators')
+const { catchError, map, toArray, mapTo } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Bus = require('./vehicles/bus')
 const { error } = require('./log')
@@ -119,15 +111,6 @@ class Kommun {
         error('dispatchedBookings -> unhandledBookings.pipe', err)
       ),
       shareReplay()
-    )
-
-    this.handledBookings = this.dispatchedBookings.pipe(
-      map((booking) => {
-        booking.kommun = this
-      }),
-      catchError((err) =>
-        error('handledBookings -> dispatchedBookings.pipe', err)
-      )
     )
 
     //   this.handledBookings = this.unhandledBookings.pipe(
