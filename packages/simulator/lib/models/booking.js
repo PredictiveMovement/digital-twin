@@ -88,6 +88,7 @@ class Booking {
       cost: this.cost,
       distance: this.distance,
       weight: this.weight,
+      sender: this.sender,
       position: this.position?.toObject(),
       pickup: this.pickup,
       carId: this.car?.id,

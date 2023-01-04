@@ -97,8 +97,14 @@ const CarInfo = ({ data }) => {
           Hastighet <strong>{data.speed} km/h</strong>
         </Paragraph>
         <Paragraph>
+          Meter till destinationen <strong>{data.ema}</strong>
+        </Paragraph>
+        <Paragraph>
           Kör för <strong></strong>
           {data.fleet}
+        </Paragraph>
+        <Paragraph>
+          Status <strong>{data.status}</strong>
         </Paragraph>
         <Paragraph>
           Köat:{' '}

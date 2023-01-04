@@ -402,7 +402,7 @@ const Map = ({
       setHoverInfo({
         ...object,
         type: 'booking',
-        title: object.address,
+        title: object.sender,
         subTitle: object.isCommercial
           ? '(företag)'
           : ' Status: ' + getStatusLabel(object.status),
@@ -492,23 +492,23 @@ const Map = ({
             return {
               inbound: getColorBasedOnFleet(car),
               outbound: getColorBasedOnFleet(car),
-              from: car.position,
+              from: booking.pickup,
               to: booking.destination,
             }
           case 'Queued':
             return {
               inbound: getColorBasedOnFleet(car),
               outbound: [90, 40, 200, 100],
-              from: car.position,
-              to: booking.pickup,
+              from: booking.pickup,
+              to: booking.destination,
             }
           case 'Delivered':
             return null
 
           default:
             return {
-              inbound: [90, 200, 200, 200],
-              outbound: [90, 40, 200, 100],
+              inbound: [255, 255, 255, 200],
+              outbound: [255, 255, 255, 100],
               from: booking.pickup,
               to: booking.destination,
             }
