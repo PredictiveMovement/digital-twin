@@ -31,7 +31,7 @@ const engine = {
     const kommunerStream = kommuner.read()
     const regions = require('./streams/regions')(kommunerStream)
 
-    info('Starting experiment with params:', savedParams)
+    info(`Starting experiment ${id} with params:`, savedParams)
 
     const parameters = {
       id,
