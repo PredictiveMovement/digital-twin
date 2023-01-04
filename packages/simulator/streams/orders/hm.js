@@ -57,7 +57,7 @@ function read() {
         })
     }),
     catchError((err) => {
-      error('parse zip', err)
+      error('HM -> from CSV', err)
       return of({})
     }),
     filter((hm) => hm.destination),
