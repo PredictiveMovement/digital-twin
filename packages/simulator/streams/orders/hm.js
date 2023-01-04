@@ -6,6 +6,7 @@ const {
   groupBy,
   mergeAll,
   catchError,
+  retryWhen,
 } = require('rxjs/operators')
 const moment = require('moment')
 const { readCsv } = require('../../adapters/csv')
@@ -37,7 +38,7 @@ function read() {
         weight: weight / 1000, // g -> kg
       })
     ),
-    filter((row) => moment(row.created).isSame('2022-09-05', 'day')),
+    filter((row) => moment(row.created).isSame('2022-09-07', 'day')),
     mergeMap((hmBooking) => {
       return fetch(
         `https://streams.predictivemovement.se/addresses/zip/${hmBooking.deliveryZip}?size=1&seed=${hmBooking.id}`
@@ -82,6 +83,12 @@ function read() {
           ),
       5
     ),
+    retryWhen((errors) => {
+      errors.pipe(
+        tap((err) => error('Zip streams error, retrying in 1s...', err)),
+        delay(1000)
+      )
+    }),
     mergeAll(),
     groupBy((row) => row.origin),
     mergeMap((group) =>
@@ -97,6 +104,12 @@ function read() {
         ),
       1
     ),
+    retryWhen((errors) => {
+      errors.pipe(
+        tap((err) => error('Pelias error, retrying in 1s...', err)),
+        delay(1000)
+      )
+    }),
     mergeAll(),
     map((row) => new Booking(row)),
     catchError((err) => {
