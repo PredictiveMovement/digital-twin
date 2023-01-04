@@ -53,6 +53,10 @@ module.exports = {
     return {
       id: i,
       description: id,
+      time_window: [
+        moment('05:00:00', 'hh:mm:ss').unix(),
+        moment('18:00:00', 'hh:mm:ss').unix(),
+      ],
       capacity: [parcelCapacity - cargo.length],
       start: [position.lon, position.lat],
       end: heading ? [heading.lon, heading.lat] : undefined,
