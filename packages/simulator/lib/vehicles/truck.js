@@ -26,14 +26,18 @@ class Truck extends Vehicle {
         return this.navigateTo(this.booking.pickup.position)
       case 'delivery':
         return this.navigateTo(this.booking.destination.position)
+      case 'returning':
+        this.status = 'ready'
+        return
       default:
+        this.status = 'returning'
         return this.navigateTo(this.startPosition)
     }
   }
 
   stopped() {
     super.stopped()
-    if (this.plan) this.pickNextInstructionFromPlan()
+    this.pickNextInstructionFromPlan()
   }
 
   async pickup() {
@@ -52,14 +56,13 @@ class Truck extends Vehicle {
   }
 
   async handleBooking(booking) {
-    await super.handleBooking(booking)
+    this.queue.push(booking)
+    booking.assign(this)
+    booking.queued(this)
 
     clearTimeout(this._timeout)
     this._timeout = setTimeout(async () => {
-      this.plan = await findBestRouteToPickupBookings(
-        this,
-        [this.booking, ...this.queue].filter((f) => f)
-      )
+      this.plan = await findBestRouteToPickupBookings(this, this.queue)
 
       if (!this.instruction) await this.pickNextInstructionFromPlan()
     }, 2000)

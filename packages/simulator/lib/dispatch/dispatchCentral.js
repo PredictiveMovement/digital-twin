@@ -43,7 +43,6 @@ const getVroomPlan = async (cars, bookings) => {
         .filter((s) => s.type === 'pickup')
         .flatMap((step) => {
           const booking = bookings[step.id]
-          booking.pickup.departureTime = moment(step.arrival).format('hh:mm:ss')
           return booking
         }),
     }
