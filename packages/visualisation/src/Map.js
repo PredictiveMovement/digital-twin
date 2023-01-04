@@ -173,7 +173,7 @@ const Map = ({
     const opacity = Math.round((4 / 5) * 255)
     switch (fleet.toLowerCase()) {
       case 'brun':
-        return [234, 181, 67, opacity]
+        return [205, 127, 50, opacity]
       case 'bring':
         return [189, 197, 129, opacity]
       case 'gul':
