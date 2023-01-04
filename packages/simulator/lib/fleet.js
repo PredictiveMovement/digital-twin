@@ -1,5 +1,5 @@
 const { Subject, range, from, merge, of } = require('rxjs')
-const { map, shareReplay, mergeMap, tap, share } = require('rxjs/operators')
+const { shareReplay, mergeMap, share, catchError } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
 const Car = require('./vehicles/car')
 const Truck = require('./vehicles/truck')
@@ -70,12 +70,14 @@ class Fleet {
                 position: this.hub.position,
               })
             )
+          }),
+          catchError((err) => {
+            error(
+              `Error creating vehicle for fleet ${name}: ${err}\n\n${
+                new Error().stack
+              }\n\n`
+            )
           })
-          // error(
-          //   `Error creating vehicle for fleet ${name}: ${err}\n\n${
-          //     new Error().stack
-          //   }\n\n`
-          // )
         )
       ),
       shareReplay()
