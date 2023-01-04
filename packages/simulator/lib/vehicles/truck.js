@@ -10,6 +10,7 @@ class Truck extends Vehicle {
     this.isPrivateCar = false
     this.co2PerKmKg = 0.1201 // NOTE: From a quick google. Needs to be verified.
     this.parcelCapacity = args.capacity
+    this.plan = []
 
     this.position = args.position
     this.startPosition = args.startPosition || args.position
