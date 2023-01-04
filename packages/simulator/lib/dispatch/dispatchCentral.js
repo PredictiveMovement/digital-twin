@@ -60,7 +60,6 @@ const dispatch = (cars, bookings) => {
     filter((cars) => cars.length > 0),
     mergeMap((cars) =>
       bookings.pipe(
-        tap((b) => console.log('booking', b.id)),
         bufferTime(5000),
         filter((b) => b.length > 0),
         concatMap((bookings) => {
@@ -68,7 +67,11 @@ const dispatch = (cars, bookings) => {
         }),
         catchError((err) => error('vroom plan err', err)),
         mergeAll(),
-        tap(({ car, bookings }) => info('plan', car.id, bookings.length)),
+        tap(({ car, bookings }) =>
+          info(
+            `Plan ${car.id} (${car.fleet.name}) received ${bookings.length} bookings`
+          )
+        ),
         mergeMap(({ car, bookings }) =>
           from(bookings).pipe(
             mergeMap((booking) => car.handleBooking(booking), 1)

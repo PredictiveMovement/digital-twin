@@ -18,7 +18,7 @@ class Vehicle {
   constructor({
     id = 'v-' + safeId(),
     position,
-    status = 'Ready',
+    status = 'ready',
     parcelCapacity,
     passengerCapacity,
     weight = 10000,
@@ -81,6 +81,11 @@ class Vehicle {
       .getTimeInMilliseconds()
       .pipe(
         scan((prevRemainingPointsInRoute, currentTimeInMs) => {
+          if (!prevRemainingPointsInRoute.length) {
+            this.stopped()
+            return []
+          }
+
           const { next, skippedPoints, remainingPoints, ...position } =
             interpolate.route(
               route.started,
@@ -92,13 +97,8 @@ class Vehicle {
             return []
           }
           this.updatePosition(newPosition, skippedPoints, currentTimeInMs)
-          if (!next || this.ema < 100) {
-            this.stopped()
-            return []
-          }
           return remainingPoints
-        }, interpolate.points(route)),
-        takeWhile((e) => e?.length > 4)
+        }, interpolate.points(route))
       )
       .subscribe((e) => null)
   }

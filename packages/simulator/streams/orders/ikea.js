@@ -6,6 +6,7 @@ const {
   groupBy,
   mergeAll,
   catchError,
+  retryWhen,
 } = require('rxjs/operators')
 const moment = require('moment')
 const { readCsv } = require('../../adapters/csv')
@@ -17,10 +18,10 @@ const { error } = require('../../lib/log')
 
 const origins = {
   CDC031: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
+    name: 'Ikea Malmö', // TODO: Get the right location.
   },
   CDC405: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
+    name: 'Ikea Malmö', // TODO: Get the right location.
   },
   STO012: {
     name: 'Ikea Kungens Kurva',
@@ -41,22 +42,22 @@ const origins = {
     name: 'Ikea Kalmar',
   },
   SUP22216: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
+    name: 'Ikea Malmö', // TODO: Get the right location.
   },
   SUP22677: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
+    name: 'Ikea Malmö', // TODO: Get the right location.
   },
   SUP22844: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
+    name: 'Ikea Malmö', // TODO: Get the right location.
   },
   SUP23329: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
+    name: 'Ikea Malmö', // TODO: Get the right location.
   },
   SUP50029: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
+    name: 'Ikea Malmö', // TODO: Get the right location.
   },
   None: {
-    name: 'Norra Hamnen Malmö', // TODO: Get the right location.
+    name: 'Ikea Malmö', // TODO: Get the right location.
   },
 }
 
@@ -86,8 +87,8 @@ function read() {
         length,
       })
     ),
-    filter((row) => moment(row.created).isSame('2022-09-05', 'day')),
-    groupBy((row) => row.id),
+    filter((row) => moment(row.created).isSame('2022-09-07', 'day')),
+    groupBy((row) => row.id), // TODO: Group by IKEA's ID so all parcels sharing an id are treated as one booking.
     mergeMap((group) =>
       group.pipe(
         toArray(),
@@ -108,6 +109,12 @@ function read() {
           ),
       5
     ),
+    retryWhen((errors) => {
+      errors.pipe(
+        tap((err) => error('Zip streams error, retrying in 1s...', err)),
+        delay(1000)
+      )
+    }),
     mergeAll(),
     groupBy((row) => row.origin),
     mergeMap((group) =>
