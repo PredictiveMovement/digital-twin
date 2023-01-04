@@ -1,4 +1,4 @@
-const { Subject, range, from, merge } = require('rxjs')
+const { Subject, range, from, merge, of } = require('rxjs')
 const { map, shareReplay, mergeMap, tap, share } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
 const Car = require('./vehicles/car')
@@ -61,24 +61,21 @@ class Fleet {
     this.cars = from(Object.entries(vehicles)).pipe(
       mergeMap(([type, count]) =>
         range(0, count).pipe(
-          mergeMap(() =>
-            randomize(this.hub.position)
-              .then((position) => {
-                const Vehicle = vehicleTypes[type].class
-                return new Vehicle({
-                  ...vehicleTypes[type],
-                  fleet: this,
-                  position,
-                })
+          mergeMap(() => {
+            const Vehicle = vehicleTypes[type].class
+            return of(
+              new Vehicle({
+                ...vehicleTypes[type],
+                fleet: this,
+                position: this.hub.position,
               })
-              .catch((err) => {
-                error(
-                  `Error creating vehicle for fleet ${name}: ${err}\n\n${
-                    new Error().stack
-                  }\n\n`
-                )
-              })
-          )
+            )
+          })
+          // error(
+          //   `Error creating vehicle for fleet ${name}: ${err}\n\n${
+          //     new Error().stack
+          //   }\n\n`
+          // )
         )
       ),
       shareReplay()
