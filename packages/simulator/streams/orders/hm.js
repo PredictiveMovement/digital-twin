@@ -32,6 +32,7 @@ function read() {
         deliveryZip,
         deliveryDate: moment(deliveryDate, 'YYYY/MM/DD HH:mm').valueOf(),
         origin,
+        sender: 'H&M',
         created: moment(created, 'YYYY/MM/DD HH:mm').valueOf(),
         weight: weight / 1000, // g -> kg
       })

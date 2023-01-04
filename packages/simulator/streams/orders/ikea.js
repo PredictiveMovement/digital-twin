@@ -79,6 +79,7 @@ function read() {
         deliveryZip,
         deliveryDate,
         origin,
+        sender: 'IKEA',
         created,
         volume,
         weight,
