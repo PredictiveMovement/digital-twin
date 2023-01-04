@@ -7,6 +7,8 @@ const {
   mergeAll,
   catchError,
   retryWhen,
+  tap,
+  delay,
 } = require('rxjs/operators')
 const moment = require('moment')
 const { readCsv } = require('../../adapters/csv')
@@ -88,6 +90,7 @@ function read() {
       })
     ),
     filter((row) => moment(row.created).isSame('2022-09-07', 'day')),
+    filter((row) => row.deliveryZip),
     groupBy((row) => row.id), // TODO: Group by IKEA's ID so all parcels sharing an id are treated as one booking.
     mergeMap((group) =>
       group.pipe(
