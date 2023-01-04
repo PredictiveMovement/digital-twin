@@ -7,6 +7,8 @@ const {
   mergeAll,
   catchError,
   retryWhen,
+  tap,
+  delay,
 } = require('rxjs/operators')
 const moment = require('moment')
 const { readCsv } = require('../../adapters/csv')
@@ -39,29 +41,7 @@ function read() {
       })
     ),
     filter((row) => moment(row.created).isSame('2022-09-07', 'day')),
-    mergeMap((hmBooking) => {
-      return fetch(
-        `https://streams.predictivemovement.se/addresses/zip/${hmBooking.deliveryZip}?size=1&seed=${hmBooking.id}`
-      )
-        .then((res) => res.json())
-        .then((addresses) => {
-          const address = addresses[0]
-          if (!address)
-            throw new Error('No address found for ' + hmBooking.deliveryZip)
-          return {
-            destination: {
-              address,
-              position: new Position(address.position),
-            },
-            ...hmBooking,
-          }
-        })
-    }),
-    catchError((err) => {
-      error('HM -> from CSV', err)
-      return of({})
-    }),
-    filter((hm) => hm.destination),
+    filter((hm) => hm.destination && hm.deliveryZip),
     groupBy((row) => row.id),
     mergeMap((group) =>
       group.pipe(
@@ -88,6 +68,10 @@ function read() {
         tap((err) => error('Zip streams error, retrying in 1s...', err)),
         delay(1000)
       )
+    }),
+    catchError((err) => {
+      error('HM -> from CSV', err)
+      return of({})
     }),
     mergeAll(),
     groupBy((row) => row.origin),

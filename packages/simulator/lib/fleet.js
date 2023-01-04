@@ -87,7 +87,7 @@ class Fleet {
     this.manualDispatchedBookings = new Subject()
     this.dispatchedBookings = merge(
       this.manualDispatchedBookings,
-      dispatch(this.cars, this.unhandledBookings)
+      dispatch(this.cars, this.unhandledBookings) // TODO: Cluster bookings by pickup location.
     ).pipe(share())
   }
 
