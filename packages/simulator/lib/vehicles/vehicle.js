@@ -92,7 +92,7 @@ class Vehicle {
             return []
           }
           this.updatePosition(newPosition, skippedPoints, currentTimeInMs)
-          if (!next || remainingPoints.length < 5) {
+          if (!next || this.ema < 100) {
             this.stopped()
             return []
           }
@@ -105,9 +105,7 @@ class Vehicle {
 
   navigateTo(position) {
     this.heading = position
-    if (this.position.distanceTo(position) < 100) {
-      return this.stopped()
-    }
+
     return osrm
       .route(this.position, this.heading)
       .then(async (route) => {

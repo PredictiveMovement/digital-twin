@@ -1,6 +1,6 @@
+const { from } = require('rxjs')
 const { findBestRouteToPickupBookings } = require('../dispatch/truckDispatch')
 const { info } = require('../log')
-const { virtualTime } = require('../virtualTime')
 const Vehicle = require('./vehicle')
 
 class Truck extends Vehicle {
@@ -22,10 +22,8 @@ class Truck extends Vehicle {
     this.statusEvents.next(this)
     switch (this.status) {
       case 'pickup':
-        await virtualTime.waitUntil(this.instruction.arrival)
         return this.navigateTo(this.booking.pickup.position)
       case 'delivery':
-        await virtualTime.waitUntil(this.instruction.arrival)
         return this.navigateTo(this.booking.destination.position)
       default:
         return this.navigateTo(this.startPosition)
