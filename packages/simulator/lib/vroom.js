@@ -2,7 +2,7 @@ const fetch = require('node-fetch')
 // eslint-disable-next-line no-undef
 const vroomUrl = process.env.VROOM_URL || 'https://vroom.predictivemovement.se/'
 const moment = require('moment')
-const { debug } = require('./log')
+const { debug, error } = require('./log')
 
 module.exports = {
   bookingToShipment({ id, pickup, destination }, i) {
@@ -79,5 +79,9 @@ module.exports = {
         !res.ok ? Promise.reject('Vroom error:' + (await res.text())) : res
       )
       .then((res) => res.json())
+      .catch((vroomError) => {
+        error('Vroom error:', vroomError)
+        return Promise.reject(vroomError)
+      })
   },
 }
