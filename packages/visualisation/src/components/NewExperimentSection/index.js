@@ -63,8 +63,8 @@ const NewExperimentSection = ({
         <H1>Nytt experiment</H1>
 
         <Paragraph black>
-          Här kan starta ett nytt experiment, välj hur många fasta vs dynamiska
-          rutter du vill ha.
+          Här kan du starta ett nytt experiment, välj hur många fasta vs
+          dynamiska rutter du vill ha.
         </Paragraph>
         <Form>
           <div style={{ marginBottom: '0.5rem', marginTop: '-0.7rem' }}>
