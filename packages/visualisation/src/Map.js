@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { StaticMap } from 'react-map-gl'
-import maplibregl from 'maplibre-gl'
 import DeckGL, {
   PolygonLayer,
   ScatterplotLayer,
