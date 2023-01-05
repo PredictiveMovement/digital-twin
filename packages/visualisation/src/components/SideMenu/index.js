@@ -5,9 +5,11 @@ import plus from '../../icons/svg/plus.svg'
 import experimentIcon from '../../icons/svg/experimentIcon.svg'
 import historyIcon from '../../icons/svg/historyIcon.svg'
 import menuActive from '../../icons/svg/menuActive.svg'
+import pencilIcon from '../../icons/svg/pencil.svg'
 import SavedExperimentSection from '../SavedExperimentSection'
 import ExperimentSection from '../ExperimentSection'
 import NewExperimentSection from '../NewExperimentSection'
+import ExperimentParametersSection from '../ExperimentParametersSection'
 import useOutsideClick from '../../hooks/useClickOutside'
 import { keyframes } from 'styled-components'
 
@@ -105,6 +107,22 @@ const SideMenu = ({
           <MenuItem
             onClick={() =>
               setOpen((current) =>
+                current === 'experimentParameters'
+                  ? 'map'
+                  : 'experimentParameters'
+              )
+            }
+          >
+            <img src={pencilIcon} alt="Parametrar" />
+            {open === 'experimentParameters' && (
+              <ActiveMenu>
+                <img src={menuActive} alt="Open" />
+              </ActiveMenu>
+            )}
+          </MenuItem>
+          <MenuItem
+            onClick={() =>
+              setOpen((current) =>
                 current === 'experiment' ? 'map' : 'experiment'
               )
             }
@@ -132,13 +150,23 @@ const SideMenu = ({
           </MenuItem>
         </List>
       </Menu>
+
       {open === 'experiment' && (
         <ExperimentSection
           currentParameters={currentParameters}
           activeLayers={activeLayers}
         />
       )}
+
       {open === 'savedExperiment' && <SavedExperimentSection />}
+      {open === 'experimentParameters' && (
+        <ExperimentParametersSection
+          newParameters={newParameters}
+          newExperiment={newExperiment}
+          setNewParameters={setNewParameters}
+        />
+      )}
+
       {open === 'newExperiment' && (
         <NewExperimentSection
           newParameters={newParameters}
