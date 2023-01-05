@@ -86,7 +86,7 @@ function read() {
     mergeMap(({ key, rows }) => {
       let pickup = key
       if (importOrigins.includes(key.toLowerCase().trim())) {
-        pickup = 'Malmö Airport' // TODO: Improve handling of origins outside of Sweden.
+        pickup = 'Hangarvägen 57, 233 71 Svedala' // TODO: Improve handling of origins outside of Sweden.
       }
 
       return search(pickup).then(({ name, position }) =>
