@@ -44,7 +44,7 @@ module.exports = {
     return {
       id: i,
       description: id,
-      capacity: [passengerCapacity - passengers.length],
+      capacity: [passengerCapacity - (passengers?.length || 0)],
       start: [position.lon, position.lat],
       end: heading ? [heading.lon, heading.lat] : undefined,
     }
@@ -81,7 +81,7 @@ module.exports = {
       body: JSON.stringify({
         jobs,
         shipments,
-        vehicles,
+        vehicles: vehicles.filter((v) => v.capacity[0] > 0),
         options: {
           plan: true,
         },
