@@ -176,6 +176,8 @@ const Map = ({
     switch (fleet.toLowerCase()) {
       case 'brun':
         return [205, 127, 50, opacity]
+      case 'lila':
+        return [99, 20, 145, opacity]
       case 'bring':
         return [189, 197, 129, opacity]
       case 'gul':
