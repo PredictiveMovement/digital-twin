@@ -2,6 +2,7 @@ const fetch = require('node-fetch')
 // eslint-disable-next-line no-undef
 const vroomUrl = process.env.VROOM_URL || 'https://vroom.predictivemovement.se/'
 const moment = require('moment')
+const { debug } = require('./log')
 
 module.exports = {
   bookingToShipment({ id, pickup, destination }, i) {
@@ -58,6 +59,11 @@ module.exports = {
     }
   },
   async plan({ jobs, shipments, vehicles }) {
+    debug(
+      `Call Vroom with ${jobs?.length || 0} jobs, ${
+        shipments?.length || 0
+      } shipments and ${vehicles?.length || 0} vehicles`
+    )
     return await fetch(vroomUrl, {
       method: 'POST',
       headers: {

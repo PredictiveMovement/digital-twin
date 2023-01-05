@@ -1,5 +1,5 @@
 const fetch = require('node-fetch')
-const { info } = require('./log')
+const { info, debug, error } = require('./log')
 const Position = require('./models/position')
 const peliasUrl =
   process.env.PELIAS_URL || 'https://pelias.predictivemovement.se'
@@ -23,7 +23,10 @@ module.exports = {
       .then(
         ({
           features: [
-            { geometry, properties: { name, street, houseNumber, localadmin, label } } = {},
+            {
+              geometry,
+              properties: { name, street, houseNumber, localadmin, label },
+            } = {},
           ] = [],
         }) => ({
           name,
@@ -36,7 +39,8 @@ module.exports = {
             lat: geometry.coordinates[1],
           }),
         })
-      ).catch((e) => {
+      )
+      .catch((e) => {
         const error = new Error().stack
         console.error(`Error in pelias nearest\n${error}\n${e}\n\n`)
       })
@@ -51,7 +55,10 @@ module.exports = {
           near.lon
         )}}&layers=${encodeURIComponent(layers)}`
       : ''
-    const url = `${peliasUrl}/v1/search?text=${encodeURIComponent(name)}${focus}&size=1`
+    const url = `${peliasUrl}/v1/search?text=${encodeURIComponent(
+      name
+    )}${focus}&size=1`
+    debug('Call Pelias', url)
     return fetch(url)
       .then((response) => {
         if (!response.ok) throw 'pelias error: ' + response.statusText
@@ -70,8 +77,8 @@ module.exports = {
         }),
       }))
       .catch((e) => {
-        const error = new Error().stack
-        console.error(`Error in pelias search\n${error}\n${e}\n\n`)
+        const peliasError = new Error().stack
+        error(`Error in pelias search\n${peliasError}\n${e}\n\n`)
       })
   },
 }
