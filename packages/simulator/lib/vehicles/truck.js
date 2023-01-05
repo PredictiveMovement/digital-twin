@@ -1,4 +1,3 @@
-const { from } = require('rxjs')
 const { findBestRouteToPickupBookings } = require('../dispatch/truckDispatch')
 const { info } = require('../log')
 const Vehicle = require('./vehicle')
