@@ -1,7 +1,7 @@
 /**
  * TODO: Describe the stream that this file exports and what its data means
  */
-const { from, shareReplay, take, ReplaySubject } = require('rxjs')
+const { from, shareReplay, ReplaySubject } = require('rxjs')
 const { map, tap, filter, reduce, mergeMap } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
@@ -15,7 +15,6 @@ const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const Pelias = require('../lib/pelias')
 const { getCitizens } = require('../simulator/citizens')
 const { includedMunicipalities, defaultEmitters } = require('../config')
-const { generateBookingsInKommun } = require('../simulator/bookings')
 
 function getPopulationSquares({ geometry: { coordinates } }) {
   return population.pipe(

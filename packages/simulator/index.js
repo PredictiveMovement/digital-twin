@@ -2,17 +2,16 @@ const { filter, share, merge, shareReplay } = require('rxjs')
 const {
   mergeMap,
   map,
-  tap,
-  scan,
   catchError,
-  distinctUntilChanged,
   toArray,
   pairwise,
 } = require('rxjs/operators')
+
 var evilDns = require('evil-dns')
 evilDns.add('pelias.predictivemovement.se', '185.189.30.241')
 evilDns.add('osrm.predictivemovement.se', '185.189.30.129')
 evilDns.add('vroom.predictivemovement.se', '185.189.30.129')
+
 const { virtualTime } = require('./lib/virtualTime')
 
 const kommuner = require('./streams/kommuner')
@@ -20,8 +19,10 @@ const kommuner = require('./streams/kommuner')
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
 const statistics = require('./lib/statistics')
-const { info, error, debug } = require('./lib/log')
+const { info, error } = require('./lib/log')
 const { haversine, getNrOfPointsBetween } = require('./lib/distance')
+
+const { mapInitState } = require('./config')
 
 const engine = {
   subscriptions: [],
@@ -38,6 +39,7 @@ const engine = {
       startDate: new Date(),
       fixedRoute: savedParams.fixedRoute || 100,
       emitters: defaultEmitters,
+      mapInitState,
     }
     statistics.collectExperimentMetadata(parameters)
 
