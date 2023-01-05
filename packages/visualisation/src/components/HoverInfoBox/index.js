@@ -217,6 +217,10 @@ const PassengerInfo = ({ data }) => {
 const GenericInfo = ({ data }) => {
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
+      <Paragraph>
+        <strong>Bokning {data.id}</strong>
+      </Paragraph>
+      <Paragraph>&nbsp;</Paragraph>
       <Paragraph>{data.title}</Paragraph>
       <Paragraph>{data.subTitle}</Paragraph>
       <Paragraph>Bil: {data.carId}</Paragraph>
