@@ -21,6 +21,7 @@ const { error } = require('../../lib/log')
 const importOrigins = ['poznan, pl', 'tilburg, nl']
 
 function read() {
+  // eslint-disable-next-line no-undef
   return from(readCsv(process.cwd() + '/data/helsingborg/hm.csv')).pipe(
     map(
       ({
@@ -42,8 +43,8 @@ function read() {
         weight: weight / 1000, // g -> kg
       })
     ),
-    filter((row) => moment(row.created).isSame('2022-09-07', 'day')),
-    filter((hm) => hm.deliveryZip),
+    filter((row) => moment(row.created).isSame('2022-09-07', 'week')),
+    filter((hm) => hm.destination && hm.deliveryZip),
     groupBy((row) => row.id),
     mergeMap((group) =>
       group.pipe(

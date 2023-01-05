@@ -89,7 +89,7 @@ function read() {
         length,
       })
     ),
-    filter((row) => moment(row.created).isSame('2022-09-07', 'day')),
+    filter((row) => moment(row.created).isSame('2022-09-07', 'week')),
     filter((row) => row.deliveryZip),
     groupBy((row) => row.id), // TODO: Group by IKEA's ID so all parcels sharing an id are treated as one booking.
     mergeMap((group) =>
