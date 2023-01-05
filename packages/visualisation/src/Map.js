@@ -38,14 +38,17 @@ const Map = ({
   activeCar,
   setActiveCar,
   time,
+  mapInitState,
 }) => {
-  const [mapState, setMapState] = useState({
-    latitude: 55.901021,
-    longitude: 13.001441,
+  const mapInitStateDefaults = {
+    latitude: 65.0964472642777,
+    longitude: 17.112050188704504,
     bearing: 0,
-    zoom: 9, // min ~0.6 max 24.0
+    zoom: 5, // min ~0.6 max 24.0
     pitch: 40,
-  })
+  }
+
+  const [mapState, setMapState] = useState(mapInitState || mapInitStateDefaults)
 
   const rotateCamera = useCallback(() => {
     setMapState((mapState) => ({
