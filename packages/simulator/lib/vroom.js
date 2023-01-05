@@ -2,7 +2,7 @@ const fetch = require('node-fetch')
 // eslint-disable-next-line no-undef
 const vroomUrl = process.env.VROOM_URL || 'https://vroom.predictivemovement.se/'
 const moment = require('moment')
-const { debug, error } = require('./log')
+const { info, error, debug } = require('./log')
 
 module.exports = {
   bookingToShipment({ id, pickup, destination }, i) {
@@ -63,11 +63,16 @@ module.exports = {
     }
   },
   async plan({ jobs, shipments, vehicles }) {
-    debug(
-      `Call Vroom with ${jobs?.length || 0} jobs, ${
-        shipments?.length || 0
-      } shipments and ${vehicles?.length || 0} vehicles`
-    )
+    const logger = setInterval(() => {
+      debug(
+        'Waiting for vroom to respond...',
+        jobs?.length,
+        'jobs,',
+        shipments?.length,
+        'shipments. Vehicles:',
+        vehicles?.length === 1 ? vehicles[0].id : vehicles?.length
+      )
+    }, 2000)
     return await fetch(vroomUrl, {
       method: 'POST',
       headers: {
@@ -77,12 +82,18 @@ module.exports = {
         jobs,
         shipments,
         vehicles,
+        options: {
+          plan: true,
+        },
       }),
     })
       .then(async (res) =>
         !res.ok ? Promise.reject('Vroom error:' + (await res.text())) : res
       )
-      .then((res) => res.json())
+      .then((res) => {
+        clearInterval(logger)
+        return res.json()
+      })
       .catch((vroomError) => {
         error('Vroom error:', vroomError)
         return Promise.reject(vroomError)
