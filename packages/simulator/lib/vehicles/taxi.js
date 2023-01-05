@@ -46,7 +46,11 @@ class Taxi extends Vehicle {
       case 'delivery':
         await virtualTime.waitUntil(this.instruction.arrival)
         return this.navigateTo(this.booking.destination.position)
+      case 'returning':
+        this.status = 'ready'
+        return
       default:
+        this.status = 'returning'
         return this.navigateTo(this.startPosition)
     }
   }
@@ -72,12 +76,17 @@ class Taxi extends Vehicle {
   }
 
   async handleBooking(booking) {
-    await super.handleBooking(booking)
-    this.plan = await findBestRouteToPickupBookings(
-      this,
-      [this.booking, ...this.queue].filter((f) => f)
-    )
-    if (!this.instruction) this.pickNextInstructionFromPlan()
+    this.queue.push(booking)
+    booking.assign(this)
+    booking.queued(this)
+
+    clearTimeout(this._timeout)
+    this._timeout = setTimeout(async () => {
+      this.plan = await findBestRouteToPickupBookings(this, this.queue)
+
+      if (!this.instruction) await this.pickNextInstructionFromPlan()
+    }, 2000)
+
     return booking
   }
 }
