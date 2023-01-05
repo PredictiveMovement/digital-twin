@@ -40,10 +40,10 @@ const Map = ({
   time,
 }) => {
   const [mapState, setMapState] = useState({
-    latitude: 65.0964472642777,
-    longitude: 17.112050188704504,
+    latitude: 55.901021,
+    longitude: 13.001441,
     bearing: 0,
-    zoom: 5, // min ~0.6 max 24.0
+    zoom: 9, // min ~0.6 max 24.0
     pitch: 40,
   })
 
