@@ -18,6 +18,8 @@ const Position = require('../../lib/models/position')
 const Booking = require('../../lib/models/booking')
 const { error } = require('../../lib/log')
 
+const importOrigins = ['poznan, pl', 'tilburg, nl']
+
 function read() {
   return from(readCsv(process.cwd() + '/data/helsingborg/hm.csv')).pipe(
     map(
@@ -41,7 +43,7 @@ function read() {
       })
     ),
     filter((row) => moment(row.created).isSame('2022-09-07', 'day')),
-    filter((hm) => hm.destination && hm.deliveryZip),
+    filter((hm) => hm.deliveryZip),
     groupBy((row) => row.id),
     mergeMap((group) =>
       group.pipe(
@@ -81,13 +83,16 @@ function read() {
         map((rows) => ({ key: group.key, rows }))
       )
     ),
-    mergeMap(
-      ({ key, rows }) =>
-        search(key).then(({ name, position }) =>
-          rows.map((row) => ({ pickup: { name, position }, ...row }))
-        ),
-      1
-    ),
+    mergeMap(({ key, rows }) => {
+      let pickup = key
+      if (importOrigins.includes(key.toLowerCase().trim())) {
+        pickup = 'Malmö Airport' // TODO: Improve handling of origins outside of Sweden.
+      }
+
+      return search(pickup).then(({ name, position }) =>
+        rows.map((row) => ({ pickup: { name, position }, ...row }))
+      )
+    }, 1),
     retryWhen((errors) => {
       errors.pipe(
         tap((err) => error('Pelias error, retrying in 1s...', err)),
