@@ -57,7 +57,6 @@ class Taxi extends Vehicle {
 
   async pickup() {
     info('Pickup passenger', this.id, this.booking?.passenger?.name)
-    this.passengers = [...this.passengers, this.booking?.passenger]
     this.currentPassengerCount++
     this.passengers.push(this.booking.passenger)
     this.cargoEvents.next(this)

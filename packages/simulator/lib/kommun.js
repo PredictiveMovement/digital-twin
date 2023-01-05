@@ -16,11 +16,6 @@ const expandFleets = () => (fleets) =>
     mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(mapTo(fleet)))
   )
 
-const bookings = {
-  hm: require('../streams/orders/hm.js'),
-  ikea: require('../streams/orders/ikea.js'),
-}
-
 // pick a random item in an array-like stream
 const pickRandom = () => (stream) =>
   stream.pipe(
@@ -41,6 +36,7 @@ class Kommun {
     postombud,
     population,
     measureStations,
+    unhandledBookings,
     citizens,
     squares,
     fleets,
@@ -57,6 +53,7 @@ class Kommun {
     this.postombud = postombud
     this.measureStations = measureStations
     this.packageVolumes = packageVolumes
+    this.unhandledBookings = unhandledBookings
     this.busesPerCapita = 100 / 80_000
     this.population = population
     this.privateCars = new ReplaySubject()
@@ -85,11 +82,6 @@ class Kommun {
       })),
       map((props) => new Bus(props))
     )
-
-    this.unhandledBookings =
-      this.name === 'Helsingborgs stad'
-        ? merge(bookings.hm, bookings.ikea)
-        : of()
 
     this.pickNextFleet = () =>
       this.fleets.pipe(
