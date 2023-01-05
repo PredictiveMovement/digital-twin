@@ -52,29 +52,68 @@ const Form = styled.form`
   margin-top: 1rem;
 `
 
-const NewExperimentSection = ({
+const ExperimentParametersSection = ({
   newParameters,
   newExperiment,
   setNewParameters,
 }) => {
-  const onChange = (e) => {
-    setNewParameters({ ...newParameters, fixedRoute: e.target.value })
+  const fleets = {
+    'Helsingborgs stad': {
+      fleets: [
+        {
+          name: 'Postnord',
+          vehicles: {
+            tungLastbil: 0,
+            medeltungLastbil: 4,
+            lättLastbil: 1,
+            bil: 0,
+          },
+          marketshare: 0.6,
+          hub: [13.101441, 55.601021],
+        },
+        {
+          name: 'Röd',
+          vehicles: {
+            tungLastbil: 0,
+            medeltungLastbil: 2,
+          },
+          marketshare: 0.18,
+          hub: [13.046085, 55.554708],
+        },
+        {
+          name: 'Gul',
+          vehicles: {
+            lättLastbil: 2,
+          },
+          marketshare: 0.06,
+          hub: [13.104629, 55.60737],
+        },
+        {
+          name: 'Lila',
+          vehicles: {
+            lättLastbil: 2,
+          },
+          marketshare: 0.06,
+          hub: [13.367398, 55.536388],
+        },
+      ],
+    },
   }
 
   const handleChange = (e) => {
-    console.log('Update JSON')
-    console.log(e)
+    console.log('Update JSON', e['Helsingborgs stad'].fleets[0])
+    console.log(fleetsJson['Helsingborgs stad'].fleets[0])
   }
 
   return (
     <MenuContainer>
       <Wrapper>
-        <H1>Parametrar</H1>
-
+        <H1>Parametrarssssffffffff</H1>
+        mmmm
         <Editor value={fleetsJson} onChange={handleChange} />
       </Wrapper>
     </MenuContainer>
   )
 }
 
-export default NewExperimentSection
+export default ExperimentParametersSection
