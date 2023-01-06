@@ -20,6 +20,8 @@ function execute() {
         'Traffic Web': trafficWeb,
         Mätår: year,
         Månad: month,
+        UT,
+        IN,
         Rikt: directionInSwedish,
         'VaDT Tung': heavyTrafficCount,
       }) => ({
@@ -30,7 +32,7 @@ function execute() {
         ),
         year,
         month,
-        heavyTrafficCount,
+        heavyTrafficCount: Math.round(heavyTrafficCount / (IN - UT)),
         id: hbgNr,
         direction: directionInSwedish,
       })

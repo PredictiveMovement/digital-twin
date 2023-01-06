@@ -91,7 +91,7 @@ function read() {
         fleets,
       }) => {
         const squares = getPopulationSquares({ geometry })
-        return new Kommun({
+        const kommun = new Kommun({
           geometry,
           name: namn,
           id: kod,
@@ -113,13 +113,10 @@ function read() {
             ? merge(bookings.hm, bookings.ikea)
             : of(),
         })
+        kommun.citizens = getCitizens(kommun)
+        return kommun
       }
     ),
-    tap((kommun) => {
-      if (defaultEmitters.includes('passengers')) {
-        kommun.citizens = getCitizens(kommun)
-      }
-    }),
     shareReplay()
   )
 }
