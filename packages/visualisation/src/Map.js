@@ -457,7 +457,12 @@ const Map = ({
     getIcon: (d) => 'marker',
     getPosition: (c) => c.position,
     sizeScale: 5,
-    getColor: (d) => [16, 255 * (d.heavyTrafficCount / d.count), 123, 200],
+    getColor: (d) => [
+      16,
+      (d.count / 10) * 255,
+      255 * (d.heavyTrafficCount / 255),
+      200,
+    ],
     getSize: (d) => 5,
     sizeMaxPixels: 15,
     pickable: true,
