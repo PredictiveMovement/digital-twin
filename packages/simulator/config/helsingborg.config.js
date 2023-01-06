@@ -1,12 +1,6 @@
 const includedMunicipalities = ['Helsingborg']
 const ignoreWelcomeMessage = true
-const defaultEmitters = [
-  'cars',
-  'postombud',
-  'kommuner',
-  'bookings',
-  'measureStations',
-]
+const defaultEmitters = ['cars', 'kommuner', 'bookings', 'measureStations']
 
 const mapInitState = {
   latitude: 55.901021,

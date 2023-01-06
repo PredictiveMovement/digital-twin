@@ -9,6 +9,7 @@ const {
   retryWhen,
   tap,
   delay,
+  bufferTime,
 } = require('rxjs/operators')
 const moment = require('moment')
 const { readCsv } = require('../../adapters/csv')
@@ -43,8 +44,8 @@ function read() {
         weight: weight / 1000, // g -> kg
       })
     ),
-    filter((row) => moment(row.created).isSame('2022-09-07', 'week')),
-    filter((hm) => hm.destination && hm.deliveryZip),
+    filter((row) => moment(row.created).isSame('2022-09-07', 'day')),
+    filter((hm) => hm.deliveryZip),
     groupBy((row) => row.id),
     mergeMap((group) =>
       group.pipe(
@@ -80,7 +81,7 @@ function read() {
     groupBy((row) => row.origin),
     mergeMap((group) =>
       group.pipe(
-        toArray(),
+        bufferTime(1000),
         map((rows) => ({ key: group.key, rows }))
       )
     ),
