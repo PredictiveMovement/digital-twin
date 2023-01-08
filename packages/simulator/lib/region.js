@@ -202,6 +202,7 @@ class Region {
             )
           )
         ),
+        catchError((err) => error('region taxiDispatch', err)),
         share()
       )
     )
