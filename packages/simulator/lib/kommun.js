@@ -7,7 +7,14 @@ const {
   of,
   range,
 } = require('rxjs')
-const { catchError, map, toArray, mapTo } = require('rxjs/operators')
+const {
+  catchError,
+  map,
+  toArray,
+  mapTo,
+  groupBy,
+  first,
+} = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Bus = require('./vehicles/bus')
 const { error } = require('./log')
@@ -99,6 +106,8 @@ class Kommun {
           )
         )
       ),
+      groupBy((booking) => booking.id),
+      mergeMap((group) => group.pipe(first())),
       catchError((err) =>
         error('dispatchedBookings -> unhandledBookings.pipe', err)
       ),
