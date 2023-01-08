@@ -1,17 +1,21 @@
 const {
   from,
   shareReplay,
-  Subject,
   ReplaySubject,
   mergeMap,
   merge,
   of,
   range,
-  first,
 } = require('rxjs')
-const { map, catchError, toArray, mapTo, filter } = require('rxjs/operators')
+const {
+  catchError,
+  map,
+  toArray,
+  mapTo,
+  groupBy,
+  first,
+} = require('rxjs/operators')
 const Fleet = require('./fleet')
-const Car = require('./vehicles/car')
 const Bus = require('./vehicles/bus')
 const { error } = require('./log')
 const expandFleets = () => (fleets) =>
@@ -39,8 +43,8 @@ class Kommun {
     postombud,
     population,
     measureStations,
+    unhandledBookings,
     citizens,
-    bookings,
     squares,
     fleets,
     busCount,
@@ -56,7 +60,7 @@ class Kommun {
     this.postombud = postombud
     this.measureStations = measureStations
     this.packageVolumes = packageVolumes
-    this.unhandledBookings = new Subject()
+    this.unhandledBookings = unhandledBookings
     this.busesPerCapita = 100 / 80_000
     this.population = population
     this.privateCars = new ReplaySubject()
@@ -65,7 +69,6 @@ class Kommun {
 
     this.co2 = 0
     this.citizens = citizens
-    this.bookings = bookings
 
     this.fleets = from(
       fleets.map((fleet) => new Fleet({ hub: center, ...fleet }))
@@ -87,46 +90,63 @@ class Kommun {
       map((props) => new Bus(props))
     )
 
-    this.dispatchedBookings = this.fleets.pipe(
-      mergeMap((fleet) => fleet.dispatchedBookings),
-      catchError((err) => {
-        error('kommun dispatched booking', err)
-      }),
+    this.pickNextFleet = () =>
+      this.fleets.pipe(
+        expandFleets(),
+        pickRandom(),
+        catchError((err) => error('pickNextFleet', err))
+      )
+
+    this.dispatchedBookings = this.unhandledBookings.pipe(
+      mergeMap((booking) =>
+        this.pickNextFleet().pipe(
+          mergeMap(
+            (fleet) => fleet.handleBooking(booking) && fleet.dispatchedBookings,
+            1
+          )
+        )
+      ),
+      groupBy((booking) => booking.id),
+      mergeMap((group) => group.pipe(first())),
+      catchError((err) =>
+        error('dispatchedBookings -> unhandledBookings.pipe', err)
+      ),
       shareReplay()
     )
-  }
 
-  handleBooking(booking) {
-    this.bookings.next(booking)
-    booking.kommun = this
-    this.fleets
-      .pipe(
-        expandFleets(), // otherwise pick one at random
-        pickRandom()
-      )
-      .subscribe((fleet) => fleet.handleBooking(booking))
+    //   this.handledBookings = this.unhandledBookings.pipe(
+    //     map((booking) => {
+    //       booking.kommun = this
+    //       this.fleets
+    //         .pipe(
+    //           expandFleets(), // otherwise pick one at random
+    //           pickRandom()
+    //         )
+    //         .subscribe((fleet) => fleet.handleBooking(booking))
 
-    if (booking.finalDestination?.position) {
-      booking.deliveredEvents.pipe(first()).subscribe(() => {
-        booking.pickup = booking.destination
-        booking.destination = booking.finalDestination
+    //       if (booking.finalDestination?.position) {
+    //         booking.deliveredEvents.pipe(first()).subscribe(() => {
+    //           booking.pickup = booking.destination
+    //           booking.destination = booking.finalDestination
 
-        // Create a private car to pickup the package from the nearestOmbud
-        // https://transportstyrelsen.se/sv/vagtrafik/statistik/Statistik-over-koldioxidutslapp/statistik-over-koldioxidutslapp-2020/
-        const weight = 1500
-        const co2perkm = 125 // gram
-        const privateCar = new Car({
-          position: booking.destination.position,
-          isPrivateCar: true,
-          weight,
-          parcelCapacity: 2,
-          co2PerKmKg: co2perkm / 1000 / weight,
-        })
-        privateCar.handleBooking(booking)
-        this.privateCars.next(privateCar)
-      })
-    }
-    return booking
+    //           // Create a private car to pickup the package from the nearestOmbud
+    //           // https://transportstyrelsen.se/sv/vagtrafik/statistik/Statistik-over-koldioxidutslapp/statistik-over-koldioxidutslapp-2020/
+    //           const weight = 1500
+    //           const co2perkm = 125 // gram
+    //           const privateCar = new Car({
+    //             position: booking.destination.position,
+    //             isPrivateCar: true,
+    //             weight,
+    //             parcelCapacity: 2,
+    //             co2PerKmKg: co2perkm / 1000 / weight,
+    //           })
+    //           privateCar.handleBooking(booking)
+    //           this.privateCars.next(privateCar)
+    //         })
+    //       }
+    //       return booking
+    //     })
+    //   )
   }
 }
 

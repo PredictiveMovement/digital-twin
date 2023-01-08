@@ -1,5 +1,5 @@
 const { ReplaySubject } = require('rxjs')
-const { scan, takeWhile } = require('rxjs/operators')
+const { scan } = require('rxjs/operators')
 const moment = require('moment')
 const { assert } = require('console')
 
@@ -18,7 +18,7 @@ class Vehicle {
   constructor({
     id = 'v-' + safeId(),
     position,
-    status = 'Ready',
+    status = 'ready',
     parcelCapacity,
     passengerCapacity,
     weight = 10000,
@@ -72,6 +72,7 @@ class Vehicle {
       this.movementSubscription.unsubscribe()
     }
     if (!route) return
+
     if (virtualTime.timeMultiplier === Infinity) {
       return this.updatePosition(route) // teleport mode
     }
@@ -80,6 +81,11 @@ class Vehicle {
       .getTimeInMilliseconds()
       .pipe(
         scan((prevRemainingPointsInRoute, currentTimeInMs) => {
+          if (!prevRemainingPointsInRoute.length) {
+            this.stopped()
+            return []
+          }
+
           const { next, skippedPoints, remainingPoints, ...position } =
             interpolate.route(
               route.started,
@@ -91,19 +97,15 @@ class Vehicle {
             return []
           }
           this.updatePosition(newPosition, skippedPoints, currentTimeInMs)
-          if (!next || remainingPoints.length < 5) {
-            this.stopped()
-            return []
-          }
           return remainingPoints
-        }, interpolate.points(route)),
-        takeWhile((e) => e?.length > 4)
+        }, interpolate.points(route))
       )
       .subscribe((e) => null)
   }
 
   navigateTo(position) {
     this.heading = position
+
     return osrm
       .route(this.position, this.heading)
       .then(async (route) => {
@@ -127,7 +129,7 @@ class Vehicle {
       )
   }
 
-  handleBooking(booking) {
+  async handleBooking(booking) {
     assert(booking instanceof Booking, 'Booking needs to be of type Booking')
 
     if (!this.busy) {

@@ -44,7 +44,7 @@ const ProgressBar = ({ completed }) => {
           <Total completed={completed} />
         </Filler>
       </Container>
-      <Percentage>{completed}%</Percentage>
+      <Percentage>{completed} %</Percentage>
     </Wrapper>
   )
 }
