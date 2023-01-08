@@ -1,5 +1,5 @@
-const { Subject, range, from, merge } = require('rxjs')
-const { map, shareReplay, mergeMap } = require('rxjs/operators')
+const { Subject, range, from, merge, of } = require('rxjs')
+const { shareReplay, mergeMap, share, catchError } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
 const Car = require('./vehicles/car')
 const Truck = require('./vehicles/truck')
@@ -7,7 +7,7 @@ const Drone = require('./vehicles/drone')
 const { randomize } = require('../simulator/address')
 const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')
-const {error} = require('./log')
+const { error, info } = require('./log')
 
 const packagesPerPallet = 30 // this is a guesstimate
 const vehicleTypes = {
@@ -48,27 +48,36 @@ class Fleet {
     this.name = name
     this.marketshare = marketshare
     const hubPos = new Position(hub)
-    if(!hubPos.valid) {
-      error(`Invalid hub position for fleet ${name}: ${hub}\n\n${new Error().stack}\n\n`)
+    if (!hubPos.valid) {
+      error(
+        `Invalid hub position for fleet ${name}: ${hub}\n\n${
+          new Error().stack
+        }\n\n`
+      )
     }
-    this.hub = { position: (hubPos.valid ? hubPos : { lat: 0, lon: 0 }) }
+    this.hub = { position: hubPos.valid ? hubPos : { lat: 0, lon: 0 } }
     this.percentageHomeDelivery = (percentageHomeDelivery || 0) / 100 || 0.15 // based on guestimates from workshop with transport actors in oct 2021
     this.percentageReturnDelivery = 0.1
     this.cars = from(Object.entries(vehicles)).pipe(
       mergeMap(([type, count]) =>
         range(0, count).pipe(
-          mergeMap(() =>
-            randomize(this.hub.position).then((position) => {
-              const Vehicle = vehicleTypes[type].class
-              return new Vehicle({
+          mergeMap(() => {
+            const Vehicle = vehicleTypes[type].class
+            return of(
+              new Vehicle({
                 ...vehicleTypes[type],
                 fleet: this,
-                position,
+                position: this.hub.position,
               })
-            }).catch((err) => {
-              error(`Error creating vehicle for fleet ${name}: ${err}\n\n${new Error().stack}\n\n`)
-            })
-          )
+            )
+          }),
+          catchError((err) => {
+            error(
+              `Error creating vehicle for fleet ${name}: ${err}\n\n${
+                new Error().stack
+              }\n\n`
+            )
+          })
         )
       ),
       shareReplay()
@@ -77,18 +86,17 @@ class Fleet {
     this.manualDispatchedBookings = new Subject()
     this.dispatchedBookings = merge(
       this.manualDispatchedBookings,
-      dispatch(this.cars, this.unhandledBookings).pipe(
-        map(({ booking }) => booking)
-      )
-    )
+      dispatch(this.cars, this.unhandledBookings) // TODO: Cluster bookings by pickup location.
+    ).pipe(share())
   }
 
   async handleBooking(booking, car) {
     booking.fleet = this
     if (car) {
       this.manualDispatchedBookings.next(booking)
-      return car.handleBooking(booking)
+      return await car.handleBooking(booking)
     } else {
+      info(`Dispatching ${booking.id} to ${this.name}`)
       this.unhandledBookings.next(booking)
     }
     return booking

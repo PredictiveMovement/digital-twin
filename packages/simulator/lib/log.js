@@ -3,6 +3,12 @@ const chalk = require('chalk')
 // eslint-disable-next-line no-undef
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info'
 
+const logLevelIsAtLeastDebug = LOG_LEVEL.toUpperCase() === 'DEBUG'
+const logLevelIsAtLeastInfo =
+  LOG_LEVEL.toUpperCase() === 'INFO' || logLevelIsAtLeastDebug
+const logLevelIsAtLeastWarn =
+  LOG_LEVEL.toUpperCase() === 'WARN' || logLevelIsAtLeastInfo
+
 module.exports = {
   error: (title, error, data, ...rest) => {
     console.error(`${chalk.redBright.bold('ERROR')} ${chalk.red(title)}`)
@@ -12,31 +18,31 @@ module.exports = {
     }
   },
   debug: (message, data = '', ...rest) => {
-    if (LOG_LEVEL !== 'DEBUG') {
+    if (!logLevelIsAtLeastDebug) {
       return
     }
     console.log(
-      `${chalk.whiteBright.bold('DEBUG')} ${chalk.white(message)}`,
+      `${chalk.whiteBright.bold('DEBUG')} ${chalk.gray(message)}`,
       data,
       ...rest
     )
   },
   info: (message, data = '', ...rest) => {
-    if (LOG_LEVEL !== 'info' && LOG_LEVEL !== 'DEBUG') {
+    if (!logLevelIsAtLeastInfo) {
       return
     }
     console.log(
-      `${chalk.whiteBright.bold('INFO')} ${chalk.white(message)}`,
+      `${chalk.whiteBright.bold('INFO ')} ${chalk.white(message)}`,
       data,
       ...rest
     )
   },
   warn: (message, data = '', ...rest) => {
-    if (LOG_LEVEL !== 'info' && LOG_LEVEL !== 'DEBUG') {
+    if (!logLevelIsAtLeastWarn) {
       return
     }
     console.log(
-      `${chalk.whiteBright.bold('INFO')} ${chalk.white(message)}`,
+      `${chalk.red.bold('WARN ')} ${chalk.white(message)}`,
       data,
       ...rest
     )

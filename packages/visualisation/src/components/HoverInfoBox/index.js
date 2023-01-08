@@ -38,7 +38,7 @@ const MeasurementStationInfo = ({ data }) => {
           Mätpunkt: <strong>{data.id}</strong>
         </Paragraph>
         <Paragraph>
-          Antal tunga fordorn: <strong>{data.heavyTraficCount}</strong>
+          Antal tunga fordorn: <strong>{data.heavyTrafficCount}</strong>
         </Paragraph>
         <Paragraph>
           Mäter bilar som kör: <strong>{data.direction}</strong>
@@ -93,26 +93,51 @@ const CarInfo = ({ data }) => {
             Linje: <strong>{data.lineNumber}</strong>
           </Paragraph>
         )}
+
+        <Paragraph>&nbsp;</Paragraph>
         <Paragraph>
-          Hastighet <strong>{data.speed} km/h</strong>
+          Flotta: <strong>{data.fleet}</strong>
         </Paragraph>
         <Paragraph>
-          Kör för <strong></strong>
-          {data.fleet}
+          Status: <strong>{data.status}</strong>
+        </Paragraph>
+
+        <Paragraph>&nbsp;</Paragraph>
+        <Paragraph>
+          Hastighet: <strong>{data.speed || 0} km/h</strong>
         </Paragraph>
         <Paragraph>
-          Köat:{' '}
-          <strong>
-            {data.queue || 0} {cargoName(data.vehicleType)}
-          </strong>
+          Avstånd till destination: <strong>{data.ema} m</strong>
+        </Paragraph>
+
+        <Paragraph>&nbsp;</Paragraph>
+        <Paragraph>
+          Körsträcka:{' '}
+          <strong>{Math.ceil(10 * data.distance) / 10 || 0} km</strong>
         </Paragraph>
         <Paragraph>
           CO<sub>2</sub>:{' '}
           <strong>{Math.ceil(10 * data.co2) / 10 || 0} kg</strong>
         </Paragraph>
+
+        <Paragraph>&nbsp;</Paragraph>
+        {data.passengerCapacity && (
+          <Paragraph>
+            Kapacitet: <strong>{data.passengerCapacity} passagerare</strong>
+          </Paragraph>
+        )}
+        {data.parcelCapacity && (
+          <Paragraph>
+            Kapacitet: <strong>{data.parcelCapacity} paket</strong>
+          </Paragraph>
+        )}
+
+        <Paragraph>&nbsp;</Paragraph>
         <Paragraph>
-          Körsträcka:{' '}
-          <strong>{Math.ceil(10 * data.distance) / 10 || 0} km</strong>
+          Köat:{' '}
+          <strong>
+            {data.queue || 0} {cargoName(data.vehicleType)}
+          </strong>
         </Paragraph>
         {data.passengerCapacity && (
           <Paragraph>
@@ -124,18 +149,9 @@ const CarInfo = ({ data }) => {
             Lastat: <strong>{data.cargo} paket</strong>
           </Paragraph>
         )}
-        {data.passengerCapacity && (
-          <Paragraph>
-            Passagerarkapacitet:{' '}
-            <strong>{data.passengerCapacity} passagerare</strong>
-          </Paragraph>
-        )}
-        {data.parcelCapacity && (
-          <Paragraph>
-            Paketkapacitet: <strong>{data.parcelCapacity} paket</strong>
-          </Paragraph>
-        )}
       </div>
+
+      <Paragraph>&nbsp;</Paragraph>
       {data.passengerCapacity && (
         <div>
           <Paragraph>Passagerarfyllnadsgrad:</Paragraph>
@@ -201,8 +217,13 @@ const PassengerInfo = ({ data }) => {
 const GenericInfo = ({ data }) => {
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
+      <Paragraph>
+        <strong>Bokning {data.id}</strong>
+      </Paragraph>
+      <Paragraph>&nbsp;</Paragraph>
       <Paragraph>{data.title}</Paragraph>
       <Paragraph>{data.subTitle}</Paragraph>
+      <Paragraph>Bil: {data.carId}</Paragraph>
       {data.deliveryTime ? (
         <Paragraph>
           Leveranstid: {Math.ceil((10 * data.deliveryTime) / 60 / 60) / 10} h

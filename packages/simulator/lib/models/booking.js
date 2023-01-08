@@ -5,7 +5,10 @@ const { ReplaySubject, merge } = require('rxjs')
 class Booking {
   constructor(booking) {
     Object.assign(this, booking)
-    this.id = 'b-' + safeId()
+    this.id =
+      `${
+        booking.sender ? booking.sender.replace(/\&/g, '').toLowerCase() : 'b'
+      }-` + safeId()
     this.status = 'New'
     this.co2 = 0 //TODO: initialvärde?
     this.passenger = booking.passenger
@@ -88,6 +91,7 @@ class Booking {
       cost: this.cost,
       distance: this.distance,
       weight: this.weight,
+      sender: this.sender,
       position: this.position?.toObject(),
       pickup: this.pickup,
       carId: this.car?.id,

@@ -1,5 +1,4 @@
 const Car = require('../../lib/vehicles/car')
-const { take, toArray } = require('rxjs/operators')
 const Booking = require('../../lib/booking')
 const { virtualTime } = require('../../lib/virtualTime')
 
@@ -70,7 +69,7 @@ describe('A car', () => {
         },
       })
     )
-    expect(car.status).toEqual('Pickup')
+    expect(car.status).toEqual('pickup')
     car.on('pickup', () => {
       expect(car.position?.lon).toEqual(ljusdal.lon)
       expect(car.position?.lat).toEqual(ljusdal.lat)

@@ -2,6 +2,7 @@ const fetch = require('node-fetch')
 // eslint-disable-next-line no-undef
 const vroomUrl = process.env.VROOM_URL || 'https://vroom.predictivemovement.se/'
 const moment = require('moment')
+const { error, debug } = require('./log')
 
 module.exports = {
   bookingToShipment({ id, pickup, destination }, i) {
@@ -39,16 +40,39 @@ module.exports = {
       },
     }
   },
-  taxiToVehicle({ id, position, passengerCapacity, heading, bookings }, i) {
+  taxiToVehicle({ id, position, passengerCapacity, heading, passengers }, i) {
     return {
       id: i,
       description: id,
-      capacity: [passengerCapacity],
+      capacity: [passengerCapacity - (passengers?.length || 0)],
+      start: [position.lon, position.lat],
+      end: heading ? [heading.lon, heading.lat] : undefined,
+    }
+  },
+  truckToVehicle({ id, position, parcelCapacity, heading, cargo }, i) {
+    return {
+      id: i,
+      description: id,
+      time_window: [
+        moment('05:00:00', 'hh:mm:ss').unix(),
+        moment('18:00:00', 'hh:mm:ss').unix(),
+      ],
+      capacity: [parcelCapacity - cargo.length],
       start: [position.lon, position.lat],
       end: heading ? [heading.lon, heading.lat] : undefined,
     }
   },
   async plan({ jobs, shipments, vehicles }) {
+    const logger = setInterval(() => {
+      debug(
+        'Waiting for vroom to respond...',
+        jobs?.length,
+        'jobs,',
+        shipments?.length,
+        'shipments. Vehicles:',
+        vehicles?.length === 1 ? vehicles[0].id : vehicles?.length
+      )
+    }, 2000)
     return await fetch(vroomUrl, {
       method: 'POST',
       headers: {
@@ -57,12 +81,22 @@ module.exports = {
       body: JSON.stringify({
         jobs,
         shipments,
-        vehicles,
+        vehicles: vehicles.filter((v) => v.capacity[0] > 0),
+        options: {
+          plan: true,
+        },
       }),
     })
       .then(async (res) =>
         !res.ok ? Promise.reject('Vroom error:' + (await res.text())) : res
       )
-      .then((res) => res.json())
+      .then((res) => {
+        clearInterval(logger)
+        return res.json()
+      })
+      .catch((vroomError) => {
+        error('Vroom error:', vroomError)
+        return Promise.reject(vroomError)
+      })
   },
 }
