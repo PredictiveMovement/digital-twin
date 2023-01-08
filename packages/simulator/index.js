@@ -116,6 +116,7 @@ const engine = {
         movedEvents.pipe(
           mergeMap(({ position: carPosition, pointsPassedSinceLastUpdate }) =>
             experiment.measureStations.pipe(
+              filter(({ position }) => carPosition.distanceTo(position) < 1000),
               map(({ position: mPosition, id: mId }) => ({
                 carPosition: carPosition.toObject(),
                 pointsPassedSinceLastUpdate,
