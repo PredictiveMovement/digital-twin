@@ -6,15 +6,24 @@ const cookie = require('cookie')
 
 function subscribe(experiment, socket) {
   return [
-    require('./routes/bookings').register(experiment, socket),
-    require('./routes/buses').register(experiment, socket),
-    require('./routes/cars').register(experiment, socket),
-    require('./routes/kommuner').register(experiment, socket),
-    require('./routes/measureStations').register(experiment, socket),
-    require('./routes/passengers').register(experiment, socket),
-    require('./routes/postombud').register(experiment, socket),
+    defaultEmitters.includes('bookings') &&
+      require('./routes/bookings').register(experiment, socket),
+    defaultEmitters.includes('buses') &&
+      require('./routes/buses').register(experiment, socket),
+    defaultEmitters.includes('cars') &&
+      require('./routes/cars').register(experiment, socket),
+    defaultEmitters.includes('kommuner') &&
+      require('./routes/kommuner').register(experiment, socket),
+    defaultEmitters.includes('measureStations') &&
+      require('./routes/measureStations').register(experiment, socket),
+    defaultEmitters.includes('passengers') &&
+      require('./routes/passengers').register(experiment, socket),
+    defaultEmitters.includes('postombud') &&
+      require('./routes/postombud').register(experiment, socket),
     require('./routes/time').register(experiment, socket),
-  ].flat()
+  ]
+    .filter((f) => f)
+    .flat()
 }
 
 function start(socket) {

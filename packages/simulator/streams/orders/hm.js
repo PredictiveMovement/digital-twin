@@ -9,6 +9,7 @@ const {
   retryWhen,
   tap,
   delay,
+  bufferTime,
 } = require('rxjs/operators')
 const moment = require('moment')
 const { readCsv } = require('../../adapters/csv')
@@ -21,6 +22,7 @@ const { error } = require('../../lib/log')
 const importOrigins = ['poznan, pl', 'tilburg, nl']
 
 function read() {
+  // eslint-disable-next-line no-undef
   return from(readCsv(process.cwd() + '/data/helsingborg/hm.csv')).pipe(
     map(
       ({
@@ -79,7 +81,7 @@ function read() {
     groupBy((row) => row.origin),
     mergeMap((group) =>
       group.pipe(
-        toArray(),
+        bufferTime(1000),
         map((rows) => ({ key: group.key, rows }))
       )
     ),

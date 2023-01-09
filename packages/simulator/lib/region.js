@@ -118,6 +118,7 @@ class Region {
       flattenProperty('trips'),
       filter(({ buses, trips }) => buses.length && trips.length),
       mergeMap(({ buses, trips }) => busDispatch(buses, trips), 3), // try to find optimal plan x kommun at a time
+      retryWhen((errors) => errors.pipe(delay(1000), take(10))),
       mergeAll(),
       mergeMap(({ bus, stops }) =>
         from(stops).pipe(
@@ -175,7 +176,9 @@ class Region {
             ),
             catchError((err) => error('taxi cluster err', err)),
             concatMap(({ center, bookings }) => {
-              const nearestTaxis = takeNearest(taxis, center, 10)
+              const nearestTaxis = takeNearest(taxis, center, 10).filter(
+                ({ passengerCapacity: c, passengers: p }) => c > p.length
+              )
               return taxiDispatch(nearestTaxis, bookings).catch((err) => {
                 error('taxiDispatch', err)
                 bookings.forEach((booking) => this.manualBookings.next(booking))
@@ -199,6 +202,7 @@ class Region {
             )
           )
         ),
+        catchError((err) => error('region taxiDispatch', err)),
         share()
       )
     )

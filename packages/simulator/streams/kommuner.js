@@ -1,7 +1,7 @@
 /**
  * TODO: Describe the stream that this file exports and what its data means
  */
-const { from, shareReplay, ReplaySubject } = require('rxjs')
+const { from, shareReplay, ReplaySubject, merge, of } = require('rxjs')
 const { map, tap, filter, reduce, mergeMap } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
@@ -15,6 +15,11 @@ const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const Pelias = require('../lib/pelias')
 const { getCitizens } = require('../simulator/citizens')
 const { includedMunicipalities, defaultEmitters } = require('../config')
+
+const bookings = {
+  hm: require('../streams/orders/hm.js'),
+  ikea: require('../streams/orders/ikea.js'),
+}
 
 function getPopulationSquares({ geometry: { coordinates } }) {
   return population.pipe(
@@ -86,7 +91,7 @@ function read() {
         fleets,
       }) => {
         const squares = getPopulationSquares({ geometry })
-        return new Kommun({
+        const kommun = new Kommun({
           geometry,
           name: namn,
           id: kod,
@@ -97,7 +102,6 @@ function read() {
           center: await centerPoint(namn),
           pickupPositions: pickupPositions || [],
           squares,
-          citizens: new ReplaySubject(), // will be set later
           postombud: getPostombud(namn),
           measureStations: getMeasureStations(namn),
           population: await squares
@@ -105,17 +109,14 @@ function read() {
             .toPromise(),
           packageVolumes: packageVolumes.find((e) => namn.startsWith(e.name)),
           commercialAreas: getCommercialAreas(kod),
+          unhandledBookings: namn.startsWith('Helsingborg')
+            ? merge(bookings.hm, bookings.ikea)
+            : of(),
         })
+        kommun.citizens = getCitizens(kommun)
+        return kommun
       }
     ),
-    tap((kommun) => {
-      if (defaultEmitters.includes('passengers')) {
-        getCitizens(kommun).subscribe((citizen) =>
-          kommun.citizens.next(citizen)
-        )
-      }
-    }),
-
     shareReplay()
   )
 }

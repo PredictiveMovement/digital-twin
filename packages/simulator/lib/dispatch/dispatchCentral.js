@@ -61,9 +61,18 @@ const dispatch = (cars, bookings) => {
       bookings.pipe(
         bufferTime(5000),
         filter((b) => b.length > 0),
-        mergeMap((bookings) => getVroomPlan(cars, bookings)),
-        catchError((err) => error('vroom plan err', err)),
+        //mergeMap((bookings) => getVroomPlan(cars, bookings)),
+        mergeMap(async (bookings) => {
+          const clusters = await clusterPositions(bookings, cars.length)
+          return clusters.map(({ items: bookings }, i) => ({
+            car: cars[i],
+            bookings,
+          }))
+        }),
+        catchError((err) => error('cluster err', err)),
+        tap((plans) => info('plans', plans.length)),
         mergeAll(),
+        filter(({ bookings }) => bookings.length > 0),
         tap(({ car, bookings }) =>
           info(
             `Plan ${car.id} (${car.fleet.name}) received ${bookings.length} bookings`
