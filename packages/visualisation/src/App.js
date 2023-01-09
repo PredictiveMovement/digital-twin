@@ -55,11 +55,11 @@ const App = () => {
     setCommercialAreasLayer,
     kommunLayer,
     setKommunLayer,
-    setBusLineLayer,
     busLineLayer,
+    setBusLineLayer,
   }
 
-  const newExperiment = (object) => {
+  const newExperiment = () => {
     socket.emit('experimentParameters', newParameters)
   }
 
