@@ -75,6 +75,7 @@ const SideMenu = ({
   newParameters,
   newExperiment,
   setNewParameters,
+  fleets,
 }) => {
   const ref = useRef()
 
@@ -161,8 +162,9 @@ const SideMenu = ({
       {open === 'savedExperiment' && <SavedExperimentSection />}
       {open === 'experimentParameters' && (
         <ExperimentParametersSection
-          newParameters={newParameters}
+          fleets={fleets}
           newExperiment={newExperiment}
+          newParameters={newParameters}
           setNewParameters={setNewParameters}
         />
       )}

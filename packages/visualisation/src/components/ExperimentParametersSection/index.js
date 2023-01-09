@@ -1,10 +1,7 @@
-import Slider from '@mui/material/Slider'
 import styled from 'styled-components'
 import { H1, Paragraph } from '../Typography'
 import { JsonEditor as Editor } from 'jsoneditor-react'
 import 'jsoneditor-react/es/editor.min.css'
-
-import fleetsJson from './fleets.json'
 
 const MenuContainer = styled.div`
   display: flex;
@@ -22,17 +19,6 @@ const MenuContainer = styled.div`
   z-index: 4;
 `
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-`
-
-const FlexSpaceBetween = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
-
 const StyledButton = styled.button`
   width: 140px;
   height: 40px;
@@ -45,64 +31,22 @@ const StyledButton = styled.button`
   border-radius: 2px;
 `
 
-const Form = styled.form`
+const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 2rem;
+  overflow-y: scroll;
 `
 
 const ExperimentParametersSection = ({
-  newParameters,
+  fleets,
   newExperiment,
+  newParameters,
   setNewParameters,
 }) => {
-  const fleets = {
-    'Helsingborgs stad': {
-      fleets: [
-        {
-          name: 'Postnord',
-          vehicles: {
-            tungLastbil: 0,
-            medeltungLastbil: 4,
-            lättLastbil: 1,
-            bil: 0,
-          },
-          marketshare: 0.6,
-          hub: [13.101441, 55.601021],
-        },
-        {
-          name: 'Röd',
-          vehicles: {
-            tungLastbil: 0,
-            medeltungLastbil: 2,
-          },
-          marketshare: 0.18,
-          hub: [13.046085, 55.554708],
-        },
-        {
-          name: 'Gul',
-          vehicles: {
-            lättLastbil: 2,
-          },
-          marketshare: 0.06,
-          hub: [13.104629, 55.60737],
-        },
-        {
-          name: 'Lila',
-          vehicles: {
-            lättLastbil: 2,
-          },
-          marketshare: 0.06,
-          hub: [13.367398, 55.536388],
-        },
-      ],
-    },
-  }
-
-  const handleChange = (e) => {
-    console.log('Update JSON', e['Helsingborgs stad'].fleets[0])
-    console.log(fleetsJson['Helsingborgs stad'].fleets[0])
+  const updateFleetsJson = (fleetsJson) => {
+    console.log('Update JSON', fleetsJson)
+    setNewParameters({ ...newParameters, fleets: fleetsJson })
   }
 
   return (
@@ -110,7 +54,10 @@ const ExperimentParametersSection = ({
       <Wrapper>
         <H1>Parametrar</H1>
         <h2>fleets.json</h2>
-        <Editor value={fleetsJson} onChange={handleChange} />
+        <Editor value={fleets} onChange={updateFleetsJson} />
+        <StyledButton type="submit" onClick={newExperiment}>
+          Nytt experiment
+        </StyledButton>
       </Wrapper>
     </MenuContainer>
   )
