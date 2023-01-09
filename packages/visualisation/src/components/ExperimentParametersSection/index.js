@@ -108,8 +108,8 @@ const ExperimentParametersSection = ({
   return (
     <MenuContainer>
       <Wrapper>
-        <H1>Parametrarssssffffffff</H1>
-        mmmm
+        <H1>Parametrar</H1>
+        <h2>fleets.json</h2>
         <Editor value={fleetsJson} onChange={handleChange} />
       </Wrapper>
     </MenuContainer>
