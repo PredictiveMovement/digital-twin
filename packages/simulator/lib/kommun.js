@@ -23,11 +23,6 @@ const expandFleets = () => (fleets) =>
     mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(mapTo(fleet)))
   )
 
-const bookings = {
-  hm: require('../streams/orders/hm.js'),
-  ikea: require('../streams/orders/ikea.js'),
-}
-
 // pick a random item in an array-like stream
 const pickRandom = () => (stream) =>
   stream.pipe(
