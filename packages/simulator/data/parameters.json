@@ -1,3 +1,72 @@
 {
-  "fixedRoute": 21
+  "id": "Tzhg-EYPU",
+  "startDate": "2023-01-10T08:28:33.365Z",
+  "fixedRoute": 21,
+  "emitters": [
+    "cars",
+    "kommuner",
+    "bookings",
+    "measureStations"
+  ],
+  "mapInitState": {
+    "latitude": 55.901021,
+    "longitude": 13.001441,
+    "bearing": 0,
+    "zoom": 9,
+    "pitch": 40
+  },
+  "fleets": {
+    "Helsingborgs stad": {
+      "fleets": [
+        {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 4,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 0.01,
+          "hub": [
+            13.101441,
+            55.601021
+          ]
+        },
+        {
+          "name": "Röd",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 2
+          },
+          "marketshare": 0.01,
+          "hub": [
+            13.046085,
+            55.554708
+          ]
+        },
+        {
+          "name": "Gul",
+          "vehicles": {
+            "lättLastbil": 10
+          },
+          "marketshare": 0.96,
+          "hub": [
+            13.104629,
+            55.60737
+          ]
+        },
+        {
+          "name": "Lila",
+          "vehicles": {
+            "lättLastbil": 2
+          },
+          "marketshare": 0.01,
+          "hub": [
+            13.367398,
+            55.536388
+          ]
+        }
+      ]
+    }
+  }
 }

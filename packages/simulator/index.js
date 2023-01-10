@@ -29,7 +29,7 @@ const engine = {
   createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
     const savedParams = readParameters()
 
-    const kommunerStream = kommuner.read()
+    const kommunerStream = kommuner.read(savedParams)
     const regions = require('./streams/regions')(kommunerStream)
 
     info(`Starting experiment ${id} with params:`, savedParams)

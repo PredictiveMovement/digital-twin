@@ -5,7 +5,6 @@ const { from, shareReplay, ReplaySubject, merge, of } = require('rxjs')
 const { map, tap, filter, reduce, mergeMap } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
-const fleets = require('../data/fleets.json')
 const population = require('./population')
 const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
@@ -68,7 +67,7 @@ async function centerPoint(namn, retries = 0) {
   }
 }
 
-function read() {
+function read({ fleets }) {
   return from(data).pipe(
     filter(({ namn }) =>
       includedMunicipalities.some((name) => namn.startsWith(name))

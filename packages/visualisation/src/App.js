@@ -246,48 +246,8 @@ const App = () => {
   }
 
   const setupFleets = () => {
-    setFleets({
-      'Helsingborgs stad': {
-        fleets: [
-          {
-            name: 'Postnord',
-            vehicles: {
-              tungLastbil: 0,
-              medeltungLastbil: 4,
-              lättLastbil: 1,
-              bil: 0,
-            },
-            marketshare: 0.6,
-            hub: [13.101441, 55.601021],
-          },
-          {
-            name: 'Röd',
-            vehicles: {
-              tungLastbil: 0,
-              medeltungLastbil: 2,
-            },
-            marketshare: 0.18,
-            hub: [13.046085, 55.554708],
-          },
-          {
-            name: 'Gul',
-            vehicles: {
-              lättLastbil: 2,
-            },
-            marketshare: 0.06,
-            hub: [13.104629, 55.60737],
-          },
-          {
-            name: 'Lila',
-            vehicles: {
-              lättLastbil: 2,
-            },
-            marketshare: 0.06,
-            hub: [13.367398, 55.536388],
-          },
-        ],
-      },
-    })
+    const fleetsJson = require('./data/fleets.json')
+    setFleets(fleetsJson)
   }
 
   useEffect(setupFleets, [])
