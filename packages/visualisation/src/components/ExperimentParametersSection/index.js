@@ -44,9 +44,9 @@ const ExperimentParametersSection = ({
   newParameters,
   setNewParameters,
 }) => {
-  const updateFleetsJson = (fleetsJson) => {
-    console.log('Update JSON', fleetsJson)
-    setNewParameters({ ...newParameters, fleets: fleetsJson })
+  const updateFleetsJson = (updatedJson) => {
+    console.log('Update JSON', updatedJson)
+    setNewParameters({ ...newParameters, fleets: updatedJson })
   }
 
   return (
