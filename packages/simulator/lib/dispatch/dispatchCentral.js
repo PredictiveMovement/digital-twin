@@ -53,6 +53,12 @@ const dispatch = (cars, bookings) => {
   return cars.pipe(
     toArray(),
     tap((cars) => {
+      if (!cars.length) {
+        warn('Fleet has no cars, dispatch is not possible.')
+      }
+    }),
+    filter((cars) => cars.length > 0),
+    tap((cars) => {
       const fleet = cars[0].fleet.name
       info(`Dispatch ${cars.length} vehicles in ${fleet}`)
     }),
