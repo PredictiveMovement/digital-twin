@@ -1,6 +1,6 @@
 {
-  "id": "Tzhg-EYPU",
-  "startDate": "2023-01-10T08:28:33.365Z",
+  "id": "JZ6Z-HrEk",
+  "startDate": "2023-01-10T08:34:11.183Z",
   "fixedRoute": 21,
   "emitters": [
     "cars",
@@ -16,6 +16,779 @@
     "pitch": 40
   },
   "fleets": {
+    "Ale kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Alingsås kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Alvesta kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Aneby kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Arboga kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Arjeplogs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        },
+        {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 4,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 0.6,
+          "hub": [21.034263, 64.746704]
+        },
+        {
+          "name": "Röd",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 2
+          },
+          "marketshare": 0.18,
+          "hub": [21.034263, 64.746704]
+        },
+        {
+          "name": "Gul",
+          "vehicles": {
+            "medeltungLastbil": 1
+          },
+          "marketshare": 0.06,
+          "hub": [21.034263, 64.746704]
+        },
+        {
+          "name": "Brun",
+          "vehicles": {
+            "medeltungLastbil": 1
+          },
+          "marketshare": 0.06,
+          "hub": [21.034263, 64.746704]
+        }
+      ]
+    },
+    "Arvidsjaurs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        },
+        {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 5,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 60,
+          "hub": [21.034263, 64.746704]
+        },
+        {
+          "name": "Röd",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 3
+          },
+          "marketshare": 18,
+          "hub": [21.034263, 64.746704]
+        },
+        {
+          "name": "Gul",
+          "vehicles": {
+            "lättLastbil": 1
+          },
+          "marketshare": 6,
+          "hub": [21.034263, 64.746704]
+        },
+        {
+          "name": "Brun",
+          "vehicles": {
+            "lättLastbil": 1
+          },
+          "marketshare": 6,
+          "hub": [21.034263, 64.746704]
+        }
+      ]
+    },
+    "Arvika kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Askersunds kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Avesta kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Bengtsfors kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Bergs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Bjurholms kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Bjuvs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Bodens kommun": {
+      "fleets": [
+        {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 2,
+            "lättLastbil": 2,
+            "bil": 0
+          },
+          "marketshare": 0.6,
+          "hub": [22.045246, 65.614869]
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Bollebygds kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Bollnäs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Borgholms kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Borlänge kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Borås stad": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Botkyrka kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Boxholms kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Bromölla kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Bräcke kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Burlövs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Båstads kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Dals-Eds kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Danderyds kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Degerfors kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Dorotea kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Eda kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Ekerö kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Eksjö kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Emmaboda kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Enköpings kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Eskilstuna kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Eslövs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Essunga kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Fagersta kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Falkenbergs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Falköpings kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Falu kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Filipstads kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Finspångs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Flens kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Forshaga kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Färgelanda kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Gagnefs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Gislaveds kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Gnesta kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Gnosjö kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Region Gotland": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Grums kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Grästorps kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Gullspångs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Gällivare kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Gävle kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Göteborgs stad": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Götene kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Habo kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Hagfors kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Hallsbergs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Hallstahammars kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Halmstads kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Hammarö kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Haninge kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Haparanda stad": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Heby kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Hedemora kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
     "Helsingborgs stad": {
       "fleets": [
         {
@@ -26,11 +799,8 @@
             "lättLastbil": 1,
             "bil": 0
           },
-          "marketshare": 0.01,
-          "hub": [
-            13.101441,
-            55.601021
-          ]
+          "marketshare": 0.6,
+          "hub": [13.101441, 55.601021]
         },
         {
           "name": "Röd",
@@ -38,35 +808,2359 @@
             "tungLastbil": 0,
             "medeltungLastbil": 2
           },
-          "marketshare": 0.01,
-          "hub": [
-            13.046085,
-            55.554708
-          ]
+          "marketshare": 0.18,
+          "hub": [13.046085, 55.554708]
         },
         {
           "name": "Gul",
           "vehicles": {
-            "lättLastbil": 10
+            "lättLastbil": 2
           },
-          "marketshare": 0.96,
-          "hub": [
-            13.104629,
-            55.60737
-          ]
+          "marketshare": 0.06,
+          "hub": [13.104629, 55.607370]
         },
         {
           "name": "Lila",
           "vehicles": {
             "lättLastbil": 2
           },
-          "marketshare": 0.01,
-          "hub": [
-            13.367398,
-            55.536388
-          ]
+          "marketshare": 0.06,
+          "hub": [13.367398, 55.536388]
+        }
+      ]
+    },
+    "Herrljunga kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Hjo kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Hofors kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Huddinge kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Hudiksvalls kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Hultsfreds kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Hylte kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Håbo kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Hällefors kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Härjedalens kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Härnösands kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Härryda kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Hässleholms kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Höganäs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Högsby kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Hörby kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Höörs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Jokkmokks kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Järfälla kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Jönköpings kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Kalix kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Kalmar kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Karlsborgs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Karlshamns kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Karlskoga kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Karlskrona kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Karlstads kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Katrineholms kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Kils kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Kinda kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Kiruna kommun": {
+      "fleets": []
+    },
+    "Klippans kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Knivsta kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Kramfors kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Kristianstads kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Kristinehamns kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Krokoms kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Kumla kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Kungsbacka kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Kungsörs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Kungälvs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Kävlinge kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Köpings kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Laholms kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Landskrona stad": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Laxå kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Lekebergs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Leksands kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Lerums kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Lessebo kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Lidingö stad": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Lidköpings kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Lilla Edets kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Lindesbergs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Linköpings kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Ljungby kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Ljusdals kommun": {
+      "fleets": [
+        {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 3,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 60,
+          "hub": [17.08409, 61.741754]
+        },
+        {
+          "name": "Röd",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 1,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 12,
+          "hub": [17.08409, 61.741754]
+        },
+        {
+          "name": "Gul",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 1,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 6,
+          "hub": [17.08409, 61.741754]
+        },
+        {
+          "name": "Brun",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 0,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 6,
+          "hub": [17.085194, 61.741017]
+        },
+        {
+          "name": "SNX",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 2,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 6,
+          "hub": [16.058036, 61.820841]
+        }
+      ]
+    },
+    "Ljusnarsbergs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Lomma kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Ludvika kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Luleå kommun": {
+      "fleets": [
+        {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 4,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 0.6,
+          "hub": [13.016601, 55.622044]
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Lunds kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Lycksele kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Lysekils kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Malmö stad": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Malung-Sälens kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Malå kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Mariestads kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Markaryds kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Marks kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Melleruds kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Mjölby kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Mora kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Motala kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Mullsjö kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Munkedals kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Munkfors kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Mölndals stad": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Mönsterås kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Mörbylånga kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Nacka kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Nora kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Norbergs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Nordanstigs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Nordmalings kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Norrköpings kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Norrtälje kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Norsjö kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Nybro kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Nykvarns kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Nyköpings kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Nynäshamns kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Nässjö kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Ockelbo kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Olofströms kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Orsa kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Orust kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Osby kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Oskarshamns kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Ovanåkers kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Oxelösunds kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Pajala kommun": {
+      "fleets": [
+        {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 1,
+            "lättLastbil": 3,
+            "bil": 0
+          },
+          "marketshare": 60,
+          "hub": [22.050702, 65.610326]
+        },
+        {
+          "name": "Röd",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 0,
+            "lättLastbil": 2,
+            "bil": 0
+          },
+          "marketshare": 18,
+          "hub": [22.050702, 65.610326]
+        },
+        {
+          "name": "Gul",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 0,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 6,
+          "hub": [22.050702, 65.610326]
+        },
+        {
+          "name": "Brun",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 0,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 6,
+          "hub": [22.050702, 65.610326]
+        }
+      ]
+    },
+    "Partille kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Perstorps kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Piteå kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Ragunda kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Robertsfors kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Ronneby kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Rättviks kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Sala kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Salems kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Sandvikens kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Sigtuna kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Simrishamns kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Sjöbo kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Skara kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Skellefteå kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Skinnskattebergs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Skurups kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Skövde kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Smedjebackens kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Sollefteå kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Sollentuna kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Solna stad": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Sorsele kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Sotenäs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Staffanstorps kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Stenungsunds kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Stockholms stad": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Storfors kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Storumans kommun": {
+      "fleets": [
+        {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 1,
+            "medeltungLastbil": 2,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 60,
+          "hub": [14.640025, 63.222212]
+        },
+        {
+          "name": "Röd",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 1,
+            "lättLastbil": 2,
+            "bil": 0
+          },
+          "marketshare": 18,
+          "hub": [20.136678, 63.85036]
+        },
+        {
+          "name": "Gul",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 1,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 6,
+          "hub": [20.136678, 63.85036]
+        },
+        {
+          "name": "Brun",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 1,
+            "lättLastbil": 0,
+            "bil": 0
+          },
+          "marketshare": 6,
+          "hub": [20.136678, 63.85036]
+        }
+      ]
+    },
+    "Strängnäs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Strömstads kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Strömsunds kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Sundbybergs stad": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Sundsvalls kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Sunne kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Surahammars kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Svalövs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Svedala kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Svenljunga kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Säffle kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Säters kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Sävsjö kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Söderhamns kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Söderköpings kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Södertälje kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Sölvesborgs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Tanums kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Tibro kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Tidaholms kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Tierps kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Timrå kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Tingsryds kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Tjörns kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Tomelilla kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Torsby kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Torsås kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Tranemo kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Tranås kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Trelleborgs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Trollhättans stad": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Trosa kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Tyresö kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Täby kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Töreboda kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Uddevalla kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Ulricehamns kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Umeå kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Upplands Väsby kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Upplands-Bro kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Uppsala kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Uppvidinge kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Vadstena kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Vaggeryds kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Valdemarsviks kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Vallentuna kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Vansbro kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Vara kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Varbergs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Vaxholms stad": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Vellinge kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Vetlanda kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Vilhelmina kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Vimmerby kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Vindelns kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Vingåkers kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Vårgårda kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Vänersborgs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Vännäs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Värmdö kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Värnamo kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Västerviks kommun": {
+      "fleets": [
+        {
+          "name": "Drönarleverans AB",
+          "vehicles": {
+            "drönare": 200
+          },
+          "percentageHomeDelivery": 100,
+          "marketshare": 20,
+          "hub": [16.528936, 57.776915]
+        }
+      ]
+    },
+    "Västerås stad": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Växjö kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Ydre kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Ystads kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Åmåls kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Ånge kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Åre kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Årjängs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Åsele kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Åstorps kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Åtvidabergs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Älmhults kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Älvdalens kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Älvkarleby kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Älvsbyns kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Ängelholms kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Öckerö kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Ödeshögs kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Örebro kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Örkelljunga kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Örnsköldsviks kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Östersunds kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Österåkers kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Östhammars kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Östra Göinge kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Överkalix kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Övertorneå kommun": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
         }
       ]
     }
   }
+  
 }
