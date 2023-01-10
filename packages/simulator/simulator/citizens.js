@@ -1,50 +1,49 @@
-const {
-  take,
-  map,
-  mergeMap,
-  toArray,
-  filter,
-  tap,
-} = require('rxjs/operators')
-const { from } = require('rxjs')
-const path = require('path')
-const fs = require('fs')
-
+const { take, map, mergeAll } = require('rxjs/operators')
+const fetch = require('node-fetch')
+const { addMeters } = require('../lib/distance')
+const { randomNames } = require('../lib/personNames')
 const Citizen = require('../lib/models/citizen')
 const { info } = require('../lib/log')
+const { search } = require('../lib/pelias')
 
-const readCitizensFile = () => {
-  const dataDir = path.join(__dirname, '..', 'data')
-  const citizensFileName = 'citizens.json'
-  const file = path.join(dataDir, citizensFileName)
-  return from(JSON.parse(fs.readFileSync(file)))
+const getAddressesInBoundingBox = (topLeft, bottomRight, size = 10) =>
+  fetch(
+    `https://streams.predictivemovement.se/addresses/box?tl=${topLeft.lon},${topLeft.lat}&br=${bottomRight.lon},${bottomRight.lat}&size=${size}`
+  ).then((res) => res.json())
+
+const getAddressesInSquare = (position, area, population) => {
+  const topLeft = addMeters(position, { x: area / 2, y: area / 2 })
+  const bottomRight = addMeters(position, { x: -area / 2, y: -area / 2 })
+  return getAddressesInBoundingBox(topLeft, bottomRight, population)
 }
 
+const getCitizensInSquare = async (
+  { position, area, population, ages },
+  kommun
+) => {
+  const nrOfCitizens = Math.floor(population * 0.05) // sample x% of the population
+  const homeAdresses = await getAddressesInSquare(position, area, nrOfCitizens)
+  return randomNames.pipe(
+    map((name, i) => {
+      const home = homeAdresses[i]
+      const workplace = kommun.workplaces[i % kommun.workplaces.length]
 
-const getCitizens = (kommun, numberOfCitizens = 250) => {
-  const kommunName = kommun.name
-  if (numberOfCitizens > 250) { numberOfCitizens = 250 }
-  info(`Getting ${numberOfCitizens} citizens for ${kommunName}.`)
-  return readCitizensFile().pipe(
-    filter((citizenData) => citizenData.kommun === kommunName),
-    map((citizenData) => instantiateCitizen(citizenData, kommun)),
-    take(numberOfCitizens)
+      return (
+        home &&
+        new Citizen({
+          ...name,
+          home,
+          // age: ages[Math.floor(Math.random() * ages.length)],
+          workplace,
+          kommun: kommun.name,
+          position: home.position,
+        })
+      )
+    }),
+    take(nrOfCitizens)
   )
 }
 
-const instantiateCitizen = (citizenData, kommun) => {
-  const { name, home, workplace, id } = citizenData
-  return new Citizen({
-    id,
-    home,
-    workplace,
-    kommun,
-    position: { lat: home.position.lat, lon: home.position.lon },
-    startPosition: { lat: home.position.lat, lon: home.position.lon },
-    name: name,
-  })
-}
-
 module.exports = {
-  getCitizens,
+  getCitizensInSquare,
 }
