@@ -5,6 +5,7 @@ const {
   catchError,
   toArray,
   pairwise,
+  tap,
 } = require('rxjs/operators')
 
 var evilDns = require('evil-dns')
@@ -64,7 +65,10 @@ const engine = {
       ),
       parameters,
       passengers: regions.pipe(
+        filter((region) => !region.citizens),
+
         mergeMap((region) => region.citizens),
+        catchError((err) => error('Experiment -> Passengers', err)),
         shareReplay()
       ),
       taxis: regions.pipe(mergeMap((region) => region.taxis)),

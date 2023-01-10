@@ -72,12 +72,18 @@ function read({ fleets }) {
     filter(({ namn }) =>
       includedMunicipalities.some((name) => namn.startsWith(name))
     ),
-    map((kommun) => ({
-      ...kommun,
-      fleets: fleets[kommun.namn]?.fleets?.length
-        ? fleets[kommun.namn].fleets
-        : [],
-    })),
+    map((kommun) => {
+      let kommunFleets = []
+
+      if (fleets && fleets[kommun.namn]?.fleets?.length) {
+        kommunFleets = fleets[kommun.namn].fleets
+      }
+
+      return {
+        ...kommun,
+        fleets: kommunFleets,
+      }
+    }),
     mergeMap(
       async ({
         geometry,
