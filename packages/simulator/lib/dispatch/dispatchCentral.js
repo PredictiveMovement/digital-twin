@@ -15,7 +15,7 @@ const {
   toArray,
   bufferCount,
 } = require('rxjs/operators')
-const { info, error } = require('../log')
+const { info, error, warn } = require('../log')
 const { clusterPositions } = require('../kmeans')
 const { haversine } = require('../distance')
 const { truckToVehicle, bookingToShipment, plan } = require('../vroom')
@@ -60,7 +60,7 @@ const dispatch = (cars, bookings) => {
     filter((cars) => cars.length > 0),
     tap((cars) => {
       const fleet = cars[0].fleet.name
-      info(`Dispatch ${cars.length} vehicles in ${fleet}`)
+      info(`🚚 Dispatch ${cars.length} vehicles in ${fleet}`)
     }),
     filter((cars) => cars.length > 0),
     mergeMap((cars) =>
