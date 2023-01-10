@@ -6,16 +6,15 @@ const {
   mergeMap,
   concatMap,
   toArray,
-  zipWith
+  zipWith,
 } = require('rxjs/operators')
 const perlin = require('perlin-noise')
-
 
 const pelias = require('./lib/pelias')
 const { addMeters } = require('./lib/distance')
 const { randomNames } = require('./lib/personNames')
 const { randomize } = require('./simulator/address')
-const kommuner = require('./streams/kommuner')
+const kommuner = require('./streams/kommuner').read()
 const { safeId } = require('./lib/id')
 const log = require('./lib/log')
 
@@ -25,9 +24,7 @@ const LOG_LEVEL = process.env.LOG_LEVEL || 'info'
 const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
 
 const execute = () => {
-  console.log(
-    `Generating and saving ${NUMBER_OF_CITIZENS} citizens`
-  )
+  console.log(`Generating and saving ${NUMBER_OF_CITIZENS} citizens`)
   generatePassengerDetails(kommuner, NUMBER_OF_CITIZENS).subscribe(
     citizenSerializer,
     console.error
@@ -137,9 +134,7 @@ const saveFile = (citizens) => {
     const jsonOutput = JSON.stringify(citizens, null, 2)
     fs.writeFileSync(filePath, jsonOutput)
     console.log(`\n\nSaved ${citizens.length} citizens to ${filePath}`)
-  } catch (error) {
-
-  }
+  } catch (error) {}
 }
 const citizenSerializer = (citizens) => {
   serializedPassengers = citizens.map((citizen) => {
@@ -157,4 +152,3 @@ const citizenSerializer = (citizens) => {
 }
 
 execute()
-

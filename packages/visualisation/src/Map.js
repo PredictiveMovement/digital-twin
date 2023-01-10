@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { StaticMap } from 'react-map-gl'
-import maplibregl from 'maplibre-gl'
 import DeckGL, {
   PolygonLayer,
   ScatterplotLayer,
@@ -39,14 +38,17 @@ const Map = ({
   activeCar,
   setActiveCar,
   time,
+  mapInitState,
 }) => {
-  const [mapState, setMapState] = useState({
+  const mapInitStateDefaults = {
     latitude: 65.0964472642777,
     longitude: 17.112050188704504,
     bearing: 0,
     zoom: 5, // min ~0.6 max 24.0
     pitch: 40,
-  })
+  }
+
+  const [mapState, setMapState] = useState(mapInitState || mapInitStateDefaults)
 
   const rotateCamera = useCallback(() => {
     setMapState((mapState) => ({
@@ -173,7 +175,9 @@ const Map = ({
     const opacity = Math.round((4 / 5) * 255)
     switch (fleet.toLowerCase()) {
       case 'brun':
-        return [234, 181, 67, opacity]
+        return [205, 127, 50, opacity]
+      case 'lila':
+        return [99, 20, 145, opacity]
       case 'bring':
         return [189, 197, 129, opacity]
       case 'gul':
@@ -377,7 +381,7 @@ const Map = ({
 
   const bookingLayer = new ScatterplotLayer({
     id: 'booking-layer',
-    data: bookings.filter((b) => !b.assigned),
+    data: bookings, //.filter((b) => !b.assigned), // TODO: revert change
     opacity: 1,
     stroked: false,
     filled: true,
@@ -388,7 +392,9 @@ const Map = ({
     },
     getRadius: () => 4,
     // #fab
-    getFillColor: ({ status }) =>
+    getFillColor: (
+      { status } // TODO: Different colors for IKEA & HM
+    ) =>
       status === 'Delivered'
         ? [170, 255, 187]
         : status === 'Picked up'
@@ -400,7 +406,7 @@ const Map = ({
       setHoverInfo({
         ...object,
         type: 'booking',
-        title: object.address,
+        title: object.sender,
         subTitle: object.isCommercial
           ? '(företag)'
           : ' Status: ' + getStatusLabel(object.status),
@@ -451,8 +457,14 @@ const Map = ({
     getIcon: (d) => 'marker',
     getPosition: (c) => c.position,
     sizeScale: 5,
-    getColor: () => [16, 197, 123, 200],
+    getColor: (d) => [
+      16,
+      (d.count / 10) * 255,
+      255 * (d.heavyTrafficCount / 255),
+      200,
+    ],
     getSize: (d) => 5,
+    sizeMaxPixels: 15,
     pickable: true,
     onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
@@ -489,23 +501,23 @@ const Map = ({
             return {
               inbound: getColorBasedOnFleet(car),
               outbound: getColorBasedOnFleet(car),
-              from: car.position,
+              from: booking.pickup,
               to: booking.destination,
             }
           case 'Queued':
             return {
               inbound: getColorBasedOnFleet(car),
               outbound: [90, 40, 200, 100],
-              from: car.position,
-              to: booking.pickup,
+              from: booking.pickup,
+              to: booking.destination,
             }
           case 'Delivered':
             return null
 
           default:
             return {
-              inbound: [90, 200, 200, 200],
-              outbound: [90, 40, 200, 100],
+              inbound: [255, 255, 255, 200],
+              outbound: [255, 255, 255, 100],
               from: booking.pickup,
               to: booking.destination,
             }

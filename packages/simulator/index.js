@@ -2,60 +2,64 @@ const { filter, share, merge, shareReplay } = require('rxjs')
 const {
   mergeMap,
   map,
-  tap,
-  scan,
   catchError,
-  distinctUntilChanged,
   toArray,
   pairwise,
 } = require('rxjs/operators')
 
+var evilDns = require('evil-dns')
+evilDns.add('pelias.predictivemovement.se', '185.189.30.241')
+evilDns.add('osrm.predictivemovement.se', '185.189.30.129')
+evilDns.add('vroom.predictivemovement.se', '185.189.30.129')
+
 const { virtualTime } = require('./lib/virtualTime')
 
 const kommuner = require('./streams/kommuner')
-const regions = require('./streams/regions')(kommuner)
+
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
 const statistics = require('./lib/statistics')
-const { info, error, debug } = require('./lib/log')
+const { info, error } = require('./lib/log')
 const { haversine, getNrOfPointsBetween } = require('./lib/distance')
 
-const static = {
-  busStops: regions.pipe(mergeMap((region) => region.stops)),
-  lineShapes: regions.pipe(
-    mergeMap((region) => region.lineShapes),
-    shareReplay()
-  ),
-  postombud: kommuner.pipe(mergeMap((kommun) => kommun.postombud)),
-  kommuner: kommuner.pipe(shareReplay()),
-}
+const { mapInitState } = require('./config')
 
 const engine = {
   subscriptions: [],
   createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
     const savedParams = readParameters()
 
-    info('Starting experiment with params:', savedParams)
+    const kommunerStream = kommuner.read()
+    const regions = require('./streams/regions')(kommunerStream)
+
+    info(`Starting experiment ${id} with params:`, savedParams)
 
     const parameters = {
       id,
       startDate: new Date(),
       fixedRoute: savedParams.fixedRoute || 100,
       emitters: defaultEmitters,
+      mapInitState,
     }
     statistics.collectExperimentMetadata(parameters)
 
     const experiment = {
-      ...static,
+      busStops: regions.pipe(mergeMap((region) => region.stops)),
+      lineShapes: regions.pipe(
+        mergeMap((region) => region.lineShapes),
+        shareReplay()
+      ),
+      postombud: kommunerStream.pipe(mergeMap((kommun) => kommun.postombud)),
+      kommuner: kommunerStream.pipe(shareReplay()),
       subscriptions: [],
       virtualTime,
-      cars: kommuner.pipe(mergeMap((kommun) => kommun.cars)),
+      cars: kommunerStream.pipe(mergeMap((kommun) => kommun.cars)),
       dispatchedBookings: merge(
         regions.pipe(mergeMap((r) => r.dispatchedBookings)),
-        kommuner.pipe(mergeMap((k) => k.dispatchedBookings))
+        kommunerStream.pipe(mergeMap((k) => k.dispatchedBookings))
       ),
       buses: regions.pipe(mergeMap((region) => region.buses)),
-      measureStations: kommuner.pipe(
+      measureStations: kommunerStream.pipe(
         mergeMap((kommun) => kommun.measureStations)
       ),
       parameters,
@@ -112,6 +116,7 @@ const engine = {
         movedEvents.pipe(
           mergeMap(({ position: carPosition, pointsPassedSinceLastUpdate }) =>
             experiment.measureStations.pipe(
+              filter(({ position }) => carPosition.distanceTo(position) < 1000),
               map(({ position: mPosition, id: mId }) => ({
                 carPosition: carPosition.toObject(),
                 pointsPassedSinceLastUpdate,

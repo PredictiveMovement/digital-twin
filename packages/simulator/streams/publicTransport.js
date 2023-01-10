@@ -28,7 +28,7 @@ const {
 } = require('./gtfs.js')
 
 // stop_times.trip_id -> trips.service_id -> calendar_dates.service_id
-const todaysDate = moment().format('YYYYMMDD')
+const todaysDate = moment().format('20221130')
 const todaysServiceIds = serviceDatesMap[todaysDate].map(
   ({ serviceId }) => serviceId
 )
@@ -61,10 +61,8 @@ const enhancedBusStops = busStops.pipe(
   shareReplay()
 )
 
-const stopTimeToDate = (stopTime) => (
+const stopTimeToDate = (stopTime) =>
   new Date(`${new Date().toISOString().slice(0, 11)}${stopTime}`)
-)
-
 
 const lineShapes = enhancedBusStops.pipe(
   map(
@@ -90,29 +88,35 @@ const lineShapes = enhancedBusStops.pipe(
     trip.pipe(reduce((acc, cur) => [...acc, cur], [`${trip.key}`]))
   ),
   map((arr) => {
-    const values = arr.slice(1).sort((a,b) => (
-      stopTimeToDate(a.arrivalTime) - stopTimeToDate(b.arrivalTime)
-    ))
+    const values = arr
+      .slice(1)
+      .sort(
+        (a, b) => stopTimeToDate(a.arrivalTime) - stopTimeToDate(b.arrivalTime)
+      )
     const count = values.length
     return {
       lineNumber: arr[1].lineNumber,
       tripId: arr[0],
-      stops: values.map(({stop}) => (stop.position)),
+      stops: values.map(({ stop }) => stop.position),
       count,
     }
   }),
   groupBy((trip) => trip.lineNumber),
-  mergeMap((lineTrips) =>(
+  mergeMap((lineTrips) =>
     lineTrips.pipe(
       reduce((acc, curr) => {
-        if(acc !== undefined && curr !== undefined && (acc.count === undefined || acc.count < curr.count)) {
+        if (
+          acc !== undefined &&
+          curr !== undefined &&
+          (acc.count === undefined || acc.count < curr.count)
+        ) {
           acc = curr
         }
         return acc
       }, {})
     )
-  )),
-  map(({ lineNumber, stops }) => ({ lineNumber, stops })),
+  ),
+  map(({ lineNumber, stops }) => ({ lineNumber, stops }))
 )
 
 module.exports = {

@@ -20,8 +20,10 @@ function execute() {
         'Traffic Web': trafficWeb,
         Mätår: year,
         Månad: month,
+        UT,
+        IN,
         Rikt: directionInSwedish,
-        'VaDT Tung': heavyTraficCount,
+        'VaDT Tung': heavyTrafficCount,
       }) => ({
         kommun: 'Helsingborg',
         position: sweCoords.toLatLng(
@@ -30,7 +32,7 @@ function execute() {
         ),
         year,
         month,
-        heavyTraficCount,
+        heavyTrafficCount: Math.round(heavyTrafficCount / (IN - UT)),
         id: hbgNr,
         direction: directionInSwedish,
       })

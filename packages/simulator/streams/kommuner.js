@@ -1,7 +1,7 @@
 /**
  * TODO: Describe the stream that this file exports and what its data means
  */
-const { from, shareReplay, take, ReplaySubject } = require('rxjs')
+const { from, shareReplay, ReplaySubject, merge, of } = require('rxjs')
 const { map, tap, filter, reduce, mergeMap } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
@@ -15,7 +15,11 @@ const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const Pelias = require('../lib/pelias')
 const { getCitizens } = require('../simulator/citizens')
 const { includedMunicipalities, defaultEmitters } = require('../config')
-const { generateBookingsInKommun } = require('../simulator/bookings')
+
+const bookings = {
+  hm: require('../streams/orders/hm.js'),
+  ikea: require('../streams/orders/ikea.js'),
+}
 
 function getPopulationSquares({ geometry: { coordinates } }) {
   return population.pipe(
@@ -47,6 +51,23 @@ function getMeasureStations(kommunName) {
   )
 }
 
+async function centerPoint(namn, retries = 0) {
+  try {
+    return await Pelias.search(namn).then((res) => res.position)
+  } catch (err) {
+    if (retries < 3) {
+      console.log(
+        "Couldn't find center point for",
+        namn,
+        `retrying ${retries + 1}/3...`
+      )
+      return centerPoint(namn, retries + 1)
+    }
+    console.error('Could not find center point for', namn)
+    return { lat: 0, lon: 0 }
+  }
+}
+
 function read() {
   return from(data).pipe(
     filter(({ namn }) =>
@@ -70,7 +91,7 @@ function read() {
         fleets,
       }) => {
         const squares = getPopulationSquares({ geometry })
-        return new Kommun({
+        const kommun = new Kommun({
           geometry,
           name: namn,
           id: kod,
@@ -78,11 +99,9 @@ function read() {
           zip: postnummer,
           telephone: telefon,
           fleets: fleets || [],
-          center: await Pelias.search(namn).then((res) => res.position),
+          center: await centerPoint(namn),
           pickupPositions: pickupPositions || [],
           squares,
-          bookings: new ReplaySubject(), // will be set later
-          citizens: new ReplaySubject(), // will be set later
           postombud: getPostombud(namn),
           measureStations: getMeasureStations(namn),
           population: await squares
@@ -90,28 +109,16 @@ function read() {
             .toPromise(),
           packageVolumes: packageVolumes.find((e) => namn.startsWith(e.name)),
           commercialAreas: getCommercialAreas(kod),
+          unhandledBookings: namn.startsWith('Helsingborg')
+            ? merge(bookings.hm, bookings.ikea)
+            : of(),
         })
+        kommun.citizens = getCitizens(kommun)
+        return kommun
       }
     ),
-    tap((kommun) => {
-      if (defaultEmitters.includes('passengers')) {
-        getCitizens(kommun).subscribe((citizen) =>
-          kommun.citizens.next(citizen)
-        )
-      }
-      if (defaultEmitters.includes('bookings')) {
-        kommun.fleets
-          .pipe(take(1)) // We use take(1) to make sure there's atleast one fleet (with a depo) in the kommun. Otherwise bookings shouldn't be generated
-          .subscribe(() =>
-            generateBookingsInKommun(kommun).subscribe((booking) =>
-              kommun.handleBooking(booking)
-            )
-          )
-      }
-    }),
-
     shareReplay()
   )
 }
 
-const kommuner = (module.exports = read())
+module.exports = { read }

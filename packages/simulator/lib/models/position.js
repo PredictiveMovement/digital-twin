@@ -13,9 +13,20 @@ class Position {
     this.lon = lon
     this.lat = lat
   }
+
+  valid() {
+    if(!this.lon || !this.lat) return false
+    if(this.lon < -180 || this.lon > 180) return false
+    if(this.lat < -90 || this.lat > 90) return false
+    if(this.lon === NaN || this.lat === NaN) return false
+
+    return true
+  }
+
   distanceTo(position) {
     return haversine(this, position)
   }
+
   toObject() {
     return { lon: this.lon, lat: this.lat }
   }

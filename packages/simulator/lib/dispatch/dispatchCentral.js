@@ -1,40 +1,98 @@
-const { mergeAll, timer, of } = require('rxjs')
+const { mergeAll, timer, of, from } = require('rxjs')
 const {
-  toArray,
   map,
   tap,
   filter,
-  takeUntil,
   delay,
   mergeMap,
   catchError,
+  scan,
+  debounceTime,
+  bufferTime,
+  switchMap,
+  concatMap,
+  retryWhen,
+  toArray,
+  bufferCount,
 } = require('rxjs/operators')
+const { info, error } = require('../log')
+const { clusterPositions } = require('../kmeans')
 const { haversine } = require('../distance')
+const { truckToVehicle, bookingToShipment, plan } = require('../vroom')
+const moment = require('moment')
+
+const takeNearest = (cars, center, count) =>
+  cars
+    .sort((a, b) => {
+      const aDistance = haversine(a.position, center)
+      const bDistance = haversine(b.position, center)
+      return aDistance - bDistance
+    })
+    .slice(0, count)
+
+const getVroomPlan = async (cars, bookings) => {
+  const vehicles = cars.map(truckToVehicle)
+  const shipments = bookings.map(bookingToShipment) // TODO: concat bookings from existing vehicles with previous assignments
+  info('Calling vroom dispatch', vehicles.length, shipments.length)
+  const result = await plan({ shipments, vehicles })
+
+  return result.routes.map((route) => {
+    return {
+      car: cars.find(({ id }) => id === route.description),
+      bookings: route.steps
+        .filter((s) => s.type === 'pickup')
+        .flatMap((step) => {
+          const booking = bookings[step.id]
+          return booking
+        }),
+    }
+  })
+}
 
 const dispatch = (cars, bookings) => {
-  return bookings.pipe(
-    mergeMap(
-      (booking) =>
-        cars.pipe(
-          map((car) => ({
-            car,
-            distance: haversine(
-              car.heading || car.position,
-              booking.pickup.position
-            ),
-          })),
-          filter(({ car }) => car.canPickupBooking(booking)), // wait until we have a car with free capacity
-          takeUntil(timer(300)), // to be able to sort we have to batch somehow. Lets start with time
-          toArray(),
-          filter((c) => c.length),
-          map(
-            (cars) => cars.sort((a, b) => a.distance - b.distance).shift()?.car
-          ),
-          filter((car) => car),
-          map((car) => ({ car, booking: car.handleBooking(booking) }))
+  return cars.pipe(
+    toArray(),
+    tap((cars) => {
+      const fleet = cars[0].fleet.name
+      info(`Dispatch ${cars.length} vehicles in ${fleet}`)
+    }),
+    filter((cars) => cars.length > 0),
+    mergeMap((cars) =>
+      bookings.pipe(
+        bufferTime(5000),
+        filter((b) => b.length > 0),
+        //mergeMap((bookings) => getVroomPlan(cars, bookings)),
+        mergeMap(async (bookings) => {
+          const clusters = await clusterPositions(bookings, cars.length)
+          return clusters.map(({ items: bookings }, i) => ({
+            car: cars[i],
+            bookings,
+          }))
+        }),
+        catchError((err) => error('cluster err', err)),
+        tap((plans) => info('plans', plans.length)),
+        mergeAll(),
+        filter(({ bookings }) => bookings.length > 0),
+        tap(({ car, bookings }) =>
+          info(
+            `Plan ${car.id} (${car.fleet.name}) received ${bookings.length} bookings`
+          )
         ),
-      1
-    )
+        mergeMap(({ car, bookings }) =>
+          from(bookings).pipe(
+            mergeMap((booking) => car.handleBooking(booking), 1)
+          )
+        ),
+        // tap((bookings) => info('dispatched', bookings)),
+        retryWhen((errors) =>
+          errors.pipe(
+            tap((err) => error('dispatch error, retrying in 1s...', err)),
+            delay(1000)
+          )
+        )
+      )
+    ),
+    catchError((err) => error('dispatchCentral -> dispatch', err))
   )
 }
 
