@@ -69,6 +69,15 @@ const dispatch = (cars, bookings) => {
         filter((b) => b.length > 0),
         //mergeMap((bookings) => getVroomPlan(cars, bookings)),
         mergeMap(async (bookings) => {
+          if (bookings.length < cars.length) {
+            return [
+              {
+                car: cars[0],
+                bookings,
+              },
+            ]
+          }
+
           const clusters = await clusterPositions(bookings, cars.length)
           return clusters.map(({ items: bookings }, i) => ({
             car: cars[i],
