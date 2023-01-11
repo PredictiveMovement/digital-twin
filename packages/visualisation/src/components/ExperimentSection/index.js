@@ -40,6 +40,8 @@ const MenuContainer = styled.div`
   padding-top: 2.5rem;
   top: 0;
   z-index: 4;
+
+  overflow-y: scroll;
 `
 
 const Button = styled.button`
