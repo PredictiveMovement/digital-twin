@@ -63,16 +63,17 @@ module.exports = {
     }
   },
   async plan({ jobs, shipments, vehicles }) {
+    const vehicle =
+      (vehicles?.length || 0) === 1
+        ? vehicles[0].description
+        : vehicles?.length || 0
+    const logInfo = `(📍 ${jobs?.length || 0}, 📦 ${
+      shipments?.length || 0
+    }, 🚚 ${vehicle})`
     const logger = setInterval(() => {
-      debug(
-        'Waiting for vroom to respond...',
-        jobs?.length,
-        'jobs,',
-        shipments?.length,
-        'shipments. Vehicles:',
-        vehicles?.length === 1 ? vehicles[0].id : vehicles?.length
-      )
+      debug('Calling Vroom', logInfo)
     }, 2000)
+
     return await fetch(vroomUrl, {
       method: 'POST',
       headers: {
@@ -95,7 +96,7 @@ module.exports = {
         return res.json()
       })
       .catch((vroomError) => {
-        error('Vroom error:', vroomError)
+        error(`Vroom error: ${vroomError}`, logInfo, vehicles)
         return Promise.reject(vroomError)
       })
   },
