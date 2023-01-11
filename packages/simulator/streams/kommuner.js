@@ -14,6 +14,7 @@ const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const Pelias = require('../lib/pelias')
 const { getCitizens } = require('../simulator/citizens')
 const { includedMunicipalities, defaultEmitters } = require('../config')
+const { info } = require('../lib/log')
 
 const bookings = {
   hm: require('../streams/orders/hm.js'),
@@ -55,7 +56,7 @@ async function centerPoint(namn, retries = 0) {
     return await Pelias.search(namn).then((res) => res.position)
   } catch (err) {
     if (retries < 3) {
-      console.log(
+      info(
         "Couldn't find center point for",
         namn,
         `retrying ${retries + 1}/3...`
