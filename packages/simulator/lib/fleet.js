@@ -96,7 +96,7 @@ class Fleet {
       this.manualDispatchedBookings.next(booking)
       return await car.handleBooking(booking)
     } else {
-      info(`Dispatching ${booking.id} to ${this.name}`)
+      info(`📦 Dispatching ${booking.id} to ${this.name}`)
       this.unhandledBookings.next(booking)
     }
     return booking

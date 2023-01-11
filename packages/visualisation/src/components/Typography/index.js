@@ -21,11 +21,13 @@ const ParagraphLarge = styled.p`
 
 const H1 = styled.h1`
   font-size: ${(props) => (props.large ? '24px' : '20px')};
+  font-weight: 700;
   margin: 0;
 `
 
 const H2 = styled.h2`
   font-size: 18px;
+  font-weight: 600;
   margin: 0;
 `
 

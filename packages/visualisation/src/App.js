@@ -33,6 +33,7 @@ const App = () => {
   const [kommunLayer, setKommunLayer] = useState(true)
   const [newParameters, setNewParameters] = useState({})
   const [currentParameters, setCurrentParameters] = useState({})
+  const [fleets, setFleets] = useState({})
 
   const { socket } = useSocket()
 
@@ -55,11 +56,11 @@ const App = () => {
     setCommercialAreasLayer,
     kommunLayer,
     setKommunLayer,
-    setBusLineLayer,
     busLineLayer,
+    setBusLineLayer,
   }
 
-  const newExperiment = (object) => {
+  const newExperiment = () => {
     socket.emit('experimentParameters', newParameters)
   }
 
@@ -244,7 +245,12 @@ const App = () => {
     setActiveCar(null)
   }
 
-  useEffect(resetSimulation, []) // Reset simulation on refresh
+  const setupFleets = () => {
+    const fleetsJson = require('./data/fleets.json')
+    setFleets(fleetsJson)
+  }
+
+  useEffect(setupFleets, [])
 
   return (
     <>
@@ -261,6 +267,7 @@ const App = () => {
         newParameters={newParameters}
         newExperiment={newExperiment}
         setNewParameters={setNewParameters}
+        fleets={fleets}
       />
 
       <PlaybackOptions
