@@ -68,7 +68,6 @@ async function centerPoint(namn, retries = 0) {
 }
 
 function read({ fleets }) {
-  console.log('Has fleets', !!fleets)
   return from(data).pipe(
     filter(({ namn }) =>
       includedMunicipalities.some((name) => namn.startsWith(name))
