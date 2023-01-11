@@ -81,7 +81,7 @@ function read() {
     groupBy((row) => row.origin),
     mergeMap((group) =>
       group.pipe(
-        bufferTime(1000),
+        toArray(),
         map((rows) => ({ key: group.key, rows }))
       )
     ),

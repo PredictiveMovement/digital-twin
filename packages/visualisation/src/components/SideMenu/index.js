@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 import pmLogo from '../../icons/svg/pmLogo.svg'
-import plus from '../../icons/svg/plus.svg'
 import experimentIcon from '../../icons/svg/experimentIcon.svg'
 import historyIcon from '../../icons/svg/historyIcon.svg'
 import menuActive from '../../icons/svg/menuActive.svg'
+import pencilIcon from '../../icons/svg/pencil.svg'
 import SavedExperimentSection from '../SavedExperimentSection'
 import ExperimentSection from '../ExperimentSection'
 import NewExperimentSection from '../NewExperimentSection'
@@ -73,6 +73,7 @@ const SideMenu = ({
   newParameters,
   newExperiment,
   setNewParameters,
+  fleets,
 }) => {
   const ref = useRef()
 
@@ -95,7 +96,7 @@ const SideMenu = ({
               )
             }
           >
-            <img src={plus} alt="New Experiment" />
+            <img src={pencilIcon} alt="Parametrar" />
             {open === 'newExperiment' && (
               <ActiveMenu>
                 <img src={menuActive} alt="Open" />
@@ -132,15 +133,19 @@ const SideMenu = ({
           </MenuItem>
         </List>
       </Menu>
+
       {open === 'experiment' && (
         <ExperimentSection
           currentParameters={currentParameters}
           activeLayers={activeLayers}
         />
       )}
+
       {open === 'savedExperiment' && <SavedExperimentSection />}
+
       {open === 'newExperiment' && (
         <NewExperimentSection
+          fleets={fleets}
           newParameters={newParameters}
           newExperiment={newExperiment}
           setNewParameters={setNewParameters}

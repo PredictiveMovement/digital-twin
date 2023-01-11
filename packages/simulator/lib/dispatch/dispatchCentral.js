@@ -15,7 +15,7 @@ const {
   toArray,
   bufferCount,
 } = require('rxjs/operators')
-const { info, error } = require('../log')
+const { info, error, warn } = require('../log')
 const { clusterPositions } = require('../kmeans')
 const { haversine } = require('../distance')
 const { truckToVehicle, bookingToShipment, plan } = require('../vroom')
@@ -53,8 +53,14 @@ const dispatch = (cars, bookings) => {
   return cars.pipe(
     toArray(),
     tap((cars) => {
+      if (!cars.length) {
+        warn('Fleet has no cars, dispatch is not possible.')
+      }
+    }),
+    filter((cars) => cars.length > 0), // TODO: Move this check to the caller.
+    tap((cars) => {
       const fleet = cars[0].fleet.name
-      info(`Dispatch ${cars.length} vehicles in ${fleet}`)
+      info(`🚚 Dispatch ${cars.length} vehicles in ${fleet}`)
     }),
     filter((cars) => cars.length > 0),
     mergeMap((cars) =>
@@ -63,6 +69,15 @@ const dispatch = (cars, bookings) => {
         filter((b) => b.length > 0),
         //mergeMap((bookings) => getVroomPlan(cars, bookings)),
         mergeMap(async (bookings) => {
+          if (bookings.length < cars.length) {
+            return [
+              {
+                car: cars[0],
+                bookings,
+              },
+            ]
+          }
+
           const clusters = await clusterPositions(bookings, cars.length)
           return clusters.map(({ items: bookings }, i) => ({
             car: cars[i],
