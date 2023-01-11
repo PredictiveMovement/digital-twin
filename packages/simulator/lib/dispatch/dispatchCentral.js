@@ -57,7 +57,7 @@ const dispatch = (cars, bookings) => {
         warn('Fleet has no cars, dispatch is not possible.')
       }
     }),
-    filter((cars) => cars.length > 0),
+    filter((cars) => cars.length > 0), // TODO: Move this check to the caller.
     tap((cars) => {
       const fleet = cars[0].fleet.name
       info(`🚚 Dispatch ${cars.length} vehicles in ${fleet}`)
