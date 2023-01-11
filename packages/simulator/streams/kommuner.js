@@ -68,20 +68,17 @@ async function centerPoint(namn, retries = 0) {
 }
 
 function read({ fleets }) {
+  console.log('Has fleets', !!fleets)
   return from(data).pipe(
     filter(({ namn }) =>
       includedMunicipalities.some((name) => namn.startsWith(name))
     ),
     map((kommun) => {
-      let kommunFleets = []
-
-      if (fleets && fleets[kommun.namn]?.fleets?.length) {
-        kommunFleets = fleets[kommun.namn].fleets
-      }
-
       return {
         ...kommun,
-        fleets: kommunFleets,
+        fleets: fleets[kommun.namn]?.fleets?.length
+          ? fleets[kommun.namn].fleets
+          : [],
       }
     }),
     mergeMap(
