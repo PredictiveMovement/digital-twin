@@ -190,8 +190,8 @@ const PassengerInfo = ({ data }) => {
             data.bookings.map((j) => {
               return (
                 <li>
-                  {j.pickup.departureTime}:{j.pickup.name} &gt;{' '}
-                  {j.destination.name}
+                  {j.pickup.departureTime && `(${j.pickup.departureTime}) `}
+                  {j.pickup.name} &gt; {j.destination.name}
                 </li>
               )
             })}
