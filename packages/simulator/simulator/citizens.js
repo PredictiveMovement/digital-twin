@@ -1,45 +1,42 @@
-const { take, map, mergeAll } = require('rxjs/operators')
-const fetch = require('node-fetch')
-const { addMeters } = require('../lib/distance')
+const { take, map, filter, mergeAll } = require('rxjs/operators')
 const { randomNames } = require('../lib/personNames')
 const Citizen = require('../lib/models/citizen')
-const { info } = require('../lib/log')
-const { search } = require('../lib/pelias')
+const { from, zip } = require('rxjs')
+const { getAddressesInArea } = require('./address')
 
-const getAddressesInBoundingBox = (topLeft, bottomRight, size = 10) =>
-  fetch(
-    `https://streams.predictivemovement.se/addresses/box?tl=${topLeft.lon},${topLeft.lat}&br=${bottomRight.lon},${bottomRight.lat}&size=${size}`
-  ).then((res) => res.json())
-
-const getAddressesInSquare = (position, area, population) => {
-  const topLeft = addMeters(position, { x: area / 2, y: area / 2 })
-  const bottomRight = addMeters(position, { x: -area / 2, y: -area / 2 })
-  return getAddressesInBoundingBox(topLeft, bottomRight, population)
-}
-
-const getCitizensInSquare = async (
+const getCitizensInSquare = (
   { position, area, population, ages },
-  kommun
+  workplaces,
+  kommunName
 ) => {
-  const nrOfCitizens = Math.floor(population * 0.05) // sample x% of the population
-  const homeAdresses = await getAddressesInSquare(position, area, nrOfCitizens)
-  return randomNames.pipe(
-    map((name, i) => {
-      const home = homeAdresses[i]
-      const workplace = kommun.workplaces[i % kommun.workplaces.length]
-
+  const nrOfCitizens = Math.floor(population * 0.01) // sample x% of the population
+  if (nrOfCitizens === 0) return from([])
+  const addresses = from(getAddressesInArea(position, area, nrOfCitizens)).pipe(
+    mergeAll()
+  )
+  return zip([
+    addresses,
+    randomNames.pipe(take(nrOfCitizens)),
+    workplaces,
+  ]).pipe(
+    map(([home, name, workplaces]) => {
       return (
         home &&
         new Citizen({
           ...name,
           home,
           // age: ages[Math.floor(Math.random() * ages.length)],
-          workplace,
-          kommun: kommun.name,
+          workplace: workplaces.sort((a, b) =>
+            a.id.includes('venue') || b.id.includes('venue')
+              ? -1
+              : Math.random() - 0.5
+          )[0],
+          kommun: kommunName,
           position: home.position,
         })
       )
     }),
+    filter((citizen) => citizen),
     take(nrOfCitizens)
   )
 }

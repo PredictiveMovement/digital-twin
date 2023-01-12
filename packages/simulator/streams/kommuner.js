@@ -1,8 +1,8 @@
 /**
  * TODO: Describe the stream that this file exports and what its data means
  */
-const { from, shareReplay, ReplaySubject, merge, of } = require('rxjs')
-const { map, tap, filter, reduce, mergeMap } = require('rxjs/operators')
+const { from, shareReplay, merge, of } = require('rxjs')
+const { map, filter, reduce, mergeMap } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
 const fleets = require('../data/fleets.json')
@@ -13,8 +13,12 @@ const measureStations = require('./measureStations')
 const inside = require('point-in-polygon')
 const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const Pelias = require('../lib/pelias')
-const { getCitizens } = require('../simulator/citizens')
-const { includedMunicipalities, defaultEmitters } = require('../config')
+const { getCitizensInSquare } = require('../simulator/citizens')
+const { includedMunicipalities } = require('../config')
+const { convertPosition } = require('../lib/distance')
+const coords = require('swe-coords')
+const Position = require('../lib/models/position')
+const { getAddressesInArea } = require('../simulator/address')
 
 const bookings = {
   hm: require('../streams/orders/hm.js'),
@@ -26,7 +30,11 @@ function getPopulationSquares({ geometry: { coordinates } }) {
     filter(({ position: { lon, lat } }) =>
       coordinates.some((coordinates) => inside([lon, lat], coordinates))
     ),
-    map(({ position, population }) => ({ position, population })), // only keep the essentials to save memory
+    map(({ position, population, area }) => ({
+      position,
+      population,
+      area: +area,
+    })), // only keep the essentials to save memory
     shareReplay()
   )
 }
@@ -68,6 +76,25 @@ async function centerPoint(namn, retries = 0) {
   }
 }
 
+function getWorkplaces(commercialAreas) {
+  return commercialAreas.pipe(
+    mergeMap(async (commercialArea) => {
+      const {
+        X_koord: x,
+        Y_koord: y,
+        AREA_HA: area,
+        ARBST_DETH: nrOfWorkplaces,
+      } = commercialArea.properties
+      const position = new Position(
+        convertPosition(coords.toLatLng(y.toString(), x.toString()))
+      )
+      const adresses = await getAddressesInArea(position, area, nrOfWorkplaces)
+      return adresses
+    }),
+    shareReplay()
+  )
+}
+
 function read() {
   return from(data).pipe(
     filter(({ namn }) =>
@@ -82,7 +109,7 @@ function read() {
     mergeMap(
       async ({
         geometry,
-        namn,
+        namn: name,
         epost,
         postnummer,
         telefon,
@@ -91,29 +118,35 @@ function read() {
         fleets,
       }) => {
         const squares = getPopulationSquares({ geometry })
+        const commercialAreas = getCommercialAreas(kod)
+        const workplaces = getWorkplaces(commercialAreas)
+        const citizens = squares.pipe(
+          mergeMap((square) => getCitizensInSquare(square, workplaces, name), 1)
+        )
+
         const kommun = new Kommun({
           geometry,
-          name: namn,
+          name,
           id: kod,
           email: epost,
           zip: postnummer,
           telephone: telefon,
           fleets: fleets || [],
-          center: await centerPoint(namn),
+          center: await centerPoint(name),
           pickupPositions: pickupPositions || [],
           squares,
-          postombud: getPostombud(namn),
-          measureStations: getMeasureStations(namn),
+          postombud: getPostombud(name),
+          measureStations: getMeasureStations(name),
           population: await squares
             .pipe(reduce((a, b) => a + b.population, 0))
             .toPromise(),
-          packageVolumes: packageVolumes.find((e) => namn.startsWith(e.name)),
-          commercialAreas: getCommercialAreas(kod),
-          unhandledBookings: namn.startsWith('Helsingborg')
+          packageVolumes: packageVolumes.find((e) => name.startsWith(e.name)),
+          commercialAreas: commercialAreas,
+          unhandledBookings: name.startsWith('Helsingborg')
             ? merge(bookings.hm, bookings.ikea)
             : of(),
+          citizens,
         })
-        kommun.citizens = getCitizens(kommun)
         return kommun
       }
     ),

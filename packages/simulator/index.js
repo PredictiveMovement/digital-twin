@@ -5,6 +5,7 @@ const {
   catchError,
   toArray,
   pairwise,
+  tap,
 } = require('rxjs/operators')
 
 var evilDns = require('evil-dns')
@@ -71,6 +72,7 @@ const engine = {
     }
     experiment.passengers
       .pipe(
+        mergeMap((passenger) => passenger.bookings),
         catchError((err) => error('passenger statistics err', err)),
         shareReplay()
       )
