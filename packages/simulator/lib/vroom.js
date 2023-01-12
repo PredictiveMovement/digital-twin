@@ -94,7 +94,13 @@ module.exports = {
       body: JSON.stringify({
         jobs,
         shipments,
-        vehicles: vehicles.filter((v) => v.capacity[0] > 0),
+        vehicles: vehicles.filter((v) => {
+          if (!v.capacity) {
+            return true
+          }
+
+          return v.capacity[0] > 0
+        }),
         options: {
           plan: true,
         },
