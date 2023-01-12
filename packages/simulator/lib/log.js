@@ -21,11 +21,12 @@ module.exports = {
     if (!logLevelIsAtLeastDebug) {
       return
     }
-    console.log(
-      `${chalk.whiteBright.bold('DEBUG')} ${chalk.gray(message)}`,
-      data,
-      ...rest
-    )
+
+    console.log(`${chalk.whiteBright.bold('DEBUG')} ${chalk.gray(message)}`)
+
+    if (data) {
+      console.error(JSON.stringify(data, null, 2), ...rest)
+    }
   },
   info: (message, data = '', ...rest) => {
     if (!logLevelIsAtLeastInfo) {

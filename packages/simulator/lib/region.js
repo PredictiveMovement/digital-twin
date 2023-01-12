@@ -180,7 +180,7 @@ class Region {
                 ({ passengerCapacity: c, passengers: p }) => c > p.length
               )
               return taxiDispatch(nearestTaxis, bookings).catch((err) => {
-                error('taxiDispatch', err)
+                error('Region -> Dispatched Bookings -> Taxi', err)
                 bookings.forEach((booking) => this.manualBookings.next(booking))
                 return of([])
               })

@@ -114,7 +114,13 @@ module.exports = {
         return res.json()
       })
       .catch((vroomError) => {
-        error(`Vroom error: ${vroomError}`, logInfo, vehicles)
+        error(
+          `Vroom error: ${vroomError} (enable debug logging for details)`,
+          logInfo
+        )
+        debug('Jobs', jobs)
+        debug('Shipments', shipments)
+        debug('Vehicles', vehicles)
         return Promise.reject(vroomError)
       })
   },
