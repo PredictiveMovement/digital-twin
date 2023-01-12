@@ -30,7 +30,7 @@ const engine = {
   createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
     const savedParams = readParameters()
 
-    const kommunerStream = kommuner.read()
+    const kommunerStream = kommuner.read(savedParams)
     const regions = require('./streams/regions')(kommunerStream)
 
     info(`Starting experiment ${id} with params:`, savedParams)
@@ -65,7 +65,10 @@ const engine = {
       ),
       parameters,
       passengers: regions.pipe(
+        filter((region) => !region.citizens),
+
         mergeMap((region) => region.citizens),
+        catchError((err) => error('Experiment -> Passengers', err)),
         shareReplay()
       ),
       taxis: regions.pipe(mergeMap((region) => region.taxis)),

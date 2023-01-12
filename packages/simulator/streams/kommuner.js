@@ -5,7 +5,6 @@ const { from, shareReplay, merge, of } = require('rxjs')
 const { map, filter, reduce, mergeMap } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
-const fleets = require('../data/fleets.json')
 const population = require('./population')
 const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
@@ -19,6 +18,8 @@ const { convertPosition } = require('../lib/distance')
 const coords = require('swe-coords')
 const Position = require('../lib/models/position')
 const { getAddressesInArea } = require('../simulator/address')
+const { getCitizens } = require('../simulator/citizens')
+const { info } = require('../lib/log')
 
 const bookings = {
   hm: require('../streams/orders/hm.js'),
@@ -64,7 +65,7 @@ async function centerPoint(namn, retries = 0) {
     return await Pelias.search(namn).then((res) => res.position)
   } catch (err) {
     if (retries < 3) {
-      console.log(
+      info(
         "Couldn't find center point for",
         namn,
         `retrying ${retries + 1}/3...`
@@ -95,17 +96,20 @@ function getWorkplaces(commercialAreas) {
   )
 }
 
-function read() {
+// function read() {
+function read({ fleets }) {
   return from(data).pipe(
     filter(({ namn }) =>
       includedMunicipalities.some((name) => namn.startsWith(name))
     ),
-    map((kommun) => ({
-      ...kommun,
-      fleets: fleets[kommun.namn]?.fleets?.length
-        ? fleets[kommun.namn].fleets
-        : [],
-    })),
+    map((kommun) => {
+      return {
+        ...kommun,
+        fleets: fleets[kommun.namn]?.fleets?.length
+          ? fleets[kommun.namn].fleets
+          : [],
+      }
+    }),
     mergeMap(
       async ({
         geometry,
