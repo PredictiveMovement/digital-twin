@@ -1,16 +1,40 @@
 const { stops, stopTimes, lineShapes } = require('../publicTransport')
 const Region = require('../../lib/region')
-const { shareReplay, mergeMap } = require('rxjs')
+const { shareReplay, mergeMap, filter } = require('rxjs')
 
-const norrbotten = (kommuner) =>
-  new Region({
-    name: 'Norrbotten',
+const includedMunicipalities = [
+  'Arjeplogs kommun',
+  'Arvidsjaurs kommun',
+  'Bodens kommun',
+  'Gällivare kommun',
+  'Haparanda stad',
+  'Jokkmokks kommun',
+  'Kalix kommun',
+  'Kiruna kommun',
+  'Luleå kommun',
+  'Pajala kommun',
+  'Piteå kommun',
+  'Storumans kommun',
+  'Älvsbyns kommun',
+  'Överkalix kommun',
+  'Övertorneå kommun',
+]
+
+const norrbotten = (municipalitiesStream) => {
+  const municipalities = municipalitiesStream.pipe(
+    filter((munipality) => includedMunicipalities.includes(munipality.name))
+  )
+
+  return new Region({
     id: 'norrbotten',
-    stops: stops.pipe(shareReplay()), // todo: support more regions
+    name: 'Norrbotten',
+    kommuner: municipalities,
+
+    // Bus things.
+    stops: stops.pipe(shareReplay()),
     stopTimes: stopTimes.pipe(shareReplay()),
-    citizens: kommuner.pipe(mergeMap((kommun) => kommun.citizens)),
     lineShapes: lineShapes.pipe(shareReplay()),
-    kommuner,
   })
+}
 
 module.exports = norrbotten
