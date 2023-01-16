@@ -104,6 +104,10 @@ class Region {
 
     this.citizens = kommuner.pipe(mergeMap((kommun) => kommun.citizens))
 
+    this.measureStations = kommuner.pipe(
+      mergeMap((kommun) => kommun.measureStations)
+    )
+
     this.taxis = kommuner.pipe(
       mergeMap((kommun) => kommun.cars),
       filter((car) => car.vehicleType === 'taxi'),

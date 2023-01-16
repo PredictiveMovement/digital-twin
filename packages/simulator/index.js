@@ -53,20 +53,13 @@ const engine = {
       subscriptions: [],
       virtualTime,
       cars: regions.pipe(mergeMap((region) => region.cars)),
-      // cars: kommunerStream.pipe(mergeMap((kommun) => kommun.cars)),
       dispatchedBookings: merge(
         regions.pipe(mergeMap((r) => r.dispatchedBookings)),
         kommunerStream.pipe(mergeMap((k) => k.dispatchedBookings))
       ),
       buses: regions.pipe(mergeMap((region) => region.buses)),
-      // measureStations: regions.pipe(
-      //   tap((region) => console.log('HELVETE', region)),
-      //   mergeMap((region) =>
-      //     region.kommuner.pipe(mergeMap((kommun) => kommun.measureStations))
-      //   )
-      // ),
-      measureStations: kommunerStream.pipe(
-        mergeMap((kommun) => kommun.measureStations)
+      measureStations: regions.pipe(
+        mergeMap((region) => region.measureStations)
       ),
       parameters,
       passengers: regions.pipe(
