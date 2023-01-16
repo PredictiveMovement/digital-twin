@@ -58,7 +58,7 @@ module.exports = {
     const url = `${peliasUrl}/v1/search?text=${encodeURIComponent(
       name
     )}${focus}&size=1`
-    debug('Call Pelias: ' + url)
+    debug('Call Pelias', url)
     return fetch(url)
       .then((response) => {
         if (!response.ok) throw 'pelias error: ' + response.statusText
