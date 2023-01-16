@@ -95,12 +95,22 @@ class Region {
     this.stops = stops
     this.citizens = citizens
     this.lineShapes = lineShapes
+    this.kommuner = kommuner // TODO: Rename to municipalities.
+
+    this.cars = kommuner.pipe(
+      mergeMap((kommun) => kommun.cars),
+      shareReplay()
+    )
+
+    this.citizens = kommuner.pipe(mergeMap((kommun) => kommun.citizens))
 
     this.taxis = kommuner.pipe(
       mergeMap((kommun) => kommun.cars),
       filter((car) => car.vehicleType === 'taxi'),
       shareReplay()
     )
+
+    this.postombud = kommuner.pipe(mergeMap((kommun) => kommun.postombud))
 
     this.buses = kommuner.pipe(
       map((kommun) => kommun.buses),

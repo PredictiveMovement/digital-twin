@@ -1,15 +1,24 @@
 const Region = require('../../lib/region')
-const { shareReplay, mergeMap, of } = require('rxjs')
+const { shareReplay, mergeMap, of, filter, tap } = require('rxjs')
 
-const skane = (kommuner) =>
-  new Region({
-    name: 'Skåne',
+const includedMunicipalities = ['Helsingborgs stad']
+
+const skane = (municipalitiesStream) => {
+  const municipalities = municipalitiesStream.pipe(
+    filter((munipality) => includedMunicipalities.includes(munipality.name))
+  )
+
+  return new Region({
     id: 'skane',
-    stops: of([]).pipe(shareReplay()), // todo: support more regions
+    cats: 4,
+    name: 'Skåne',
+    kommuner: municipalities,
+
+    // NOTE: No buses in Skåne.
+    stops: of([]).pipe(shareReplay()),
     stopTimes: of([]).pipe(shareReplay()),
-    citizens: kommuner.pipe(mergeMap((kommun) => kommun.citizens)),
     lineShapes: of([]).pipe(shareReplay()),
-    kommuner,
   })
+}
 
 module.exports = skane

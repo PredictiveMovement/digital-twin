@@ -6,6 +6,7 @@ const {
   toArray,
   pairwise,
   tap,
+  mergeAll,
 } = require('rxjs/operators')
 
 var evilDns = require('evil-dns')
@@ -14,8 +15,6 @@ evilDns.add('osrm.predictivemovement.se', '185.189.30.129')
 evilDns.add('vroom.predictivemovement.se', '185.189.30.129')
 
 const { virtualTime } = require('./lib/virtualTime')
-
-const kommuner = require('./streams/kommuner')
 
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
@@ -29,11 +28,10 @@ const engine = {
   subscriptions: [],
   createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
     const savedParams = readParameters()
-
-    const kommunerStream = kommuner.read(savedParams)
-    const regions = require('./streams/regions')(kommunerStream)
-
     info(`Starting experiment ${id} with params:`, savedParams)
+
+    const regions = require('./streams/regions')(savedParams)
+    const kommunerStream = regions.pipe(mergeMap((region) => region.kommuner))
 
     const parameters = {
       id,
@@ -54,12 +52,19 @@ const engine = {
       kommuner: kommunerStream.pipe(shareReplay()),
       subscriptions: [],
       virtualTime,
-      cars: kommunerStream.pipe(mergeMap((kommun) => kommun.cars)),
+      cars: regions.pipe(mergeMap((region) => region.cars)),
+      // cars: kommunerStream.pipe(mergeMap((kommun) => kommun.cars)),
       dispatchedBookings: merge(
         regions.pipe(mergeMap((r) => r.dispatchedBookings)),
         kommunerStream.pipe(mergeMap((k) => k.dispatchedBookings))
       ),
       buses: regions.pipe(mergeMap((region) => region.buses)),
+      // measureStations: regions.pipe(
+      //   tap((region) => console.log('HELVETE', region)),
+      //   mergeMap((region) =>
+      //     region.kommuner.pipe(mergeMap((kommun) => kommun.measureStations))
+      //   )
+      // ),
       measureStations: kommunerStream.pipe(
         mergeMap((kommun) => kommun.measureStations)
       ),
