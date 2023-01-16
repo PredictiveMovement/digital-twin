@@ -40,25 +40,13 @@ module.exports = {
       },
     }
   },
-  taxiToVehicle({ id, position, heading, plan }, i) {
+  taxiToVehicle({ id, position, passengerCapacity, heading, passengers }, i) {
     return {
       id: i,
       description: id,
+      capacity: [passengerCapacity - (passengers?.length || 0)],
       start: [position.lon, position.lat],
       end: heading ? [heading.lon, heading.lat] : undefined,
-      steps: plan.map((planStep) => {
-        console.log('step', planStep)
-        return {
-          type: planStep.action,
-          arrival: planStep.arrival,
-          duration: 100, // TODO: Calculate.
-          setup: 0,
-          service: 10,
-          waiting_time: 1,
-          violations: [],
-          id: planStep.booking.id,
-        }
-      }),
     }
   },
   truckToVehicle({ id, position, parcelCapacity, heading, cargo }, i) {
