@@ -83,7 +83,7 @@ module.exports = {
       shipments?.length || 0
     }, 🚚 ${vehicle})`
     const logger = setInterval(() => {
-      debug('Calling Vroom', logInfo)
+      debug('Calling Vroom: ' + logInfo)
     }, 2000)
 
     return await fetch(vroomUrl, {
