@@ -31,7 +31,6 @@ const engine = {
     info(`Starting experiment ${id} with params:`, savedParams)
 
     const regions = require('./streams/regions')(savedParams)
-    const kommunerStream = regions.pipe(mergeMap((region) => region.kommuner))
 
     const parameters = {
       id,
@@ -48,14 +47,23 @@ const engine = {
         mergeMap((region) => region.lineShapes),
         shareReplay()
       ),
-      postombud: kommunerStream.pipe(mergeMap((kommun) => kommun.postombud)),
-      kommuner: kommunerStream.pipe(shareReplay()),
+      postombud: regions.pipe(mergeMap((region) => region.postombud)),
+      kommuner: regions.pipe(
+        mergeMap((region) => region.kommuner),
+        shareReplay()
+      ),
       subscriptions: [],
       virtualTime,
       cars: regions.pipe(mergeMap((region) => region.cars)),
       dispatchedBookings: merge(
-        regions.pipe(mergeMap((r) => r.dispatchedBookings)),
-        kommunerStream.pipe(mergeMap((k) => k.dispatchedBookings))
+        regions.pipe(mergeMap((region) => region.dispatchedBookings)),
+        regions.pipe(
+          mergeMap((region) =>
+            region.kommuner.pipe(
+              mergeMap((kommun) => kommun.dispatchedBookings)
+            )
+          )
+        )
       ),
       buses: regions.pipe(mergeMap((region) => region.buses)),
       measureStations: regions.pipe(
