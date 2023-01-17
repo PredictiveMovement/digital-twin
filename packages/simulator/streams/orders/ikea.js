@@ -126,13 +126,19 @@ function read() {
         map((rows) => ({ key: group.key, rows }))
       )
     ),
-    mergeMap(
-      ({ key, rows }) =>
-        search(origins[key].name).then(({ name, position }) =>
-          rows.map((row) => ({ pickup: { name, position }, ...row }))
-        ),
-      1
-    ),
+    mergeMap(({ key, rows }) => {
+      // TODO: Figure out a good way to distribute the orders to the distribution centers.
+      const distributionCenters = [
+        'Mineralgatan 5, Helsingborg', // PostNord.
+        'Brunkalundsvägen 4, Helsingborg', // Schenker.
+        'Trintegatan 10, Helsingborg', // DHL.
+        'Strandbadsvägen 7, Helsingborg', // TNT.
+      ]
+
+      return search(distributionCenters[1]).then(({ name, position }) =>
+        rows.map((row) => ({ pickup: { name, position }, ...row }))
+      )
+    }, 1),
     mergeAll(),
     map((row) => new Booking(row)),
     catchError((err) => {
