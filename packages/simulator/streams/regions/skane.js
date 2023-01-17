@@ -15,7 +15,7 @@ const skane = (municipalitiesStream) => {
     kommuner: municipalities,
 
     // NOTE: No buses in Skåne.
-    stopTimes: of([]).pipe(shareReplay()),
+    stopTimes: new Subject(),
   })
 }
 
