@@ -115,7 +115,7 @@ function read({ fleets }) {
             ? merge(bookings.hm, bookings.ikea)
             : of(),
         })
-        kommun.citizens = getCitizens(kommun)
+        kommun.citizens = [] // getCitizens(kommun)
         return kommun
       }
     ),
