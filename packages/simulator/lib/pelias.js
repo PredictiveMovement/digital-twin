@@ -58,17 +58,19 @@ module.exports = {
     const url = `${peliasUrl}/v1/search?text=${encodeURIComponent(
       name
     )}${focus}&size=1`
-    debug('Call Pelias', url)
+    debug('Pelias -> Search', url)
     return fetch(url)
       .then((response) => {
         if (!response.ok) throw 'pelias error: ' + response.statusText
         return response.json()
       })
-      .then((p) =>
-        p.features[0]?.geometry?.coordinates?.length
+      .then((p) => {
+        debug('Pelias -> Search', p)
+
+        return p.features[0]?.geometry?.coordinates?.length
           ? p
           : Promise.reject('No coordinates found')
-      )
+      })
       .then(({ features: [{ geometry, properties } = {}] = [] }) => ({
         ...properties,
         position: new Position({
