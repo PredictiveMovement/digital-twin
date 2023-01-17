@@ -1,6 +1,6 @@
 const { stops, stopTimes, lineShapes } = require('../publicTransport')
+const { shareReplay, filter } = require('rxjs')
 const Region = require('../../lib/region')
-const { shareReplay, mergeMap, filter } = require('rxjs')
 
 const includedMunicipalities = [
   'Arjeplogs kommun',

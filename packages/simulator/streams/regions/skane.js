@@ -1,5 +1,5 @@
+const { shareReplay, of, filter, Subject } = require('rxjs')
 const Region = require('../../lib/region')
-const { shareReplay, mergeMap, of, filter, tap } = require('rxjs')
 
 const includedMunicipalities = ['Helsingborgs stad']
 
