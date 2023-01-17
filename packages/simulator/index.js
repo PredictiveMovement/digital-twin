@@ -42,8 +42,12 @@ const engine = {
     statistics.collectExperimentMetadata(parameters)
 
     const experiment = {
-      busStops: regions.pipe(mergeMap((region) => region.stops)),
+      busStops: regions.pipe(
+        filter((region) => region.stops),
+        mergeMap((region) => region.stops)
+      ),
       lineShapes: regions.pipe(
+        filter((region) => region.lineShapes),
         mergeMap((region) => region.lineShapes),
         shareReplay()
       ),
