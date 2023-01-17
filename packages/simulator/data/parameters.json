@@ -182,15 +182,12 @@
           "name": "Postnord",
           "vehicles": {
             "tungLastbil": 0,
-            "medeltungLastbil": 3,
+            "medeltungLastbil": 4,
             "lättLastbil": 1,
             "bil": 0
           },
           "marketshare": 0.6,
-          "hub": [
-            13.101441,
-            55.601021
-          ],
+          "hub": [12.783566, 56.069157],
           "hubAddress": "Mineralgatan 5, Helsingborg"
         },
         {
@@ -200,10 +197,7 @@
             "medeltungLastbil": 2
           },
           "marketshare": 0.18,
-          "hub": [
-            13.046085,
-            55.554708
-          ],
+          "hub": [12.768723, 56.010354],
           "hubAddress": "Brunkalundsvägen 4, Helsingborg"
         },
         {
@@ -212,10 +206,7 @@
             "lättLastbil": 2
           },
           "marketshare": 0.06,
-          "hub": [
-            13.104629,
-            55.60737
-          ],
+          "hub": [12.778268, 56.021101],
           "hubAddress": "Trintegatan 10, Helsingborg"
         },
         {
@@ -224,10 +215,7 @@
             "lättLastbil": 2
           },
           "marketshare": 0.06,
-          "hub": [
-            13.367398,
-            55.536388
-          ],
+          "hub": [12.709821, 56.019950],
           "hubAddress": "Strandbadsvägen 7, Helsingborg"
         }
       ]
