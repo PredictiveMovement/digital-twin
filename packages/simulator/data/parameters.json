@@ -1,6 +1,6 @@
 {
-  "id": "tkPc-FnY8",
-  "startDate": "2023-01-11T09:54:35.338Z",
+  "id": "tATd-MuN7",
+  "startDate": "2023-01-17T13:43:21.642Z",
   "fixedRoute": 21,
   "emitters": [
     "cars",
@@ -21,7 +21,7 @@
         {
           "name": "Taxi",
           "vehicles": {
-            "taxi": 4
+            "taxi": 5
           }
         },
         {
@@ -182,7 +182,7 @@
           "name": "Postnord",
           "vehicles": {
             "tungLastbil": 0,
-            "medeltungLastbil": 4,
+            "medeltungLastbil": 3,
             "lättLastbil": 1,
             "bil": 0
           },
@@ -190,7 +190,8 @@
           "hub": [
             13.101441,
             55.601021
-          ]
+          ],
+          "hubAddress": "Mineralgatan 5, Helsingborg"
         },
         {
           "name": "Röd",
@@ -202,7 +203,8 @@
           "hub": [
             13.046085,
             55.554708
-          ]
+          ],
+          "hubAddress": "Brunkalundsvägen 4, Helsingborg"
         },
         {
           "name": "Gul",
@@ -213,7 +215,8 @@
           "hub": [
             13.104629,
             55.60737
-          ]
+          ],
+          "hubAddress": "Trintegatan 10, Helsingborg"
         },
         {
           "name": "Lila",
@@ -224,7 +227,8 @@
           "hub": [
             13.367398,
             55.536388
-          ]
+          ],
+          "hubAddress": "Strandbadsvägen 7, Helsingborg"
         }
       ]
     },
