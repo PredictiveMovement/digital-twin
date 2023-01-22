@@ -23,8 +23,6 @@ const statistics = require('./lib/statistics')
 const { info, error } = require('./lib/log')
 const { haversine, getNrOfPointsBetween } = require('./lib/distance')
 
-const { mapInitState } = require('./config')
-
 const engine = {
   subscriptions: [],
   createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
@@ -40,7 +38,6 @@ const engine = {
       startDate: new Date(),
       fixedRoute: savedParams.fixedRoute || 100,
       emitters: defaultEmitters,
-      mapInitState,
     }
     statistics.collectExperimentMetadata(parameters)
 

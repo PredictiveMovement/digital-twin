@@ -275,24 +275,21 @@ const App = () => {
         onPlay={onPlay}
         onSpeedChange={onSpeedChange}
       />
-      {(reset || !currentParameters.mapInitState) && <Loading />}
-      {currentParameters.mapInitState && (
-        <Map
-          activeLayers={activeLayers}
-          passengers={passengers}
-          cars={cars}
-          bookings={bookings}
-          postombud={postombud}
-          measureStations={measureStations}
-          busStops={busStops}
-          kommuner={kommuner}
-          activeCar={activeCar}
-          time={time}
-          setActiveCar={setActiveCar}
-          lineShapes={lineShapes}
-          mapInitState={currentParameters.mapInitState}
-        />
-      )}
+      {reset && <Loading />}
+      <Map
+        activeLayers={activeLayers}
+        passengers={passengers}
+        cars={cars}
+        bookings={bookings}
+        postombud={postombud}
+        measureStations={measureStations}
+        busStops={busStops}
+        kommuner={kommuner}
+        activeCar={activeCar}
+        time={time}
+        setActiveCar={setActiveCar}
+        lineShapes={lineShapes}
+      />
     </>
   )
 }
