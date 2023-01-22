@@ -180,7 +180,7 @@ class Region {
                 ({ passengerCapacity: c, passengers: p }) => c > p.length
               )
               return taxiDispatch(nearestTaxis, bookings).catch((err) => {
-                error('taxiDispatch', err)
+                error('Region -> Dispatched Bookings -> Taxi', err)
                 bookings.forEach((booking) => this.manualBookings.next(booking))
                 return of([])
               })
@@ -189,7 +189,11 @@ class Region {
             mergeAll(),
             mergeMap(({ taxi, bookings }) =>
               from(bookings).pipe(
-                mergeMap((booking) => taxi.fleet.handleBooking(booking, taxi))
+                // TODO: We have a bug here, the system tries to dispatch taxis that are already full.
+                mergeMap((booking) => taxi.fleet.handleBooking(booking, taxi)),
+                catchError((err) =>
+                  error('Region -> Dispatched Bookings -> Taxis', err)
+                )
               )
             ),
             retryWhen((errors) =>
