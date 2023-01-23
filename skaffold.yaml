@@ -10,6 +10,8 @@ build:
     #     buildArgs:
     #       apikey: "{{.TRAFIKLAB_KEY}}"
     #       operator: norrbotten
+    - image:  iteam1337/sample-address
+      context: packages/sampleAddresses
     - image: iteam1337/pm-digital-twin-simulation-engine
       context: packages/simulator
     - image: iteam1337/pm-digital-twin-visualisation
