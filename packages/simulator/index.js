@@ -6,11 +6,10 @@ const {
   toArray,
   pairwise,
   tap,
+  mergeAll,
 } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
-
-const kommuner = require('./streams/kommuner')
 
 const { safeId } = require('./lib/id')
 const { readParameters } = require('./lib/fileUtils')
@@ -22,11 +21,9 @@ const engine = {
   subscriptions: [],
   createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
     const savedParams = readParameters()
-
-    const kommunerStream = kommuner.read(savedParams)
-    const regions = require('./streams/regions')(kommunerStream)
-
     info(`Starting experiment ${id} with params:`, savedParams)
+
+    const regions = require('./streams/regions')(savedParams)
 
     const parameters = {
       id,
@@ -37,23 +34,36 @@ const engine = {
     statistics.collectExperimentMetadata(parameters)
 
     const experiment = {
-      busStops: regions.pipe(mergeMap((region) => region.stops)),
+      busStops: regions.pipe(
+        filter((region) => region.stops),
+        mergeMap((region) => region.stops)
+      ),
       lineShapes: regions.pipe(
+        filter((region) => region.lineShapes),
         mergeMap((region) => region.lineShapes),
         shareReplay()
       ),
-      postombud: kommunerStream.pipe(mergeMap((kommun) => kommun.postombud)),
-      kommuner: kommunerStream.pipe(shareReplay()),
+      postombud: regions.pipe(mergeMap((region) => region.postombud)),
+      kommuner: regions.pipe(
+        mergeMap((region) => region.kommuner),
+        shareReplay()
+      ),
       subscriptions: [],
       virtualTime,
-      cars: kommunerStream.pipe(mergeMap((kommun) => kommun.cars)),
+      cars: regions.pipe(mergeMap((region) => region.cars)),
       dispatchedBookings: merge(
-        regions.pipe(mergeMap((r) => r.dispatchedBookings)),
-        kommunerStream.pipe(mergeMap((k) => k.dispatchedBookings))
+        regions.pipe(mergeMap((region) => region.dispatchedBookings)),
+        regions.pipe(
+          mergeMap((region) =>
+            region.kommuner.pipe(
+              mergeMap((kommun) => kommun.dispatchedBookings)
+            )
+          )
+        )
       ),
       buses: regions.pipe(mergeMap((region) => region.buses)),
-      measureStations: kommunerStream.pipe(
-        mergeMap((kommun) => kommun.measureStations)
+      measureStations: regions.pipe(
+        mergeMap((region) => region.measureStations)
       ),
       parameters,
       passengers: regions.pipe(
