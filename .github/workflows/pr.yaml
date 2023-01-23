@@ -1,0 +1,41 @@
+name: PR Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  test-sample-addresses:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v3
+
+      - name: 🔧 Build SampleAddresses
+        uses: docker/build-push-action@v3
+        with:
+          context: packages/sampleAddresses
+
+  test-simulator:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v3
+
+      - name: 🔧 Build Simulator
+        uses: docker/build-push-action@v3
+        with:
+          context: packages/simulator
+
+  test-visualisation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v3
+
+      - name: 🔧 Build Visualisation
+        uses: docker/build-push-action@v3
+        with:
+          context: packages/visualisation
