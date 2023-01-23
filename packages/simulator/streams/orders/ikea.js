@@ -126,7 +126,7 @@ function read() {
         map((rows) => ({ key: group.key, rows }))
       )
     ),
-    mergeMap(({ key, rows }) => {
+    mergeMap(({ key, rows }, i) => {
       // TODO: Figure out a good way to distribute the orders to the distribution centers.
       const distributionCenters = [
         'Mineralgatan 5, Helsingborg', // PostNord.
@@ -135,7 +135,7 @@ function read() {
         'Strandbadsvägen 7, Helsingborg', // TNT.
       ]
 
-      return search(distributionCenters[1]).then(({ name, position }) =>
+      return search(distributionCenters[i % 4]).then(({ name, position }) =>
         rows.map((row) => ({ pickup: { name, position }, ...row }))
       )
     }, 1),

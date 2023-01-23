@@ -85,7 +85,7 @@ function read() {
         map((rows) => ({ key: group.key, rows }))
       )
     ),
-    mergeMap(({ key, rows }) => {
+    mergeMap(({ key, rows }, i) => {
       // TODO: Figure out a good way to distribute the orders to the distribution centers.
       const distributionCenters = [
         'Mineralgatan 5, Helsingborg', // PostNord.
@@ -96,10 +96,10 @@ function read() {
 
       let pickup = key
       if (importOrigins.includes(key.toLowerCase().trim())) {
-        pickup = distributionCenters[3] // TODO: Improve handling of origins outside of Sweden.
+        pickup = distributionCenters[i % 4] // TODO: Improve handling of origins outside of Sweden.
       }
 
-      return search(distributionCenters[0]).then(({ name, position }) =>
+      return search(distributionCenters[i % 4]).then(({ name, position }) =>
         rows.map((row) => ({ pickup: { name, position }, ...row }))
       )
     }, 1),
