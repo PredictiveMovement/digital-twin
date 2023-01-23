@@ -97,6 +97,8 @@ function getWorkplaces(commercialAreas) {
 
 // function read() {
 function read({ fleets }) {
+  const workplaces = getWorkplaces(commercialAreas)
+
   return from(data).pipe(
     filter(({ namn }) =>
       includedMunicipalities.some((name) => namn.startsWith(name))
@@ -122,9 +124,18 @@ function read({ fleets }) {
       }) => {
         const squares = getPopulationSquares({ geometry })
         const commercialAreas = getCommercialAreas(kod)
-        const workplaces = getWorkplaces(commercialAreas)
+        const center = await centerPoint(name)
+        const nearbyWorkplaces = workplaces.pipe(
+          filter((workplace) => {
+            //  TODO: Get statistics on how far people travel to work.
+            return workplace.position.distanceTo(center) < 100000 // TODO: Make this configurable on kommun
+          })
+        )
         const citizens = squares.pipe(
-          mergeMap((square) => getCitizensInSquare(square, workplaces, name), 1)
+          mergeMap(
+            (square) => getCitizensInSquare(square, nearbyWorkplaces, name),
+            1
+          )
         )
 
         const kommun = new Kommun({
@@ -135,7 +146,7 @@ function read({ fleets }) {
           zip: postnummer,
           telephone: telefon,
           fleets: fleets || [],
-          center: await centerPoint(name),
+          center,
           pickupPositions: pickupPositions || [],
           squares,
           postombud: getPostombud(name),
