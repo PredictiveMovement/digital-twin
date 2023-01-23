@@ -1,12 +1,4 @@
-const {
-  pipe,
-  from,
-  shareReplay,
-  mergeMap,
-  merge,
-  Subject,
-  of,
-} = require('rxjs')
+const { from, shareReplay, mergeMap, merge, Subject, of } = require('rxjs')
 const {
   map,
   groupBy,
@@ -16,27 +8,23 @@ const {
   mergeAll,
   share,
   toArray,
-  pluck,
   catchError,
   switchMap,
   bufferTime,
   retryWhen,
   delay,
   take,
-  bufferCount,
   scan,
-  throttle,
   debounceTime,
   concatMap,
 } = require('rxjs/operators')
-const Booking = require('./models/booking')
 const { busDispatch } = require('./dispatch/busDispatch')
 const { isInsideCoordinates } = require('../lib/polygon')
 const { clusterPositions } = require('./kmeans')
 const { haversine } = require('./distance')
 const { taxiDispatch } = require('./dispatch/taxiDispatch')
 const { error, info } = require('./log')
-const Taxi = require('./vehicles/taxi')
+const Booking = require('./models/booking')
 
 const flattenProperty = (property) => (stream) =>
   stream.pipe(
@@ -79,22 +67,39 @@ const getTripsPerKommun = (kommuner) => (stopTimes) =>
   )
 
 class Region {
-  constructor({
-    geometry,
-    name,
-    id,
-    stops,
-    stopTimes,
-    lineShapes,
-    citizens,
-    kommuner,
-  }) {
+  constructor({ id, name, geometry, stops, stopTimes, lineShapes, kommuner }) {
+    this.id = id
+
     this.geometry = geometry
     this.name = name
-    this.id = id
     this.stops = stops
-    this.citizens = citizens
     this.lineShapes = lineShapes
+    this.kommuner = kommuner // TODO: Rename to municipalities.
+
+    /**
+     * Static map objects.
+     */
+
+    this.measureStations = kommuner.pipe(
+      mergeMap((kommun) => kommun.measureStations)
+    )
+
+    this.postombud = kommuner.pipe(mergeMap((kommun) => kommun.postombud))
+
+    /**
+     * Vehicle streams.
+     */
+
+    this.buses = kommuner.pipe(
+      map((kommun) => kommun.buses),
+      mergeAll(),
+      shareReplay()
+    )
+
+    this.cars = kommuner.pipe(
+      mergeMap((kommun) => kommun.cars),
+      shareReplay()
+    )
 
     this.taxis = kommuner.pipe(
       mergeMap((kommun) => kommun.cars),
@@ -102,11 +107,11 @@ class Region {
       shareReplay()
     )
 
-    this.buses = kommuner.pipe(
-      map((kommun) => kommun.buses),
-      mergeAll(),
-      shareReplay()
-    )
+    /**
+     * Transportable objects streams.
+     */
+
+    this.citizens = kommuner.pipe(mergeMap((kommun) => kommun.citizens))
 
     this.stopAssignments = stopTimes.pipe(
       getTripsPerKommun(kommuner),
@@ -131,14 +136,14 @@ class Region {
       share()
     )
 
+    this.manualBookings = new Subject()
+
     this.unhandledBookings = this.citizens.pipe(
       mergeMap((passenger) => passenger.bookings),
       filter((booking) => !booking.assigned),
       catchError((err) => error('unhandledBookings', err)),
       share()
     )
-
-    this.manualBookings = new Subject()
 
     /*
     // TODO: Move this to dispatch central:
