@@ -19,7 +19,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       # - uses: rlespinasse/github-slug-action@v3.x
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: install dependencies
