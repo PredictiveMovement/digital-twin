@@ -1,4 +1,10 @@
-const { from, share } = require('rxjs')
+const { from, share, shareReplay } = require('rxjs')
 const norrbotten = require('./norrbotten')
+const skane = require('./skane')
 
-module.exports = (kommuner) => from([norrbotten(kommuner)]).pipe(share())
+const kommuner = require('../kommuner')
+
+module.exports = (savedParams) => {
+  const kommunerStream = kommuner.read(savedParams)
+  return from([norrbotten(kommunerStream), skane(kommunerStream)]).pipe(share())
+}
