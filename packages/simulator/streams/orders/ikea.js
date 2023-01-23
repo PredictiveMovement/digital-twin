@@ -110,14 +110,14 @@ function read() {
               ...rows[i],
             }))
           ),
-      5
+      1
     ),
-    retryWhen((errors) => {
+    retryWhen((errors) =>
       errors.pipe(
         tap((err) => error('Zip streams error, retrying in 1s...', err)),
         delay(1000)
       )
-    }),
+    ),
     mergeAll(),
     groupBy((row) => row.origin),
     mergeMap((group) =>
@@ -133,7 +133,7 @@ function read() {
         ),
       1
     ),
-    mergeAll(),
+    mergeAll(1),
     map((row) => new Booking(row)),
     catchError((err) => {
       error('IKEA -> from CSV', err)

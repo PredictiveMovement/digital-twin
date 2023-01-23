@@ -67,12 +67,12 @@ function read() {
           ),
       5
     ),
-    retryWhen((errors) => {
+    retryWhen((errors) =>
       errors.pipe(
         tap((err) => error('Zip streams error, retrying in 1s...', err)),
         delay(1000)
       )
-    }),
+    ),
     catchError((err) => {
       error('HM -> from CSV', err)
       return of({})
@@ -95,13 +95,13 @@ function read() {
         rows.map((row) => ({ pickup: { name, position }, ...row }))
       )
     }, 1),
-    retryWhen((errors) => {
+    retryWhen((errors) =>
       errors.pipe(
         tap((err) => error('Pelias error, retrying in 1s...', err)),
         delay(1000)
       )
-    }),
-    mergeAll(),
+    ),
+    mergeAll(1),
     map((row) => new Booking(row)),
     catchError((err) => {
       error('HM -> from CSV', err)
