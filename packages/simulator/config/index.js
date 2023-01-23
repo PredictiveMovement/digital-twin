@@ -1,5 +1,34 @@
-const projectName = process.env.PROJECT_NAME || 'rorla'
+const defaultEmitters = [
+  'bookings',
+  'buses',
+  'busLines',
+  'busStops',
+  'cars',
+  'kommuner',
+  'measureStations',
+  'passengers',
+  'taxis',
+]
 
-const projectConfig = require(`./${projectName}.config.js`)
+const includedMunicipalities = [
+  'Arjeplog',
+  'Arvidsjaur',
+  'Boden',
+  'Gällivare',
+  'Haparanda',
+  'Helsingborg',
+  'Jokkmokk',
+  'Kalix',
+  'Kiruna',
+  'Luleå',
+  'Pajala',
+  'Piteå',
+  'Älvsbyn',
+  'Överkalix',
+  'Övertorneå',
+]
 
-module.exports = projectConfig
+module.exports = {
+  defaultEmitters,
+  includedMunicipalities,
+}

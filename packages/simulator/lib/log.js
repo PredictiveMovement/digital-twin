@@ -13,36 +13,48 @@ module.exports = {
   error: (title, error, data, ...rest) => {
     console.error(`${chalk.redBright.bold('ERROR')} ${chalk.red(title)}`)
     console.error(error)
+
     if (data) {
       console.error(JSON.stringify(data, null, 2), ...rest)
     }
   },
-  debug: (message, data = '', ...rest) => {
+  debug: (title, message, data = '', ...rest) => {
     if (!logLevelIsAtLeastDebug) {
       return
     }
-    console.log(
-      `${chalk.whiteBright.bold('DEBUG')} ${chalk.gray(message)}`,
-      data,
-      ...rest
+
+    console.debug(
+      `${chalk.whiteBright.bold('DEBUG')} ${chalk.gray(title)} ${chalk.gray(
+        message
+      )}`
     )
+
+    if (data) {
+      console.error(JSON.stringify(data, null, 2), ...rest)
+    }
   },
-  info: (message, data = '', ...rest) => {
+  info: (title, message, data = '', ...rest) => {
     if (!logLevelIsAtLeastInfo) {
       return
     }
+
     console.log(
-      `${chalk.whiteBright.bold('INFO ')} ${chalk.white(message)}`,
+      `${chalk.whiteBright.bold('INFO ')} ${chalk.white(title)} ${chalk.white(
+        message
+      )}`,
       data,
       ...rest
     )
   },
-  warn: (message, data = '', ...rest) => {
+  warn: (title, message, data = '', ...rest) => {
     if (!logLevelIsAtLeastWarn) {
       return
     }
+
     console.log(
-      `${chalk.red.bold('WARN ')} ${chalk.white(message)}`,
+      `${chalk.red.bold('WARN ')} ${chalk.white(title)} ${chalk.white(
+        message
+      )}`,
       data,
       ...rest
     )
