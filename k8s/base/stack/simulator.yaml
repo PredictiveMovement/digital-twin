@@ -25,33 +25,54 @@ spec:
       containers:
         - name: simulator
           image: iteam1337/pm-digital-twin-simulation-engine
+          resources: {}
           ports:
             - containerPort: 4000
+          env:
+            - name: OSRM_URL
+              value: http://osrm.osrm.svc.cluster.local:5000
           volumeMounts:
-            - name: ombudsnat
-              mountPath: /app/data
-
+            - name: cache
+              mountPath: /cache
       volumes:
-        - name: ombudsnat
-          hostPath:
-            path: /storage/predictivemovement/drone
+        - name: cache
+          persistentVolumeClaim:
+            claimName: cache
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cache
+spec:
+  resources:
+    requests:
+      storage: 4Gi
+  volumeMode: Filesystem
+  storageClassName: longhorn
+  accessModes:
+    - ReadWriteOnce
+
+---
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: simulator-ingress
   annotations:
-    kubernetes.io/ingress.class: "public"
+    kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   tls:
     - hosts:
         - drone-engine.predictivemovement.se
-      secretName: simulator-prod-tls
+      secretName: drone-engine-prod-tls
   rules:
     - host: drone-engine.predictivemovement.se
       http:
         paths:
-          - backend:
-              serviceName: simulator
-              servicePort: 4000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: simulator
+                port:
+                  number: 4000

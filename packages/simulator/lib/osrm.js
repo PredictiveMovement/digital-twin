@@ -1,7 +1,7 @@
 const fetch = require('node-fetch')
 const polyline = require('polyline')
 const osrmUrl =
-  process.env.OSRM_URL || 'https://osrm.predictivemovenet.se' || '//:5000'
+  process.env.OSRM_URL || 'https://osrm.predictivemovement.se' || '//:5000'
 
 const decodePolyline = function (geometry) {
   return polyline.decode(geometry).map((point) => ({
