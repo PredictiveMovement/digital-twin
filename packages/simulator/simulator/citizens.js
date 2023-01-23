@@ -1,4 +1,4 @@
-const { take, map, filter, mergeAll } = require('rxjs/operators')
+const { take, map, filter, mergeAll, toArray } = require('rxjs/operators')
 const { randomNames } = require('../lib/personNames')
 const Citizen = require('../lib/models/citizen')
 const { from, zip } = require('rxjs')
@@ -19,18 +19,14 @@ const getCitizensInSquare = (
     randomNames.pipe(take(nrOfCitizens)),
     workplaces,
   ]).pipe(
-    map(([home, name, workplaces]) => {
+    map(([home, name, workplace]) => {
       return (
         home &&
         new Citizen({
           ...name,
           home,
           // age: ages[Math.floor(Math.random() * ages.length)],
-          workplace: workplaces.sort((a, b) =>
-            a.id.includes('venue') || b.id.includes('venue')
-              ? -1
-              : Math.random() - 0.5
-          )[0],
+          workplace,
           kommun: kommunName,
           position: home.position,
         })
