@@ -56,7 +56,7 @@ app.get('/', (req, res) => {
     'bottomright is not a valid coordinate pair (lat,lon)'
   )
 
-  fetchAdresses(query(topleft, bottomright, seed, size))
+  fetchAdresses(query(topleft, bottomright, size, seed))
     .then((addresses) => {
       res.json(addresses)
     })

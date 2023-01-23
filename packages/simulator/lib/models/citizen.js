@@ -20,7 +20,7 @@ const { safeId } = require('../id')
 const moment = require('moment')
 const Booking = require('./booking')
 const pelias = require('../pelias')
-const { error } = require('../log')
+const { error, info } = require('../log')
 const { getHours, getISODay } = require('date-fns')
 const Position = require('./position')
 
@@ -28,19 +28,21 @@ class Citizen {
   constructor({ name, position, workplace, home, startPosition, kommun }) {
     this.id = 'p-' + safeId()
     this.workplace = {
-      name: workplace.name,
+      name: workplace.name || 'arbetsplats',
       position: new Position(workplace.position),
     }
-    this.home = { name: home.name, position: new Position(home.position) }
+    this.home = {
+      name: home.name || 'hemma',
+      position: new Position(home.position),
+    }
     this.name = name
     this.position = new Position(position)
-    this.startPosition = new Position(startPosition)
+    this.startPosition = new Position(startPosition || this.position)
     this.kommun = kommun
     this.distance = 0
     this.cost = 0
     this.co2 = 0
     this.inVehicle = false
-    this.kommun = kommun
 
     // Aggregated values
     this.co2 = 0
@@ -158,7 +160,7 @@ class Citizen {
         return of(null)
       }),
       mergeAll(), // since previous step returns a promise, we need to resolve "one step deeper"
-      catchError((err) => error('passenger intent err', err)),
+      catchError((err) => error('passenger bookings err', err)),
       filter((f) => f instanceof Booking),
       shareReplay()
     )
