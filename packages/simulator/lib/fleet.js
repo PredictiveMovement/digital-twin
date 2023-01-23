@@ -8,6 +8,7 @@ const { randomize } = require('../simulator/address')
 const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')
 const { error, info } = require('./log')
+const { search } = require('./pelias')
 
 const packagesPerPallet = 30 // this is a guesstimate
 const vehicleTypes = {
@@ -44,7 +45,14 @@ const vehicleTypes = {
 }
 
 class Fleet {
-  constructor({ name, marketshare, percentageHomeDelivery, vehicles, hub }) {
+  constructor({
+    name,
+    marketshare,
+    percentageHomeDelivery,
+    vehicles,
+    hub,
+    hubAddress,
+  }) {
     this.name = name
     this.marketshare = marketshare
     const hubPos = new Position(hub)
@@ -56,6 +64,7 @@ class Fleet {
       )
     }
     this.hub = { position: hubPos.valid ? hubPos : { lat: 0, lon: 0 } }
+
     this.percentageHomeDelivery = (percentageHomeDelivery || 0) / 100 || 0.15 // based on guestimates from workshop with transport actors in oct 2021
     this.percentageReturnDelivery = 0.1
     this.cars = from(Object.entries(vehicles)).pipe(
@@ -63,6 +72,22 @@ class Fleet {
         range(0, count).pipe(
           mergeMap(() => {
             const Vehicle = vehicleTypes[type].class
+
+            // NOTE: This should work because mergeMap is supposed to handle promises...
+            // if (!!hubAddress) {
+            //   return search(hubAddress)
+            //     .then(({ position }) => {
+            //       return of(
+            //         new Vehicle({
+            //           ...vehicleTypes[type],
+            //           fleet: this,
+            //           position: position,
+            //         })
+            //       )
+            //     })
+            //     .catch((err) => error('Fleet -> Cars', err))
+            // }
+
             return of(
               new Vehicle({
                 ...vehicleTypes[type],
