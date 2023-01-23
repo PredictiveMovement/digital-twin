@@ -15,8 +15,8 @@ const getAddressesInBoundingBox = (
   ).then((res) => (res.ok ? res.json() : Promise.reject(res.text())))
 
 const getAddressesInArea = (position, area, population) => {
-  const topLeft = addMeters(position, { x: area / 2, y: area / 2 })
-  const bottomRight = addMeters(position, { x: -area / 2, y: -area / 2 })
+  const topLeft = addMeters(position, { x: -area / 2, y: area / 2 })
+  const bottomRight = addMeters(position, { x: area / 2, y: -area / 2 })
   return getAddressesInBoundingBox(topLeft, bottomRight, population).catch(
     async (err) => {
       await err
