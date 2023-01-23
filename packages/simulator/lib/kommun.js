@@ -4,7 +4,6 @@ const {
   ReplaySubject,
   mergeMap,
   merge,
-  of,
   range,
 } = require('rxjs')
 const {
@@ -18,6 +17,7 @@ const {
 const Fleet = require('./fleet')
 const Bus = require('./vehicles/bus')
 const { error } = require('./log')
+const { search } = require('./pelias')
 const expandFleets = () => (fleets) =>
   fleets.pipe(
     mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(mapTo(fleet)))
@@ -71,7 +71,21 @@ class Kommun {
     this.citizens = citizens
 
     this.fleets = from(
-      fleets.map((fleet) => new Fleet({ hub: center, ...fleet }))
+      fleets.map((fleet) => {
+        // NOTE: This should work because from() is supposed to be able to handle promises...
+        // if (!!fleet.hubAddress) {
+        //   return search(fleet.hubAddress)
+        //     .then(({ address, position }) => {
+        //       console.log('Fleet hub positions', position)
+        //       return new Fleet({ hub: position, ...fleet })
+        //     })
+        //     .catch((err) => {
+        //       error('Kommun -> Fleets', err)
+        //     })
+        // }
+
+        return new Fleet({ hub: center, ...fleet })
+      })
     )
 
     this.cars = merge(

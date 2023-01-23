@@ -173,15 +173,20 @@ const Map = ({
     switch (fleet.toLowerCase()) {
       case 'brun':
         return [205, 127, 50, opacity]
+      case 'tnt':
       case 'lila':
         return [99, 20, 145, opacity]
       case 'bring':
+      case 'grön':
         return [189, 197, 129, opacity]
+      case 'dhl':
       case 'gul':
         return [249, 202, 36, opacity]
+      case 'blå':
       case 'postnord':
         return [57, 123, 184, opacity]
       case 'röd':
+      case 'schenker':
         return [235, 77, 75, opacity]
       case 'länstrafiken i norrbotten':
         return [232, 67, 147, opacity]

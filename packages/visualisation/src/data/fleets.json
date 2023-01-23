@@ -143,7 +143,8 @@
           "bil": 0
         },
         "marketshare": 0.6,
-        "hub": [13.101441, 55.601021]
+        "hub": [12.783566, 56.069157],
+        "hubAddress": "Mineralgatan 5, Helsingborg"
       },
       {
         "name": "Röd",
@@ -152,7 +153,8 @@
           "medeltungLastbil": 2
         },
         "marketshare": 0.18,
-        "hub": [13.046085, 55.554708]
+        "hub": [12.768723, 56.010354],
+        "hubAddress": "Brunkalundsvägen 4, Helsingborg"
       },
       {
         "name": "Gul",
@@ -160,7 +162,8 @@
           "lättLastbil": 2
         },
         "marketshare": 0.06,
-        "hub": [13.104629, 55.607370]
+        "hub": [12.778268, 56.021101],
+        "hubAddress": "Trintegatan 10, Helsingborg"
       },
       {
         "name": "Lila",
@@ -168,7 +171,8 @@
           "lättLastbil": 2
         },
         "marketshare": 0.06,
-        "hub": [13.367398, 55.536388]
+        "hub": [12.709821, 56.019950],
+        "hubAddress": "Strandbadsvägen 7, Helsingborg"
       }
     ]
   },
