@@ -110,7 +110,7 @@ function read() {
               ...rows[i],
             }))
           ),
-      5
+      1
     ),
     retryWhen((errors) =>
       errors.pipe(
@@ -133,7 +133,7 @@ function read() {
         ),
       1
     ),
-    mergeAll(),
+    mergeAll(1),
     map((row) => new Booking(row)),
     catchError((err) => {
       error('IKEA -> from CSV', err)
