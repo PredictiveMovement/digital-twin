@@ -7,7 +7,7 @@ on:
 
 jobs:
 
-  test:
+  test-sample-addresses:
     runs-on: ubuntu-latest
     steps:
       - name: 🛎️ Checkout
@@ -18,12 +18,24 @@ jobs:
         with:
           context: packages/sampleAddresses
 
+  test-simulator:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v3
+
       - name: 🔧 Build Simulator
         uses: docker/build-push-action@v3
         with:
           context: packages/simulator
 
-      - name: 🔧 Build Visualsation
+  test-visualisation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v3
+
+      - name: 🔧 Build Visualisation
         uses: docker/build-push-action@v3
         with:
           context: packages/visualisation
