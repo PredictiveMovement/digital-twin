@@ -2,7 +2,15 @@
  * TODO: Describe the stream that this file exports and what its data means
  */
 const { from, shareReplay, merge, of } = require('rxjs')
-const { map, filter, reduce, mergeMap } = require('rxjs/operators')
+const {
+  map,
+  filter,
+  reduce,
+  mergeMap,
+  tap,
+  mergeAll,
+  repeat,
+} = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const data = require('../data/kommuner.json')
 const population = require('./population')
@@ -18,7 +26,7 @@ const coords = require('swe-coords')
 const Position = require('../lib/models/position')
 const { getAddressesInArea } = require('../simulator/address')
 const { includedMunicipalities } = require('../config')
-const { info } = require('../lib/log')
+const { info, debug } = require('../lib/log')
 
 const bookings = {
   hm: require('../streams/orders/hm.js'),
@@ -89,8 +97,9 @@ function getWorkplaces(commercialAreas) {
         convertPosition(coords.toLatLng(y.toString(), x.toString()))
       )
       const adresses = await getAddressesInArea(position, area, nrOfWorkplaces)
-      return adresses
-    }),
+      return adresses.map((a) => ({ ...a, position: new Position(a.position) }))
+    }, 1),
+    mergeAll(),
     shareReplay()
   )
 }
@@ -126,10 +135,12 @@ function read({ fleets }) {
         const commercialAreas = getCommercialAreas(kod)
         const center = await centerPoint(name)
         const nearbyWorkplaces = workplaces.pipe(
-          filter((workplace) => {
-            //  TODO: Get statistics on how far people travel to work.
-            return workplace.position.distanceTo(center) < 100000 // TODO: Make this configurable on kommun
-          })
+          // TODO: calculate based on a normal distribution and size of the municipality?
+          // or other data from SCB?
+          filter(
+            (workplace) => workplace?.position?.distanceTo(center) < 100_000
+          ),
+          repeat()
         )
         const citizens = squares.pipe(
           mergeMap(
