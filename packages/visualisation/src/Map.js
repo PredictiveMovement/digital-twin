@@ -637,6 +637,7 @@ const Map = ({
         //mapLib={maplibregl}
         //mapStyle="https://maptiler.iteam.services/styles/basic-preview/style.json"
         mapStyle="mapbox://styles/mapbox/dark-v10"
+        mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
       />
       {hoverInfo && mapState.zoom > 6 && <HoverInfoBox data={hoverInfo} />}
       <TimeProgressBar time={time} />
