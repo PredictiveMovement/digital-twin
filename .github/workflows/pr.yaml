@@ -13,6 +13,11 @@ jobs:
       - name: 🛎️ Checkout
         uses: actions/checkout@v3
 
+      - name: 🔧 Build SampleAddresses
+        uses: docker/build-push-action@v3
+        with:
+          context: packages/sampleAddresses
+
       - name: 🔧 Build Simulator
         uses: docker/build-push-action@v3
         with:
@@ -21,4 +26,4 @@ jobs:
       - name: 🔧 Build Visualsation
         uses: docker/build-push-action@v3
         with:
-          context: packages/visualsation
+          context: packages/visualisation
