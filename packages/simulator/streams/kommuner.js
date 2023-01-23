@@ -13,12 +13,11 @@ const inside = require('point-in-polygon')
 const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const Pelias = require('../lib/pelias')
 const { getCitizensInSquare } = require('../simulator/citizens')
-const { includedMunicipalities } = require('../config')
 const { convertPosition } = require('../lib/distance')
 const coords = require('swe-coords')
 const Position = require('../lib/models/position')
 const { getAddressesInArea } = require('../simulator/address')
-const { getCitizens } = require('../simulator/citizens')
+const { includedMunicipalities } = require('../config')
 const { info } = require('../lib/log')
 
 const bookings = {
