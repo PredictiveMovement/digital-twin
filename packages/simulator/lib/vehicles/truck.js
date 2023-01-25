@@ -36,14 +36,14 @@ class Truck extends Vehicle {
   }
 
   stopped() {
+    if (this.status === 'returning') return info(this.id, 'returned') // we are done - we have returned to origin
     super.stopped()
     this.pickNextInstructionFromPlan()
   }
 
   async pickup() {
     // Wait 1 minute to simulate loading/unloading
-    const now = await virtualTime.getTimeInMillisecondsAsPromise()
-    await virtualTime.waitUntil(now + 60_000)
+    await virtualTime.wait(60_000)
 
     info('Pickup cargo', this.id, this.booking.id)
     // this.cargo = [...this.cargo, this.booking?.passenger]
