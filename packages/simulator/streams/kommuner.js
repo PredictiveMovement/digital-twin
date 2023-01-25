@@ -145,8 +145,9 @@ function read({ fleets }) {
         const citizens = squares.pipe(
           mergeMap(
             (square) => getCitizensInSquare(square, nearbyWorkplaces, name),
-            1
-          )
+            5
+          ),
+          shareReplay()
         )
 
         const kommun = new Kommun({
