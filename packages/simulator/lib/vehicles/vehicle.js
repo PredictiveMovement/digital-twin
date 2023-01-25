@@ -106,6 +106,13 @@ class Vehicle {
   navigateTo(position) {
     this.heading = position
 
+    if (this.position.distanceTo(position) < 100) {
+      // Do not route if we are close enough.
+
+      this.stopped()
+      return position
+    }
+
     return osrm
       .route(this.position, this.heading)
       .then(async (route) => {
@@ -205,7 +212,9 @@ class Vehicle {
 
   dropOff() {
     if (this.booking) {
-      this.busy = false
+      if (!this.queue.length) {
+        this.busy = false
+      }
       this.booking.delivered(this.position)
       this.delivered.push(this.booking)
     }
