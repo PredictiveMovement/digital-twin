@@ -1,6 +1,7 @@
 const { findBestRouteToPickupBookings } = require('../dispatch/truckDispatch')
 const { info } = require('../log')
 const Vehicle = require('./vehicle')
+const { virtualTime } = require('../virtualTime')
 
 class Truck extends Vehicle {
   constructor(args) {
@@ -40,6 +41,10 @@ class Truck extends Vehicle {
   }
 
   async pickup() {
+    // Wait 1 minute to simulate loading/unloading
+    const now = await virtualTime.getTimeInMillisecondsAsPromise()
+    await virtualTime.waitUntil(now + 60_000)
+
     info('Pickup cargo', this.id, this.booking.id)
     // this.cargo = [...this.cargo, this.booking?.passenger]
     this.cargo.push(this.booking)
