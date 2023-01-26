@@ -19,24 +19,27 @@ class Truck extends Vehicle {
   async pickNextInstructionFromPlan() {
     this.instruction = this.plan.shift()
     this.booking = this.instruction?.booking
-    this.status = this.instruction?.action || 'ready'
+    this.status = this.instruction?.action || 'returning'
     this.statusEvents.next(this)
     switch (this.status) {
+      case 'start':
+        return this.navigateTo(this.startPosition)
       case 'pickup':
         return this.navigateTo(this.booking.pickup.position)
       case 'delivery':
         return this.navigateTo(this.booking.destination.position)
+      case 'ready':
       case 'returning':
         this.status = 'ready'
         return
       default:
-        this.status = 'returning'
+        console.log('Unknown status', this.status, this.instruction)
+        if (!this.plan.length) this.status = 'returning'
         return this.navigateTo(this.startPosition)
     }
   }
 
   stopped() {
-    if (this.status === 'returning') return info(this.id, 'returned') // we are done - we have returned to origin
     super.stopped()
     this.pickNextInstructionFromPlan()
   }
