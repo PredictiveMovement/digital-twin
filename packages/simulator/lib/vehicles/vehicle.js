@@ -139,8 +139,7 @@ class Vehicle {
   async handleBooking(booking) {
     assert(booking instanceof Booking, 'Booking needs to be of type Booking')
 
-    if (!this.busy) {
-      this.busy = true
+    if (!this.booking) {
       this.booking = booking
       booking.assign(this)
       this.status = 'pickup'
@@ -212,11 +211,9 @@ class Vehicle {
 
   dropOff() {
     if (this.booking) {
-      if (!this.queue.length) {
-        this.busy = false
-      }
       this.booking.delivered(this.position)
       this.delivered.push(this.booking)
+      this.booking = null
     }
     this.statusEvents.next(this)
 
