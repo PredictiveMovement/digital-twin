@@ -59,6 +59,7 @@ module.exports = {
       name
     )}${focus}&size=1`
     debug('Pelias -> Search', url)
+    process.stdout.write('p')
     return fetch(url)
       .then((response) => {
         if (!response.ok) throw 'pelias error: ' + response.statusText
