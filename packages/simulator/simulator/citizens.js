@@ -9,7 +9,7 @@ const getCitizensInSquare = (
   workplaces,
   kommunName
 ) => {
-  const nrOfCitizens = Math.floor(population * 0.01) // sample x% of the population
+  const nrOfCitizens = Math.floor(population * 0.03) // sample x% of the population
   if (nrOfCitizens === 0) return from([])
   const addresses = from(getAddressesInArea(position, area, nrOfCitizens)).pipe(
     mergeAll()

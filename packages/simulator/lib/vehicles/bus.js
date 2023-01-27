@@ -40,8 +40,7 @@ class Bus extends Vehicle {
   }
 
   async handleBooking(booking) {
-    if (!this.busy) {
-      this.busy = true
+    if (!this.booking) {
       this.booking = booking
       booking.assign(this)
       this.status = 'pickup'
@@ -56,7 +55,6 @@ class Bus extends Vehicle {
 
   reset() {
     this.queue = []
-    this.busy = false
     this.position = this.startPosition
   }
 

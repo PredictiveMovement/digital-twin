@@ -25,6 +25,7 @@ module.exports = {
       [from.lon, from.lat],
       [to.lon, to.lat],
     ].join(';')
+    process.stdout.write('r')
     return (
       fetch(
         `${osrmUrl}/route/v1/driving/${coordinates}?steps=true&alternatives=false&overview=full&annotations=true`
@@ -52,6 +53,7 @@ module.exports = {
   nearest(position) {
     const coordinates = [position.lon, position.lat].join(',')
     const url = `${osrmUrl}/nearest/v1/driving/${coordinates}`
+    process.stdout.write('n')
     const promise = fetch(url).then(
       (response) => {
         return response.json()
@@ -70,6 +72,8 @@ module.exports = {
     const timestamps = positions
       .map((pos) => Math.round(+pos.date / 1000))
       .join(';')
+    process.stdout.write('m')
+
     return fetch(
       `${osrmUrl}/match/v1/driving/${coordinates}?timestamps=${timestamps}&geometries=geojson&annotations=true&overview=full`
     ) // Add annotations and steps to get each node speed

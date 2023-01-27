@@ -106,6 +106,13 @@ class Vehicle {
   navigateTo(position) {
     this.heading = position
 
+    if (this.position.distanceTo(position) < 100) {
+      // Do not route if we are close enough.
+
+      this.stopped()
+      return position
+    }
+
     return osrm
       .route(this.position, this.heading)
       .then(async (route) => {
@@ -132,8 +139,7 @@ class Vehicle {
   async handleBooking(booking) {
     assert(booking instanceof Booking, 'Booking needs to be of type Booking')
 
-    if (!this.busy) {
-      this.busy = true
+    if (!this.booking) {
       this.booking = booking
       booking.assign(this)
       this.status = 'pickup'
@@ -205,9 +211,9 @@ class Vehicle {
 
   dropOff() {
     if (this.booking) {
-      this.busy = false
       this.booking.delivered(this.position)
       this.delivered.push(this.booking)
+      this.booking = null
     }
     this.statusEvents.next(this)
 

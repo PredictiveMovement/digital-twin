@@ -5,8 +5,10 @@ const clusterPositions = (input, nrOfClusters = 5) => {
     position.lon,
     position.lat,
   ])
+  process.stdout.write('k..')
   return new Promise((resolve, reject) =>
     kmeans.clusterize(vectors, { k: nrOfClusters }, (err, res) => {
+      process.stdout.write('.m')
       if (err) return reject(err)
       const clusters = res.map((cluster) => ({
         center: { lon: cluster.centroid[0], lat: cluster.centroid[1] },
