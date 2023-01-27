@@ -1,6 +1,7 @@
 const { findBestRouteToPickupBookings } = require('../dispatch/truckDispatch')
 const { info } = require('../log')
 const Vehicle = require('./vehicle')
+const { virtualTime } = require('../virtualTime')
 
 class Truck extends Vehicle {
   constructor(args) {
@@ -18,18 +19,22 @@ class Truck extends Vehicle {
   async pickNextInstructionFromPlan() {
     this.instruction = this.plan.shift()
     this.booking = this.instruction?.booking
-    this.status = this.instruction?.action || 'ready'
+    this.status = this.instruction?.action || 'returning'
     this.statusEvents.next(this)
     switch (this.status) {
+      case 'start':
+        return this.navigateTo(this.startPosition)
       case 'pickup':
         return this.navigateTo(this.booking.pickup.position)
       case 'delivery':
         return this.navigateTo(this.booking.destination.position)
+      case 'ready':
       case 'returning':
         this.status = 'ready'
         return
       default:
-        this.status = 'returning'
+        console.log('Unknown status', this.status, this.instruction)
+        if (!this.plan.length) this.status = 'returning'
         return this.navigateTo(this.startPosition)
     }
   }
@@ -40,6 +45,9 @@ class Truck extends Vehicle {
   }
 
   async pickup() {
+    // Wait 1 minute to simulate loading/unloading
+    await virtualTime.wait(60_000)
+
     info('Pickup cargo', this.id, this.booking.id)
     // this.cargo = [...this.cargo, this.booking?.passenger]
     this.cargo.push(this.booking)

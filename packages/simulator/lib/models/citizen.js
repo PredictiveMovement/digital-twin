@@ -13,6 +13,9 @@ const {
   tap,
   mergeAll,
   share,
+  retryWhen,
+  delay,
+  take,
 } = require('rxjs')
 const { virtualTime } = require('../virtualTime')
 
@@ -114,14 +117,7 @@ class Citizen {
               mergeMap((position) =>
                 pelias.search('restaurang', position, 'venue')
               ),
-              retry(3),
-              catchError(
-                (e) =>
-                  console.error(
-                    `Couldn't find lunchplace. ${this.name} have to eat at the office ¯\_(ツ)_/¯ `,
-                    e.message
-                  ) || of(null)
-              ),
+              retryWhen((errors) => errors.pipe(delay(1000), take(3))), // retry 3 times - all lunch searches happens at the same time
               filter((position) => position != null),
               mergeMap(async (lunchPlace) =>
                 from([

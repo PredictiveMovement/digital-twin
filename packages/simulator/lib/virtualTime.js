@@ -69,6 +69,11 @@ class VirtualTime {
     return firstValueFrom(this.currentTime.pipe(filter((e) => e >= waitUntil)))
   }
 
+  async wait(ms) {
+    const now = await this.getTimeInMillisecondsAsPromise()
+    this.waitUntil(now + ms)
+  }
+
   // Set the speed in which time should advance
   setTimeMultiplier(timeMultiplier) {
     this.timeMultiplier = timeMultiplier
