@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: visualisation
-          image: iteam1337/pm-digital-twin-visualisation
+          image: predictivemovement/pm-digital-twin-visualisation
           ports:
             - containerPort: 80
 
