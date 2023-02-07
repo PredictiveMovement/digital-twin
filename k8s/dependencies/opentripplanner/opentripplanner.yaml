@@ -15,7 +15,7 @@ spec:
         app: otp
     spec:
       containers:
-        - image: iteam1337/opentripplanner-sweden:latest
+        - image: predictivemovement/opentripplanner-sweden:latest
           name: otp
           resources:
             requests:

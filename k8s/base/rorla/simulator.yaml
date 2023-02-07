@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: simulator
-          image: iteam1337/pm-digital-twin-simulation-engine
+          image: predictivemovement/digital-twin-simulator
           resources:
             requests:
               cpu: "1"

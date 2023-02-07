@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: sample-address
-          image: iteam1337/sample-address
+          image: predictivemovement/sample-address
           ports:
             - containerPort: 4001
           resources:

@@ -4,13 +4,13 @@ metadata:
   name: pm-digital-twin
 build:
   artifacts:
-    - image: iteam1337/otp-sweden
+    - image: predictivemovement/otp-sweden
       context: k8s/dependencies/opentripplanner
       docker:
         buildArgs:
           apikey: "{{.TRAFIKLAB_KEY}}"
           operator: norrbotten
-    - image: iteam1337/sample-address
+    - image: predictivemovement/sample-address
       context: packages/sampleAddresses
 deploy:
   kubectl:
