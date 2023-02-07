@@ -4,6 +4,5 @@ kind: Kustomization
 
 # list of Resource Config to be Applied
 resources:
-  - helsingborg
-  - rorla
+  - digital-twin
   - sampleAddresses

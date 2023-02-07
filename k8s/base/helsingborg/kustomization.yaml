@@ -1,9 +1,0 @@
-# kustomization.yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-namespace: helsingborg-stage
-# list of Resource Config to be Applied
-resources:
-  - simulator.yaml
-  - visualisation.yaml

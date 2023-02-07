@@ -1,0 +1,112 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: simulator
+spec:
+  ports:
+    - port: 4000
+      targetPort: 4000
+  selector:
+    app: simulator
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulator
+spec:
+  selector:
+    matchLabels:
+      app: simulator
+  template:
+    metadata:
+      labels:
+        app: simulator
+    spec:
+      containers:
+        - name: simulator
+          image: predictivemovement/digital-twin-simulator
+          resources:
+            requests:
+              cpu: "1"
+              memory: "512Mi"
+            limits:
+              memory: "1Gi"
+          ports:
+            - containerPort: 4000
+          env:
+            - name: VROOM_URL
+              value: https://vroom.predictivemovement.se
+            - name: ELASTICSEARCH_URL
+              value: http://elasticsearch.elasticsearch:9200
+            - name: PROJECT_NAME
+              value: helsingborg
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: simulator-ingress-helsingborg
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.org/websocket-services: "simulator"
+spec:
+  tls:
+    - hosts:
+        - tvilling.predictivemovement.se
+        - helsingborg.predictivemovement.se # Legacy.
+        - helsingborg-stage.predictivemovement.se # Legacy.
+        - rorla.predictivemovement.se # Legacy.
+        - rorla-stage.predictivemovement.se # Legacy.
+      secretName: helsingborg-stage-tls
+  rules:
+    - host: tvilling.predictivemovement.se
+      http:
+        paths:
+          - path: /socket.io/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: simulator
+                port:
+                  number: 4000
+    - host: helsingborg.predictivemovement.se
+      http:
+        paths:
+          - path: /socket.io/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: simulator
+                port:
+                  number: 4000
+    - host: helsingborg-stage.predictivemovement.se
+      http:
+        paths:
+          - path: /socket.io/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: simulator
+                port:
+                  number: 4000
+    - host: rorla.predictivemovement.se
+      http:
+        paths:
+          - path: /socket.io/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: simulator
+                port:
+                  number: 4000
+    - host: rorla-stage.predictivemovement.se
+      http:
+        paths:
+          - path: /socket.io/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: simulator
+                port:
+                  number: 4000
