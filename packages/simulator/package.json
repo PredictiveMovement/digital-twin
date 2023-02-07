@@ -1,5 +1,5 @@
 {
-  "name": "simulation-engine",
+  "name": "Digital Twin",
   "version": "0.7.0",
   "description": "",
   "main": "web/index.js",
@@ -40,12 +40,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Iteam1337/engine.git"
+    "url": "git+https://github.com/PredictiveMovement/digital-twin.git"
   },
   "bugs": {
-    "url": "https://github.com/Iteam1337/engine/issues"
+    "url": "https://github.com/PredictiveMovement/digital-twin/issues"
   },
-  "homepage": "https://github.com/Iteam1337/engine#readme",
+  "homepage": "https://www.predictivemovement.se",
   "nodemonConfig": {
     "ignore": [
       "data/pm_bookings*.json"
