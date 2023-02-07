@@ -12,9 +12,9 @@ build:
     #       operator: norrbotten
     - image:  predictivemovement/sample-address
       context: packages/sampleAddresses
-    - image: predictivemovement/pm-digital-twin-simulation-engine
+    - image: predictivemovement/digital-twin-simulator
       context: packages/simulator
-    - image: predictivemovement/pm-digital-twin-visualisation
+    - image: predictivemovement/digital-twin-visualisation
       context: packages/visualisation
       docker:
         buildArgs:

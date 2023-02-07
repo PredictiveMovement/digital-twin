@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: visualisation-helsingborg
-          image: predictivemovement/pm-digital-twin-visualisation
+          image: predictivemovement/digital-twin-visualisation
           resources:
             requests:
               cpu: 100m
