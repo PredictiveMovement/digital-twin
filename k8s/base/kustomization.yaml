@@ -6,4 +6,4 @@ kind: Kustomization
 resources:
   - helsingborg
   - rorla
-  - sampleAdresses
+  - sampleAddresses
