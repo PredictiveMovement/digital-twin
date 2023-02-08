@@ -54,10 +54,10 @@ spec:
   tls:
     - hosts:
         - tvilling.predictivemovement.se
-        - helsingborg.predictivemovement.se # Legacy.
-        - helsingborg-stage.predictivemovement.se # Legacy.
-        - rorla.predictivemovement.se # Legacy.
-        - rorla-stage.predictivemovement.se # Legacy.
+        # - helsingborg.predictivemovement.se # Legacy.
+        # - helsingborg-stage.predictivemovement.se # Legacy.
+        # - rorla.predictivemovement.se # Legacy.
+        # - rorla-stage.predictivemovement.se # Legacy.
       secretName: helsingborg-stage-tls
   rules:
     - host: tvilling.predictivemovement.se
@@ -70,43 +70,43 @@ spec:
                 name: simulator
                 port:
                   number: 4000
-    - host: helsingborg.predictivemovement.se
-      http:
-        paths:
-          - path: /socket.io/.*
-            pathType: Prefix
-            backend:
-              service:
-                name: simulator
-                port:
-                  number: 4000
-    - host: helsingborg-stage.predictivemovement.se
-      http:
-        paths:
-          - path: /socket.io/.*
-            pathType: Prefix
-            backend:
-              service:
-                name: simulator
-                port:
-                  number: 4000
-    - host: rorla.predictivemovement.se
-      http:
-        paths:
-          - path: /socket.io/.*
-            pathType: Prefix
-            backend:
-              service:
-                name: simulator
-                port:
-                  number: 4000
-    - host: rorla-stage.predictivemovement.se
-      http:
-        paths:
-          - path: /socket.io/.*
-            pathType: Prefix
-            backend:
-              service:
-                name: simulator
-                port:
-                  number: 4000
+    # - host: helsingborg.predictivemovement.se
+    #   http:
+    #     paths:
+    #       - path: /socket.io/.*
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #             name: simulator
+    #             port:
+    #               number: 4000
+    # - host: helsingborg-stage.predictivemovement.se
+    #   http:
+    #     paths:
+    #       - path: /socket.io/.*
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #             name: simulator
+    #             port:
+    #               number: 4000
+    # - host: rorla.predictivemovement.se
+    #   http:
+    #     paths:
+    #       - path: /socket.io/.*
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #             name: simulator
+    #             port:
+    #               number: 4000
+    # - host: rorla-stage.predictivemovement.se
+    #   http:
+    #     paths:
+    #       - path: /socket.io/.*
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #             name: simulator
+    #             port:
+    #               number: 4000
