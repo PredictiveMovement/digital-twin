@@ -43,8 +43,10 @@ class Taxi extends Vehicle {
     switch (this.status) {
       case 'pickup':
         await virtualTime.waitUntil(this.instruction.arrival)
+        this.status = 'toPickup'
         return this.navigateTo(this.booking.pickup.position)
       case 'delivery':
+        this.status = 'toDelivery'
         await virtualTime.waitUntil(this.instruction.arrival)
         return this.navigateTo(this.booking.destination.position)
       case 'returning':

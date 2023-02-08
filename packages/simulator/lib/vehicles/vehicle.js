@@ -8,7 +8,7 @@ const { haversine, bearing } = require('../distance')
 const interpolate = require('../interpolate')
 const Booking = require('../models/booking')
 const { safeId } = require('../id')
-const { error } = require('../log')
+const { error, info } = require('../log')
 const { virtualTime } = require('../virtualTime')
 const Position = require('../models/position')
 
@@ -142,7 +142,7 @@ class Vehicle {
     if (!this.booking) {
       this.booking = booking
       booking.assign(this)
-      this.status = 'pickup'
+      this.status = 'toPickup'
       this.statusEvents.next(this)
 
       this.navigateTo(booking.pickup.position)
@@ -191,7 +191,7 @@ class Vehicle {
         })
       if (this.booking && this.booking.destination) {
         this.booking.pickedUp(this.position)
-        this.status = 'delivery'
+        this.status = 'toDelivery'
         this.statusEvents.next(this)
 
         // should we first pickup more bookings before going to the destination?
@@ -300,13 +300,16 @@ class Vehicle {
     }
   }
 
+  // start -> toPickup -> pickup -> toDelivery -> delivery -> start
+
   stopped() {
+    info(`Vehicle ${this.id} stopped. Status: ${this.status}`)
     this.speed = 0
     this.statusEvents.next(this)
     if (this.booking) {
       this.simulate(false)
-      if (this.status === 'pickup') return this.pickup()
-      if (this.status === 'delivery') return this.dropOff()
+      if (this.status === 'toPickup') return this.pickup()
+      if (this.status === 'toDelivery') return this.dropOff()
     }
   }
 
