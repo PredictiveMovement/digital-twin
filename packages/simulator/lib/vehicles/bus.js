@@ -43,7 +43,7 @@ class Bus extends Vehicle {
     if (!this.booking) {
       this.booking = booking
       booking.assign(this)
-      this.status = 'pickup'
+      this.status = 'toPickup'
       await this.navigateTo(booking.destination.position)
       this.movedEvents.next(this)
     } else {
