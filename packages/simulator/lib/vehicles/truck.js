@@ -48,7 +48,8 @@ class Truck extends Vehicle {
 
   async pickup() {
     // Wait 1 minute to simulate loading/unloading
-    await virtualTime.wait(60_000)
+    // this.simulate(false) // pause interpolation while we wait
+    // await virtualTime.wait(60_000)
     if (!this.booking) return info('ERR: No booking to pickup', this.id)
     if (this.cargo.indexOf(this.booking) > -1)
       return info('ERR: Already picked up', this.id, this.booking.id)
