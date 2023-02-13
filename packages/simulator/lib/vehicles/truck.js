@@ -25,8 +25,10 @@ class Truck extends Vehicle {
       case 'start':
         return this.navigateTo(this.startPosition)
       case 'pickup':
+        this.status = 'toPickup'
         return this.navigateTo(this.booking.pickup.position)
       case 'delivery':
+        this.status = 'toDelivery'
         return this.navigateTo(this.booking.destination.position)
       case 'ready':
       case 'returning':
@@ -46,7 +48,11 @@ class Truck extends Vehicle {
 
   async pickup() {
     // Wait 1 minute to simulate loading/unloading
-    await virtualTime.wait(60_000)
+    // this.simulate(false) // pause interpolation while we wait
+    // await virtualTime.wait(60_000)
+    if (!this.booking) return info('ERR: No booking to pickup', this.id)
+    if (this.cargo.indexOf(this.booking) > -1)
+      return info('ERR: Already picked up', this.id, this.booking.id)
 
     info('Pickup cargo', this.id, this.booking.id)
     // this.cargo = [...this.cargo, this.booking?.passenger]
@@ -63,6 +69,7 @@ class Truck extends Vehicle {
   }
 
   async handleBooking(booking) {
+    if (this.queue.indexOf(booking) > -1) throw new Error('Already queued')
     this.queue.push(booking)
     booking.assign(this)
     booking.queued(this)
