@@ -42,14 +42,14 @@ metadata:
 spec:
   tls:
     - hosts:
-        - tvilling.predictivemovement.se
+        - tvilling-stage.predictivemovement.se
         # - helsingborg.predictivemovement.se # Legacy.
-        # - helsingborg-stage.predictivemovement.se # Legacy.
+        - helsingborg-stage.predictivemovement.se # Legacy.
         # - rorla.predictivemovement.se # Legacy.
-        # - rorla-stage.predictivemovement.se # Legacy.
+        - rorla-stage.predictivemovement.se # Legacy.
       secretName: helsingborg-stage-tls
   rules:
-    - host: tvilling.predictivemovement.se
+    - host: tvilling-stage.predictivemovement.se
       http:
         paths:
           - path: /
@@ -59,43 +59,23 @@ spec:
                 name: visualisation
                 port:
                   number: 80
-    # - host: helsingborg.predictivemovement.se
-    #   http:
-    #     paths:
-    #       - path: /
-    #         pathType: Prefix
-    #         backend:
-    #           service:
-    #             name: visualisation
-    #             port:
-    #               number: 80
-    # - host: helsingborg-stage.predictivemovement.se
-    #   http:
-    #     paths:
-    #       - path: /
-    #         pathType: Prefix
-    #         backend:
-    #           service:
-    #             name: visualisation
-    #             port:
-    #               number: 80
-    # - host: rorla.predictivemovement.se
-    #   http:
-    #     paths:
-    #       - path: /
-    #         pathType: Prefix
-    #         backend:
-    #           service:
-    #             name: visualisation
-    #             port:
-    #               number: 80
-    # - host: rorla-stage.predictivemovement.se
-    #   http:
-    #     paths:
-    #       - path: /
-    #         pathType: Prefix
-    #         backend:
-    #           service:
-    #             name: visualisation
-    #             port:
-    #               number: 80
+    - host: helsingborg-stage.predictivemovement.se
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: visualisation
+                port:
+                  number: 80
+    - host: rorla-stage.predictivemovement.se
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: visualisation
+                port:
+                  number: 80
