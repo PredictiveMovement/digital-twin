@@ -40,8 +40,4 @@ profiles:
       kustomize:
         paths:
           - k8s/overlays/prod
-  - name: staging
-    deploy:
-      kustomize:
-        paths:
-          - k8s/overlays/staging
+
