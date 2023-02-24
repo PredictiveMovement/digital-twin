@@ -8,3 +8,4 @@ resources:
 
 patches:
 - path: visualisation.yaml
+- path: simulator.yaml
