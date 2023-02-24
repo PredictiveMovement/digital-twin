@@ -256,7 +256,7 @@ class Vehicle {
   }
 
   async updatePosition(position, pointsPassedSinceLastUpdate, time) {
-    console.count(`updatePosition${this.id}`)
+    //console.count(`updatePosition${this.id}`)
     const lastPosition = this.position || position
     const timeDiff = time - this.lastPositionUpdate
 
