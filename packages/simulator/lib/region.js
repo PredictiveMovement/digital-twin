@@ -164,17 +164,15 @@ class Region {
         filter((taxis) => taxis.length > 0),
         mergeMap((taxis) =>
           merge(this.manualBookings, this.unhandledBookings).pipe(
-            bufferTime(5000),
+            bufferTime(5000, null, 100),
             filter((bookings) => bookings.length > 0),
             tap((bookings) => info('Clustering bookings', bookings.length)),
             switchMap((bookings) => {
-              if (bookings.length < taxis.length)
+              const clusters = Math.max(5, Math.ceil(bookings.length / 10))
+              if (bookings.length < taxis.length || bookings.length < clusters)
                 return of([{ center: bookings[0].position, items: bookings }])
 
-              return clusterPositions(
-                bookings,
-                Math.max(5, Math.ceil(bookings.length / 10))
-              )
+              return clusterPositions(bookings, Math.max(5, clusters))
             }),
             mergeAll(),
             map(({ center, items: bookings }) => ({ center, bookings })),
