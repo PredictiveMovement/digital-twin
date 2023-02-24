@@ -69,8 +69,12 @@ function register(io) {
     socket.emit('parameters', socket.data.experiment.parameters)
 
     socket.on('disconnect', (reason) => {
-      info('Client disconnected', reason)
-      socket.data.experiment.subscriptions.map((e) => e.unsubscribe())
+      info('Client disconnected', reason, 'shutting down experiment in 60s')
+      clearTimeout(socket.data.timeout)
+      socket.data.timeout = setTimeout(() => {
+        info('Shutting down experiment')
+        socket.data.experiment.subscriptions.map((e) => e.unsubscribe())
+      }, 60_000)
     })
   })
 }
