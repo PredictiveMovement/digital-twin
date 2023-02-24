@@ -66,6 +66,7 @@ module.exports = {
         return response.json()
       })
       .then((p) => {
+        process.stdout.write('pa')
         debug('Pelias -> Search', p)
 
         return p.features[0]?.geometry?.coordinates?.length
