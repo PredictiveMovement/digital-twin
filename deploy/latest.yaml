@@ -1,0 +1,244 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: simulator
+  namespace: digital-twin-stage
+spec:
+  ports:
+  - port: 4000
+    targetPort: 4000
+  selector:
+    app: simulator
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: visualisation
+  namespace: digital-twin-stage
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: visualisation
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-address
+  namespace: pm-streams
+spec:
+  ports:
+  - port: 4001
+    targetPort: 4001
+  selector:
+    app: sample-address
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulator
+  namespace: digital-twin-stage
+spec:
+  selector:
+    matchLabels:
+      app: simulator
+  template:
+    metadata:
+      labels:
+        app: simulator
+    spec:
+      containers:
+      - env:
+        - name: VROOM_URL
+          value: https://vroom.predictivemovement.se
+        - name: ELASTICSEARCH_URL
+          value: http://elasticsearch.elasticsearch:9200
+        - name: PROJECT_NAME
+          value: helsingborg
+        - name: STREAMS_URL
+          value: http://sample-address.pm-streams:4001
+        image: registry.iteam.services/predictivemovement_digital-twin-simulator:v2.0.2@sha256:73a12389b616f1d25825ff2cd0c080233708a420e0fae215024cd71b49ba1c22
+        name: simulator
+        ports:
+        - containerPort: 4000
+        resources:
+          requests:
+            cpu: "1"
+            memory: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visualisation
+  namespace: digital-twin-stage
+spec:
+  selector:
+    matchLabels:
+      app: visualisation
+  template:
+    metadata:
+      labels:
+        app: visualisation
+    spec:
+      containers:
+      - image: registry.iteam.services/predictivemovement_digital-twin-visualisation:v2.0.2@sha256:c186a86155b6be1dfd30ded55687cd84013beb71afc4b43336be2c87774da760
+        name: visualisation
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-address
+  namespace: pm-streams
+spec:
+  selector:
+    matchLabels:
+      app: sample-address
+  template:
+    metadata:
+      labels:
+        app: sample-address
+    spec:
+      containers:
+      - env:
+        - name: PELIAS_HOSTNAME
+          value: elasticsearch.elasticsearch.svc.cluster.local:9200
+        image: registry.iteam.services/predictivemovement_sample-address:v2.0.2@sha256:48171c7d1a201a083fc3e8e4f2bde98939885eb7bc8e856da5788dac12fa05b9
+        name: sample-address
+        ports:
+        - containerPort: 4001
+        resources:
+          requests:
+            cpu: "0.1"
+            memory: 100Mi
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.org/websocket-services: simulator
+  name: simulator-ingress-helsingborg
+  namespace: digital-twin-stage
+spec:
+  rules:
+  - host: tvilling-stage.predictivemovement.se
+    http:
+      paths:
+      - backend:
+          service:
+            name: simulator
+            port:
+              number: 4000
+        path: /socket.io/.*
+        pathType: Prefix
+  - host: helsingborg-stage.predictivemovement.se
+    http:
+      paths:
+      - backend:
+          service:
+            name: simulator
+            port:
+              number: 4000
+        path: /socket.io/.*
+        pathType: Prefix
+  - host: rorla-stage.predictivemovement.se
+    http:
+      paths:
+      - backend:
+          service:
+            name: simulator
+            port:
+              number: 4000
+        path: /socket.io/.*
+        pathType: Prefix
+  tls:
+  - hosts:
+    - tvilling-stage.predictivemovement.se
+    - helsingborg-stage.predictivemovement.se
+    - rorla-stage.predictivemovement.se
+    secretName: helsingborg-stage-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+  name: visualisation-ingress
+  namespace: digital-twin-stage
+spec:
+  rules:
+  - host: tvilling-stage.predictivemovement.se
+    http:
+      paths:
+      - backend:
+          service:
+            name: visualisation
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: helsingborg-stage.predictivemovement.se
+    http:
+      paths:
+      - backend:
+          service:
+            name: visualisation
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: rorla-stage.predictivemovement.se
+    http:
+      paths:
+      - backend:
+          service:
+            name: visualisation
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - tvilling-stage.predictivemovement.se
+    - helsingborg-stage.predictivemovement.se
+    - rorla-stage.predictivemovement.se
+    secretName: helsingborg-stage-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "360"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "360"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "360"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+  name: sample-address-ingress
+  namespace: pm-streams
+spec:
+  rules:
+  - host: streams.predictivemovement.se
+    http:
+      paths:
+      - backend:
+          service:
+            name: sample-address
+            port:
+              number: 4001
+        path: /addresses/(.*)
+        pathType: Prefix
+  tls:
+  - hosts:
+    - streams.predictivemovement.se
+    secretName: sampleaddresses-prod-tls
