@@ -19,7 +19,7 @@ const Booking = require('../../lib/models/booking')
 const { error } = require('../../lib/log')
 
 const streamsUrl =
-  process.env.STREAMS_URL || 'https://streams.predictivemovement.se'
+  process.env.STREAMS_URL || 'https://streams.predictivemovement.se/addresses'
 
 const origins = {
   CDC031: {
@@ -103,9 +103,7 @@ function read() {
     ),
     mergeMap(
       ({ key, rows }) =>
-        fetch(
-          `${streamsUrl}/addresses/zip/${rows[0].deliveryZip}?size=1&seed=${key}`
-        )
+        fetch(`${streamsUrl}/zip/${rows[0].deliveryZip}?size=1&seed=${key}`)
           .then((res) => res.json())
           .then((addresses) =>
             addresses.map(({ address, position }, i) => ({
