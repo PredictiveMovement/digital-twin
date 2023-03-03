@@ -35,6 +35,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git fetch origin release
           git checkout release
+          ## Merge main into release
           git merge main --ff --commit -q
           npm version minor
 
