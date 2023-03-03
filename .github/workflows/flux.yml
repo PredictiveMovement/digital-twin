@@ -29,19 +29,18 @@ jobs:
             fixed-${{ github.sha }}
             fixed-
 
-      - name: Update Minor Verision
+      - name: Update Patch Verision
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           git checkout -b release
-          npm version minor
+          npm version patch
 
       - name: Build with Skaffold
         uses: hiberbee/github-action-skaffold@latest
         with:
           command: build
           repository: registry.iteam.services
-          digest-source: tag
 
       - name: Render output
         uses: hiberbee/github-action-skaffold@latest
@@ -49,7 +48,6 @@ jobs:
           command: render --output deploy/latest.yaml
           cache-file: ''
           repository: registry.iteam.services
-          digest-source: tag
 
       - name: Push new manifest to FluxCD
         run: |
