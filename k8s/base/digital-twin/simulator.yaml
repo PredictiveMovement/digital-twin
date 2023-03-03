@@ -38,6 +38,8 @@ spec:
               value: http://elasticsearch.elasticsearch:9200
             - name: PROJECT_NAME
               value: helsingborg
+            - name: STREAMS_URL
+              value: http://sample-address.pm-streams:4001
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
