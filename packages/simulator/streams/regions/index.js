@@ -6,5 +6,7 @@ const kommuner = require('../kommuner')
 
 module.exports = (savedParams) => {
   const kommunerStream = kommuner.read(savedParams)
-  return from([norrbotten(kommunerStream), skane(kommunerStream)]).pipe(share())
+  return from([/*norrbotten(kommunerStream), */ skane(kommunerStream)]).pipe(
+    share()
+  )
 }
