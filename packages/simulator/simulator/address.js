@@ -4,7 +4,7 @@ const Position = require('../lib/models/position')
 const { addMeters } = require('../lib/distance')
 const fetch = require('node-fetch')
 const streamsUrl =
-  process.env.STREAMS_URL || 'https://streams.predictivemovement.se'
+  process.env.STREAMS_URL || 'https://streams.predictivemovement.se/addresses'
 
 const getAddressesInBoundingBox = (
   topLeft,
@@ -13,7 +13,7 @@ const getAddressesInBoundingBox = (
   layers = 'venue' // TODO: activate this feature in box.js
 ) =>
   fetch(
-    `${streamsUrl}/addresses/box?tl=${topLeft.lon},${topLeft.lat}&br=${bottomRight.lon},${bottomRight.lat}&size=${size}&layers=${layers}}`
+    `${streamsUrl}/box?tl=${topLeft.lon},${topLeft.lat}&br=${bottomRight.lon},${bottomRight.lat}&size=${size}&layers=${layers}}`
   ).then((res) => (res.ok ? res.json() : Promise.reject(res.text())))
 
 const getAddressesInArea = (position, area, population) => {

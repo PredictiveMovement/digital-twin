@@ -20,6 +20,8 @@ const Booking = require('../../lib/models/booking')
 const { error } = require('../../lib/log')
 
 const importOrigins = ['poznan, pl', 'tilburg, nl']
+const streamsUrl =
+  process.env.STREAMS_URL || 'https://streams.predictivemovement.se/addresses'
 
 function read() {
   // eslint-disable-next-line no-undef
@@ -55,9 +57,7 @@ function read() {
     ),
     mergeMap(
       ({ key, rows }) =>
-        fetch(
-          `https://streams.predictivemovement.se/addresses/zip/${rows[0].deliveryZip}?size=1&seed=${key}`
-        )
+        fetch(`${streamsUrl}/zip/${rows[0].deliveryZip}?size=1&seed=${key}`)
           .then((res) => res.json())
           .then((addresses) =>
             addresses.map(({ address, position }, i) => ({
