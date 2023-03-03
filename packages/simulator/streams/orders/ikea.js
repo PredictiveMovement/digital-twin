@@ -18,6 +18,9 @@ const Position = require('../../lib/models/position')
 const Booking = require('../../lib/models/booking')
 const { error } = require('../../lib/log')
 
+const streamsUrl =
+  process.env.STREAMS_URL || 'https://streams.predictivemovement.se'
+
 const origins = {
   CDC031: {
     name: 'Ikea Malmö', // TODO: Get the right location.
@@ -101,7 +104,7 @@ function read() {
     mergeMap(
       ({ key, rows }) =>
         fetch(
-          `https://streams.predictivemovement.se/addresses/zip/${rows[0].deliveryZip}?size=1&seed=${key}`
+          `${streamsUrl}/addresses/zip/${rows[0].deliveryZip}?size=1&seed=${key}`
         )
           .then((res) => res.json())
           .then((addresses) =>
