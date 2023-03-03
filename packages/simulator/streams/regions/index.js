@@ -7,6 +7,7 @@ const regions = {
 
 const kommuner = require('../kommuner')
 
+// TODO: Deploy separate environments for each region.
 const region = process.env.REGION || 'skane'
 
 module.exports = (savedParams) => {
