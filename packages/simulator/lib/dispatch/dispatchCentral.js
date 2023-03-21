@@ -66,7 +66,7 @@ const dispatch = (cars, bookings) => {
     mergeMap((cars) =>
       bookings.pipe(
         filter((booking) => !booking.car),
-        bufferTime(5000),
+        bufferTime(5000, null, 100),
         filter((b) => b.length > 0),
         //mergeMap((bookings) => getVroomPlan(cars, bookings)),
         mergeMap(async (bookings) => {
