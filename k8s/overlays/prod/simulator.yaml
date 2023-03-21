@@ -13,7 +13,7 @@ spec:
     - host: tvilling.predictivemovement.se
       http:
         paths:
-          - path: /socket.io/.*
+          - path: /socket.io
             pathType: Prefix
             backend:
               service:
@@ -23,7 +23,7 @@ spec:
     - host: helsingborg.predictivemovement.se
       http:
         paths:
-          - path: /socket.io/.*
+          - path: /socket.io
             pathType: Prefix
             backend:
               service:
@@ -33,7 +33,7 @@ spec:
     - host: rorla.predictivemovement.se
       http:
         paths:
-          - path: /socket.io/.*
+          - path: /socket.io
             pathType: Prefix
             backend:
               service:
