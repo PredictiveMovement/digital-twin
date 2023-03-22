@@ -14,11 +14,11 @@ class Position {
     this.lat = lat
   }
 
-  valid() {
-    if(!this.lon || !this.lat) return false
-    if(this.lon < -180 || this.lon > 180) return false
-    if(this.lat < -90 || this.lat > 90) return false
-    if(this.lon === NaN || this.lat === NaN) return false
+  isValid() {
+    if (!this.lon || !this.lat) return false
+    if (this.lon < -180 || this.lon > 180) return false
+    if (this.lat < -90 || this.lat > 90) return false
+    if (this.lon === NaN || this.lat === NaN) return false
 
     return true
   }

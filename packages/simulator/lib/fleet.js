@@ -56,14 +56,14 @@ class Fleet {
     this.name = name
     this.marketshare = marketshare
     const hubPos = new Position(hub)
-    if (!hubPos.valid) {
+    if (!hubPos.isValid) {
       error(
         `Invalid hub position for fleet ${name}: ${hub}\n\n${
           new Error().stack
         }\n\n`
       )
     }
-    this.hub = { position: hubPos.valid ? hubPos : { lat: 0, lon: 0 } }
+    this.hub = { position: hubPos.isValid ? hubPos : { lat: 0, lon: 0 } }
 
     this.percentageHomeDelivery = (percentageHomeDelivery || 0) / 100 || 0.15 // based on guestimates from workshop with transport actors in oct 2021
     this.percentageReturnDelivery = 0.1
