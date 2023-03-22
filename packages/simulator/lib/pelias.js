@@ -5,8 +5,8 @@ const peliasUrl =
   process.env.PELIAS_URL || 'https://pelias.predictivemovement.se'
 
 info('Pelias URL', peliasUrl)
-module.exports = {
-  nearest(position, layers = 'address,venue') {
+
+const nearest = (position, layers = 'address,venue') => {
     const { lon, lat } = position
 
     const url = `${peliasUrl}/v1/reverse?point.lat=${lat}&point.lon=${lon}&size=1&layers=${layers}`
@@ -46,43 +46,44 @@ module.exports = {
       })
 
     return promise
-  },
-  search(name, near = null, layers = 'address,venue') {
+  }
+const  search = (name, near = null, layers = 'address,venue', size = 1000) => {
+    const encodedName = encodeURIComponent(name)
     const focus = near
-      ? `&focus.point.lat=${encodeURIComponent(
-          near.lat
-        )}&focus.point.lon=${encodeURIComponent(
-          near.lon
-        )}}&layers=${encodeURIComponent(layers)}`
+      ? `&focus.point.lat=${near.lat}&focus.point.lon=${near.lon}}&layers=${layers}`
       : ''
-    const url = `${peliasUrl}/v1/search?text=${encodeURIComponent(
-      name
-    )}${focus}&size=1`
-    debug('Pelias -> Search', url)
+    const url = `${peliasUrl}/v1/search?text=${encodedName}${focus}&size=${size}`
     process.stdout.write('p')
     return fetch(url)
       .then((response) => {
         if (!response.ok) throw 'pelias error: ' + response.statusText
         return response.json()
       })
-      .then((p) => {
-        process.stdout.write('pa')
-        debug('Pelias -> Search', p)
-
-        return p.features[0]?.geometry?.coordinates?.length
-          ? p
-          : Promise.reject('No coordinates found')
-      })
-      .then(({ features: [{ geometry, properties } = {}] = [] }) => ({
-        ...properties,
-        position: new Position({
-          lon: geometry.coordinates[0],
-          lat: geometry.coordinates[1],
-        }),
-      }))
+      .then((results) =>
+        results.features
+          .map(({ geometry, properties } = {}) => ({
+            ...properties,
+            position: new Position({
+              lon: geometry.coordinates[0],
+              lat: geometry.coordinates[1],
+            }),
+          }))
+          .filter((p) => p.position.isValid())
+      )
       .catch((e) => {
         const peliasError = new Error().stack
         error(`Error in pelias search\n${peliasError}\n${e}\n\n`)
       })
   },
+
+  const searchOne = async (name, near = null, layers = 'address,venue') => {
+    const results = await pelias.search(name, near, layers, 1)
+    return results[0]
+  }
+
+
+module.exports = {
+  nearest,
+  search,
+  searchOne,
 }

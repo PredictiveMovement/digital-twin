@@ -7,8 +7,10 @@ const {
   filter,
   reduce,
   mergeMap,
-  tap,
   mergeAll,
+  defaultIfEmpty,
+  toArray,
+  take,
   repeat,
 } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
@@ -27,6 +29,7 @@ const Position = require('../lib/models/position')
 const { getAddressesInArea } = require('../simulator/address')
 const { includedMunicipalities } = require('../config')
 const { info, debug } = require('../lib/log')
+const assert = require('assert')
 
 const bookings = {
   hm: require('../streams/orders/hm.js'),
@@ -67,47 +70,14 @@ function getMeasureStations(kommunName) {
   )
 }
 
-async function centerPoint(namn, retries = 0) {
-  try {
-    return await Pelias.search(namn).then((res) => res.position)
-  } catch (err) {
-    if (retries < 3) {
-      info(
-        "Couldn't find center point for",
-        namn,
-        `retrying ${retries + 1}/3...`
-      )
-      return centerPoint(namn, retries + 1)
-    }
-    console.error('Could not find center point for', namn)
-    return { lat: 0, lon: 0 }
-  }
-}
-
-function getWorkplaces(commercialAreas) {
-  return commercialAreas.pipe(
-    mergeMap(async (commercialArea) => {
-      const {
-        X_koord: x,
-        Y_koord: y,
-        AREA_HA: area,
-        ARBST_DETH: nrOfWorkplaces,
-      } = commercialArea.properties
-      const position = new Position(
-        convertPosition(coords.toLatLng(y.toString(), x.toString()))
-      )
-      const adresses = await getAddressesInArea(position, area, nrOfWorkplaces)
-      return adresses.map((a) => ({ ...a, position: new Position(a.position) }))
-    }, 1),
-    mergeAll(),
-    shareReplay()
-  )
+async function getWorkplaces(position, nrOfWorkplaces = 100) {
+  const area = 10000
+  const adresses = await getAddressesInArea(position, area, nrOfWorkplaces)
+  return adresses.map((a) => ({ ...a, position: new Position(a.position) }))
 }
 
 // function read() {
 function read({ fleets }) {
-  const workplaces = getWorkplaces(commercialAreas)
-
   return from(data).pipe(
     filter(({ namn }) =>
       includedMunicipalities.some((name) => namn.startsWith(name))
@@ -133,15 +103,13 @@ function read({ fleets }) {
       }) => {
         const squares = getPopulationSquares({ geometry })
         const commercialAreas = getCommercialAreas(kod)
-        const center = await centerPoint(name)
-        const nearbyWorkplaces = workplaces.pipe(
-          // TODO: calculate based on a normal distribution and size of the municipality?
-          // or other data from SCB?
-          filter(
-            (workplace) => workplace?.position?.distanceTo(center) < 100_000
-          ),
+        const center = await Pelias.searchOne(name).then((res) => res.position)
+        const nearbyWorkplaces = from(getWorkplaces(center)).pipe(
+          mergeAll(),
+          take(100),
           repeat()
         )
+
         const citizens = squares.pipe(
           mergeMap(
             (square) => getCitizensInSquare(square, nearbyWorkplaces, name),

@@ -25,7 +25,6 @@ module.exports = {
       [from.lon, from.lat],
       [to.lon, to.lat],
     ].join(';')
-    process.stdout.write('r')
     return (
       fetch(
         `${osrmUrl}/route/v1/driving/${coordinates}?steps=true&alternatives=false&overview=full&annotations=true`

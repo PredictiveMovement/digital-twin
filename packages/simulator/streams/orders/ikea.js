@@ -13,7 +13,7 @@ const {
 const moment = require('moment')
 const { readCsv } = require('../../adapters/csv')
 const { default: fetch } = require('node-fetch')
-const { search } = require('../../lib/pelias')
+const { searchOne } = require('../../lib/pelias')
 const Position = require('../../lib/models/position')
 const Booking = require('../../lib/models/booking')
 const { error } = require('../../lib/log')
@@ -136,7 +136,7 @@ function read() {
         'Strandbadsvägen 7, Helsingborg', // TNT.
       ]
 
-      return search(distributionCenters[i % 4]).then(({ name, position }) =>
+      return searchOne(distributionCenters[i % 4]).then(({ name, position }) =>
         rows.map((row) => ({ pickup: { name, position }, ...row }))
       )
     }, 1),
