@@ -115,7 +115,7 @@ class Citizen {
           case 'lunch':
             return of(this.workplace.position).pipe(
               mergeMap((position) =>
-                pelias.search('restaurang', position, 'venue')
+                pelias.searchOne('restaurang', position, 'venue')
               ),
               retryWhen((errors) => errors.pipe(delay(1000), take(3))), // retry 3 times - all lunch searches happens at the same time
               filter((position) => position != null),

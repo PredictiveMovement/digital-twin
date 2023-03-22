@@ -15,9 +15,9 @@ const getCitizensInSquare = (
     mergeAll()
   )
   return zip([
-    addresses,
+    addresses.pipe(take(nrOfCitizens)),
     randomNames.pipe(take(nrOfCitizens)),
-    workplaces,
+    workplaces.pipe(take(nrOfCitizens)),
   ]).pipe(
     map(([home, name, workplace]) => {
       return (
