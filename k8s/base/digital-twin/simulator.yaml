@@ -36,15 +36,13 @@ spec:
               value: https://vroom.predictivemovement.se
             - name: ELASTICSEARCH_URL
               value: http://elasticsearch.elasticsearch:9200
-            - name: PROJECT_NAME
-              value: helsingborg
             - name: STREAMS_URL
               value: http://sample-address.pm-streams:4001
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: simulator-ingress-helsingborg
+  name: simulator-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
@@ -56,7 +54,7 @@ spec:
         - tvilling-stage.predictivemovement.se
         - helsingborg-stage.predictivemovement.se # Legacy.
         - rorla-stage.predictivemovement.se # Legacy.
-      secretName: helsingborg-stage-tls
+      secretName: simulator-stage-tls
   rules:
     - host: tvilling-stage.predictivemovement.se
       http:
