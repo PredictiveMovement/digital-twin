@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: rorla
+
+resources:
+- ../../base/digital-twin
+
+patches:
+- path: visualisation.yaml
+- path: simulator.yaml
+- patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: REGION
+        value: "norrbotten"
+  target:
+    kind: Deployment
+    name: simulator

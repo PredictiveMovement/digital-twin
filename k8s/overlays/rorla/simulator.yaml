@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: simulator-ingress
+spec:
+  tls:
+    - hosts:
+        - rorla.predictivemovement.se # Legacy.
+      secretName: rorla-prod-tls
+  rules:
+    - host: rorla.predictivemovement.se
+      http:
+        paths:
+          - path: /socket.io
+            pathType: Prefix
+            backend:
+              service:
+                name: simulator
+                port:
+                  number: 4000

@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: simulator-ingress
+spec:
+  tls:
+    - hosts:
+        - helsingborg.predictivemovement.se # Legacy.
+      secretName: helsingborg-prod-tls
+  rules:
+    - host: helsingborg.predictivemovement.se
+      http:
+        paths:
+          - path: /socket.io
+            pathType: Prefix
+            backend:
+              service:
+                name: simulator
+                port:
+                  number: 4000

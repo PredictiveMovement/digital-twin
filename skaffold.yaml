@@ -39,5 +39,6 @@ profiles:
     deploy:
       kustomize:
         paths:
-          - k8s/overlays/prod
+          - k8s/overlays/helsingborg
+          - k8s/overlays/rorla
 
