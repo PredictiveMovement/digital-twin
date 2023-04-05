@@ -50,7 +50,7 @@ const nearest = (position, layers = 'address,venue') => {
 const search = (name, near = null, layers = 'address,venue', size = 1000) => {
   const encodedName = encodeURIComponent(name)
   const focus = near
-    ? `&focus.point.lat=${near.lat}&focus.point.lon=${near.lon}}&layers=${layers}`
+    ? `&focus.point.lat=${near.lat}&focus.point.lon=${near.lon}&layers=${layers}`
     : ''
   const url = `${peliasUrl}/v1/search?text=${encodedName}${focus}&size=${size}`
   process.stdout.write('p')
@@ -72,7 +72,7 @@ const search = (name, near = null, layers = 'address,venue', size = 1000) => {
     )
     .catch((e) => {
       const peliasError = new Error().stack
-      error(`Error in pelias search\n${peliasError}\n${e}\n\n`)
+      error(`Error in pelias search\n${url}\n${peliasError}\n${e}\n\n`)
     })
 }
 
