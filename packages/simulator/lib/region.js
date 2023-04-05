@@ -179,13 +179,10 @@ class Region {
             }),
             mergeAll(),
             map(({ center, items: bookings }) => ({ center, bookings })),
-            tap(({ center, bookings }) =>
-              info('cluster', center, bookings.length)
-            ),
             catchError((err) => error('taxi cluster err', err)),
             concatMap(({ center, bookings }) => {
               const nearestTaxis = takeNearest(taxis, center, 10).filter(
-                ({ passengerCapacity: c, passengers: p }) => c > p.length
+                (taxi) => taxi.canPickupMorePassengers()
               )
               return taxiDispatch(nearestTaxis, bookings).catch((err) => {
                 error('Region -> Dispatched Bookings -> Taxi', err)

@@ -16,7 +16,6 @@ class Taxi extends Vehicle {
     this.id = id
     this.position = position
     this.heading = null
-    this.currentPassengerCount = 0
     this.cargo = []
     this.passengers = []
     this.queue = []
@@ -35,8 +34,13 @@ class Taxi extends Vehicle {
     this.pickNextInstructionFromPlan()
   }
 
+  canPickupMorePassengers() {
+    if (this.passengerCapacity > this.passengers.length) return true
+    return false
+  }
+
   async pickNextInstructionFromPlan() {
-    this.instruction = this.plan.shift()
+    this.instruction = this.plan?.shift()
     this.booking = this.instruction?.booking
     this.status = this.instruction?.action || 'ready'
     this.statusEvents.next(this)
@@ -49,6 +53,8 @@ class Taxi extends Vehicle {
         this.status = 'toDelivery'
         await virtualTime.waitUntil(this.instruction.arrival)
         return this.navigateTo(this.booking.destination.position)
+      case 'start':
+        return this.pickNextInstructionFromPlan()
       case 'returning':
         this.status = 'ready'
         return
@@ -60,7 +66,6 @@ class Taxi extends Vehicle {
 
   async pickup() {
     info('Pickup passenger', this.id, this.booking?.passenger?.name)
-    this.currentPassengerCount++
     this.passengers.push(this.booking.passenger)
     this.cargoEvents.next(this)
     this.booking.pickedUp(this.position)
@@ -73,14 +78,14 @@ class Taxi extends Vehicle {
     )
     this.cargoEvents.next(this)
     this.booking.delivered(this.position)
-
-    this.currentPassengerCount--
   }
 
   async handleBooking(booking) {
     this.queue.push(booking)
     booking.assign(this)
     booking.queued(this)
+
+    info('🙋‍♂️ Dispatching', booking.id, 'to', this.id)
 
     clearTimeout(this._timeout)
     this._timeout = setTimeout(async () => {

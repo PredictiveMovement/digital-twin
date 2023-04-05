@@ -114,6 +114,7 @@ class Citizen {
             )
           case 'lunch':
             return of(this.workplace.position).pipe(
+              filter((m) => Math.random() < 0.1), // 10% of the time, eat at a restaurant
               mergeMap((position) =>
                 pelias.searchOne('restaurang', position, 'venue')
               ),
