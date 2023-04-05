@@ -67,8 +67,7 @@ const engine = {
       ),
       parameters,
       passengers: regions.pipe(
-        filter((region) => !region.citizens),
-
+        filter((region) => region.citizens),
         mergeMap((region) => region.citizens),
         catchError((err) => error('Experiment -> Passengers', err)),
         shareReplay()
