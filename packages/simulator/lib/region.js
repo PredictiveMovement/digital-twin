@@ -43,6 +43,7 @@ const getTripsPerKommun = (kommuner) => (stopTimes) =>
   stopTimes.pipe(
     groupBy(({ tripId }) => tripId),
     mergeMap((s) => s.pipe(toArray())),
+    filter((stops) => stops.length > 1),
     mergeMap((stops) => {
       const firstStop = stops[0]
       const lastStop = stops[stops.length - 1]
@@ -122,7 +123,7 @@ class Region {
       flattenProperty('buses'),
       flattenProperty('trips'),
       filter(({ buses, trips }) => buses.length && trips.length),
-      mergeMap(({ buses, trips }) => busDispatch(buses, trips), 3), // try to find optimal plan x kommun at a time
+      mergeMap(({ buses, trips }) => busDispatch(buses, trips), 1), // try to find optimal plan x kommun at a time
       retryWhen((errors) => errors.pipe(delay(1000), take(10))),
       mergeAll(),
       mergeMap(({ bus, stops }) =>

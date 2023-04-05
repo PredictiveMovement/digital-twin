@@ -7,10 +7,17 @@ const regions = {
 
 const kommuner = require('../kommuner')
 
-// TODO: Deploy separate environments for each region.
-const region = process.env.REGION || 'skane'
-
 module.exports = (savedParams) => {
   const kommunerStream = kommuner.read(savedParams)
-  return from([regions[region](kommunerStream)]).pipe(share())
+  const includedRegions = Object.entries(regions)
+    .filter(
+      ([region]) =>
+        process.env.REGIONS?.includes(region) ||
+        process.env.REGIONS === '*' ||
+        !process.env.REGIONS
+    )
+    .map(([_, region]) => region)
+  return from(includedRegions.map((region) => region(kommunerStream))).pipe(
+    share()
+  )
 }

@@ -13,7 +13,7 @@ patches:
     - op: add
       path: /spec/template/spec/containers/0/env/-
       value:
-        name: REGION
+        name: REGIONS
         value: "norrbotten"
   target:
     kind: Deployment
