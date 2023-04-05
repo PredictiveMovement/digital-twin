@@ -60,7 +60,7 @@ class Citizen {
         hour: getHours(date),
         weekDay: getISODay(date),
       })),
-      //filter(() => Math.random() > 0.5),
+      filter(() => Math.random() > 0.5),
       map(({ hour }) => {
         if (hour < 4 && hour > 22) return 'sleep'
         if (hour >= 12 && hour <= 16) return 'lunch'
@@ -117,7 +117,9 @@ class Citizen {
               mergeMap((position) =>
                 pelias.searchOne('restaurang', position, 'venue')
               ),
-              retryWhen((errors) => errors.pipe(delay(1000), take(3))), // retry 3 times - all lunch searches happens at the same time
+              retryWhen((errors) =>
+                errors.pipe(delay(Math.random() * 10000), take(3))
+              ), // retry 3 times - all lunch searches happens at the same time
               filter((position) => position != null),
               mergeMap(async (lunchPlace) =>
                 from([
