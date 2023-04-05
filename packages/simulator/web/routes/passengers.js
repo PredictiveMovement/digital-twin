@@ -16,7 +16,7 @@ const register = (experiment, socket) => {
         filter((p) => p.length > 0)
       )
       .subscribe((passengers) => {
-        info(`🙋‍♀️ Sending ${passengers.length} passengers to client`)
+        info(`🙋 Sending ${passengers.length} passengers`)
         const passengerObjects = passengers.map((p) => p.toObject())
         socket.emit('passengers', passengerObjects)
       }),
