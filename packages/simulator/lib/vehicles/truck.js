@@ -54,7 +54,7 @@ class Truck extends Vehicle {
     if (this.cargo.indexOf(this.booking) > -1)
       return info('ERR: Already picked up', this.id, this.booking.id)
 
-    debug('Pickup cargo', this.id, this.booking.id)
+    info('Pickup cargo', this.id, this.booking.id)
     // this.cargo = [...this.cargo, this.booking?.passenger]
     this.cargo.push(this.booking)
     this.cargoEvents.next(this)
