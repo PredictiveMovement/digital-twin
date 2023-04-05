@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import ProgressBar from '../ProgressBar'
 import { H4, Paragraph } from '../Typography'
 
 const Wrapper = styled.div`

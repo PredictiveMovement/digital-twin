@@ -1,6 +1,6 @@
 const { findBestRouteToPickupBookings } = require('../dispatch/taxiDispatch')
 const { safeId } = require('../id')
-const { info } = require('../log')
+const { info, debug } = require('../log')
 const Vehicle = require('../vehicles/vehicle')
 const { virtualTime } = require('../virtualTime')
 const fleet = {
@@ -29,7 +29,7 @@ class Taxi extends Vehicle {
   }
 
   stopped() {
-    if (this.status === 'returning') return info(this.id, 'returned') // we are done - we have returned to origin
+    if (this.status === 'returning') return debug(this.id, 'returned') // we are done - we have returned to origin
     super.stopped()
     this.pickNextInstructionFromPlan()
   }
@@ -65,7 +65,7 @@ class Taxi extends Vehicle {
   }
 
   async pickup() {
-    info('Pickup passenger', this.id, this.booking?.passenger?.name)
+    debug('Pickup passenger', this.id, this.booking?.passenger?.name)
     this.passengers.push(this.booking.passenger)
     this.cargoEvents.next(this)
     this.booking.pickedUp(this.position)
