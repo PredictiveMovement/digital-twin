@@ -304,7 +304,6 @@ class Vehicle {
   // start -> toPickup -> pickup -> toDelivery -> delivery -> start
 
   stopped() {
-    info(`Vehicle ${this.id} stopped. Status: ${this.status}`)
     this.speed = 0
     this.statusEvents.next(this)
     if (this.booking) {

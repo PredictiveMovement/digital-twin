@@ -86,7 +86,6 @@ const dispatch = (cars, bookings) => {
           }))
         }),
         catchError((err) => error('cluster err', err)),
-        tap((plans) => info('plans', plans.length)),
         mergeAll(),
         filter(({ bookings }) => bookings.length > 0),
         tap(({ car, bookings }) =>

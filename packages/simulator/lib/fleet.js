@@ -7,7 +7,7 @@ const Drone = require('./vehicles/drone')
 const { randomize } = require('../simulator/address')
 const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')
-const { error, info } = require('./log')
+const { error, info, debug } = require('./log')
 const { search } = require('./pelias')
 
 const packagesPerPallet = 30 // this is a guesstimate
@@ -121,7 +121,7 @@ class Fleet {
       this.manualDispatchedBookings.next(booking)
       return await car.handleBooking(booking)
     } else {
-      info(`📦 Dispatching ${booking.id} to ${this.name}`)
+      debug(`📦 Dispatching ${booking.id} to ${this.name}`)
       this.unhandledBookings.next(booking)
     }
     return booking
