@@ -7,11 +7,13 @@ const taxiDispatch = async (taxis, bookings) => {
   const vehicles = taxis.map(taxiToVehicle)
   const shipments = bookings.map(bookingToShipment) // TODO: concat bookings from existing vehicles with previous assignments
   info('Calling vroom for taxi', vehicles.length, shipments.length)
+  process.stdout.write('🚕')
   const result = await plan({ shipments, vehicles })
   const virtualNow = await virtualTime.getTimeInMillisecondsAsPromise()
   const now = moment(new Date(virtualNow))
 
   return result.routes.map((route) => {
+    process.stdout.write('✅')
     return {
       taxi: taxis.find(({ id }) => id === route.description),
       bookings: route.steps
