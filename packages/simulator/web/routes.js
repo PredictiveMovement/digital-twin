@@ -3,6 +3,7 @@ const { saveParameters } = require('../lib/fileUtils')
 const { info } = require('../lib/log')
 const { defaultEmitters, ignoreWelcomeMessage } = require('../config')
 const cookie = require('cookie')
+const moment = require('moment')
 
 function subscribe(experiment, socket) {
   return [
@@ -29,6 +30,10 @@ function subscribe(experiment, socket) {
 function start(socket) {
   const experiment = engine.createExperiment({ defaultEmitters })
   experiment.subscriptions = subscribe(experiment, socket)
+  experiment.virtualTime.waitUntil(moment().endOf('day').valueOf()).then(() => {
+    info('Experiment finished. Restarting...')
+    process.kill(process.pid, 'SIGUSR2')
+  })
   socket.data.experiment = experiment
 }
 
@@ -70,9 +75,11 @@ function register(io) {
 
     socket.on('disconnect', (reason) => {
       info('Client disconnected', reason, 'shutting down experiment in 60s')
+
       clearTimeout(socket.data.timeout)
       socket.data.timeout = setTimeout(() => {
         info('Shutting down experiment')
+        process.kill(process.pid, 'SIGUSR2')
         socket.data.experiment.subscriptions.map((e) => e.unsubscribe())
       }, 60_000)
     })
