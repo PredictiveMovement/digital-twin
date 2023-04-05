@@ -140,7 +140,7 @@ class Region {
     this.manualBookings = new Subject()
 
     this.unhandledBookings = this.citizens.pipe(
-      mergeMap((passenger) => passenger.bookings, 1),
+      mergeMap((passenger) => passenger.bookings),
       filter((booking) => !booking.assigned),
       catchError((err) => error('unhandledBookings', err)),
       share()
@@ -167,7 +167,9 @@ class Region {
           merge(this.manualBookings, this.unhandledBookings).pipe(
             bufferTime(5000, null, 100),
             filter((bookings) => bookings.length > 0),
-            tap((bookings) => info('Clustering bookings', bookings.length)),
+            tap((bookings) =>
+              info('Clustering taxi bookings', bookings.length, taxis.length)
+            ),
             switchMap((bookings) => {
               const clusters = Math.max(5, Math.ceil(bookings.length / 10))
               if (bookings.length < taxis.length || bookings.length < clusters)
