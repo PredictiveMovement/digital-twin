@@ -19,9 +19,14 @@ const fetchAdresses = async (query) => {
     .map(
       ({
         _id: id,
-        _source: { center_point: position, address_parts: address },
+        _source: {
+          center_point: position,
+          address_parts: address,
+          name: { default: name } = {},
+        },
       }) => ({
         address,
+        name,
         position,
         id,
       })
