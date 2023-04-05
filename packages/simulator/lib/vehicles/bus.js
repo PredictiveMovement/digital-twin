@@ -82,7 +82,7 @@ class Bus extends Vehicle {
       this.simulate(false)
       return
     }
-    this.status = 'delivery'
+    this.status = 'toDelivery'
     return this.navigateTo(this.booking.destination.position) // resume simulation
   }
 }
