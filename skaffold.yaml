@@ -41,4 +41,5 @@ profiles:
         paths:
           - k8s/overlays/helsingborg
           - k8s/overlays/rorla
+          - k8s/overlays/digital-twin
 
