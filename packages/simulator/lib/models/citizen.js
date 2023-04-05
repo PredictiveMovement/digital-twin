@@ -199,6 +199,8 @@ class Citizen {
       position: this.position,
       waitTime: this.waitTime,
       kommun: this.kommun.name,
+      home: this.home,
+      workplace: this.workplace,
     }
     return obj
   }

@@ -183,20 +183,8 @@ const PassengerInfo = ({ data }) => {
       <Paragraph>
         Namn: <strong>{data.name}</strong>
       </Paragraph>
-      <Paragraph>Resor:</Paragraph>
-      <Paragraph>
-        <ul>
-          {data.bookings &&
-            data.bookings.map((j) => {
-              return (
-                <li>
-                  {j.pickup.departureTime && `(${j.pickup.departureTime}) `}
-                  {j.pickup.name} &gt; {j.destination.name}
-                </li>
-              )
-            })}
-        </ul>
-      </Paragraph>
+      <Paragraph>Bostad: {data.home.name}</Paragraph>
+      <Paragraph>Arbetsplats: {data.workplace.name}</Paragraph>
       <Paragraph>
         CO<sub>2</sub>:{' '}
         <strong>{Math.ceil((10 * data.co2) / 10) || 0} kg</strong>
