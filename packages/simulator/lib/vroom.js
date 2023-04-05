@@ -44,7 +44,7 @@ module.exports = {
     return {
       id: i,
       description: id,
-      capacity: [passengerCapacity - (passengers?.length || 0)],
+      capacity: [Math.max(1, passengerCapacity - (passengers?.length || 0))], // HACK: sometimes we will arrive here with -1 or 0 in capacity - we should fix that
       start: [position.lon, position.lat],
       end: heading ? [heading.lon, heading.lat] : undefined,
     }
@@ -82,13 +82,7 @@ module.exports = {
       body: JSON.stringify({
         jobs,
         shipments,
-        vehicles: vehicles.filter((v) => {
-          if (!v.capacity) {
-            return true
-          }
-
-          return v.capacity[0] > 0
-        }),
+        vehicles,
         options: {
           plan: true,
         },
