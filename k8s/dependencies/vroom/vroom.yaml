@@ -24,6 +24,9 @@ spec:
       labels:
         app: vroom
     spec:
+      nodeSelector:
+        mem: high
+        role: worker
       containers:
         - name: vroom
           image: vroomvrp/vroom-docker:v1.11.0

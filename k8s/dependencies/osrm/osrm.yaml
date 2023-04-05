@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -14,6 +15,9 @@ spec:
       labels:
         app: osrm
     spec:
+      nodeSelector:
+        mem: high
+        role: worker
       containers:
         - image: predictivemovement/osrm-sweden:latest
           name: osrm
