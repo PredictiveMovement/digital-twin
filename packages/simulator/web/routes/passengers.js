@@ -1,4 +1,5 @@
-const { startWith, mergeMap, scan, map, bufferTime, filter } = require('rxjs')
+const { bufferTime, filter, merge } = require('rxjs')
+const { info } = require('../../lib/log')
 
 /**
  * When a new socket is connected, we send the current state of the experiment
@@ -9,27 +10,13 @@ const { startWith, mergeMap, scan, map, bufferTime, filter } = require('rxjs')
  */
 const register = (experiment, socket) => {
   return [
-    experiment.passengers
-      .pipe(
-        mergeMap((passenger) =>
-          passenger.bookings.pipe(
-            scan((acc, booking) => [...acc, booking.toObject()], []), // every booking is added to the array
-            map((bookings) => ({ passenger, bookings })),
-            startWith(
-              { passenger, bookings: [] } // first value of passenger without any bookings
-            )
-          )
-        )
-      )
-      .subscribe(({ passenger, bookings }) => {
-        socket.emit('passengers', [{ ...passenger.toObject(), bookings }])
-      }),
-    experiment.passengerUpdates
+    merge(experiment.passengers, experiment.passengerUpdates)
       .pipe(
         bufferTime(500), // start a window every x ms
         filter((p) => p.length > 0)
       )
       .subscribe((passengers) => {
+        info(`🙋‍♀️ Sending ${passengers.length} passengers to client`)
         const passengerObjects = passengers.map((p) => p.toObject())
         socket.emit('passengers', passengerObjects)
       }),
