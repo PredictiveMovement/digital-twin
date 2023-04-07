@@ -3,6 +3,7 @@ const fetch = require('node-fetch')
 const vroomUrl = process.env.VROOM_URL || 'https://vroom.predictivemovement.se/'
 const moment = require('moment')
 const { error, debug } = require('./log')
+const { getFromCache, updateCache } = require('./cache')
 
 module.exports = {
   bookingToShipment({ id, pickup, destination }, i) {
@@ -43,7 +44,7 @@ module.exports = {
   taxiToVehicle({ id, position, passengerCapacity, heading, passengers }, i) {
     return {
       id: i,
-      description: id,
+      //description: id,
       capacity: [Math.max(1, passengerCapacity - (passengers?.length || 0))], // HACK: sometimes we will arrive here with -1 or 0 in capacity - we should fix that
       start: [position.lon, position.lat],
       end: heading ? [heading.lon, heading.lat] : undefined,
@@ -52,7 +53,7 @@ module.exports = {
   truckToVehicle({ id, position, parcelCapacity, heading, cargo }, i) {
     return {
       id: i,
-      description: id,
+      //description: id,
       time_window: [
         moment('05:00:00', 'hh:mm:ss').unix(),
         moment('18:00:00', 'hh:mm:ss').unix(),
@@ -63,16 +64,9 @@ module.exports = {
     }
   },
   async plan({ jobs, shipments, vehicles }) {
-    const vehicle =
-      (vehicles?.length || 0) === 1
-        ? vehicles[0].description
-        : vehicles?.length || 0
-    const logInfo = `(📍 ${jobs?.length || 0}, 📦 ${
-      shipments?.length || 0
-    }, 🚚 ${vehicle})`
-    const logger = setInterval(() => {
-      debug('Waiting for Vroom...', logInfo)
-    }, 2000)
+    const result = await getFromCache({ jobs, shipments, vehicles })
+    const before = Date.now()
+    if (result) return result
 
     return await fetch(vroomUrl, {
       method: 'POST',
@@ -91,10 +85,12 @@ module.exports = {
       .then(async (res) =>
         !res.ok ? Promise.reject('Vroom error:' + (await res.text())) : res
       )
-      .then((res) => {
-        clearInterval(logger)
-        return res.json()
-      })
+      .then((res) => res.json())
+      .then((json) =>
+        Date.now() - before > 10_000
+          ? updateCache({ jobs, shipments, vehicles }, json) // cache when it takes more than 10 seconds
+          : json
+      )
       .catch((vroomError) => {
         error(
           `Vroom error: ${vroomError} (enable debug logging for details)`,

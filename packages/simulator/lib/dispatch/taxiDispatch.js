@@ -12,10 +12,10 @@ const taxiDispatch = async (taxis, bookings) => {
   const virtualNow = await virtualTime.getTimeInMillisecondsAsPromise()
   const now = moment(new Date(virtualNow))
 
-  return result.routes.map((route) => {
+  return result?.routes.map((route) => {
     process.stdout.write('✅')
     return {
-      taxi: taxis.find(({ id }) => id === route.description),
+      taxi: taxis[route.vehicle],
       bookings: route.steps
         .filter((s) => s.type === 'pickup')
         .flatMap((step) => {

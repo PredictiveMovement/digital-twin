@@ -38,7 +38,7 @@ const getVroomPlan = async (cars, bookings) => {
 
   return result.routes.map((route) => {
     return {
-      car: cars.find(({ id }) => id === route.description),
+      car: cars[route.vehicle],
       bookings: route.steps
         .filter((s) => s.type === 'pickup')
         .flatMap((step) => {

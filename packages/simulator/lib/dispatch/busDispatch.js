@@ -68,7 +68,7 @@ const busDispatch = async (buses, trips) => {
     const toHub = stepToBookingEntity(route.steps[route.steps.length - 1])
 
     return {
-      bus: buses.find(({ id }) => id === route.description),
+      bus: buses[route.vehicle],
       stops: [toFirstStop].concat(
         route.steps
           .filter((s) => s.type === 'pickup')

@@ -85,7 +85,7 @@ class Taxi extends Vehicle {
     booking.assign(this)
     booking.queued(this)
 
-    info('🙋‍♂️ Dispatching', booking.id, 'to', this.id)
+    debug('🙋‍♂️ Dispatching', booking.id, 'to', this.id)
 
     clearTimeout(this._timeout)
     this._timeout = setTimeout(async () => {
