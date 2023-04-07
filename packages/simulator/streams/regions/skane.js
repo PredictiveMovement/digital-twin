@@ -1,4 +1,5 @@
-const { of, filter, Subject } = require('rxjs')
+const { stops, stopTimes, lineShapes } = require('../publicTransport')
+const { of, filter, Subject, shareReplay } = require('rxjs')
 const Region = require('../../lib/region')
 
 const includedMunicipalities = ['Helsingborgs stad']
@@ -14,8 +15,10 @@ const skane = (municipalitiesStream) => {
     name: 'Skåne',
     kommuner: municipalities,
 
-    // NOTE: No buses in Skåne.
-    stopTimes: of([]),
+    // Bus things.
+    stops: stops.pipe(shareReplay()),
+    stopTimes: stopTimes.pipe(shareReplay()),
+    lineShapes: lineShapes.pipe(shareReplay()),
   })
 }
 
