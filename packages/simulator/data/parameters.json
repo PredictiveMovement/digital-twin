@@ -57,6 +57,12 @@
     "Helsingborgs stad": {
       "fleets": [
         {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 100
+          }
+        },
+        {
           "name": "Postnord",
           "vehicles": {
             "tungLastbil": 0,
