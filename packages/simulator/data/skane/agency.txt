@@ -1,0 +1,8 @@
+agency_id,agency_name,agency_url,agency_timezone,agency_lang,agency_fare_url
+121120000150128007,Nettbuss Express AB,https://www.resrobot.se/,Europe/Stockholm,sv,
+121120000217778712,Vsttrafik AB,https://www.resrobot.se/,Europe/Stockholm,sv,
+121120000150128029,Flygbussarna Airport Coaches AB,https://www.resrobot.se/,Europe/Stockholm,sv,
+121120000000001001,Skånetrafiken,https://www.skanetrafiken.se/,Europe/Stockholm,sv,https://www.skanetrafiken.se/
+121120000150128079,Sveriges Jänvägar,https://www.resrobot.se/,Europe/Stockholm,sv,
+121120000150128057,Trafikverket,https://www.resrobot.se/,Europe/Stockholm,sv,
+121120000150127963,Hallandstrafiken AB,https://www.resrobot.se/,Europe/Stockholm,sv,
