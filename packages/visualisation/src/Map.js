@@ -196,7 +196,7 @@ const Map = ({
         return [34, 166, 179, opacity]
       case 'taxi':
       case 'anropsstyrd kollektivtrafik':
-        return [255, 255, 0, opacity]
+        return [255, 255, 0, 20]
       default:
         return [254, 254, 254, opacity]
     }
@@ -359,7 +359,7 @@ const Map = ({
     //opacity: 0.7,
     stroked: false,
     filled: true,
-    radiusScale: 6,
+    radiusScale: 2,
     radiusUnits: 'pixels',
     getPosition: ({ position }) => {
       return position
@@ -494,7 +494,7 @@ const Map = ({
         switch (booking.status) {
           case 'Picked up':
             return {
-              inbound: [169, 178, 237, 255],
+              inbound: [169, 178, 237, 55],
               outbound: getColorBasedOnFleet(car),
               from: car.position,
               to: booking.destination,
