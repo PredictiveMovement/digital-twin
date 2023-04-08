@@ -4,10 +4,14 @@ import ProgressBar from '../ProgressBar'
 import { Paragraph } from '../Typography'
 import moment from 'moment'
 
-const Wrapper = styled.div`
+const Wrapper = styled.div.attrs((props) => ({
+  style: {
+    left: props.left - 50,
+    bottom: props.top,
+  },
+}))`
   position: absolute;
-  left: ${(props) => props.left - 50}px;
-  bottom: ${(props) => props.top}px;
+
   background-color: #fff;
   color: #000;
   min-width: 200px;
@@ -109,6 +113,10 @@ const CarInfo = ({ data }) => {
         </Paragraph>
         <Paragraph>
           Avstånd till destination: <strong>{data.ema} m</strong>
+        </Paragraph>
+        <Paragraph>
+          Anländer kl:{' '}
+          <strong>{new Date(data.eta).toLocaleTimeString().slice(0, 5)}</strong>
         </Paragraph>
 
         <Paragraph>&nbsp;</Paragraph>
