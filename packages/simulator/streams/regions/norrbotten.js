@@ -1,4 +1,5 @@
-const { stops, stopTimes, lineShapes } = require('../publicTransport')
+const { stops, stopTimes, lineShapes } =
+  require('../publicTransport')('norrbotten')
 const { shareReplay, filter } = require('rxjs')
 const Region = require('../../lib/region')
 
