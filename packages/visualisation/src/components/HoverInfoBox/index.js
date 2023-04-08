@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import ProgressBar from '../ProgressBar'
 import { Paragraph } from '../Typography'
+import moment from 'moment'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -193,10 +194,22 @@ const PassengerInfo = ({ data }) => {
         Distans: <strong>{Math.ceil(data.distance / 1000) || 0} km</strong>
       </Paragraph>
       <Paragraph>
-        Restid: <strong>{Math.ceil(data.moveTime / 60) || 0} min</strong>
+        Restid:{' '}
+        <strong>
+          {moment
+            .duration(data.moveTime || 0, 'seconds')
+            .locale('sv')
+            .format()}
+        </strong>
       </Paragraph>
       <Paragraph>
-        Väntetid: <strong>{Math.ceil(data.waitTime / 60) || 0} min</strong>
+        Väntetid:{' '}
+        <strong>
+          {moment
+            .duration(data.waitTime || 0, 'seconds')
+            .locale('sv')
+            .format()}
+        </strong>
       </Paragraph>
     </Wrapper>
   )

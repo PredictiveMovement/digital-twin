@@ -4,6 +4,7 @@ import './index.css'
 import App from './App'
 // import reportWebVitals from './reportWebVitals'
 import { SocketIOProvider } from './context/socketIOProvider'
+import 'moment-duration-format'
 
 ReactDOM.render(
   <SocketIOProvider
