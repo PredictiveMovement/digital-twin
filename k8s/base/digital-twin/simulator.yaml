@@ -37,7 +37,7 @@ spec:
             - containerPort: 4000
           env:
             - name: VROOM_URL
-              value: https://vroom.predictivemovement.se
+              value: http://vroom.vroom.svc.cluster.local:3000
             - name: ELASTICSEARCH_URL
               value: http://elasticsearch.elasticsearch:9200
             - name: STREAMS_URL
