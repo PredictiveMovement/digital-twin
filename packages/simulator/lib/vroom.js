@@ -92,10 +92,7 @@ module.exports = {
           : json
       )
       .catch((vroomError) => {
-        error(
-          `Vroom error: ${vroomError} (enable debug logging for details)`,
-          logInfo
-        )
+        error(`Vroom error: ${vroomError} (enable debug logging for details)`)
         debug('Jobs', jobs)
         debug('Shipments', shipments)
         debug('Vehicles', vehicles)

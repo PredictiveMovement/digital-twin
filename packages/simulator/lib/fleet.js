@@ -4,11 +4,9 @@ const { dispatch } = require('./dispatch/dispatchCentral')
 const Car = require('./vehicles/car')
 const Truck = require('./vehicles/truck')
 const Drone = require('./vehicles/drone')
-const { randomize } = require('../simulator/address')
 const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')
 const { error, info, debug } = require('./log')
-const { search } = require('./pelias')
 
 const packagesPerPallet = 30 // this is a guesstimate
 const vehicleTypes = {
