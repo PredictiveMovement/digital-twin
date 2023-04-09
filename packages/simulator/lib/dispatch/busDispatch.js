@@ -5,6 +5,8 @@ const correctTime = (time) => time.replace(/^24:/, '00:')
 const unix = (str) => moment(correctTime(str), 'HH:mm:ss').unix()
 const { info, warn } = require('../log')
 
+const MAX_SHIPMENTS = 2000
+
 const tripToShipment = ({ tripId, firstStop, lastStop }, i) => ({
   id: i,
   description: tripId,
@@ -46,8 +48,21 @@ const busToVehicle = ({ id, position, passengerCapacity, heading }, i) => ({
  */
 
 const busDispatch = async (buses, trips) => {
+  // if we have more than 2000 trips, split the problem in two - recursively
+  if (trips.length > MAX_SHIPMENTS)
+    return Promise.all(
+      busDispatch(
+        buses.slice(0, buses.length / 2),
+        trips.slice(0, trips.length / 2)
+      ),
+      busDispatch(
+        buses.slice(buses.length / 2),
+        trips.slice(trips.length / 2)
+      ).then((a, b) => a.concat(b))
+    )
   const shipments = trips.map(tripToShipment)
   const vehicles = buses.map(busToVehicle)
+
   const kommunName = trips[0].kommun
   info(
     `Calling vroom for ${kommunName} with ${vehicles.length} buses and ${shipments.length} trips`
