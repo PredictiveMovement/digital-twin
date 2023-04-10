@@ -284,7 +284,7 @@ const App = () => {
         onPlay={onPlay}
         onSpeedChange={onSpeedChange}
       />
-      {(!connected || reset || !cars.length) && (
+      {(!connected || reset || !cars.length || !bookings.length) && (
         <Loading
           connected={connected}
           passengers={passengers.length}

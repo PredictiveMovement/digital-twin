@@ -2,7 +2,13 @@ import React from 'react'
 import styled from 'styled-components'
 import logo from '../../icons/svg/pmLogo.svg'
 import { keyframes } from 'styled-components'
-import { Stepper, Step, StepLabel } from '@mui/material'
+import {
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
+  Typography,
+} from '@mui/material'
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -14,20 +20,6 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-`
-
-const Text = styled.p`
-  font-size: 30px;
-  color: white;
-  z-index: 3;
-`
-
-const SubText = styled.p`
-  padding-top: 1rem;
-  font-size: 15px;
-  font-weight: bold;
-  color: white;
-  z-index: 3;
 `
 
 const pulseAnimation = keyframes`
@@ -63,30 +55,41 @@ const Loading = ({
   if (!connected) activeStep = 0
   else if (!kommuner) activeStep = 2
   else if (!cars) activeStep = 3
-  else if (!busStops) activeStep = 4
-  else if (!passengers) activeStep = 5
+  else if (!passengers) activeStep = 4
+  else if (!busStops) activeStep = 5
 
   return (
     <Wrapper>
-      <PulseIcon alt="Predictive Movement Logo" src={logo} />
-      <SubText>Predictive Movement</SubText>
       <Stepper activeStep={activeStep} orientation="vertical">
         <Step key={1}>
           <StepLabel>Kontaktar servern...</StepLabel>
+          <StepContent>
+            <Typography
+              color="white"
+              sx={{
+                color: 'white',
+                fontSize: '0.9rem',
+                maxWidth: '300px',
+              }}
+            >
+              Försöker nå simulatorservern hos Predictive Movement. Om detta
+              steg tar tid beror det oftast på ett fel som har uppstått. Vänta
+              någon minut så startar servrarna om sig automatiskt. Om det
+              fortfarande inte fungerar, kontakta teamet på Discord.
+            </Typography>
+          </StepContent>
         </Step>
         <Step key={2}>
           <StepLabel>Hämtar {kommuner} kommuner</StepLabel>
         </Step>
         <Step key={3}>
-          <StepLabel>Hämtar {cars} fordon</StepLabel>
+          <StepLabel>Skapar {cars} fordon</StepLabel>
         </Step>
         <Step key={4}>
-          <StepLabel>
-            Hämtar {busStops} busstationer och beräknar rutter
-          </StepLabel>
+          <StepLabel>Genererar {passengers} passagerare</StepLabel>
         </Step>
         <Step key={5}>
-          <StepLabel>Genererar {passengers} passagerare</StepLabel>
+          <StepLabel>Skapar {busStops} busstationer och rutter</StepLabel>
         </Step>
       </Stepper>
     </Wrapper>

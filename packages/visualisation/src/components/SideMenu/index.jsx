@@ -27,7 +27,7 @@ const pulseAnimation = keyframes`
 `
 
 const Menu = styled.nav`
-  background-color: #10c57b;
+  background-color: #10c57b33;
   bottom: 0;
   left: 0;
   top: 0;
