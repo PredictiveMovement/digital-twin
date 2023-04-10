@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useSocket } from './hooks/useSocket.js'
-import Map from './Map.js'
-import PlaybackOptions from './components/PlaybackOptions/index.js'
-import Loading from './components/Loading/index.js'
+import Map from './Map'
+import PlaybackOptions from './components/PlaybackOptions'
+import Loading from './components/Loading'
 import styled from 'styled-components'
 import ResetIcon from './icons/svg/resetIcon.svg'
-import TransparentButton from './components/TransparentButton/index.js'
-import SideMenu from './components/SideMenu/index.js'
-import WelcomeBox from './components/WelcomeBox/index.js'
+import TransparentButton from './components/TransparentButton'
+import SideMenu from './components/SideMenu'
+
+import fleetsJson from './data/fleets.json'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -34,6 +35,8 @@ const App = () => {
   const [newParameters, setNewParameters] = useState({})
   const [currentParameters, setCurrentParameters] = useState({})
   const [fleets, setFleets] = useState({})
+
+  const [connected, setConnected] = useState(false)
 
   const { socket } = useSocket()
 
@@ -246,16 +249,21 @@ const App = () => {
   }
 
   const setupFleets = () => {
-    const fleetsJson = require('./data/fleets.json')
     setFleets(fleetsJson)
   }
 
   useEffect(setupFleets, [])
 
+  socket.on('disconnect', () => {
+    setConnected(false)
+  })
+
+  socket.on('connect', () => {
+    setConnected(true)
+  })
+
   return (
     <>
-      <WelcomeBox />
-
       <Wrapper>
         <TransparentButton onClick={() => resetSimulation()}>
           <img src={ResetIcon} alt="Reset" />
@@ -275,21 +283,17 @@ const App = () => {
         onPlay={onPlay}
         onSpeedChange={onSpeedChange}
       />
-      {reset && <Loading />}
-      <Map
-        activeLayers={activeLayers}
-        passengers={passengers}
-        cars={cars}
-        bookings={bookings}
-        postombud={postombud}
-        measureStations={measureStations}
-        busStops={busStops}
-        kommuner={kommuner}
-        activeCar={activeCar}
-        time={time}
-        setActiveCar={setActiveCar}
-        lineShapes={lineShapes}
-      />
+      {(!connected || reset || !cars.length) && (
+        <Loading
+          connected={connected}
+          passengers={passengers.length}
+          cars={cars.length}
+          bookings={bookings.length}
+          busStops={busStops.length}
+          kommuner={kommuner.length}
+          lineShapes={lineShapes.length}
+        />
+      )}
     </>
   )
 }

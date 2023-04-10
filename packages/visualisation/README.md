@@ -29,8 +29,8 @@ Your app is ready to be deployed!
 
 Make sure you have these env variables set:
 
-          REACT_APP_SIMULATOR_URL
-          REACT_APP_MAPBOX_ACCESS_TOKEN
+          VITE_SIMULATOR_URL
+          VITE_MAPBOX_ACCESS_TOKEN
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 

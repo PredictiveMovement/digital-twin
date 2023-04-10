@@ -18,11 +18,6 @@ import Button from './components/Button'
 import mapboxgl from 'mapbox-gl'
 import HoverInfoBox from './components/HoverInfoBox'
 
-// @ts-ignore
-mapboxgl.workerClass =
-  // eslint-disable-next-line import/no-webpack-loader-syntax
-  require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default
-
 const transitionInterpolator = new LinearInterpolator(['bearing'])
 
 const Map = ({
@@ -196,7 +191,7 @@ const Map = ({
         return [34, 166, 179, opacity]
       case 'taxi':
       case 'anropsstyrd kollektivtrafik':
-        return [255, 255, 0, 20]
+        return [255, 255, 0, opacity]
       default:
         return [254, 254, 254, opacity]
     }
@@ -576,7 +571,7 @@ const Map = ({
   return (
     <DeckGL
       //mapLib={maplibregl}
-      mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+      mapboxApiAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
       // initialViewState={mapState.viewport}
       viewState={mapState}
       // onLoad={rotateCamera}
@@ -642,7 +637,7 @@ const Map = ({
         //mapLib={maplibregl}
         //mapStyle="https://maptiler.iteam.services/styles/basic-preview/style.json"
         mapStyle="mapbox://styles/mapbox/dark-v10"
-        mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+        mapboxApiAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
       />
       {hoverInfo && mapState.zoom > 6 && <HoverInfoBox data={hoverInfo} />}
       <TimeProgressBar time={time} />

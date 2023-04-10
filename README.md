@@ -49,7 +49,7 @@ open a new terminal / tmux
     cd packages/visualization
     npm ci
   
-Add .env with the mapbox token `REACT_APP_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>` - we want to remove this step by using libremap
+Add .env with the mapbox token `VITE_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>` - we want to remove this step by using libremap
 
     npm start
 

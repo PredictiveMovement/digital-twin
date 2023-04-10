@@ -5,13 +5,22 @@ import App from './App'
 // import reportWebVitals from './reportWebVitals'
 import { SocketIOProvider } from './context/socketIOProvider'
 import 'moment-duration-format'
+import { ThemeProvider, createTheme } from '@mui/material'
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+})
 
 ReactDOM.render(
   <SocketIOProvider
-    url={process.env.REACT_APP_SIMULATOR_URL || 'http://localhost:4000'}
+    url={import.meta.env.VITE_SIMULATOR_URL || 'http://localhost:4000'}
     opts={{ withCredentials: true }}
   >
-    <App />
+    <ThemeProvider theme={darkTheme}>
+      <App />
+    </ThemeProvider>
   </SocketIOProvider>,
   document.getElementById('root')
 )
