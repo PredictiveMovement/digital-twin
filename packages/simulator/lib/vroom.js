@@ -96,7 +96,7 @@ module.exports = {
         info('Jobs', jobs)
         info('Shipments', shipments)
         info('Vehicles', vehicles)
-        return Promise.reject(vroomError)
+        return vroomError
       })
   },
 }
