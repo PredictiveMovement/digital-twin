@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^12.8.3",
     "@vitejs/plugin-react": "^3.1.0",
     "deck.gl": "^8.8.23",
+    "jsoneditor-react": "^3.1.2",
     "maplibre-gl": "^1.15.3",
     "moment-duration-format": "^2.3.2",
     "point-in-polygon": "^1.1.0",

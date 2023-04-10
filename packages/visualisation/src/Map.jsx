@@ -13,10 +13,11 @@ import { ParagraphLarge } from './components/Typography'
 
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 import TimeProgressBar from './components/TimeProgressBar'
-import Button from './components/Button'
 
+import LayersMenu from './components/LayersMenu'
 import mapboxgl from 'mapbox-gl'
 import HoverInfoBox from './components/HoverInfoBox'
+import { IconButton, Menu, MenuItem } from '@mui/material'
 
 const transitionInterpolator = new LinearInterpolator(['bearing'])
 
@@ -603,32 +604,14 @@ const Map = ({
     >
       <div
         style={{
-          bottom: '150px',
-          right: '200px',
+          bottom: '40px',
+          right: '20px',
           position: 'absolute',
         }}
       >
-        <Button
-          text="Visa rutter"
-          onClick={() => {
-            setShowArcLayer(false)
-            setShowQueuedBookings((current) => !current)
-          }}
-        />
-      </div>
-      <div
-        style={{
-          bottom: '80px',
-          right: '200px',
-          position: 'absolute',
-        }}
-      >
-        <Button
-          text={'Visa nästa stopp'}
-          onClick={() => {
-            setShowQueuedBookings(false)
-            setShowArcLayer((current) => !current)
-          }}
+        <LayersMenu
+          setShowArcLayer={setShowArcLayer}
+          setShowQueuedBookings={setShowQueuedBookings}
         />
       </div>
       <StaticMap

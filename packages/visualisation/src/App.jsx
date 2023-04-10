@@ -265,8 +265,6 @@ const App = () => {
 
   return (
     <>
-      <WelcomeBox />
-
       <Wrapper>
         <TransparentButton onClick={() => resetSimulation()}>
           <img src={ResetIcon} alt="Reset" />

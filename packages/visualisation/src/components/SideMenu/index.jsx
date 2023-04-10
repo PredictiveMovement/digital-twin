@@ -1,30 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
-/*import pmLogo from '../../icons/svg/pmLogo.svg'
+import pmLogo from '../../icons/svg/pmLogo.svg'
 import experimentIcon from '../../icons/svg/experimentIcon.svg'
 import historyIcon from '../../icons/svg/historyIcon.svg'
 import menuActive from '../../icons/svg/menuActive.svg'
 import pencilIcon from '../../icons/svg/pencil.svg'
 import SavedExperimentSection from '../SavedExperimentSection'
 import ExperimentSection from '../ExperimentSection'
-import NewExperimentSection from '../NewExperimentSection'*/
-
-import InboxIcon from '@mui/icons-material/MoveToInbox'
-import MailIcon from '@mui/icons-material/Mail'
-import SvgIcon, { Button, Icon } from '@mui/material'
-import logo from '../../icons/svg/pmLogo.svg'
-
+import NewExperimentSection from '../NewExperimentSection'
+import useOutsideClick from '../../hooks/useClickOutside'
 import { keyframes } from 'styled-components'
-import {
-  Box,
-  Divider,
-  IconButton,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  SwipeableDrawer,
-} from '@mui/material'
 
 const pulseAnimation = keyframes`
   0%
@@ -90,63 +75,83 @@ const SideMenu = ({
   setNewParameters,
   fleets,
 }) => {
-  const [open, setOpen] = useState(true)
-  const toggleDrawer = (open) => (event) => {
-    if (
-      event &&
-      event.type === 'keydown' &&
-      (event.key === 'Tab' || event.key === 'Shift')
-    ) {
-      return
-    }
-    setOpen(open)
-  }
+  const ref = useRef()
 
+  const [open, setOpen] = useState('map')
+
+  useOutsideClick(ref, () => {
+    setOpen('map')
+  })
   return (
-    <>
-      <SwipeableDrawer
-        anchor={'left'}
-        open={open}
-        onClose={toggleDrawer(false)}
-        onOpen={toggleDrawer(true)}
-        swipeAreaWidth={300}
-        disableSwipeToOpen={false}
-        ModalProps={{
-          keepMounted: true,
-        }}
-      >
-        <Box
-          sx={{
-            width: 300,
-            backgroundColor: '#10c57b',
-          }}
-          role="presentation"
-          onClick={toggleDrawer(false)}
-          onKeyDown={toggleDrawer(false)}
-        >
-          <List>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <Icon>
-                    <img src={logo} alt="PM Icon" />
-                  </Icon>
-                </ListItemIcon>
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary="Experiment" />
-              </ListItemButton>
-            </ListItem>
-          </List>
-          <Divider />
-        </Box>
-      </SwipeableDrawer>
-    </>
+    <div ref={ref}>
+      <Menu>
+        <List>
+          <MenuItem onClick={() => setOpen('map')}>
+            <img src={pmLogo} alt="Logo" />
+          </MenuItem>
+          <MenuItem
+            onClick={() =>
+              setOpen((current) =>
+                current === 'newExperiment' ? 'map' : 'newExperiment'
+              )
+            }
+          >
+            <img src={pencilIcon} alt="Parametrar" />
+            {open === 'newExperiment' && (
+              <ActiveMenu>
+                <img src={menuActive} alt="Open" />
+              </ActiveMenu>
+            )}
+          </MenuItem>
+          <MenuItem
+            onClick={() =>
+              setOpen((current) =>
+                current === 'experiment' ? 'map' : 'experiment'
+              )
+            }
+          >
+            <PulseIcon src={experimentIcon} alt="Experiment" />
+            {open === 'experiment' && (
+              <ActiveMenu>
+                <img src={menuActive} alt="Open" />
+              </ActiveMenu>
+            )}
+          </MenuItem>
+          <MenuItem
+            onClick={() =>
+              setOpen((current) =>
+                current === 'savedExperiment' ? 'map' : 'savedExperiment'
+              )
+            }
+          >
+            <img src={historyIcon} alt="Saved Experiment" />
+            {open === 'savedExperiment' && (
+              <ActiveMenu>
+                <img src={menuActive} alt="Open" />
+              </ActiveMenu>
+            )}
+          </MenuItem>
+        </List>
+      </Menu>
+
+      {open === 'experiment' && (
+        <ExperimentSection
+          currentParameters={currentParameters}
+          activeLayers={activeLayers}
+        />
+      )}
+
+      {open === 'savedExperiment' && <SavedExperimentSection />}
+
+      {open === 'newExperiment' && (
+        <NewExperimentSection
+          fleets={fleets}
+          newParameters={newParameters}
+          newExperiment={newExperiment}
+          setNewParameters={setNewParameters}
+        />
+      )}
+    </div>
   )
 }
 

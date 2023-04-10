@@ -204,19 +204,13 @@ const PassengerInfo = ({ data }) => {
       <Paragraph>
         Restid:{' '}
         <strong>
-          {moment
-            .duration(data.moveTime || 0, 'seconds')
-            .locale('sv')
-            .format()}
+          {moment.duration(data.moveTime || 0, 'seconds').humanize()}
         </strong>
       </Paragraph>
       <Paragraph>
         Väntetid:{' '}
         <strong>
-          {moment
-            .duration(data.waitTime || 0, 'seconds')
-            .locale('sv')
-            .format()}
+          {moment.duration(data.waitTime || 0, 'seconds').humanize()}
         </strong>
       </Paragraph>
     </Wrapper>

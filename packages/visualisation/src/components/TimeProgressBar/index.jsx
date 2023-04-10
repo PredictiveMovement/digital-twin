@@ -8,7 +8,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   left: 15rem;
-  right: 15rem;
+  right: 5rem;
 `
 
 const Container = styled.div`
