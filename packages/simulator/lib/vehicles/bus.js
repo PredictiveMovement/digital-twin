@@ -18,6 +18,8 @@ class Bus extends Vehicle {
     id,
     stops,
     finalStop,
+    parcelCapacity,
+    passengerCapacity,
     kommun,
     ...vehicle
   }) {
@@ -35,8 +37,18 @@ class Bus extends Vehicle {
     this.kommun = kommun
     this.passengers = []
     this.startPosition = startPosition
-    this.passengerCapacity = 60 // TODO: fill this from the workshop poll
+    this.passengerCapacity = passengerCapacity // TODO: fill this from the workshop poll
+    this.parcelCapacity = parcelCapacity // TODO: fill this from the workshop poll
     this.co2PerKmKg = 1.3 // NOTE: From a quick google. Needs to be verified.
+  }
+
+  canHandle(booking) {
+    return (
+      booking.type === 'busstop' ||
+      (booking.type === 'parcel' &&
+        this.cargo.length < this.parcelCapacity &&
+        this.passengers.length < this.passengerCapacity)
+    )
   }
 
   async handleBooking(booking) {

@@ -13,11 +13,12 @@ const {
   mapTo,
   groupBy,
   first,
+  filter,
 } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Bus = require('./vehicles/bus')
 const { error } = require('./log')
-const { search } = require('./pelias')
+const { search, searchOne } = require('./pelias')
 const expandFleets = () => (fleets) =>
   fleets.pipe(
     mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(mapTo(fleet)))
@@ -70,39 +71,32 @@ class Kommun {
     this.co2 = 0
     this.citizens = citizens
 
-    this.fleets = from(
-      fleets.map((fleet) => {
-        // NOTE: This should work because from() is supposed to be able to handle promises...
-        // if (!!fleet.hubAddress) {
-        //   return search(fleet.hubAddress)
-        //     .then(({ address, position }) => {
-        //       console.log('Fleet hub positions', position)
-        //       return new Fleet({ hub: position, ...fleet })
-        //     })
-        //     .catch((err) => {
-        //       error('Kommun -> Fleets', err)
-        //     })
-        // }
+    this.fleets = from(fleets).pipe(
+      mergeMap(async (fleet) => {
+        const hub = fleet.hubAddress
+          ? await searchOne(fleet.hubAddress)
+              .then((r) => r.position)
+              .catch((err) => error(err) || center)
+          : center
 
-        return new Fleet({ hub: center, ...fleet })
+        return new Fleet({ hub, ...fleet })
       })
     )
 
     this.cars = merge(
       this.privateCars,
-      this.fleets.pipe(mergeMap((fleet) => fleet.cars))
+      this.fleets.pipe(
+        filter((fleet) => fleet.type !== 'bus'),
+        mergeMap((fleet) => fleet.cars)
+      )
     ).pipe(shareReplay())
 
-    this.buses = range(0, this.busCount).pipe(
-      map(() => ({
-        startPosition: center,
-        position: center,
-        heading: center,
-        kommun: name,
-        stops: from([]),
-      })),
-      map((props) => new Bus(props))
-    )
+    this.buses = merge(
+      this.fleets.pipe(
+        filter((fleet) => fleet.type === 'bus'),
+        mergeMap((fleet) => fleet.cars)
+      )
+    ).pipe(shareReplay())
 
     this.pickNextFleet = () =>
       this.fleets.pipe(
@@ -114,6 +108,7 @@ class Kommun {
     this.dispatchedBookings = this.unhandledBookings.pipe(
       mergeMap((booking) =>
         this.pickNextFleet().pipe(
+          filter((fleet) => fleet.canHandleBooking(booking)),
           mergeMap(
             (fleet) => fleet.handleBooking(booking) && fleet.dispatchedBookings,
             1

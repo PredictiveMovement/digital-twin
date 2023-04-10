@@ -1,10 +1,18 @@
 const { Subject, range, from, merge, of } = require('rxjs')
-const { shareReplay, mergeMap, share, catchError } = require('rxjs/operators')
+const {
+  shareReplay,
+  mergeMap,
+  share,
+  catchError,
+  first,
+  filter,
+} = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
 const Car = require('./vehicles/car')
 const Truck = require('./vehicles/truck')
 const Drone = require('./vehicles/drone')
 const Taxi = require('./vehicles/taxi')
+const Bus = require('./vehicles/bus')
 const Position = require('./models/position')
 const { error, info, debug } = require('./log')
 
@@ -12,33 +20,38 @@ const packagesPerPallet = 30 // this is a guesstimate
 const vehicleTypes = {
   tungLastbil: {
     weight: 26 * 1000,
-    capacity: 48 * packagesPerPallet,
+    parcelCapacity: 48 * packagesPerPallet,
     class: Truck,
   },
   medeltungLastbil: {
     weight: 16.5 * 1000,
-    capacity: 18 * packagesPerPallet,
+    parcelCapacity: 18 * packagesPerPallet,
     class: Truck,
   },
   lättLastbil: {
     weight: 3.5 * 1000,
-    capacity: 8 * packagesPerPallet, // TODO: is this number of pallets reasonable?
+    parcelCapacity: 8 * packagesPerPallet, // TODO: is this number of pallets reasonable?
     class: Truck,
   },
   bil: {
     weight: 1.5 * 1000,
-    capacity: 25,
+    parcelCapacity: 25,
     class: Car,
   },
   drönare: {
     weight: 5,
-    capacity: 1,
+    parcelCapacity: 1,
     class: Drone,
   },
   taxi: {
     weight: 1.5 * 1000,
-    capacity: 4,
+    passengerCapacity: 4,
     class: Taxi,
+  },
+  bus: {
+    weight: 10 * 1000,
+    passengerCapacity: 50,
+    class: Bus,
   },
 }
 
@@ -49,19 +62,12 @@ class Fleet {
     percentageHomeDelivery,
     vehicles,
     hub,
-    hubAddress,
+    type,
   }) {
     this.name = name
+    this.type = type
     this.marketshare = marketshare
-    const hubPos = new Position(hub)
-    if (!hubPos.isValid) {
-      error(
-        `Invalid hub position for fleet ${name}: ${hub}\n\n${
-          new Error().stack
-        }\n\n`
-      )
-    }
-    this.hub = { position: hubPos.isValid ? hubPos : { lat: 0, lon: 0 } }
+    this.hub = { position: new Position(hub) }
 
     this.percentageHomeDelivery = (percentageHomeDelivery || 0) / 100 || 0.15 // based on guestimates from workshop with transport actors in oct 2021
     this.percentageReturnDelivery = 0.1
@@ -70,21 +76,6 @@ class Fleet {
         range(0, count).pipe(
           mergeMap(() => {
             const Vehicle = vehicleTypes[type].class
-
-            // NOTE: This should work because mergeMap is supposed to handle promises...
-            // if (!!hubAddress) {
-            //   return search(hubAddress)
-            //     .then(({ position }) => {
-            //       return of(
-            //         new Vehicle({
-            //           ...vehicleTypes[type],
-            //           fleet: this,
-            //           position: position,
-            //         })
-            //       )
-            //     })
-            //     .catch((err) => error('Fleet -> Cars', err))
-            // }
 
             return of(
               new Vehicle({
@@ -109,8 +100,17 @@ class Fleet {
     this.manualDispatchedBookings = new Subject()
     this.dispatchedBookings = merge(
       this.manualDispatchedBookings,
-      dispatch(this.cars, this.unhandledBookings) // TODO: Cluster bookings by pickup location.
+      dispatch(this.cars, this.unhandledBookings)
     ).pipe(share())
+  }
+
+  async canHandleBooking(booking) {
+    return this.cars
+      .pipe(
+        filter((car) => car.canHandleBooking(booking)),
+        first()
+      )
+      .toPromise()
   }
 
   async handleBooking(booking, car) {

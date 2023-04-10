@@ -2,7 +2,7 @@ const fetch = require('node-fetch')
 // eslint-disable-next-line no-undef
 const vroomUrl = process.env.VROOM_URL || 'https://vroom.predictivemovement.se/'
 const moment = require('moment')
-const { error, debug } = require('./log')
+const { error, debug, info } = require('./log')
 const { getFromCache, updateCache } = require('./cache')
 
 module.exports = {

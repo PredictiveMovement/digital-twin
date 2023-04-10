@@ -11,6 +11,12 @@
           "vehicles": {
             "taxi": 5
           }
+        },
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "vehicles": {
+            "bus": 5
+          }
         }
       ]
     },
@@ -20,6 +26,12 @@
           "name": "Taxi",
           "vehicles": {
             "taxi": 5
+          }
+        },
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "vehicles": {
+            "bus": 8
           }
         }
       ]
@@ -31,6 +43,12 @@
           "vehicles": {
             "taxi": 5
           }
+        },
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "vehicles": {
+            "bus": 35
+          }
         }
       ]
     },
@@ -40,6 +58,12 @@
           "name": "Taxi",
           "vehicles": {
             "taxi": 5
+          }
+        },
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "vehicles": {
+            "bus": 22
           }
         }
       ]
@@ -51,6 +75,13 @@
           "vehicles": {
             "taxi": 5
           }
+        },
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
+          "vehicles": {
+            "bus": 12
+          }
         }
       ]
     },
@@ -60,6 +91,13 @@
           "name": "Taxi",
           "vehicles": {
             "taxi": 100
+          }
+        },
+        {
+          "name": "Skånetrafik",
+          "type": "bus",
+          "vehicles": {
+            "bus": 182
           }
         },
         {
@@ -111,6 +149,12 @@
           "vehicles": {
             "taxi": 5
           }
+        },
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "vehicles": {
+            "bus": 6
+          }
         }
       ]
     },
@@ -121,11 +165,24 @@
           "vehicles": {
             "taxi": 5
           }
+        },
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "vehicles": {
+            "bus": 20
+          }
         }
       ]
     },
     "Kiruna kommun": {
-      "fleets": []
+      "fleets": [
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "vehicles": {
+            "bus": 28
+          }
+        }
+      ]
     },
     "Ljusdals kommun": {
       "fleets": [
@@ -193,6 +250,12 @@
           "vehicles": {
             "taxi": 5
           }
+        },
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "vehicles": {
+            "bus": 97
+          }
         }
       ]
     },
@@ -202,6 +265,12 @@
           "name": "Taxi",
           "vehicles": {
             "taxi": 5
+          }
+        },
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "vehicles": {
+            "bus": 8
           }
         }
       ]
@@ -213,6 +282,12 @@
           "vehicles": {
             "taxi": 5
           }
+        },
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "vehicles": {
+            "bus": 53
+          }
         }
       ]
     },
@@ -222,6 +297,12 @@
           "name": "Taxi",
           "vehicles": {
             "taxi": 5
+          }
+        },
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "vehicles": {
+            "bus": 5
           }
         }
       ]
@@ -236,6 +317,12 @@
           "percentageHomeDelivery": 100,
           "marketshare": 20,
           "hub": [16.528936, 57.776915]
+        },
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "vehicles": {
+            "bus": 5
+          }
         }
       ]
     },
@@ -245,6 +332,12 @@
           "name": "Taxi",
           "vehicles": {
             "taxi": 5
+          }
+        },
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "vehicles": {
+            "bus": 10
           }
         }
       ]
@@ -256,6 +349,12 @@
           "vehicles": {
             "taxi": 5
           }
+        },
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "vehicles": {
+            "bus": 5
+          }
         }
       ]
     },
@@ -265,6 +364,12 @@
           "name": "Taxi",
           "vehicles": {
             "taxi": 5
+          }
+        },
+        {
+          "name": "Länstrafiken i Norrbotten",
+          "vehicles": {
+            "bus": 5
           }
         }
       ]

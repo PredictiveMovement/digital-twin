@@ -124,7 +124,13 @@ class Region {
       flattenProperty('trips'),
       filter(({ buses, trips }) => buses.length && trips.length),
       mergeMap(({ buses, trips }) => busDispatch(buses, trips), 1), // try to find optimal plan x kommun at a time
-      retryWhen((errors) => errors.pipe(delay(1000), take(10))),
+      retryWhen((errors) =>
+        errors.pipe(
+          tap((err) => error('bus error', err)),
+          delay(1000),
+          take(10)
+        )
+      ),
       mergeAll(),
       mergeMap(({ bus, stops }) =>
         from(stops).pipe(

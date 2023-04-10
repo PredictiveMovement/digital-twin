@@ -9,7 +9,7 @@ class Truck extends Vehicle {
     this.vehicleType = 'car'
     this.isPrivateCar = false
     this.co2PerKmKg = 0.1201 // NOTE: From a quick google. Needs to be verified.
-    this.parcelCapacity = args.capacity
+    this.parcelCapacity = args.parcelCapacity
     this.plan = []
 
     this.position = args.position
@@ -65,6 +65,10 @@ class Truck extends Vehicle {
     this.cargo = this.cargo.filter((p) => p !== this.booking)
     this.cargoEvents.next(this)
     this.booking.delivered(this.position)
+  }
+
+  async canHandleBooking(booking) {
+    return booking.type === 'parcel' && this.cargo.length < this.parcelCapacity
   }
 
   async handleBooking(booking) {

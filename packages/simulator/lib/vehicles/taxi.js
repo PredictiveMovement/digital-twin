@@ -20,6 +20,7 @@ class Taxi extends Vehicle {
     this.passengers = []
     this.queue = []
     this.passengerCapacity = 4 // TODO: Set this when constructing the vehicle
+    this.parcelCapacity = 0 // TODO: Set this when constructing the vehicle
     this.booking = true
     this.vehicleType = 'taxi'
     this.startPosition = startPosition || position
@@ -78,6 +79,18 @@ class Taxi extends Vehicle {
     )
     this.cargoEvents.next(this)
     this.booking.delivered(this.position)
+  }
+
+  async canHandle(booking) {
+    if (booking.type === 'parcel') {
+      if (this.cargo.length < this.parcelCapacity) return true
+      return false
+    }
+    if (booking.type === 'passenger') {
+      if (this.passengers.length < this.passengerCapacity) return true
+      return false
+    }
+    return false
   }
 
   async handleBooking(booking) {
