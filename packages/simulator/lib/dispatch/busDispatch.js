@@ -1,11 +1,20 @@
 const moment = require('moment')
+const { info, warn } = require('../log')
 const { plan } = require('../vroom')
 
-const correctTime = (time) => time.replace(/^24:/, '00:')
-const unix = (str) => moment(correctTime(str), 'HH:mm:ss').unix()
-const { info, warn } = require('../log')
+const correctTime = (time) => {
+  const regex = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/
+  const [, year, month, day, hour, minute, second] = time.match(regex)
 
-const MAX_SHIPMENTS = 2000
+  // month is 0-indexed
+  // hours can be above 24 therefore we use the internal Date constructor
+  // which handles this and shifts the date accordingly- ie 2023-04-01 25:00:00 -> 2023-04-02 01:00:00
+  return new Date(year, month - 1, day, hour, minute, second)
+}
+
+const unix = (str) => moment(correctTime(str), 'HH:mm:ss').unix()
+
+const MAX_SHIPMENTS = 500
 
 const tripToShipment = ({ tripId, firstStop, lastStop }, i) => ({
   id: i,
@@ -50,7 +59,7 @@ const busToVehicle = ({ id, position, passengerCapacity, heading }, i) => ({
 const busDispatch = async (buses, trips) => {
   // if we have more than 2000 trips, split the problem in two - recursively
   if (trips.length > MAX_SHIPMENTS)
-    return Promise.all(
+    return Promise.all([
       busDispatch(
         buses.slice(0, buses.length / 2),
         trips.slice(0, trips.length / 2)
@@ -58,8 +67,8 @@ const busDispatch = async (buses, trips) => {
       busDispatch(
         buses.slice(buses.length / 2),
         trips.slice(trips.length / 2)
-      ).then((a, b) => a.concat(b))
-    )
+      ).then((a, b) => a.concat(b)),
+    ])
   const shipments = trips.map(tripToShipment)
   const vehicles = buses.map(busToVehicle)
 
