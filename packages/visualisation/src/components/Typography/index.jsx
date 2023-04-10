@@ -4,7 +4,7 @@ const Paragraph = styled.p`
   margin: 0;
   font-weight: ${(props) => (props.thin ? 300 : 400)};
   font-size: 12px;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Helvetica Neue', sans-serif;
   color: ${(props) => (props.white ? 'white' : 'black')};
 `
 
@@ -14,7 +14,7 @@ const ParagraphBold = styled(Paragraph)`
 
 const ParagraphLarge = styled.p`
   color: ${(props) => (props.white ? 'white' : 'black')};
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Helvetica Neue', sans-serif;
   margin: 0;
   font-size: 16px;
 `

@@ -11,6 +11,8 @@ import NewExperimentSection from '../NewExperimentSection'*/
 
 import InboxIcon from '@mui/icons-material/MoveToInbox'
 import MailIcon from '@mui/icons-material/Mail'
+import SvgIcon, { Button, Icon } from '@mui/material'
+import logo from '../../icons/svg/pmLogo.svg'
 
 import { keyframes } from 'styled-components'
 import {
@@ -97,48 +99,51 @@ const SideMenu = ({
     ) {
       return
     }
-    setOpen(true)
+    setOpen(open)
   }
 
   return (
     <>
-      <IconButton onClick={toggleDrawer(true)}></IconButton>
       <SwipeableDrawer
         anchor={'left'}
         open={open}
         onClose={toggleDrawer(false)}
         onOpen={toggleDrawer(true)}
+        swipeAreaWidth={300}
+        disableSwipeToOpen={false}
+        ModalProps={{
+          keepMounted: true,
+        }}
       >
         <Box
+          sx={{
+            width: 300,
+            backgroundColor: '#10c57b',
+          }}
           role="presentation"
           onClick={toggleDrawer(false)}
           onKeyDown={toggleDrawer(false)}
         >
           <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <Icon>
+                    <img src={logo} alt="PM Icon" />
+                  </Icon>
+                </ListItemIcon>
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="Experiment" />
+              </ListItemButton>
+            </ListItem>
           </List>
           <Divider />
-          <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
         </Box>
       </SwipeableDrawer>
     </>

@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import ResetIcon from './icons/svg/resetIcon.svg'
 import TransparentButton from './components/TransparentButton'
 import SideMenu from './components/SideMenu'
+import WelcomeBox from './components/WelcomeBox'
 
 import fleetsJson from './data/fleets.json'
 
@@ -264,6 +265,8 @@ const App = () => {
 
   return (
     <>
+      <WelcomeBox />
+
       <Wrapper>
         <TransparentButton onClick={() => resetSimulation()}>
           <img src={ResetIcon} alt="Reset" />
@@ -294,6 +297,20 @@ const App = () => {
           lineShapes={lineShapes.length}
         />
       )}
+      <Map
+        activeLayers={activeLayers}
+        passengers={passengers}
+        cars={cars}
+        bookings={bookings}
+        postombud={postombud}
+        measureStations={measureStations}
+        busStops={busStops}
+        kommuner={kommuner}
+        activeCar={activeCar}
+        time={time}
+        setActiveCar={setActiveCar}
+        lineShapes={lineShapes}
+      />
     </>
   )
 }
