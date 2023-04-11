@@ -12,7 +12,7 @@ import RouteIcon from '@mui/icons-material/Route'
 import LayersIcon from '@mui/icons-material/Layers'
 import { Link } from '@mui/material'
 
-export default function LayersMenu({ setArcLayers, setShowArcLayer }) {
+export default function LayersMenu({ setShowArcLayer, setShowQueuedBookings }) {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl)
   const handleClick = (event) => {
@@ -68,13 +68,13 @@ export default function LayersMenu({ setArcLayers, setShowArcLayer }) {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={setArcLayers}>
+        <MenuItem onClick={() => setShowArcLayer((on) => !on)}>
           <ListItemIcon>
             <AirlineStopsIcon />
           </ListItemIcon>
           Visa rutter
         </MenuItem>
-        <MenuItem onClick={setShowArcLayer}>
+        <MenuItem onClick={() => setShowQueuedBookings((on) => !on)}>
           <ListItemIcon>
             <RouteIcon />
           </ListItemIcon>
