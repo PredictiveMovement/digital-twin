@@ -1,0 +1,5 @@
+dist/
+.dockerignore
+Dockerfile
+node_modules
+README.md
