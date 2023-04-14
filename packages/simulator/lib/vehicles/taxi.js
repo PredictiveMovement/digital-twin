@@ -30,7 +30,8 @@ class Taxi extends Vehicle {
   }
 
   stopped() {
-    if (this.status === 'returning') return debug(this.id, 'returned') // we are done - we have returned to origin
+    if (this.status === 'returning' && !this.plan.length)
+      return debug(this.id, 'returned') // we are done - we have returned to origin
     super.stopped()
     this.pickNextInstructionFromPlan()
   }
@@ -58,6 +59,7 @@ class Taxi extends Vehicle {
         return this.pickNextInstructionFromPlan()
       case 'returning':
         this.status = 'ready'
+        if (this.plan.length) return this.pickNextInstructionFromPlan() // we might have new bookings
         return
       default:
         this.status = 'returning'
