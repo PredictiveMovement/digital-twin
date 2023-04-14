@@ -73,11 +73,17 @@ const search = (name, near = null, layers = 'address,venue', size = 1000) => {
     .catch((e) => {
       const peliasError = new Error().stack
       error(`Error in pelias search\n${url}\n${peliasError}\n${e}\n\n`)
+      return Promise.reject(new Error('Error in pelias', peliasError))
     })
 }
 
+const cache = new Map()
+
 const searchOne = async (name, near = null, layers = 'address,venue') => {
+  const cacheKey = !near && name + layers
+  if (cacheKey && cache.has(cacheKey)) return cache.get(cacheKey)
   const results = await search(name, near, layers, 1)
+  if (cacheKey) cache.set(cacheKey, results[0])
   return results[0]
 }
 
