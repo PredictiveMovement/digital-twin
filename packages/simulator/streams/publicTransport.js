@@ -9,36 +9,57 @@ const {
   mergeMap,
   filter,
   first,
-  tap,
   reduce,
-  distinct,
-  zip,
-  bufferTime,
+  zipWith,
+  toArray,
 } = require('rxjs/operators')
 
 function publicTransport(operator) {
-  const { stops, busStops, tripsMap, serviceDatesMap, routeNamesMap } =
+  const { stops, busStops, trips, serviceDates, routeNames } =
     require('./gtfs.js')(operator)
 
   // stop_times.trip_id -> trips.service_id -> calendar_dates.service_id
-  const todaysDate = moment().format('20230413')
-  const todaysServiceIds = serviceDatesMap[todaysDate].map(
-    ({ serviceId }) => serviceId
+  const todaysDate = moment().format('YYYYMMDD')
+  const todaysServiceIds = serviceDates.pipe(
+    filter((serviceDate) => serviceDate.date === todaysDate),
+    map(({ serviceId }) => serviceId),
+    toArray(),
+    shareReplay()
+  )
+  const allTrips = trips.pipe(
+    reduce((map, trip) => {
+      map.set(trip.id, trip)
+      return map
+    }, new Map()),
+    shareReplay()
+  )
+
+  const allRouteNames = routeNames.pipe(
+    reduce((map, route) => {
+      map.set(route.id, route)
+      return map
+    }, new Map()),
+    shareReplay()
   )
 
   const enhancedBusStops = busStops.pipe(
-    map(({ tripId, ...rest }) => {
-      const trip = tripsMap[tripId]
-      const lineNumber = routeNamesMap[trip.routeId].lineNumber
-
+    zipWith(allTrips, (stop, trips) => ({
+      ...stop,
+      trip: trips.get(stop.tripId),
+    })),
+    zipWith(allRouteNames, (stop, routeNames) => {
       return {
-        trip,
-        tripId,
-        lineNumber,
-        ...rest,
+        ...stop,
+        lineNumber: routeNames.get(stop.trip.routeId).lineNumber,
       }
     }),
-    filter(({ trip: { serviceId } }) => todaysServiceIds.includes(serviceId)),
+    zipWith(todaysServiceIds, (stop, todaysServiceIds) => ({
+      ...stop,
+      todaysServiceIds,
+    })),
+    filter(({ todaysServiceIds, trip: { serviceId } }) =>
+      todaysServiceIds.includes(serviceId)
+    ),
     mergeMap(({ stopId, ...rest }) =>
       stops.pipe(
         first((stop) => stop.id === stopId, 'stop not found'),

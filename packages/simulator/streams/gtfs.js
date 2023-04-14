@@ -1,16 +1,59 @@
-const key = process.env.TRAFIKLAB_KEY // log in to trafiklab.se and get a key
-const operator = 'skane'
+const key = process.env.TRAFIKLAB_KEY || '72ed2139ebb3498d9559798b502ed209'
+// log in to trafiklab.se and get a key or use ours - it's free and public domain, shouldn't be a problem to share like this?
+
 const fs = require('fs')
 const path = require('path')
 const parse = require('csv-parse/lib/sync')
-const { info } = require('../lib/log')
+const { info, error } = require('../lib/log')
 
-//const url = `https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${key}`
-
-// const gtfsStream = require('gtfs-stream')
+const AdmZip = require('adm-zip')
+const fetch = require('node-fetch')
 const { shareReplay, Observable } = require('rxjs')
-const { map } = require('rxjs/operators')
+const { map, toArray } = require('rxjs/operators')
 const csv = require('csv-stream')
+
+const MONTH = 1000 * 60 * 60 * 24 * 30
+
+const downloadIfNotExists = (operator) => {
+  const zipFile = path.join(__dirname, `../data/${operator}.zip`)
+  const outPath = path.join(__dirname, `../data/${operator}`)
+  return new Promise((resolve, reject) => {
+    const url = `https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${key}`
+    const stream = fs.createWriteStream(zipFile)
+    const zipFileAge =
+      fs.existsSync(zipFile) && Date.now() - fs.statSync(zipFile).mtimeMs
+    if (
+      !fs.existsSync(zipFile) ||
+      !fs.existsSync(outPath) ||
+      zipFileAge > 1 * MONTH
+    ) {
+      fetch(url).then((res) =>
+        res.body
+          .pipe(stream)
+          .on('finish', () => {
+            info('Downloaded GTFS')
+            try {
+              const zip = new AdmZip(zipFile)
+              if (!fs.existsSync(outPath)) fs.mkdirSync(outPath)
+              zip.extractAllTo(outPath, true)
+            } catch (e) {
+              fs.rmSync(zipFile)
+              error('Error extracting GTFS', e)
+              return reject(e)
+            }
+            info('Extracted GTFS')
+            resolve()
+          })
+          .on('error', (err) => {
+            error('Error downloading GTFS', err)
+            reject(err)
+          })
+      )
+    } else {
+      resolve()
+    }
+  })
+}
 
 const tripMapper = ({
   trip_id: id,
@@ -23,6 +66,7 @@ const tripMapper = ({
   headsign,
   routeId,
 })
+
 const routeNamesMapper = ({ route_id: id, route_short_name: lineNumber }) => ({
   id,
   lineNumber,
@@ -39,54 +83,27 @@ const serviceDatesMapper = ({
 })
 
 function gtfs(operator) {
+  const download = downloadIfNotExists(operator)
   const gtfsStream = (file) => {
     return new Observable((observer) => {
-      const stream = fs
-        .createReadStream(
-          path.join(__dirname, `../data/${operator}/${file}.txt`)
-        )
-        .pipe(csv.createStream({ enclosedChar: '"' }))
-      stream.on('data', (data) => {
-        return observer.next(data)
-      })
-      stream.on('end', () => observer.complete())
-      stream.on('finish', () => {
-        info(`FINISH ${file}`)
-        return observer.complete() // memory leak?
+      download.then(() => {
+        const stream = fs
+          .createReadStream(
+            path.join(__dirname, `../data/${operator}/${file}.txt`)
+          )
+          .pipe(csv.createStream({ enclosedChar: '"' }))
+        stream.on('data', (data) => {
+          return observer.next(data)
+        })
+        stream.on('end', () => observer.complete())
+        stream.on('finish', () => {
+          info(`FINISH ${file}`)
+          return observer.complete() // memory leak?
+        })
       })
     })
   }
 
-  const getMap = (fileName, mapper) => {
-    const data = fs.readFileSync(
-      path.join(__dirname, `../data/${operator}/${fileName}.txt`),
-      'utf8'
-    )
-    return parse(data, { columns: true })
-      .map(mapper)
-      .reduce((acc, { id, ...rest }) => {
-        acc[id] = rest
-        return acc
-      }, {})
-  }
-
-  const getServicesMap = (fileName, mapper) => {
-    const data = fs.readFileSync(
-      path.join(__dirname, `../data/${operator}/${fileName}.txt`),
-      'utf8'
-    )
-    return parse(data, { columns: true })
-      .map(mapper)
-      .reduce((acc, { date, exceptionType, serviceId }) => {
-        if (acc[date]) {
-          acc[date].push({ serviceId, exceptionType })
-        } else {
-          acc[date] = [{ serviceId, exceptionType }]
-        }
-
-        return acc
-      }, {})
-  }
   const stops = gtfsStream('stops').pipe(
     map(
       ({
@@ -108,6 +125,10 @@ function gtfs(operator) {
   )
 
   const trips = gtfsStream('trips').pipe(map(tripMapper), shareReplay())
+  const routeNames = gtfsStream('routes').pipe(
+    map(routeNamesMapper),
+    shareReplay()
+  )
 
   // The calendar_dates file contains exceptions for when services run on schedule
   // TODO: To become GTFS-compliant we need to add scheduling with these positive
@@ -135,9 +156,7 @@ function gtfs(operator) {
     stops,
     trips,
     serviceDates,
-    serviceDatesMap: getServicesMap('calendar_dates', serviceDatesMapper),
-    routeNamesMap: getMap('routes', routeNamesMapper),
-    tripsMap: getMap('trips', tripMapper),
+    routeNames,
   }
 }
 
