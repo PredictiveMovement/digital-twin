@@ -16,7 +16,7 @@ const MONTH = 1000 * 60 * 60 * 24 * 30
 
 const downloadIfNotExists = (operator) => {
   const zipFile = path.join(__dirname, `../data/${operator}.zip`)
-  const outPath = path.join(__dirname, `../../.cache/${operator}`)
+  const outPath = path.join(__dirname, `../.cache/${operator}`)
   return new Promise((resolve, reject) => {
     const url = `https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${key}`
     const stream = fs.createWriteStream(zipFile)
@@ -34,7 +34,7 @@ const downloadIfNotExists = (operator) => {
             info('Downloaded GTFS')
             try {
               const zip = new AdmZip(zipFile)
-              if (!fs.existsSync(outPath)) fs.mkdirSync(outPath)
+              if (!fs.existsSync(outPath)) fs.mkdirSync(outPath, true)
               zip.extractAllTo(outPath, true)
             } catch (e) {
               fs.rmSync(zipFile)
