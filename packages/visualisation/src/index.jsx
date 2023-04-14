@@ -8,6 +8,20 @@ import 'moment-duration-format'
 import { ThemeProvider, createTheme } from '@mui/material'
 
 const darkTheme = createTheme({
+  overrides: {
+    MuiStepIcon: {
+      root: {
+        '&$completed': {
+          color: 'pink',
+        },
+        '&$active': {
+          color: 'red',
+        },
+      },
+      active: {},
+      completed: {},
+    },
+  },
   palette: {
     mode: 'dark',
     primary: {

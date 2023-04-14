@@ -55,14 +55,14 @@ const Loading = ({
   if (!connected) activeStep = 0
   else if (!kommuner) activeStep = 2
   else if (!cars) activeStep = 3
-  else if (!passengers) activeStep = 4
+  else if (!passengers || !bookings) activeStep = 4
   else activeStep = 5
 
   return (
     <Wrapper>
       <Stepper activeStep={activeStep} orientation="vertical">
         <Step key={1}>
-          <StepLabel>Kontaktar servern...</StepLabel>
+          <StepLabel>Försöker nå simulatorn...</StepLabel>
           {activeStep === 0 && (
             <StepContent>
               <Typography
@@ -73,10 +73,10 @@ const Loading = ({
                   maxWidth: '300px',
                 }}
               >
-                Försöker nå simulatorservern hos Predictive Movement. Om detta
-                steg tar tid beror det oftast på ett fel som har uppstått. Vänta
-                någon minut så startar servrarna om sig automatiskt. Om det
-                fortfarande inte fungerar, kontakta teamet på Discord.
+                Om detta steg tar tid beror det oftast på ett fel som har
+                uppstått. Vänta någon minut så startar servrarna om sig
+                automatiskt. Om det fortfarande inte fungerar kontakta teamet på
+                Discord.
               </Typography>
             </StepContent>
           )}
@@ -88,7 +88,9 @@ const Loading = ({
           <StepLabel>Skapar {cars} fordon...</StepLabel>
         </Step>
         <Step key={4}>
-          <StepLabel>Genererar {passengers} passagerare...</StepLabel>
+          <StepLabel>
+            Genererar {passengers} passagerare och {bookings} bokningar...
+          </StepLabel>
         </Step>
         <Step key={5}>
           <StepLabel>Skapar {busStops} busstationer och rutter...</StepLabel>
