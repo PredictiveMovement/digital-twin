@@ -16,7 +16,7 @@ const MONTH = 1000 * 60 * 60 * 24 * 30
 
 const downloadIfNotExists = (operator) => {
   const zipFile = path.join(__dirname, `../data/${operator}.zip`)
-  const outPath = path.join(__dirname, `../data/${operator}`)
+  const outPath = path.join(__dirname, `../../.cache/${operator}`)
   return new Promise((resolve, reject) => {
     const url = `https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${key}`
     const stream = fs.createWriteStream(zipFile)
@@ -89,7 +89,7 @@ function gtfs(operator) {
       download.then(() => {
         const stream = fs
           .createReadStream(
-            path.join(__dirname, `../data/${operator}/${file}.txt`)
+            path.join(__dirname, `../../.cache/${operator}/${file}.txt`)
           )
           .pipe(csv.createStream({ enclosedChar: '"' }))
         stream.on('data', (data) => {
