@@ -14,7 +14,7 @@ import { ParagraphLarge } from './components/Typography'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 import TimeProgressBar from './components/TimeProgressBar'
 
-import LayersMenu from './components/LayersMenu/index.jsx2'
+import LayersMenu from './components/LayersMenu/index.jsx'
 import mapboxgl from 'mapbox-gl'
 import HoverInfoBox from './components/HoverInfoBox'
 import { IconButton, Menu, MenuItem } from '@mui/material'

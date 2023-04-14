@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSocket } from './hooks/useSocket.js'
-import Map from './Map'
+import Map from './Map.jsx'
 import PlaybackOptions from './components/PlaybackOptions'
 import Loading from './components/Loading'
 import styled from 'styled-components'
