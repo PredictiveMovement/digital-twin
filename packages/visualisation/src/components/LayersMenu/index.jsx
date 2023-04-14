@@ -12,7 +12,11 @@ import RouteIcon from '@mui/icons-material/Route'
 import LayersIcon from '@mui/icons-material/Layers'
 import { Link } from '@mui/material'
 
-export default function LayersMenu({ setShowArcLayer, setShowQueuedBookings }) {
+export default function LayersMenu({
+  setShowArcLayer,
+  setShowActiveDeliveries,
+  setShowAssignedBookings,
+}) {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl)
   const handleClick = (event) => {
@@ -72,13 +76,19 @@ export default function LayersMenu({ setShowArcLayer, setShowQueuedBookings }) {
           <ListItemIcon>
             <AirlineStopsIcon />
           </ListItemIcon>
-          Visa rutter
+          Visa nästa stopp
         </MenuItem>
-        <MenuItem onClick={() => setShowQueuedBookings((on) => !on)}>
+        <MenuItem onClick={() => setShowAssignedBookings((on) => !on)}>
           <ListItemIcon>
             <RouteIcon />
           </ListItemIcon>
-          Visa bokningar
+          Visa köade bokningar
+        </MenuItem>
+        <MenuItem onClick={() => setShowActiveDeliveries((on) => !on)}>
+          <ListItemIcon>
+            <RouteIcon />
+          </ListItemIcon>
+          Visa pågående leveranser
         </MenuItem>
         <Divider />
         <MenuItem

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { StaticMap } from 'react-map-gl'
 import DeckGL, {
   PolygonLayer,
@@ -14,7 +14,7 @@ import { ParagraphLarge } from './components/Typography'
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 import TimeProgressBar from './components/TimeProgressBar'
 
-import LayersMenu from './components/LayersMenu'
+import LayersMenu from './components/LayersMenu/index.jsx2'
 import mapboxgl from 'mapbox-gl'
 import HoverInfoBox from './components/HoverInfoBox'
 import { IconButton, Menu, MenuItem } from '@mui/material'
@@ -476,10 +476,11 @@ const Map = ({
     },
   })
 
-  const [showQueuedBookings, setShowQueuedBookings] = useState(false)
+  const [showAssignedBookings, setShowAssignedBookings] = useState(false)
+  const [showActiveDeliveries, setShowActiveDeliveries] = useState(false)
 
   const routesData =
-    showQueuedBookings &&
+    (showActiveDeliveries || showAssignedBookings) &&
     bookings
       .filter((b) => b.type !== 'busstop')
       .map((booking) => {
@@ -489,26 +490,32 @@ const Map = ({
 
         switch (booking.status) {
           case 'Picked up':
-            return {
-              inbound: [169, 178, 237, 55],
-              outbound: getColorBasedOnFleet(car),
-              from: car.position,
-              to: booking.destination,
-            }
+            return (
+              showActiveDeliveries && {
+                inbound: [169, 178, 237, 55],
+                outbound: getColorBasedOnFleet(car),
+                from: car.position,
+                to: booking.destination,
+              }
+            )
           case 'Assigned':
-            return {
-              inbound: getColorBasedOnFleet(car),
-              outbound: getColorBasedOnFleet(car),
-              from: booking.pickup,
-              to: booking.destination,
-            }
+            return (
+              showAssignedBookings && {
+                inbound: getColorBasedOnFleet(car),
+                outbound: getColorBasedOnFleet(car),
+                from: booking.pickup,
+                to: booking.destination,
+              }
+            )
           case 'Queued':
-            return {
-              inbound: getColorBasedOnFleet(car),
-              outbound: [90, 40, 200, 100],
-              from: booking.pickup,
-              to: booking.destination,
-            }
+            return (
+              showAssignedBookings && {
+                inbound: [90, 40, 200, 0],
+                outbound: [90, 40, 200, 100],
+                from: booking.pickup,
+                to: booking.destination,
+              }
+            )
           case 'Delivered':
             return null
 
@@ -569,12 +576,15 @@ const Map = ({
     }))
   }, [activeCar, cars])
 
+  const map = useRef()
+
   return (
     <DeckGL
       //mapLib={maplibregl}
       mapboxApiAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
       // initialViewState={mapState.viewport}
       viewState={mapState}
+      ref={map}
       // onLoad={rotateCamera}
       onViewStateChange={({ viewState }) => {
         setMapState(viewState)
@@ -593,7 +603,7 @@ const Map = ({
         activeLayers.measureStationsLayer && measureStationsLayer,
         bookingLayer,
         showArcLayer && arcLayer,
-        showQueuedBookings && routesLayer,
+        showActiveDeliveries && routesLayer,
         activeLayers.busLineLayer && busLineLayer,
         activeLayers.busStopLayer && busStopLayer,
         activeLayers.carLayer && carLayer,
@@ -611,7 +621,8 @@ const Map = ({
       >
         <LayersMenu
           setShowArcLayer={setShowArcLayer}
-          setShowQueuedBookings={setShowQueuedBookings}
+          setShowActiveDeliveries={setShowActiveDeliveries}
+          setShowAssignedBookings={setShowAssignedBookings}
         />
       </div>
       <StaticMap
