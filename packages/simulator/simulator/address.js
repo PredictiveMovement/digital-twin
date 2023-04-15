@@ -3,6 +3,7 @@ const assert = require('assert')
 const Position = require('../lib/models/position')
 const { addMeters } = require('../lib/distance')
 const fetch = require('node-fetch')
+const { error } = require('../lib/log')
 const streamsUrl =
   process.env.STREAMS_URL || 'https://streams.predictivemovement.se/addresses'
 
@@ -22,7 +23,7 @@ const getAddressesInArea = (position, area, population) => {
   return getAddressesInBoundingBox(topLeft, bottomRight, population).catch(
     async (err) => {
       await err
-      console.error('Error fetching addresses', err, position, area, population)
+      error('Error fetching addresses', err, position, area, population)
       return []
     }
   )

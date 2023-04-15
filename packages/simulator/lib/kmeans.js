@@ -1,5 +1,6 @@
 const kmeans = require('node-kmeans')
 const assert = require('assert')
+const { write } = require('./log')
 
 const clusterPositions = (input, nrOfClusters = 5) => {
   const vectors = input.map(({ pickup, position = pickup.position }) => [
@@ -10,10 +11,10 @@ const clusterPositions = (input, nrOfClusters = 5) => {
     vectors.length < 300,
     'Too many positions to cluster:' + vectors.length
   )
-  process.stdout.write('k..')
+  write('k..')
   return new Promise((resolve, reject) =>
     kmeans.clusterize(vectors, { k: nrOfClusters }, (err, res) => {
-      process.stdout.write('.m')
+      write('.m')
       if (err) return reject(err)
       const clusters = res.map((cluster) => ({
         center: { lon: cluster.centroid[0], lat: cluster.centroid[1] },

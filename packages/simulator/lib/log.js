@@ -9,54 +9,73 @@ const logLevelIsAtLeastInfo =
 const logLevelIsAtLeastWarn =
   LOG_LEVEL.toUpperCase() === 'WARN' || logLevelIsAtLeastInfo
 
+const print = (logFn, titleFn, messageFn, title, message, data, ...rest) => {
+  if (data) {
+    logFn(
+      titleFn(title),
+      messageFn(message),
+      JSON.stringify(data, null, 2),
+      ...rest
+    )
+  } else {
+    logFn(titleFn(title), messageFn(message), ...rest)
+  }
+}
+
 module.exports = {
-  error: (title, error, data, ...rest) => {
-    console.error(`${chalk.redBright.bold('ERROR')} ${chalk.red(title)}`)
-    console.error(error)
-
-    if (data) {
-      console.error(JSON.stringify(data, null, 2), ...rest)
+  debug: (message, data, ...rest) => {
+    if (logLevelIsAtLeastDebug) {
+      print(
+        console.debug,
+        chalk.whiteBright.bold,
+        chalk.gray,
+        'DEBUG',
+        message,
+        data,
+        ...rest
+      )
     }
   },
-  debug: (title, message, data = '', ...rest) => {
-    if (!logLevelIsAtLeastDebug) {
-      return
-    }
-
-    console.debug(
-      `${chalk.whiteBright.bold('DEBUG')} ${chalk.gray(title)} ${chalk.gray(
-        message
-      )}`
-    )
-
-    if (data) {
-      console.error(JSON.stringify(data, null, 2), ...rest)
-    }
-  },
-  info: (title, message, data = '', ...rest) => {
-    if (!logLevelIsAtLeastInfo) {
-      return
-    }
-
-    console.log(
-      `${chalk.whiteBright.bold('INFO ')} ${chalk.white(title)} ${chalk.white(
-        message
-      )}`,
-      data,
+  error: (title, error, ...rest) => {
+    print(
+      console.error,
+      chalk.redBright.bold,
+      chalk.red,
+      'ERROR',
+      title,
+      error,
       ...rest
     )
   },
-  warn: (title, message, data = '', ...rest) => {
-    if (!logLevelIsAtLeastWarn) {
-      return
+  info: (message, data, ...rest) => {
+    if (logLevelIsAtLeastInfo) {
+      print(
+        console.log,
+        chalk.whiteBright.bold,
+        chalk.white,
+        'INFO ',
+        message,
+        data,
+        ...rest
+      )
     }
-
-    console.log(
-      `${chalk.red.bold('WARN ')} ${chalk.white(title)} ${chalk.white(
-        message
-      )}`,
-      data,
-      ...rest
-    )
+  },
+  warn: (message, data, ...rest) => {
+    if (logLevelIsAtLeastWarn) {
+      print(
+        console.log,
+        chalk.red.bold,
+        chalk.white,
+        'WARN ',
+        message,
+        data,
+        ...rest
+      )
+    }
+  },
+  write: (data) => {
+    if (logLevelIsAtLeastDebug) {
+      process.stdout.write(data)
+    }
   },
 }

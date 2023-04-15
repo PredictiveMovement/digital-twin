@@ -1,5 +1,5 @@
 const fetch = require('node-fetch')
-const { info, debug, error } = require('./log')
+const { info, error, write } = require('./log')
 const Position = require('./models/position')
 const peliasUrl =
   process.env.PELIAS_URL || 'https://pelias.predictivemovement.se'
@@ -42,7 +42,7 @@ const nearest = (position, layers = 'address,venue') => {
     )
     .catch((e) => {
       const error = new Error().stack
-      console.error(`Error in pelias nearest\n${error}\n${e}\n\n`)
+      error(`Error in pelias nearest\n${error}\n${e}\n\n`)
     })
 
   return promise
@@ -53,7 +53,7 @@ const search = (name, near = null, layers = 'address,venue', size = 1000) => {
     ? `&focus.point.lat=${near.lat}&focus.point.lon=${near.lon}&layers=${layers}`
     : ''
   const url = `${peliasUrl}/v1/search?text=${encodedName}${focus}&size=${size}`
-  process.stdout.write('p')
+  write('p')
   return fetch(url)
     .then((response) => {
       if (!response.ok) throw 'pelias error: ' + response.statusText

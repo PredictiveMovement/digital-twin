@@ -1,5 +1,5 @@
 const { findBestRouteToPickupBookings } = require('../dispatch/truckDispatch')
-const { info, debug } = require('../log')
+const { info, warn } = require('../log')
 const Vehicle = require('./vehicle')
 const { virtualTime } = require('../virtualTime')
 
@@ -35,7 +35,7 @@ class Truck extends Vehicle {
         this.status = 'ready'
         return
       default:
-        console.log('Unknown status', this.status, this.instruction)
+        warn('Unknown status', this.status, this.instruction)
         if (!this.plan.length) this.status = 'returning'
         return this.navigateTo(this.startPosition)
     }

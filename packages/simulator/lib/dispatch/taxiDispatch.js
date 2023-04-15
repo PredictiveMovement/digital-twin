@@ -1,19 +1,19 @@
 const { plan, taxiToVehicle, bookingToShipment } = require('../vroom')
 const moment = require('moment')
-const { info } = require('../log')
+const { info, write } = require('../log')
 const { virtualTime } = require('../virtualTime')
 
 const taxiDispatch = async (taxis, bookings) => {
   const vehicles = taxis.map(taxiToVehicle)
   const shipments = bookings.map(bookingToShipment) // TODO: concat bookings from existing vehicles with previous assignments
   info('Calling vroom for taxi', vehicles.length, shipments.length)
-  process.stdout.write('🚕')
+  write('🚕')
   const result = await plan({ shipments, vehicles })
   const virtualNow = await virtualTime.getTimeInMillisecondsAsPromise()
   const now = moment(new Date(virtualNow))
 
   return result?.routes.map((route) => {
-    process.stdout.write('✅')
+    write('✅')
     return {
       taxi: taxis[route.vehicle],
       bookings: route.steps
