@@ -1,18 +1,14 @@
-const fetch = require('node-fetch')
-const key = process.env.TRAFIKLAB_KEY // log in to trafiklab.se and get a key
-const path = require('path')
 const moment = require('moment')
+const gtfs = require('./gtfs.js')
 
 const { shareReplay, from, of, firstValueFrom, groupBy, pipe } = require('rxjs')
 const {
   map,
   mergeMap,
   filter,
-  first,
   catchError,
   reduce,
   toArray,
-  tap,
   mergeAll,
 } = require('rxjs/operators')
 const { error } = require('../lib/log.js')
@@ -22,15 +18,15 @@ const reduceMap = (idProp = 'id') =>
 
 const addProp = (prop, fn) =>
   pipe(
-    map((item) => ({
-      ...item,
-      [prop]: fn(item),
-    }))
+    map((item) =>
+      Object.assign(item, {
+        [prop]: fn(item),
+      })
+    )
   )
 
 async function getStopsForDate(date, operator) {
-  const { stops, busStops, trips, serviceDates, routeNames } =
-    require('./gtfs.js')(operator)
+  const { stops, busStops, trips, serviceDates, routeNames } = gtfs(operator)
 
   const allTrips = await firstValueFrom(trips.pipe(reduceMap()))
   const allRouteNames = await firstValueFrom(routeNames.pipe(reduceMap()))
@@ -61,30 +57,17 @@ function publicTransport(operator) {
     shareReplay()
   )
 
-  const stopTimeToDate = (stopTime) => moment(stopTime, 'HH:mm:ss').toDate()
-
   const lineShapes = todaysStops.pipe(
     groupBy((line) => line.tripId),
-    mergeMap((group) =>
-      group.pipe(
-        toArray(),
-        map((stops) => {
-          const count = stops.length
-          return {
-            lineNumber: stops[0].lineNumber,
-            from: stops[0].stop.name,
-            to: stops[count - 1].stop.name,
-            tripId: group.key,
-            stops: stops.map(({ stop }) => stop.position),
-            count,
-          }
-        })
-      )
-    ),
-    catchError((err) => {
-      error('GTFS error', err)
-      return of(err)
-    }),
+    mergeMap((group) => group.pipe(toArray())),
+    map((stops) => ({
+      tripId: stops[0].tripId,
+      lineNumber: stops[0].lineNumber,
+      from: stops[0].stop.name,
+      to: stops[stops.length - 1].stop.name,
+      stops: stops.map(({ stop }) => stop.position),
+    })),
+    catchError((err) => error('GTFS', err)),
     shareReplay()
   )
   return {
