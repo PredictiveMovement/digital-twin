@@ -1,4 +1,4 @@
-const { stops, stopTimes, lineShapes } = require('../publicTransport')('skane')
+const { stops, lineShapes } = require('../publicTransport')('skane')
 const { filter, shareReplay } = require('rxjs')
 const Region = require('../../lib/region')
 
@@ -16,7 +16,6 @@ const skane = (municipalitiesStream) => {
 
     // Bus things.
     stops: stops.pipe(shareReplay()),
-    stopTimes: stopTimes.pipe(shareReplay()),
     lineShapes: lineShapes.pipe(shareReplay()),
   })
 }

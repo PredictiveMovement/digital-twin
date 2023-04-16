@@ -29,6 +29,7 @@ export default function LayersMenu({
     <React.Fragment>
       <IconButton
         onClick={handleClick}
+        onMouseOver={handleClick}
         size="small"
         sx={{ ml: 2 }}
         aria-controls={open ? 'account-menu' : undefined}

@@ -39,8 +39,8 @@ const flattenProperty = (property) => (stream) =>
     )
   )
 
-const getTripsPerKommun = (kommuner) => (stopTimes) =>
-  stopTimes.pipe(
+const getTripsPerKommun = (kommuner) => (stops) =>
+  stops.pipe(
     groupBy(({ tripId }) => tripId),
     mergeMap((s) => s.pipe(toArray())),
     filter((stops) => stops.length > 1),
@@ -68,7 +68,7 @@ const getTripsPerKommun = (kommuner) => (stopTimes) =>
   )
 
 class Region {
-  constructor({ id, name, geometry, stops, stopTimes, lineShapes, kommuner }) {
+  constructor({ id, name, geometry, stops, lineShapes, kommuner }) {
     this.id = id
 
     this.geometry = geometry
@@ -114,7 +114,7 @@ class Region {
 
     this.citizens = kommuner.pipe(mergeMap((kommun) => kommun.citizens))
 
-    this.stopAssignments = stopTimes.pipe(
+    this.stopAssignments = stops.pipe(
       getTripsPerKommun(kommuner),
       map(({ kommunName, trips }) => ({
         buses: this.buses.pipe(filter((bus) => bus.kommun === kommunName)),

@@ -3,139 +3,92 @@ const key = process.env.TRAFIKLAB_KEY // log in to trafiklab.se and get a key
 const path = require('path')
 const moment = require('moment')
 
-const { shareReplay, from, of, firstValueFrom, groupBy, take } = require('rxjs')
+const { shareReplay, from, of, firstValueFrom, groupBy, pipe } = require('rxjs')
 const {
   map,
   mergeMap,
   filter,
   first,
+  catchError,
   reduce,
-  zipWith,
   toArray,
+  tap,
+  mergeAll,
 } = require('rxjs/operators')
+const { error } = require('../lib/log.js')
 
-function publicTransport(operator) {
+const reduceMap = (idProp = 'id') =>
+  pipe(reduce((map, item) => map.set(item[idProp], item), new Map()))
+
+const addProp = (prop, fn) =>
+  pipe(
+    map((item) => ({
+      ...item,
+      [prop]: fn(item),
+    }))
+  )
+
+async function getStopsForDate(date, operator) {
   const { stops, busStops, trips, serviceDates, routeNames } =
     require('./gtfs.js')(operator)
 
+  const allTrips = await firstValueFrom(trips.pipe(reduceMap()))
+  const allRouteNames = await firstValueFrom(routeNames.pipe(reduceMap()))
+  const allStops = await firstValueFrom(stops.pipe(reduceMap()))
+  const allServices = await firstValueFrom(serviceDates.pipe(reduceMap('date')))
+  const todaysServices = allServices.get(date).services
+
+  return busStops.pipe(
+    addProp('trip', (stop) => allTrips.get(stop.tripId)),
+    addProp('route', ({ trip: { routeId } }) => allRouteNames.get(routeId)),
+    addProp('lineNumber', ({ route }) => route.lineNumber),
+    filter(({ trip: { serviceId } }) => todaysServices.includes(serviceId)),
+    addProp('stop', (stop) => allStops.get(stop.stopId)),
+    addProp('position', ({ stop }) => stop.position),
+    catchError((err) => {
+      error('PublicTransport error', err)
+      throw err
+    })
+  )
+}
+
+function publicTransport(operator) {
   // stop_times.trip_id -> trips.service_id -> calendar_dates.service_id
   const todaysDate = moment().format('YYYYMMDD')
-  const todaysServiceIds = serviceDates.pipe(
-    filter((serviceDate) => serviceDate.date === todaysDate),
-    map(({ serviceId }) => serviceId),
-    toArray(),
-    shareReplay()
-  )
-  const allTrips = trips.pipe(
-    reduce((map, trip) => {
-      map.set(trip.id, trip)
-      return map
-    }, new Map()),
+
+  const todaysStops = from(getStopsForDate(todaysDate, operator)).pipe(
+    mergeAll(),
     shareReplay()
   )
 
-  const allRouteNames = routeNames.pipe(
-    reduce((map, route) => {
-      map.set(route.id, route)
-      return map
-    }, new Map()),
-    shareReplay()
-  )
+  const stopTimeToDate = (stopTime) => moment(stopTime, 'HH:mm:ss').toDate()
 
-  const enhancedBusStops = busStops.pipe(
-    zipWith(allTrips, (stop, trips) => ({
-      ...stop,
-      trip: trips.get(stop.tripId),
-    })),
-    zipWith(allRouteNames, (stop, routeNames) => {
-      return {
-        ...stop,
-        lineNumber: routeNames.get(stop.trip.routeId).lineNumber,
-      }
-    }),
-    zipWith(todaysServiceIds, (stop, todaysServiceIds) => ({
-      ...stop,
-      todaysServiceIds,
-    })),
-    filter(({ todaysServiceIds, trip: { serviceId } }) =>
-      todaysServiceIds.includes(serviceId)
-    ),
-    mergeMap(({ stopId, ...rest }) =>
-      stops.pipe(
-        first((stop) => stop.id === stopId, 'stop not found'),
-        map((stop) => ({ ...rest, stop }))
-      )
-    ),
-
-    map(({ stop: { position, name: stopName }, ...rest }) => ({
-      ...rest,
-      stopName,
-      position: { lat: +position.lat, lon: +position.lon },
-    })),
-    shareReplay()
-  )
-
-  const stopTimeToDate = (stopTime) =>
-    new Date(`${new Date().toISOString().slice(0, 11)}${stopTime}`)
-
-  const lineShapes = enhancedBusStops.pipe(
-    map(
-      ({
-        lineNumber,
-        stopName,
-        arrivalTime,
-        tripId,
-        position: { lat, lon },
-      }) => ({
-        lineNumber,
-        arrivalTime,
-        stopName,
-        tripId,
-        stop: {
-          name: stopName,
-          position: [lon, lat],
-        },
-      })
-    ),
-    groupBy((line) => line.tripId, { element: (line) => line }),
-    mergeMap((trip) =>
-      trip.pipe(reduce((acc, cur) => [...acc, cur], [`${trip.key}`]))
-    ),
-    map((arr) => {
-      const values = arr
-        .slice(1)
-        .sort(
-          (a, b) =>
-            stopTimeToDate(a.arrivalTime) - stopTimeToDate(b.arrivalTime)
-        )
-      const count = values.length
-      return {
-        lineNumber: arr[1].lineNumber,
-        tripId: arr[0],
-        stops: values.map(({ stop }) => stop.position),
-        count,
-      }
-    }),
-    groupBy((trip) => trip.lineNumber),
-    mergeMap((lineTrips) =>
-      lineTrips.pipe(
-        reduce((acc, curr) => {
-          if (
-            acc !== undefined &&
-            curr !== undefined &&
-            (acc.count === undefined || acc.count < curr.count)
-          ) {
-            acc = curr
+  const lineShapes = todaysStops.pipe(
+    groupBy((line) => line.tripId),
+    mergeMap((group) =>
+      group.pipe(
+        toArray(),
+        map((stops) => {
+          const count = stops.length
+          return {
+            lineNumber: stops[0].lineNumber,
+            from: stops[0].stop.name,
+            to: stops[count - 1].stop.name,
+            tripId: group.key,
+            stops: stops.map(({ stop }) => stop.position),
+            count,
           }
-          return acc
-        }, {})
+        })
       )
     ),
-    map(({ lineNumber, stops }) => ({ lineNumber, stops }))
+    catchError((err) => {
+      error('GTFS error', err)
+      return of(err)
+    }),
+    shareReplay()
   )
   return {
-    stops,
-    stopTimes: enhancedBusStops,
+    stops: todaysStops,
     lineShapes,
   }
 }

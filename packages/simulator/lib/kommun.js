@@ -48,7 +48,6 @@ class Kommun {
     citizens,
     squares,
     fleets,
-    busCount,
   }) {
     this.squares = squares
     this.geometry = geometry
@@ -65,8 +64,6 @@ class Kommun {
     this.busesPerCapita = 100 / 80_000
     this.population = population
     this.privateCars = new ReplaySubject()
-    this.busCount =
-      busCount || Math.max(5, Math.round(this.population * this.busesPerCapita))
 
     this.co2 = 0
     this.citizens = citizens
@@ -108,7 +105,11 @@ class Kommun {
     this.dispatchedBookings = this.unhandledBookings.pipe(
       mergeMap((booking) =>
         this.pickNextFleet().pipe(
-          filter((fleet) => fleet.canHandleBooking(booking)),
+          mergeMap((fleet) =>
+            fleet.canHandleBooking(booking).then((can) => [can, fleet])
+          ),
+          filter(([can]) => can),
+          map(([_, fleet]) => fleet),
           mergeMap(
             (fleet) => fleet.handleBooking(booking) && fleet.dispatchedBookings,
             1

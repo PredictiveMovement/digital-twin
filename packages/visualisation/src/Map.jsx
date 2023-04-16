@@ -120,20 +120,20 @@ const Map = ({
     },
   })
 
-  const geoJsonFromBusLine = (coordinates, lineNumber) => ({
+  const geoJsonFromBusLine = ({ stops, lineNumber, from, to }) => ({
     type: 'Feature',
     geometry: {
       type: 'LineString',
-      coordinates,
+      coordinates: stops.map(({ lon, lat }) => [lon, lat]),
     },
     properties: {
       name: `Buss, linje #${lineNumber}`,
+      from,
+      to,
     },
   })
   const geoJsonFromBusLines = (lineShapes) => {
-    return lineShapes.map(({ stops, lineNumber }) =>
-      geoJsonFromBusLine(stops, lineNumber)
-    )
+    return lineShapes.map((line) => geoJsonFromBusLine(line))
   }
   const busLineLayer = new GeoJsonLayer({
     id: 'busLineLayer',

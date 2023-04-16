@@ -30,6 +30,10 @@ class Position {
   toObject() {
     return { lon: this.lon, lat: this.lat }
   }
+
+  toString() {
+    return JSON.stringify(this.toObject(), null, 2)
+  }
 }
 
 module.exports = Position

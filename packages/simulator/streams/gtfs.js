@@ -1,4 +1,4 @@
-const key = process.env.TRAFIKLAB_KEY || '72ed2139ebb3498d9559798b502ed209'
+const key = process.env.TRAFIKLAB_KEY || 'aea471ef5dde447b87bc7bf4b971aaee'
 // log in to trafiklab.se and get a key or use ours - it's free and public domain, shouldn't be a problem to share like this?
 
 const fs = require('fs')
@@ -9,12 +9,13 @@ const { info, error } = require('../lib/log')
 const AdmZip = require('adm-zip')
 const fetch = require('node-fetch')
 const { shareReplay, Observable } = require('rxjs')
-const { map, toArray } = require('rxjs/operators')
+const { map, toArray, groupBy, mergeMap } = require('rxjs/operators')
 const csv = require('csv-stream')
+const Position = require('../lib/models/position')
 
 const MONTH = 1000 * 60 * 60 * 24 * 30
 
-const downloadIfNotExists = (operator) => {
+const downloadAndExtractIfNotExists = (operator) => {
   const zipFile = path.join(__dirname, `../data/${operator}.zip`)
   const outPath = path.join(__dirname, `../.cache/${operator}`)
   return new Promise((resolve, reject) => {
@@ -55,41 +56,14 @@ const downloadIfNotExists = (operator) => {
   })
 }
 
-const tripMapper = ({
-  trip_id: id,
-  service_id: serviceId,
-  trip_headsign: headsign,
-  route_id: routeId,
-}) => ({
-  id,
-  serviceId,
-  headsign,
-  routeId,
-})
-
-const routeNamesMapper = ({ route_id: id, route_short_name: lineNumber }) => ({
-  id,
-  lineNumber,
-})
-
-const serviceDatesMapper = ({
-  service_id: serviceId,
-  date: date,
-  exception_type: exceptionType,
-}) => ({
-  serviceId,
-  date,
-  exceptionType,
-})
-
 function gtfs(operator) {
-  const download = downloadIfNotExists(operator)
+  const download = downloadAndExtractIfNotExists(operator)
   const gtfsStream = (file) => {
     return new Observable((observer) => {
       download.then(() => {
         const stream = fs
           .createReadStream(
-            path.join(__dirname, `../../.cache/${operator}/${file}.txt`)
+            path.join(__dirname, `../.cache/${operator}/${file}.txt`)
           )
           .pipe(csv.createStream({ enclosedChar: '"' }))
         stream.on('data', (data) => {
@@ -116,7 +90,7 @@ function gtfs(operator) {
       }) => ({
         id,
         name,
-        position: { lat, lon },
+        position: new Position({ lat: +lat, lon: +lon }),
         station: parent_station,
         platform: platform_code,
       })
@@ -124,9 +98,27 @@ function gtfs(operator) {
     shareReplay()
   )
 
-  const trips = gtfsStream('trips').pipe(map(tripMapper), shareReplay())
+  const trips = gtfsStream('trips').pipe(
+    map(
+      ({
+        trip_id: id,
+        service_id: serviceId,
+        trip_headsign: headsign,
+        route_id: routeId,
+      }) => ({
+        id,
+        serviceId,
+        headsign,
+        routeId,
+      })
+    ),
+    shareReplay()
+  )
   const routeNames = gtfsStream('routes').pipe(
-    map(routeNamesMapper),
+    map(({ route_id: id, route_short_name: lineNumber }) => ({
+      id,
+      lineNumber,
+    })),
     shareReplay()
   )
 
@@ -135,7 +127,28 @@ function gtfs(operator) {
   // and negative exceptions. However Norrbotten does not use calendar scheduling,
   // only positive exceptions which allows us to take this shortcut/technical debt.
   const serviceDates = gtfsStream('calendar_dates').pipe(
-    map(serviceDatesMapper),
+    map(
+      ({
+        service_id: serviceId,
+        date: date,
+        exception_type: exceptionType,
+      }) => ({
+        serviceId,
+        date,
+        exceptionType,
+      })
+    ),
+    groupBy((x) => x.date),
+    map((group) => ({ date: group.key, services: group })),
+    mergeMap((group) =>
+      group.services.pipe(
+        toArray(),
+        map((services) => ({
+          date: group.date,
+          services: services.map((x) => x.serviceId),
+        }))
+      )
+    ),
     shareReplay()
   )
 

@@ -42,7 +42,7 @@ class Bus extends Vehicle {
     this.co2PerKmKg = 1.3 // NOTE: From a quick google. Needs to be verified.
   }
 
-  canHandle(booking) {
+  canHandleBooking(booking) {
     return (
       booking.type === 'busstop' ||
       (booking.type === 'parcel' &&

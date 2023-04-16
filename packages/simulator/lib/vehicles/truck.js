@@ -67,7 +67,7 @@ class Truck extends Vehicle {
     this.booking.delivered(this.position)
   }
 
-  async canHandleBooking(booking) {
+  canHandleBooking(booking) {
     return booking.type === 'parcel' && this.cargo.length < this.parcelCapacity
   }
 

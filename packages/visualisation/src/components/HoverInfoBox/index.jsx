@@ -221,12 +221,18 @@ const GenericInfo = ({ data }) => {
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <Paragraph>
-        <strong>Bokning {data.id}</strong>
+        <strong>{data.id}</strong>
       </Paragraph>
       <Paragraph>&nbsp;</Paragraph>
       <Paragraph>{data.title}</Paragraph>
       <Paragraph>{data.subTitle}</Paragraph>
       <Paragraph>Bil: {data.carId}</Paragraph>
+      <Paragraph>
+        Från: <strong>{data.from}</strong>
+      </Paragraph>
+      <Paragraph>
+        Till: <strong>{data.to}</strong>
+      </Paragraph>
       {data.deliveryTime ? (
         <Paragraph>
           Leveranstid: {Math.ceil((10 * data.deliveryTime) / 60 / 60) / 10} h

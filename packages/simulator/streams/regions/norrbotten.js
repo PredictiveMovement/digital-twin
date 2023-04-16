@@ -1,5 +1,4 @@
-const { stops, stopTimes, lineShapes } =
-  require('../publicTransport')('norrbotten')
+const { stops, lineShapes } = require('../publicTransport')('norrbotten')
 const { shareReplay, filter } = require('rxjs')
 const Region = require('../../lib/region')
 
@@ -32,9 +31,8 @@ const norrbotten = (municipalitiesStream) => {
     kommuner: municipalities,
 
     // Bus things.
-    stops: stops.pipe(shareReplay()),
-    stopTimes: stopTimes.pipe(shareReplay()),
-    lineShapes: lineShapes.pipe(shareReplay()),
+    stops,
+    lineShapes,
   })
 }
 

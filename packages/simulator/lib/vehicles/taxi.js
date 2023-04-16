@@ -75,7 +75,7 @@ class Taxi extends Vehicle {
   }
 
   async dropOff() {
-    info('Dropoff passenger', this.id, this.booking?.passenger?.name)
+    debug('Dropoff passenger', this.id, this.booking?.passenger?.name)
     this.passengers = this.passengers.filter(
       (p) => p !== this.booking.passenger
     )
@@ -83,7 +83,7 @@ class Taxi extends Vehicle {
     this.booking.delivered(this.position)
   }
 
-  async canHandle(booking) {
+  canHandleBooking(booking) {
     if (booking.type === 'parcel') {
       if (this.cargo.length < this.parcelCapacity) return true
       return false

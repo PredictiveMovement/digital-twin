@@ -14,6 +14,7 @@
         },
         {
           "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
           "vehicles": {
             "bus": 5
           }
@@ -30,6 +31,7 @@
         },
         {
           "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
           "vehicles": {
             "bus": 8
           }
@@ -46,6 +48,7 @@
         },
         {
           "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
           "vehicles": {
             "bus": 35
           }
@@ -62,6 +65,7 @@
         },
         {
           "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
           "vehicles": {
             "bus": 22
           }
@@ -152,6 +156,7 @@
         },
         {
           "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
           "vehicles": {
             "bus": 6
           }
@@ -168,6 +173,7 @@
         },
         {
           "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
           "vehicles": {
             "bus": 20
           }
@@ -178,6 +184,7 @@
       "fleets": [
         {
           "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
           "vehicles": {
             "bus": 28
           }
@@ -253,6 +260,7 @@
         },
         {
           "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
           "vehicles": {
             "bus": 97
           }
@@ -269,6 +277,7 @@
         },
         {
           "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
           "vehicles": {
             "bus": 8
           }
@@ -285,6 +294,7 @@
         },
         {
           "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
           "vehicles": {
             "bus": 53
           }
@@ -301,6 +311,7 @@
         },
         {
           "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
           "vehicles": {
             "bus": 5
           }
@@ -320,6 +331,7 @@
         },
         {
           "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
           "vehicles": {
             "bus": 5
           }
@@ -336,6 +348,7 @@
         },
         {
           "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
           "vehicles": {
             "bus": 10
           }
@@ -352,6 +365,7 @@
         },
         {
           "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
           "vehicles": {
             "bus": 5
           }
@@ -368,6 +382,7 @@
         },
         {
           "name": "Länstrafiken i Norrbotten",
+          "type": "bus",
           "vehicles": {
             "bus": 5
           }
