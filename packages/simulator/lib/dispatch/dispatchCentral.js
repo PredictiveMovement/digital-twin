@@ -15,7 +15,7 @@ const {
   toArray,
   bufferCount,
 } = require('rxjs/operators')
-const { info, error, warn } = require('../log')
+const { info, error, warn, debug } = require('../log')
 const { clusterPositions } = require('../kmeans')
 const { haversine } = require('../distance')
 const { truckToVehicle, bookingToShipment, plan } = require('../vroom')
@@ -33,7 +33,7 @@ const takeNearest = (cars, center, count) =>
 const getVroomPlan = async (cars, bookings) => {
   const vehicles = cars.map(truckToVehicle)
   const shipments = bookings.map(bookingToShipment) // TODO: concat bookings from existing vehicles with previous assignments
-  info('Calling vroom dispatch', vehicles.length, shipments.length)
+  debug('Calling vroom dispatch', vehicles.length, shipments.length)
   const result = await plan({ shipments, vehicles })
 
   return result.routes.map((route) => {

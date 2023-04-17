@@ -14,7 +14,7 @@ const print = (logFn, titleFn, messageFn, title, message, data, ...rest) => {
     logFn(
       titleFn(title),
       messageFn(message),
-      JSON.stringify(data, null, 2),
+      data instanceof Error ? data : JSON.stringify(data, null, 2),
       ...rest
     )
   } else {

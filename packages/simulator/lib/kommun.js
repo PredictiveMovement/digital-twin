@@ -14,6 +14,7 @@ const {
   groupBy,
   first,
   filter,
+  tap,
 } = require('rxjs/operators')
 const Fleet = require('./fleet')
 const Bus = require('./vehicles/bus')
@@ -76,7 +77,7 @@ class Kommun {
               .catch((err) => error(err) || center)
           : center
 
-        return new Fleet({ hub, ...fleet })
+        return new Fleet({ hub, ...fleet, kommun: this })
       })
     )
 
@@ -88,12 +89,12 @@ class Kommun {
       )
     ).pipe(shareReplay())
 
-    this.buses = merge(
-      this.fleets.pipe(
-        filter((fleet) => fleet.type === 'bus'),
-        mergeMap((fleet) => fleet.cars)
-      )
-    ).pipe(shareReplay())
+    this.buses = this.fleets.pipe(
+      filter((fleet) => fleet.type === 'bus'),
+      tap((bus) => (bus.kommun = this)),
+      mergeMap((fleet) => fleet.cars),
+      shareReplay()
+    )
 
     this.pickNextFleet = () =>
       this.fleets.pipe(

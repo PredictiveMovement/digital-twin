@@ -2,18 +2,6 @@ const moment = require('moment')
 const { info, warn } = require('../log')
 const { plan } = require('../vroom')
 
-const correctTime = (time) => {
-  const regex = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/
-  const [, year, month, day, hour, minute, second] = time.match(regex)
-
-  // month is 0-indexed
-  // hours can be above 24 therefore we use the internal Date constructor
-  // which handles this and shifts the date accordingly- ie 2023-04-01 25:00:00 -> 2023-04-02 01:00:00
-  return new Date(year, month - 1, day, hour, minute, second)
-}
-
-const unix = (str) => moment(correctTime(str), 'HH:mm:ss').unix()
-
 const MAX_SHIPMENTS = 500
 
 const tripToShipment = ({ tripId, firstStop, lastStop }, i) => ({
@@ -22,7 +10,10 @@ const tripToShipment = ({ tripId, firstStop, lastStop }, i) => ({
   amount: [1],
   pickup: {
     time_windows: [
-      [unix(firstStop.arrivalTime), unix(firstStop.departureTime) + 1],
+      [
+        moment(firstStop.arrivalTime).unix(),
+        moment(firstStop.departureTime).unix() + 1,
+      ],
     ],
     id: i,
     location: [firstStop.position.lon, firstStop.position.lat],
@@ -31,7 +22,10 @@ const tripToShipment = ({ tripId, firstStop, lastStop }, i) => ({
     id: i,
     location: [lastStop.position.lon, lastStop.position.lat],
     time_windows: [
-      [unix(lastStop.arrivalTime), unix(lastStop.departureTime) + 1],
+      [
+        moment(lastStop.arrivalTime).unix(),
+        moment(lastStop.departureTime).unix() + 1,
+      ],
     ],
   },
 })

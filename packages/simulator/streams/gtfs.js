@@ -152,6 +152,19 @@ function gtfs(operator) {
     shareReplay()
   )
 
+  const correctTime = (time) => {
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = now.getMonth()
+    const day = now.getDate()
+    const regex = /^(\d{2}):(\d{2}):(\d{2})$/
+    const [, hour, minute, second] = time.match(regex)
+
+    // hours can be above 24 therefore we use the internal Date constructor
+    // which handles this and shifts the date accordingly- ie 2023-04-01 25:00:00 -> 2023-04-02 01:00:00
+    return new Date(year, month, day, +hour, +minute, +second)
+  }
+
   const busStops = gtfsStream('stop_times').pipe(
     map(
       ({
@@ -160,7 +173,13 @@ function gtfs(operator) {
         trip_id: tripId,
         arrival_time: arrivalTime,
         departure_time: departureTime,
-      }) => ({ stopId, tripId, arrivalTime, departureTime, finalStop })
+      }) => ({
+        stopId,
+        tripId,
+        arrivalTime: correctTime(arrivalTime), // adjust for 27 hour clock
+        departureTime: correctTime(departureTime), // adjust for 27 hour clock
+        finalStop,
+      })
     ),
     shareReplay()
   )

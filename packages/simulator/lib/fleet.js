@@ -63,6 +63,7 @@ class Fleet {
     vehicles,
     hub,
     type,
+    kommun,
   }) {
     this.name = name
     this.type = type
@@ -71,6 +72,7 @@ class Fleet {
 
     this.percentageHomeDelivery = (percentageHomeDelivery || 0) / 100 || 0.15 // based on guestimates from workshop with transport actors in oct 2021
     this.percentageReturnDelivery = 0.1
+    this.kommun = kommun
     this.cars = from(Object.entries(vehicles)).pipe(
       mergeMap(([type, count]) =>
         range(0, count).pipe(

@@ -39,7 +39,7 @@ const flattenProperty = (property) => (stream) =>
     )
   )
 
-const getTripsPerKommun = (kommuner) => (stops) =>
+const busStopsGroupedOnKommun = (kommuner) => (stops) =>
   stops.pipe(
     groupBy(({ tripId }) => tripId),
     mergeMap((s) => s.pipe(toArray())),
@@ -62,7 +62,7 @@ const getTripsPerKommun = (kommuner) => (stops) =>
     }),
     groupBy(({ kommun }) => kommun),
     map((trips) => ({
-      kommunName: trips.key,
+      name: trips.key,
       trips,
     }))
   )
@@ -93,19 +93,14 @@ class Region {
 
     this.buses = kommuner.pipe(
       map((kommun) => kommun.buses),
-      mergeAll(),
-      shareReplay()
+      mergeAll()
     )
 
-    this.cars = kommuner.pipe(
-      mergeMap((kommun) => kommun.cars),
-      shareReplay()
-    )
+    this.cars = kommuner.pipe(mergeMap((kommun) => kommun.cars))
 
     this.taxis = kommuner.pipe(
       mergeMap((kommun) => kommun.cars),
-      filter((car) => car.vehicleType === 'taxi'),
-      shareReplay()
+      filter((car) => car.vehicleType === 'taxi')
     )
 
     /**
@@ -115,22 +110,17 @@ class Region {
     this.citizens = kommuner.pipe(mergeMap((kommun) => kommun.citizens))
 
     this.stopAssignments = stops.pipe(
-      getTripsPerKommun(kommuner),
-      map(({ kommunName, trips }) => ({
-        buses: this.buses.pipe(filter((bus) => bus.kommun === kommunName)),
+      busStopsGroupedOnKommun(kommuner),
+      map(({ name, trips }) => ({
+        buses: this.buses.pipe(filter((bus) => bus.fleet.kommun.name === name)),
         trips,
       })),
       flattenProperty('buses'),
       flattenProperty('trips'),
       filter(({ buses, trips }) => buses.length && trips.length),
       mergeMap(({ buses, trips }) => busDispatch(buses, trips), 1), // try to find optimal plan x kommun at a time
-      retryWhen((errors) =>
-        errors.pipe(
-          tap((err) => error('bus error', err)),
-          delay(1000),
-          take(10)
-        )
-      ),
+      catchError((err) => error('stopAssignments', err)),
+      retryWhen((errors) => errors.pipe(delay(1000), take(10))),
       mergeAll(),
       mergeMap(({ bus, stops }) =>
         from(stops).pipe(
