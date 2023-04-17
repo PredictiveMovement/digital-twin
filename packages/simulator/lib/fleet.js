@@ -1,4 +1,4 @@
-const { Subject, range, from, merge, of } = require('rxjs')
+const { Subject, range, from, merge, of, firstValueFrom } = require('rxjs')
 const {
   shareReplay,
   mergeMap,
@@ -107,12 +107,11 @@ class Fleet {
   }
 
   async canHandleBooking(booking) {
-    return this.cars
-      .pipe(
-        filter((car) => car.canHandleBooking(booking)),
-        first()
+    return firstValueFrom(
+      this.cars.pipe(
+        first((car) => car.canHandleBooking(booking), false /* defaultValue */)
       )
-      .toPromise()
+    )
   }
 
   async handleBooking(booking, car) {

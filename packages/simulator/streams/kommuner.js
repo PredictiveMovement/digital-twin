@@ -4,6 +4,7 @@
 const { from, shareReplay, merge, of } = require('rxjs')
 const {
   map,
+  tap,
   filter,
   reduce,
   mergeMap,
@@ -139,14 +140,19 @@ function read({ fleets }) {
             .toPromise(),
           packageVolumes: packageVolumes.find((e) => name.startsWith(e.name)),
           commercialAreas: commercialAreas,
-          unhandledBookings: name.startsWith('Helsingborg')
-            ? merge(bookings.hm, bookings.ikea)
-            : of(),
+
           citizens,
         })
         return kommun
       }
     ),
+    tap((kommun) => {
+      if (kommun.name.startsWith('Helsingborg')) {
+        merge(bookings.hm, bookings.ikea).forEach((booking) =>
+          kommun.handleBooking(booking)
+        )
+      }
+    }),
     shareReplay()
   )
 }

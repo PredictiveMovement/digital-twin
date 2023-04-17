@@ -1,6 +1,7 @@
 const {
   from,
   shareReplay,
+  Subject,
   ReplaySubject,
   mergeMap,
   merge,
@@ -10,19 +11,17 @@ const {
   catchError,
   map,
   toArray,
-  mapTo,
-  groupBy,
-  first,
   filter,
   tap,
+  retryWhen,
+  delay,
 } = require('rxjs/operators')
 const Fleet = require('./fleet')
-const Bus = require('./vehicles/bus')
 const { error } = require('./log')
-const { search, searchOne } = require('./pelias')
+const { searchOne } = require('./pelias')
 const expandFleets = () => (fleets) =>
   fleets.pipe(
-    mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(mapTo(fleet)))
+    mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(map(() => fleet)))
   )
 
 // pick a random item in an array-like stream
@@ -45,7 +44,6 @@ class Kommun {
     postombud,
     population,
     measureStations,
-    unhandledBookings,
     citizens,
     squares,
     fleets,
@@ -61,10 +59,10 @@ class Kommun {
     this.postombud = postombud
     this.measureStations = measureStations
     this.packageVolumes = packageVolumes
-    this.unhandledBookings = unhandledBookings
     this.busesPerCapita = 100 / 80_000
     this.population = population
     this.privateCars = new ReplaySubject()
+    this.unhandledBookings = new Subject()
 
     this.co2 = 0
     this.citizens = citizens
@@ -96,34 +94,36 @@ class Kommun {
       shareReplay()
     )
 
-    this.pickNextFleet = () =>
+    this.pickNextEligbleFleet = (booking) =>
       this.fleets.pipe(
+        mergeMap((fleet) =>
+          fleet.canHandleBooking(booking).then((ok) => [ok, fleet])
+        ),
+        filter(([ok]) => ok),
+        map(([_, fleet]) => fleet),
         expandFleets(),
         pickRandom(),
-        catchError((err) => error('pickNextFleet', err))
+        map((fleet) =>
+          !fleet
+            ? error('No eligble fleet found for booking, retrying...', booking)
+            : fleet
+        ),
+        retryWhen((errors) => errors.pipe(delay(10000))),
+        map((fleet) => ({ booking, fleet })),
+        catchError((err) => error('pickNextEligbleFleet', err))
       )
 
     this.dispatchedBookings = this.unhandledBookings.pipe(
-      mergeMap((booking) =>
-        this.pickNextFleet().pipe(
-          mergeMap((fleet) =>
-            fleet.canHandleBooking(booking).then((can) => [can, fleet])
-          ),
-          filter(([can]) => can),
-          map(([_, fleet]) => fleet),
-          mergeMap(
-            (fleet) => fleet.handleBooking(booking) && fleet.dispatchedBookings,
-            1
-          )
-        )
-      ),
-      groupBy((booking) => booking.id),
-      mergeMap((group) => group.pipe(first())),
-      catchError((err) =>
-        error('dispatchedBookings -> unhandledBookings.pipe', err)
-      ),
+      mergeMap((booking) => this.pickNextEligbleFleet(booking)),
+      mergeMap(({ booking, fleet }) => fleet.handleBooking(booking), 1),
+      catchError((err) => error('dispatchedBookings', err)),
       shareReplay()
     )
+
+    this.handleBooking = (booking) => {
+      booking.kommun = this
+      this.unhandledBookings.next(booking)
+    }
 
     //   this.handledBookings = this.unhandledBookings.pipe(
     //     map((booking) => {
