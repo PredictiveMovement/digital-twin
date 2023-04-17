@@ -1,7 +1,7 @@
 /**
  * TODO: Describe the stream that this file exports and what its data means
  */
-const { from, shareReplay, merge, of } = require('rxjs')
+const { from, shareReplay, merge } = require('rxjs')
 const {
   map,
   tap,
@@ -9,28 +9,22 @@ const {
   reduce,
   mergeMap,
   mergeAll,
-  defaultIfEmpty,
-  toArray,
   take,
   repeat,
 } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
+const Position = require('../lib/models/position')
 const data = require('../data/kommuner.json')
 const population = require('./population')
 const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
 const measureStations = require('./measureStations')
 const inside = require('point-in-polygon')
-const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const Pelias = require('../lib/pelias')
 const { getCitizensInSquare } = require('../simulator/citizens')
-const { convertPosition } = require('../lib/distance')
-const coords = require('swe-coords')
-const Position = require('../lib/models/position')
 const { getAddressesInArea } = require('../simulator/address')
 const { includedMunicipalities } = require('../config')
-const { info, debug } = require('../lib/log')
-const assert = require('assert')
+const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 
 const bookings = {
   hm: require('../streams/orders/hm.js'),

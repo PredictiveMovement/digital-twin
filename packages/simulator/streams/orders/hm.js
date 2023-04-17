@@ -9,7 +9,6 @@ const {
   retryWhen,
   tap,
   delay,
-  bufferTime,
 } = require('rxjs/operators')
 const moment = require('moment')
 const { readCsv } = require('../../adapters/csv')
@@ -99,7 +98,7 @@ function read() {
         pickup = distributionCenters[i % 4] // TODO: Improve handling of origins outside of Sweden.
       }
 
-      return searchOne(distributionCenters[i % 4]).then(({ name, position }) =>
+      return searchOne(pickup).then(({ name, position }) =>
         rows.map((row) => ({ pickup: { name, position }, ...row }))
       )
     }, 1),

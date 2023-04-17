@@ -1,7 +1,7 @@
 const moment = require('moment')
 const gtfs = require('./gtfs.js')
 
-const { shareReplay, from, of, firstValueFrom, groupBy, pipe } = require('rxjs')
+const { shareReplay, from, firstValueFrom, groupBy, pipe } = require('rxjs')
 const {
   map,
   mergeMap,

@@ -16,7 +16,7 @@ module.exports = (savedParams) => {
         process.env.REGIONS === '*' ||
         !process.env.REGIONS
     )
-    .map(([_, region]) => region)
+    .map(([, region]) => region)
   return from(includedRegions.map((region) => region(kommunerStream))).pipe(
     share()
   )

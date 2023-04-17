@@ -17,7 +17,7 @@ function execute() {
         x,
         y,
         'HBG nr': hbgNr,
-        'Traffic Web': trafficWeb,
+        //'Traffic Web': trafficWeb,
         Mätår: year,
         Månad: month,
         UT,

@@ -1,5 +1,5 @@
 const { stops, lineShapes } = require('../publicTransport')('norrbotten')
-const { shareReplay, filter } = require('rxjs')
+const { filter } = require('rxjs')
 const Region = require('../../lib/region')
 
 const includedMunicipalities = [

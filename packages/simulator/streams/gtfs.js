@@ -3,7 +3,6 @@ const key = process.env.TRAFIKLAB_KEY || 'aea471ef5dde447b87bc7bf4b971aaee'
 
 const fs = require('fs')
 const path = require('path')
-const parse = require('csv-parse/lib/sync')
 const { info, error } = require('../lib/log')
 
 const AdmZip = require('adm-zip')
