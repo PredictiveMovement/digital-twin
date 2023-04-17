@@ -2,7 +2,7 @@ const fetch = require('node-fetch')
 // eslint-disable-next-line no-undef
 const vroomUrl = process.env.VROOM_URL || 'https://vroom.predictivemovement.se/'
 const moment = require('moment')
-const { error, debug, info } = require('./log')
+const { error, info } = require('./log')
 const { getFromCache, updateCache } = require('./cache')
 
 module.exports = {
@@ -41,7 +41,7 @@ module.exports = {
       },
     }
   },
-  taxiToVehicle({ id, position, passengerCapacity, heading, passengers }, i) {
+  taxiToVehicle({ position, passengerCapacity, heading, passengers }, i) {
     return {
       id: i,
       //description: id,
@@ -50,7 +50,7 @@ module.exports = {
       end: heading ? [heading.lon, heading.lat] : undefined,
     }
   },
-  truckToVehicle({ id, position, parcelCapacity, heading, cargo }, i) {
+  truckToVehicle({ position, parcelCapacity, heading, cargo }, i) {
     return {
       id: i,
       //description: id,

@@ -1,6 +1,6 @@
 const { plan, taxiToVehicle, bookingToShipment } = require('../vroom')
 const moment = require('moment')
-const { info, write, debug } = require('../log')
+const { write, debug } = require('../log')
 const { virtualTime } = require('../virtualTime')
 
 const taxiDispatch = async (taxis, bookings) => {
@@ -37,7 +37,12 @@ const findBestRouteToPickupBookings = async (taxi, bookings) => {
 
   const result = await plan({ shipments, vehicles })
 
-  return result.routes[0]?.steps
+  if (!result || !result.routes || result.routes.length === 0) {
+    error('Unassigned bookings', result.unassigned)
+    return null
+  }
+
+  return result.routes[0].steps
     .filter(({ type }) => ['pickup', 'delivery', 'start'].includes(type))
     .map(({ id, type, arrival, departure }) => {
       const booking = bookings[id]

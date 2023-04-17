@@ -1,11 +1,11 @@
-const { take, map, filter, mergeAll, toArray } = require('rxjs/operators')
+const { take, map, filter, mergeAll } = require('rxjs/operators')
 const { randomNames } = require('../lib/personNames')
 const Citizen = require('../lib/models/citizen')
 const { from, zip } = require('rxjs')
 const { getAddressesInArea } = require('./address')
 
 const getCitizensInSquare = (
-  { position, area, population, ages },
+  { position, area, population },
   workplaces,
   kommunName
 ) => {

@@ -1,53 +1,16 @@
-const { mergeAll, timer, of, from } = require('rxjs')
+const { mergeAll, from } = require('rxjs')
 const {
-  map,
   tap,
   filter,
   delay,
   mergeMap,
   catchError,
-  scan,
-  debounceTime,
   bufferTime,
-  switchMap,
-  concatMap,
   retryWhen,
   toArray,
-  bufferCount,
 } = require('rxjs/operators')
-const { info, error, warn, debug } = require('../log')
+const { info, error, warn } = require('../log')
 const { clusterPositions } = require('../kmeans')
-const { haversine } = require('../distance')
-const { truckToVehicle, bookingToShipment, plan } = require('../vroom')
-const moment = require('moment')
-
-const takeNearest = (cars, center, count) =>
-  cars
-    .sort((a, b) => {
-      const aDistance = haversine(a.position, center)
-      const bDistance = haversine(b.position, center)
-      return aDistance - bDistance
-    })
-    .slice(0, count)
-
-const getVroomPlan = async (cars, bookings) => {
-  const vehicles = cars.map(truckToVehicle)
-  const shipments = bookings.map(bookingToShipment) // TODO: concat bookings from existing vehicles with previous assignments
-  debug('Calling vroom dispatch', vehicles.length, shipments.length)
-  const result = await plan({ shipments, vehicles })
-
-  return result.routes.map((route) => {
-    return {
-      car: cars[route.vehicle],
-      bookings: route.steps
-        .filter((s) => s.type === 'pickup')
-        .flatMap((step) => {
-          const booking = bookings[step.id]
-          return booking
-        }),
-    }
-  })
-}
 
 const dispatch = (cars, bookings) => {
   return cars.pipe(

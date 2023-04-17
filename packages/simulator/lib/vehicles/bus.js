@@ -1,8 +1,4 @@
-const Booking = require('../models/booking')
 const Vehicle = require('./vehicle')
-const { pairwise, map } = require('rxjs/operators')
-const moment = require('moment')
-const { virtualTime } = require('../virtualTime')
 
 // TODO: create this somewhere else as real fleet
 const lanstrafiken = {

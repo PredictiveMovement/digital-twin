@@ -21,51 +21,6 @@ const { error } = require('../../lib/log')
 const streamsUrl =
   process.env.STREAMS_URL || 'https://streams.predictivemovement.se/addresses'
 
-const origins = {
-  CDC031: {
-    name: 'Ikea Malmö', // TODO: Get the right location.
-  },
-  CDC405: {
-    name: 'Ikea Malmö', // TODO: Get the right location.
-  },
-  STO012: {
-    name: 'Ikea Kungens Kurva',
-  },
-  STO014: {
-    name: 'Ikea Kållered',
-  },
-  STO017: {
-    name: 'Ikea Linköping',
-  },
-  STO445: {
-    name: 'Ikea Malmö',
-  },
-  STO468: {
-    name: 'Ikea Helsingborg',
-  },
-  STO469: {
-    name: 'Ikea Kalmar',
-  },
-  SUP22216: {
-    name: 'Ikea Malmö', // TODO: Get the right location.
-  },
-  SUP22677: {
-    name: 'Ikea Malmö', // TODO: Get the right location.
-  },
-  SUP22844: {
-    name: 'Ikea Malmö', // TODO: Get the right location.
-  },
-  SUP23329: {
-    name: 'Ikea Malmö', // TODO: Get the right location.
-  },
-  SUP50029: {
-    name: 'Ikea Malmö', // TODO: Get the right location.
-  },
-  None: {
-    name: 'Ikea Malmö', // TODO: Get the right location.
-  },
-}
-
 function read() {
   return from(readCsv(process.cwd() + '/data/helsingborg/ikea.csv')).pipe(
     map(
@@ -127,7 +82,7 @@ function read() {
         map((rows) => ({ key: group.key, rows }))
       )
     ),
-    mergeMap(({ key, rows }, i) => {
+    mergeMap(({ rows }, i) => {
       // TODO: Figure out a good way to distribute the orders to the distribution centers.
       const distributionCenters = [
         'Mineralgatan 5, Helsingborg', // PostNord.

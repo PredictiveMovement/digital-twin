@@ -1,8 +1,7 @@
-const { italic } = require('chalk')
 const { VirtualTime } = require('../../lib/virtualTime')
 
 expect.extend({
-  toBeNear(x, y, z) {
+  toBeNear(x, y) {
     return {
       pass: Math.round(x / 100) === Math.round(y / 100),
       message: () =>

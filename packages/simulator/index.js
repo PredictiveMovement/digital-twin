@@ -5,8 +5,6 @@ const {
   catchError,
   toArray,
   pairwise,
-  tap,
-  mergeAll,
 } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')

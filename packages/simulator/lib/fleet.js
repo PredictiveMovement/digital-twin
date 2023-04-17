@@ -5,7 +5,6 @@ const {
   share,
   catchError,
   first,
-  filter,
 } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
 const Car = require('./vehicles/car')
@@ -14,7 +13,7 @@ const Drone = require('./vehicles/drone')
 const Taxi = require('./vehicles/taxi')
 const Bus = require('./vehicles/bus')
 const Position = require('./models/position')
-const { error, info, debug } = require('./log')
+const { error, debug } = require('./log')
 
 const packagesPerPallet = 30 // this is a guesstimate
 const vehicleTypes = {

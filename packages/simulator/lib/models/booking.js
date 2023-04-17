@@ -7,7 +7,7 @@ class Booking {
     Object.assign(this, booking)
     this.id =
       `${
-        booking.sender ? booking.sender.replace(/\&/g, '').toLowerCase() : 'b'
+        booking.sender ? booking.sender.replace(/&/g, '').toLowerCase() : 'b'
       }-` + safeId()
     this.status = 'New'
     this.co2 = 0 //TODO: initialvärde?

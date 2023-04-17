@@ -18,5 +18,10 @@
   "homepage": "https://github.com/PredictiveMovement/digital-twin#readme",
   "dependencies": {
     "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.7.0",
+    "eslint-plugin-rxjs": "^5.0.3",
+    "prettier": "^2.5.1"
   }
 }

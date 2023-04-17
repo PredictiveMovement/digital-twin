@@ -1,7 +1,6 @@
 const { findBestRouteToPickupBookings } = require('../dispatch/truckDispatch')
 const { info, warn } = require('../log')
 const Vehicle = require('./vehicle')
-const { virtualTime } = require('../virtualTime')
 
 class Truck extends Vehicle {
   constructor(args) {

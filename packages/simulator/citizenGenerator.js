@@ -19,7 +19,6 @@ const { safeId } = require('./lib/id')
 const { debug, info, write } = require('./lib/log')
 
 const NUMBER_OF_CITIZENS = 3000
-const LOG_LEVEL = process.env.LOG_LEVEL || 'info'
 
 const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
 
@@ -44,7 +43,7 @@ const randomPositions = perlin
 const generatePassengerDetails = (kommuner, numberOfPassengers) =>
   kommuner.pipe(
     mergeMap((kommun) => {
-      const { squares, postombud, name } = kommun
+      const { squares, postombud } = kommun
       write('🌆')
       return squares.pipe(
         mergeMap(({ population, position }) => {
@@ -134,7 +133,9 @@ const saveFile = (citizens) => {
     const jsonOutput = JSON.stringify(citizens, null, 2)
     fs.writeFileSync(filePath, jsonOutput)
     info(`\n\nSaved ${citizens.length} citizens to ${filePath}`)
-  } catch (error) {}
+  } catch (error) {
+    // ignore
+  }
 }
 const citizenSerializer = (citizens) => {
   serializedPassengers = citizens.map((citizen) => {

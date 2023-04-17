@@ -1,10 +1,9 @@
 const { from, of } = require('rxjs')
-const { map, tap, filter, first, mergeMap, toArray } = require('rxjs/operators')
+const { map, filter, first, mergeMap, toArray } = require('rxjs/operators')
 const pelias = require('../lib/pelias')
 const { haversine, addMeters } = require('../lib/distance')
 const perlin = require('perlin-noise')
 const Booking = require('../lib/models/booking')
-const Car = require('../lib/vehicles/car')
 
 const xy = (i, size = 100) => ({ x: i % size, y: Math.floor(i / size) })
 
@@ -37,13 +36,12 @@ function generateBookingsInKommun(kommun) {
         .slice(0, population) // one address per person in this square km2
         .map(({ x, y }) => addMeters(position, { x, y }))
         .map((position) => ({ nearestOmbud, position }))
-    ),
-    tap((s) => `randomInPointInSquares ${kommun.name}`)
+    )
   )
 
   const bookings = randomPointsInSquares.pipe(
     toArray(), // convert to array to be able to sort the addresses
-    mergeMap((a) => from(a.sort((p) => Math.random() - 0.5))),
+    mergeMap((a) => from(a.sort(() => Math.random() - 0.5))),
     mergeMap(({ nearestOmbud, position }) =>
       kommun.fleets.pipe(
         first((fleet) => nearestOmbud.operator.startsWith(fleet.name), null), // Find DHL_Express or DHL_Freight from DHL

@@ -7,7 +7,6 @@ const {
   of,
   from,
   catchError,
-  retry,
   throttleTime,
   mapTo,
   tap,
@@ -23,7 +22,7 @@ const { safeId } = require('../id')
 const moment = require('moment')
 const Booking = require('./booking')
 const pelias = require('../pelias')
-const { error, info } = require('../log')
+const { error } = require('../log')
 const { getHours, getISODay } = require('date-fns')
 const Position = require('./position')
 
@@ -114,7 +113,7 @@ class Citizen {
             )
           case 'lunch':
             return of(this.workplace.position).pipe(
-              filter((m) => Math.random() < 0.1), // 10% of the time, eat at a restaurant
+              filter(() => Math.random() < 0.1), // 10% of the time, eat at a restaurant
               mergeMap((position) =>
                 pelias.searchOne('restaurang', position, 'venue')
               ),

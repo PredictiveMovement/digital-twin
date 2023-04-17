@@ -46,7 +46,6 @@ class Drone extends Vehicle {
   async navigateTo(position) {
     this.startingFrom = this.position
     this.heading = position
-    if (!position) debugger
     const distance = haversine(this.position, position) // meters
     const km = distance / 1000
     const h = km / this.maxSpeed

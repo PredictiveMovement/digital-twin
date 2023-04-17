@@ -1,7 +1,7 @@
 const fs = require('fs')
 const parse = require('csv-parse')
 
-const readCsv = (path, sheet) => {
+const readCsv = (path) => {
   const input = fs.readFileSync(path)
   return parse(input, {
     columns: true,

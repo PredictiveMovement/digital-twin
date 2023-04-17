@@ -36,7 +36,7 @@ const register = (experiment, socket) => {
               { total: 0, totalCost: 0, deliveryTimeTotal: 0 }
             ),
             startWith({ total: 0, totalCost: 0, deliveryTimeTotal: 0 }),
-            map(({ type, total, totalCost, deliveryTimeTotal }) => ({
+            map(({ total, totalCost, deliveryTimeTotal }) => ({
               totalDelivered: total,
               totalCost,
               averagePassengerCost: totalCost / total,
@@ -58,7 +58,7 @@ const register = (experiment, socket) => {
               { total: 0, totalCost: 0, deliveryTimeTotal: 0 }
             ),
             startWith({ total: 0, totalCost: 0, deliveryTimeTotal: 0 }),
-            map(({ type, total, totalCost, deliveryTimeTotal }) => ({
+            map(({ total, totalCost, deliveryTimeTotal }) => ({
               totalDelivered: total,
               totalCost,
               averageParcelCost: totalCost / total,

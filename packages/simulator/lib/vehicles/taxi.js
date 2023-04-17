@@ -1,6 +1,6 @@
 const { findBestRouteToPickupBookings } = require('../dispatch/taxiDispatch')
 const { safeId } = require('../id')
-const { info, debug } = require('../log')
+const { debug } = require('../log')
 const Vehicle = require('../vehicles/vehicle')
 const { virtualTime } = require('../virtualTime')
 const fleet = {

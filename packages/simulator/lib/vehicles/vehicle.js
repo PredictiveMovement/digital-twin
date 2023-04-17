@@ -1,5 +1,5 @@
 const { ReplaySubject } = require('rxjs')
-const { scan, filter } = require('rxjs/operators')
+const { scan } = require('rxjs/operators')
 const moment = require('moment')
 const { assert } = require('console')
 
@@ -8,7 +8,7 @@ const { haversine, bearing } = require('../distance')
 const interpolate = require('../interpolate')
 const Booking = require('../models/booking')
 const { safeId } = require('../id')
-const { error, info } = require('../log')
+const { error } = require('../log')
 const { virtualTime } = require('../virtualTime')
 const Position = require('../models/position')
 
@@ -86,7 +86,7 @@ class Vehicle {
             return []
           }
 
-          const { next, skippedPoints, remainingPoints, ...position } =
+          const { skippedPoints, remainingPoints, ...position } =
             interpolate.route(
               route.started,
               currentTimeInMs,
@@ -100,7 +100,7 @@ class Vehicle {
           return remainingPoints
         }, interpolate.points(route))
       )
-      .subscribe((e) => null)
+      .subscribe(() => null)
   }
 
   navigateTo(position) {

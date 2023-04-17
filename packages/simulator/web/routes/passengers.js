@@ -1,5 +1,4 @@
 const { bufferTime, filter, merge } = require('rxjs')
-const { info } = require('../../lib/log')
 
 /**
  * When a new socket is connected, we send the current state of the experiment

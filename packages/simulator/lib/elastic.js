@@ -8,7 +8,7 @@ const host = process.env.ELASTICSEARCH_URL
 
 if (!host) {
   info('No elasticsearch url provided, skipping statistics collection')
-  const noOp = (name) => (value) => {
+  const noOp = () => () => {
     // info(`noOp: ${name}`)
   }
   module.exports = {
@@ -63,7 +63,7 @@ const save = (booking, indexName) => {
       id: booking.id,
       body: booking,
     })
-    .then((_) => {})
+    .then(() => {})
     .catch((e) => {
       error('Could not save booking', e)
     })

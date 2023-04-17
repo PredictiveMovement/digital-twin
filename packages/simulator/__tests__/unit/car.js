@@ -116,10 +116,6 @@ describe('A car', () => {
       })
     )
 
-    const bookings = range(10).map((id) =>
-      car.handleBooking(new Booking({ id }))
-    )
-
     expect(car.queue).toHaveLength(10)
   })
 
@@ -161,7 +157,7 @@ describe('A car', () => {
       car.handleBooking(new Booking({ id, ...ljusdalToArjeplog }))
     )
 
-    const [firstBooking, secondBooking, thirdBooking, ...rest] = bookings
+    const [firstBooking, secondBooking] = bookings
 
     firstBooking.once('delivered', () => {
       expect(car.queue).toHaveLength(1)

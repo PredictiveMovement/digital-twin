@@ -100,7 +100,7 @@ class Kommun {
           fleet.canHandleBooking(booking).then((ok) => [ok, fleet])
         ),
         filter(([ok]) => ok),
-        map(([_, fleet]) => fleet),
+        map(([, fleet]) => fleet),
         expandFleets(),
         pickRandom(),
         map((fleet) =>

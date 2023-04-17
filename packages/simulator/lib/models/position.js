@@ -18,7 +18,7 @@ class Position {
     if (!this.lon || !this.lat) return false
     if (this.lon < -180 || this.lon > 180) return false
     if (this.lat < -90 || this.lat > 90) return false
-    if (this.lon === NaN || this.lat === NaN) return false
+    if (isNaN(this.lon) || isNaN(this.lat)) return false
 
     return true
   }

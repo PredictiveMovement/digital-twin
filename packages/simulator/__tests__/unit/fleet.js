@@ -1,14 +1,12 @@
 const Fleet = require('../../lib/fleet')
-const { from, lastValueFrom } = require('rxjs')
-const { first, take, toArray } = require('rxjs/operators')
+const { from } = require('rxjs')
+const { first } = require('rxjs/operators')
 const Booking = require('../../lib/booking')
 const { virtualTime } = require('../../lib/virtualTime')
 
 const dispatch = require('../../lib/dispatchCentral')
 
 jest.mock('../../lib/dispatchCentral')
-
-const range = (length) => Array.from({ length }).map((_, i) => i)
 
 describe('A fleet', () => {
   const arjeplog = { lon: 17.886855, lat: 66.041054 }
@@ -53,7 +51,7 @@ describe('A fleet', () => {
   })
 
   it('handled bookings are dispatched', function () {
-    dispatch.dispatch.mockImplementation((cars, bookings) =>
+    dispatch.dispatch.mockImplementation(() =>
       from([
         {
           booking: testBooking,

@@ -27,7 +27,7 @@ class VirtualTime {
     const msUpdateFrequency = 100
     this.currentTime = interval(msUpdateFrequency).pipe(
       scan(
-        (acc, _curr) =>
+        (acc) =>
           addMilliseconds(
             acc,
             msUpdateFrequency * this.timeMultiplier * this.internalTimeScale

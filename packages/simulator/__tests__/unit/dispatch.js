@@ -1,15 +1,5 @@
-const { from, Subject, ReplaySubject, forkJoin, timer } = require('rxjs')
-const {
-  take,
-  scan,
-  toArray,
-  takeUntil,
-  bufferTime,
-  map,
-  concatAll,
-  windowTime,
-  shareReplay,
-} = require('rxjs/operators')
+const { from, Subject, ReplaySubject } = require('rxjs')
+const { toArray, shareReplay } = require('rxjs/operators')
 const { dispatch } = require('../../lib/dispatch/dispatchCentral')
 const Car = require('../../lib/car')
 const Booking = require('../../lib/booking')
@@ -38,7 +28,7 @@ describe('dispatch', () => {
   })
 
   it('should dispatch a booking to nearest car', function (done) {
-    dispatch(cars, bookings).subscribe(({ car, booking }) => {
+    dispatch(cars, bookings).subscribe(({ car }) => {
       expect(car.position).toEqual(ljusdal)
       done()
     })

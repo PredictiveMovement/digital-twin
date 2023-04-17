@@ -1,6 +1,5 @@
 const { plan, truckToVehicle, bookingToShipment } = require('../vroom')
-const moment = require('moment')
-const { info, error } = require('../log')
+const { error } = require('../log')
 
 const findBestRouteToPickupBookings = async (truck, bookings) => {
   const vehicles = [truckToVehicle(truck, 0)]
