@@ -1,10 +1,20 @@
 {
-  "id": "tATd-MuN7",
-  "startDate": "2023-01-17T13:43:21.642Z",
+  "id": "mft6-M8eA",
+  "startDate": "2023-04-19T20:35:40.719Z",
   "fixedRoute": 21,
-  "emitters": ["cars", "kommuner", "bookings", "measureStations"],
+  "emitters": [
+    "bookings",
+    "buses",
+    "busLines",
+    "busStops",
+    "cars",
+    "kommuner",
+    "measureStations",
+    "passengers",
+    "taxis"
+  ],
   "fleets": {
-    "Arjeplogs kommun": {
+    "Malmö kommun": {
       "fleets": [
         {
           "name": "Taxi",
@@ -13,11 +23,52 @@
           }
         },
         {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
+          "name": "Postnord",
           "vehicles": {
-            "bus": 5
-          }
+            "tungLastbil": 0,
+            "medeltungLastbil": 4,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 0.6,
+          "hub": [
+            21.034263,
+            64.746704
+          ]
+        },
+        {
+          "name": "Röd",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 2
+          },
+          "marketshare": 0.18,
+          "hub": [
+            21.034263,
+            64.746704
+          ]
+        },
+        {
+          "name": "Gul",
+          "vehicles": {
+            "medeltungLastbil": 1
+          },
+          "marketshare": 0.06,
+          "hub": [
+            21.034263,
+            64.746704
+          ]
+        },
+        {
+          "name": "Brun",
+          "vehicles": {
+            "medeltungLastbil": 1
+          },
+          "marketshare": 0.06,
+          "hub": [
+            21.034263,
+            64.746704
+          ]
         }
       ]
     },
@@ -30,27 +81,75 @@
           }
         },
         {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
+          "name": "Postnord",
           "vehicles": {
-            "bus": 8
-          }
+            "tungLastbil": 0,
+            "medeltungLastbil": 5,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 60,
+          "hub": [
+            21.034263,
+            64.746704
+          ]
+        },
+        {
+          "name": "Röd",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 3
+          },
+          "marketshare": 18,
+          "hub": [
+            21.034263,
+            64.746704
+          ]
+        },
+        {
+          "name": "Gul",
+          "vehicles": {
+            "lättLastbil": 1
+          },
+          "marketshare": 6,
+          "hub": [
+            21.034263,
+            64.746704
+          ]
+        },
+        {
+          "name": "Brun",
+          "vehicles": {
+            "lättLastbil": 1
+          },
+          "marketshare": 6,
+          "hub": [
+            21.034263,
+            64.746704
+          ]
         }
       ]
     },
     "Bodens kommun": {
       "fleets": [
         {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 2,
+            "lättLastbil": 2,
+            "bil": 0
+          },
+          "marketshare": 0.6,
+          "hub": [
+            22.045246,
+            65.614869
+          ]
+        },
+        {
           "name": "Taxi",
           "vehicles": {
             "taxi": 5
-          }
-        },
-        {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
-          "vehicles": {
-            "bus": 35
           }
         }
       ]
@@ -62,13 +161,6 @@
           "vehicles": {
             "taxi": 5
           }
-        },
-        {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
-          "vehicles": {
-            "bus": 22
-          }
         }
       ]
     },
@@ -79,31 +171,11 @@
           "vehicles": {
             "taxi": 5
           }
-        },
-        {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
-          "vehicles": {
-            "bus": 12
-          }
         }
       ]
     },
     "Helsingborgs stad": {
       "fleets": [
-        {
-          "name": "Taxi",
-          "vehicles": {
-            "taxi": 100
-          }
-        },
-        {
-          "name": "Skånetrafik",
-          "type": "bus",
-          "vehicles": {
-            "bus": 182
-          }
-        },
         {
           "name": "Postnord",
           "vehicles": {
@@ -113,8 +185,18 @@
             "bil": 0
           },
           "marketshare": 0.6,
-          "hub": [12.783566, 56.069157],
+          "hub": [
+            12.783566,
+            56.069157
+          ],
           "hubAddress": "Mineralgatan 5, Helsingborg"
+        },
+        {
+          "name": "Skånetrafik",
+          "type": "bus",
+          "vehicles": {
+            "bus": 182
+          }
         },
         {
           "name": "Röd",
@@ -123,7 +205,10 @@
             "medeltungLastbil": 2
           },
           "marketshare": 0.18,
-          "hub": [12.768723, 56.010354],
+          "hub": [
+            12.768723,
+            56.010354
+          ],
           "hubAddress": "Brunkalundsvägen 4, Helsingborg"
         },
         {
@@ -132,7 +217,10 @@
             "lättLastbil": 2
           },
           "marketshare": 0.06,
-          "hub": [12.778268, 56.021101],
+          "hub": [
+            12.778268,
+            56.021101
+          ],
           "hubAddress": "Trintegatan 10, Helsingborg"
         },
         {
@@ -141,7 +229,10 @@
             "lättLastbil": 2
           },
           "marketshare": 0.06,
-          "hub": [12.709821, 56.01995],
+          "hub": [
+            12.709821,
+            56.01995
+          ],
           "hubAddress": "Strandbadsvägen 7, Helsingborg"
         }
       ]
@@ -153,13 +244,6 @@
           "vehicles": {
             "taxi": 5
           }
-        },
-        {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
-          "vehicles": {
-            "bus": 6
-          }
         }
       ]
     },
@@ -170,26 +254,11 @@
           "vehicles": {
             "taxi": 5
           }
-        },
-        {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
-          "vehicles": {
-            "bus": 20
-          }
         }
       ]
     },
     "Kiruna kommun": {
-      "fleets": [
-        {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
-          "vehicles": {
-            "bus": 28
-          }
-        }
-      ]
+      "fleets": []
     },
     "Ljusdals kommun": {
       "fleets": [
@@ -202,7 +271,10 @@
             "bil": 0
           },
           "marketshare": 60,
-          "hub": [17.08409, 61.741754]
+          "hub": [
+            17.08409,
+            61.741754
+          ]
         },
         {
           "name": "Röd",
@@ -213,7 +285,10 @@
             "bil": 0
           },
           "marketshare": 12,
-          "hub": [17.08409, 61.741754]
+          "hub": [
+            17.08409,
+            61.741754
+          ]
         },
         {
           "name": "Gul",
@@ -224,7 +299,10 @@
             "bil": 0
           },
           "marketshare": 6,
-          "hub": [17.08409, 61.741754]
+          "hub": [
+            17.08409,
+            61.741754
+          ]
         },
         {
           "name": "Brun",
@@ -235,7 +313,10 @@
             "bil": 0
           },
           "marketshare": 6,
-          "hub": [17.085194, 61.741017]
+          "hub": [
+            17.085194,
+            61.741017
+          ]
         },
         {
           "name": "SNX",
@@ -246,23 +327,33 @@
             "bil": 0
           },
           "marketshare": 6,
-          "hub": [16.058036, 61.820841]
+          "hub": [
+            16.058036,
+            61.820841
+          ]
         }
       ]
     },
     "Luleå kommun": {
       "fleets": [
         {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 4,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 0.6,
+          "hub": [
+            13.016601,
+            55.622044
+          ]
+        },
+        {
           "name": "Taxi",
           "vehicles": {
             "taxi": 5
-          }
-        },
-        {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
-          "vehicles": {
-            "bus": 97
           }
         }
       ]
@@ -270,17 +361,60 @@
     "Pajala kommun": {
       "fleets": [
         {
-          "name": "Taxi",
+          "name": "Postnord",
           "vehicles": {
-            "taxi": 5
-          }
+            "tungLastbil": 0,
+            "medeltungLastbil": 1,
+            "lättLastbil": 3,
+            "bil": 0
+          },
+          "marketshare": 60,
+          "hub": [
+            22.050702,
+            65.610326
+          ]
         },
         {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
+          "name": "Röd",
           "vehicles": {
-            "bus": 8
-          }
+            "tungLastbil": 0,
+            "medeltungLastbil": 0,
+            "lättLastbil": 2,
+            "bil": 0
+          },
+          "marketshare": 18,
+          "hub": [
+            22.050702,
+            65.610326
+          ]
+        },
+        {
+          "name": "Gul",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 0,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 6,
+          "hub": [
+            22.050702,
+            65.610326
+          ]
+        },
+        {
+          "name": "Brun",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 0,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 6,
+          "hub": [
+            22.050702,
+            65.610326
+          ]
         }
       ]
     },
@@ -291,30 +425,66 @@
           "vehicles": {
             "taxi": 5
           }
-        },
-        {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
-          "vehicles": {
-            "bus": 53
-          }
         }
       ]
     },
     "Storumans kommun": {
       "fleets": [
         {
-          "name": "Taxi",
+          "name": "Postnord",
           "vehicles": {
-            "taxi": 5
-          }
+            "tungLastbil": 1,
+            "medeltungLastbil": 2,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 60,
+          "hub": [
+            14.640025,
+            63.222212
+          ]
         },
         {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
+          "name": "Röd",
           "vehicles": {
-            "bus": 5
-          }
+            "tungLastbil": 0,
+            "medeltungLastbil": 1,
+            "lättLastbil": 2,
+            "bil": 0
+          },
+          "marketshare": 18,
+          "hub": [
+            20.136678,
+            63.85036
+          ]
+        },
+        {
+          "name": "Gul",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 1,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 6,
+          "hub": [
+            20.136678,
+            63.85036
+          ]
+        },
+        {
+          "name": "Brun",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 1,
+            "lättLastbil": 0,
+            "bil": 0
+          },
+          "marketshare": 6,
+          "hub": [
+            20.136678,
+            63.85036
+          ]
         }
       ]
     },
@@ -327,14 +497,10 @@
           },
           "percentageHomeDelivery": 100,
           "marketshare": 20,
-          "hub": [16.528936, 57.776915]
-        },
-        {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
-          "vehicles": {
-            "bus": 5
-          }
+          "hub": [
+            16.528936,
+            57.776915
+          ]
         }
       ]
     },
@@ -344,13 +510,6 @@
           "name": "Taxi",
           "vehicles": {
             "taxi": 5
-          }
-        },
-        {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
-          "vehicles": {
-            "bus": 10
           }
         }
       ]
@@ -362,13 +521,6 @@
           "vehicles": {
             "taxi": 5
           }
-        },
-        {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
-          "vehicles": {
-            "bus": 5
-          }
         }
       ]
     },
@@ -378,13 +530,6 @@
           "name": "Taxi",
           "vehicles": {
             "taxi": 5
-          }
-        },
-        {
-          "name": "Länstrafiken i Norrbotten",
-          "type": "bus",
-          "vehicles": {
-            "bus": 5
           }
         }
       ]

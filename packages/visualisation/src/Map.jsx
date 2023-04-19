@@ -100,13 +100,13 @@ const Map = ({
     stroked: false,
     filled: true,
     radiusScale: 3,
-    radiusMinPixels: 2,
-    radiusMaxPixels: 6,
+    radiusMinPixels: 1,
+    radiusMaxPixels: 3,
     getPosition: (c) => {
       return c.position
     },
     getRadius: () => 4,
-    getFillColor: [255, 255, 255, 80],
+    getFillColor: [255, 255, 255, 20],
     pickable: true,
     onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
@@ -156,7 +156,7 @@ const Map = ({
       if (hoverInfo && hoverInfo.title === e.properties.name) {
         return [240, 10, 30]
       }
-      return [240, 10, 30, 90]
+      return [240, 10, 30, 6]
     },
     getLineWidth: 4,
     pointType: 'circle',
@@ -379,7 +379,7 @@ const Map = ({
 
   const bookingLayer = new ScatterplotLayer({
     id: 'booking-layer',
-    data: bookings, //.filter((b) => !b.assigned), // TODO: revert change
+    data: bookings.filter(b => b.type !== 'busstop'), //.filter((b) => !b.assigned), // TODO: revert change
     opacity: 1,
     stroked: false,
     filled: true,
@@ -403,7 +403,6 @@ const Map = ({
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         ...object,
-        type: 'booking',
         title: object.sender,
         subTitle: object.isCommercial
           ? '(företag)'

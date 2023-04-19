@@ -109,7 +109,7 @@ function read() {
       )
     ),
     mergeAll(1),
-    map((row) => new Booking(row)),
+    map((row) => new Booking({ type: 'parcel', ...row })),
     catchError((err) => {
       error('HM -> from CSV', err)
     }),

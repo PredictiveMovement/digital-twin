@@ -96,7 +96,7 @@ function read() {
       )
     }, 1),
     mergeAll(),
-    map((row) => new Booking(row)),
+    map((row) => new Booking({ type: 'parcel', ...row })),
     catchError((err) => {
       error('IKEA -> from CSV', err)
     }),

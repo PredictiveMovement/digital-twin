@@ -226,6 +226,7 @@ const GenericInfo = ({ data }) => {
       <Paragraph>&nbsp;</Paragraph>
       <Paragraph>{data.title}</Paragraph>
       <Paragraph>{data.subTitle}</Paragraph>
+      <Paragraph>Typ: {data.type}</Paragraph>
       <Paragraph>Bil: {data.carId}</Paragraph>
       <Paragraph>
         Från: <strong>{data.from}</strong>

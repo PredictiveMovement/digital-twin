@@ -39,12 +39,7 @@ class Bus extends Vehicle {
   }
 
   canHandleBooking(booking) {
-    return (
-      booking.type === 'busstop' ||
-      (booking.type === 'parcel' &&
-        this.cargo.length < this.parcelCapacity &&
-        this.passengers.length < this.passengerCapacity)
-    )
+    return booking.type === 'busstop' || booking.type === 'parcel'
   }
 
   async handleBooking(booking) {
