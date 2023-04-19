@@ -76,7 +76,8 @@ class Kommun {
           : center
 
         return new Fleet({ hub, ...fleet, kommun: this })
-      })
+      }),
+      shareReplay()
     )
 
     this.cars = merge(
