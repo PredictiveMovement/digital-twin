@@ -1,6 +1,6 @@
 const { plan, taxiToVehicle, bookingToShipment } = require('../vroom')
 const moment = require('moment')
-const { write, debug } = require('../log')
+const { error, debug, write } = require('../log')
 const { virtualTime } = require('../virtualTime')
 
 const taxiDispatch = async (taxis, bookings) => {
