@@ -1,8 +1,8 @@
 const moment = require('moment')
-const { info, warn } = require('../log')
+const { info, warn, error } = require('../log')
 const { plan } = require('../vroom')
 
-const MAX_SHIPMENTS = 500
+const MAX_SHIPMENTS = 200
 
 const tripToShipment = ({ tripId, firstStop, lastStop }, i) => ({
   id: i,
@@ -58,11 +58,13 @@ const busDispatch = async (buses, trips) => {
         buses.slice(0, buses.length / 2),
         trips.slice(0, trips.length / 2)
       ),
-      busDispatch(
-        buses.slice(buses.length / 2),
-        trips.slice(trips.length / 2)
-      ).then((a, b) => a.concat(b)),
+      busDispatch(buses.slice(buses.length / 2), trips.slice(trips.length / 2)),
     ])
+      .then(([a, b]) => a.concat(b))
+      .catch((e) => {
+        error('Bus concat dispatch', e)
+        return []
+      })
   const shipments = trips.map(tripToShipment)
   const vehicles = buses.map(busToVehicle)
 
