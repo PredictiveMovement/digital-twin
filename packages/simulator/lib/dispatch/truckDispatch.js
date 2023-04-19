@@ -8,7 +8,7 @@ const findBestRouteToPickupBookings = async (truck, bookings) => {
   const result = await plan({ shipments, vehicles })
 
   if (result.unassigned.length > 0) {
-    error('Unassigned bookings', result.unassigned)
+    error(`Unassigned bookings: ${result.unassigned}`)
   }
 
   return result.routes[0]?.steps

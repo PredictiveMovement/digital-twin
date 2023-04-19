@@ -17,6 +17,7 @@ const {
   scan,
   debounceTime,
   concatMap,
+  shareReplay,
 } = require('rxjs/operators')
 const { busDispatch } = require('./dispatch/busDispatch')
 const { isInsideCoordinates } = require('../lib/polygon')
@@ -93,7 +94,8 @@ class Region {
 
     this.buses = kommuner.pipe(
       map((kommun) => kommun.buses),
-      mergeAll()
+      mergeAll(),
+      shareReplay()
     )
 
     this.cars = kommuner.pipe(mergeMap((kommun) => kommun.cars))
@@ -181,6 +183,10 @@ class Region {
                 (taxi) => taxi.canPickupMorePassengers()
               )
               return taxiDispatch(nearestTaxis, bookings).catch((err) => {
+                if (!bookings || !bookings.length) {
+                  warn('Region -> Dispatched Bookings -> No bookings!', err)
+                  return of([])  
+                }
                 error('Region -> Dispatched Bookings -> Taxi', err)
                 bookings.forEach((booking) => this.manualBookings.next(booking))
                 return of([])
