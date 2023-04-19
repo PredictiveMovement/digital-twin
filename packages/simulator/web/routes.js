@@ -29,12 +29,12 @@ function subscribe(experiment, socket) {
 
 function start(socket) {
   const experiment = engine.createExperiment({ defaultEmitters })
+  socket.data.experiment = experiment
   experiment.subscriptions = subscribe(experiment, socket)
   experiment.virtualTime.waitUntil(moment().endOf('day').valueOf()).then(() => {
     info('Experiment finished. Restarting...')
     process.kill(process.pid, 'SIGUSR2')
   })
-  socket.data.experiment = experiment
 }
 
 function register(io) {
@@ -73,16 +73,28 @@ function register(io) {
 
     socket.emit('parameters', socket.data.experiment.parameters)
 
+    /* 
+    
+    This code is used to shut down the experiment if the client disconnects. it is currently disabled.
+    It saves a lot of resources on the server, but it is also a bit annoying for the user.
+
+    socket.on('connect', () => {
+      if (socket.data.timeout) {
+        info('Client connected again, cancelling shutdown')
+        clearTimeout(socket.data.timeout)
+      }
+    })
+
     socket.on('disconnect', (reason) => {
-      info('Client disconnected', reason, 'shutting down experiment in 60s')
+      info('Client disconnected', reason, 'shutting down experiment in 60s...')
 
       clearTimeout(socket.data.timeout)
       socket.data.timeout = setTimeout(() => {
-        info('Shutting down experiment')
+        info('Shutting down experiment due to inactivity')
         process.kill(process.pid, 'SIGUSR2')
         socket.data.experiment.subscriptions.map((e) => e.unsubscribe())
-      }, 60_000)
-    })
+      }, 5 * 60_000)
+    })*/
   })
 }
 module.exports = {

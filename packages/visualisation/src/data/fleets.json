@@ -147,6 +147,13 @@
         "hubAddress": "Mineralgatan 5, Helsingborg"
       },
       {
+        "name": "Skånetrafik",
+        "type": "bus",
+        "vehicles": {
+          "bus": 182
+        }
+      },
+      {
         "name": "Röd",
         "vehicles": {
           "tungLastbil": 0,
@@ -171,7 +178,7 @@
           "lättLastbil": 2
         },
         "marketshare": 0.06,
-        "hub": [12.709821, 56.019950],
+        "hub": [12.709821, 56.01995],
         "hubAddress": "Strandbadsvägen 7, Helsingborg"
       }
     ]
