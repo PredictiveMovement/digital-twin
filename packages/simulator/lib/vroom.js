@@ -4,12 +4,13 @@ const vroomUrl = process.env.VROOM_URL || 'https://vroom.predictivemovement.se/'
 const moment = require('moment')
 const { error, info } = require('./log')
 const { getFromCache, updateCache } = require('./cache')
+const queue = require('./queueSubject')
 
 module.exports = {
   bookingToShipment({ id, pickup, destination }, i) {
     return {
       id: i,
-      description: id,
+      //description: id,
       amount: [1],
       pickup: {
         time_windows: pickup.departureTime?.length
@@ -65,38 +66,45 @@ module.exports = {
   },
   async plan({ jobs, shipments, vehicles }) {
     const result = await getFromCache({ jobs, shipments, vehicles })
-    const before = Date.now()
-    if (result) return result
+    if (result) {
+      info('Vroom cache hit')
+      return result
+    }
+    debug('Vroom cache miss')
 
-    return await fetch(vroomUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        jobs,
-        shipments,
-        vehicles,
-        options: {
-          plan: true,
+    const before = Date.now()
+
+    return await queue(() =>
+      fetch(vroomUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      }),
-    })
-      .then(async (res) =>
-        !res.ok ? Promise.reject('Vroom error:' + (await res.text())) : res
-      )
-      .then((res) => res.json())
-      .then((json) =>
-        Date.now() - before > 10_000
-          ? updateCache({ jobs, shipments, vehicles }, json) // cache when it takes more than 10 seconds
-          : json
-      )
-      .catch((vroomError) => {
-        error(`Vroom error: ${vroomError} (enable debug logging for details)`)
-        info('Jobs', jobs.length)
-        info('Shipments', shipments.length)
-        info('Vehicles', vehicles.length)
-        return vroomError
+        body: JSON.stringify({
+          jobs,
+          shipments,
+          vehicles,
+          options: {
+            plan: true,
+          },
+        }),
       })
+        .then(async (res) =>
+          !res.ok ? Promise.reject('Vroom error:' + (await res.text())) : res
+        )
+        .then((res) => res.json())
+        .then((json) =>
+          Date.now() - before > 10_000
+            ? updateCache({ jobs, shipments, vehicles }, json) // cache when it takes more than 10 seconds
+            : json
+        )
+        .catch((vroomError) => {
+          error(`Vroom error: ${vroomError} (enable debug logging for details)`)
+          info('Jobs', jobs.length)
+          info('Shipments', shipments.length)
+          info('Vehicles', vehicles.length)
+          return vroomError
+        })
+    )
   },
 }
