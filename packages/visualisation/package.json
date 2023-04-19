@@ -27,7 +27,7 @@
   "scripts": {
     "start": "vite serve",
     "build": "vite build",
-    "dev": "vite --host --open"
+    "dev": "vite --host --open --port 3000"
   },
   "eslintConfig": {
     "extends": [
