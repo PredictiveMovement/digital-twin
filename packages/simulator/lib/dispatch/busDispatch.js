@@ -6,7 +6,7 @@ const MAX_SHIPMENTS = 200
 
 const tripToShipment = ({ tripId, firstStop, lastStop }, i) => ({
   id: i,
-  description: tripId,
+  //description: tripId,
   amount: [1],
   pickup: {
     time_windows: [
@@ -32,7 +32,7 @@ const tripToShipment = ({ tripId, firstStop, lastStop }, i) => ({
 
 const busToVehicle = ({ id, position, passengerCapacity, heading }, i) => ({
   id: i,
-  description: id,
+  //description: id,
   capacity: [passengerCapacity],
   start: [position.lon, position.lat],
   speed_factor: 1.2,
