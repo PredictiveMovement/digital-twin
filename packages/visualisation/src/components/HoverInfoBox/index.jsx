@@ -192,8 +192,8 @@ const PassengerInfo = ({ data }) => {
       <Paragraph>
         Namn: <strong>{data.name}</strong>
       </Paragraph>
-      <Paragraph>Bostad: {data.home.name}</Paragraph>
-      <Paragraph>Arbetsplats: {data.workplace.name}</Paragraph>
+      {data.home && <Paragraph>Bostad: {data.home.name}</Paragraph>}
+      {data.workplace && <Paragraph>Arbetsplats: {data.workplace.name}</Paragraph>}
       <Paragraph>
         CO<sub>2</sub>:{' '}
         <strong>{Math.ceil((10 * data.co2) / 10) || 0} kg</strong>
