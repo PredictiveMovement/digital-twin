@@ -47,6 +47,8 @@ const getTitle = (key) => {
     case 'averagePassengerLoad':
     case 'averageParcelLoad':
       return 'Medelfyllnadsgrad per fordon'
+    default:
+      return ''
   }
 }
 const getUnit = (key) => {
@@ -69,6 +71,8 @@ const getUnit = (key) => {
     case 'averagePassengerLoad':
     case 'averageParcelLoad':
       return '%'
+    default:
+      return ''
   }
 }
 const KommunStatisticsBox = (stats) => (
@@ -88,9 +92,9 @@ const KommunStatisticsBox = (stats) => (
         'averageParcelLoad',
       ].map((key) =>
         stats[key] ? (
-          <Grid>
-            <ParagraphBold black>{getTitle(key)}</ParagraphBold>
-            <Paragraph black>
+          <Grid key={key}>
+            <ParagraphBold key={1} black>{getTitle(key)}</ParagraphBold>
+            <Paragraph key={2} black>
               {Math.round(stats[key] * 100) / 100} {getUnit(key)}
             </Paragraph>
           </Grid>
