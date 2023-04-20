@@ -114,11 +114,14 @@ class Kommun {
         catchError((err) => error('pickNextEligbleFleet', err))
       )
 
-    this.dispatchedBookings = this.unhandledBookings.pipe(
-      mergeMap((booking) => this.pickNextEligbleFleet(booking)),
-      mergeMap(({ booking, fleet }) => fleet.handleBooking(booking), 1),
-      catchError((err) => error('dispatchedBookings', err)),
-      shareReplay()
+    this.dispatchedBookings = merge(
+      this.unhandledBookings.pipe(
+        mergeMap((booking) => this.pickNextEligbleFleet(booking)),
+        mergeMap(({ booking, fleet }) => fleet.handleBooking(booking), 1),
+        catchError((err) => error('dispatchedBookings', err)),
+        shareReplay()
+      ),
+      this.fleets.pipe(mergeMap((fleet) => fleet.dispatchedBookings))
     )
 
     this.handleBooking = (booking) => {
