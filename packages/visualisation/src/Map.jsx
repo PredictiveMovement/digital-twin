@@ -619,8 +619,11 @@ const Map = ({
         }}
       >
         <LayersMenu
+          showArcLayer={showArcLayer}
           setShowArcLayer={setShowArcLayer}
+          showActiveDeliveries={showActiveDeliveries}
           setShowActiveDeliveries={setShowActiveDeliveries}
+          showAssignedBookings={showAssignedBookings}
           setShowAssignedBookings={setShowAssignedBookings}
         />
       </div>

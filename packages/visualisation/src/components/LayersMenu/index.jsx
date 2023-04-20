@@ -13,8 +13,11 @@ import LayersIcon from '@mui/icons-material/Layers'
 import { Link } from '@mui/material'
 
 export default function LayersMenu({
+  showArcLayer,
   setShowArcLayer,
+  showActiveDeliveries,
   setShowActiveDeliveries,
+  showAssignedBookings,
   setShowAssignedBookings,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -77,19 +80,25 @@ export default function LayersMenu({
           <ListItemIcon>
             <AirlineStopsIcon />
           </ListItemIcon>
-          Visa nästa stopp
+          {showArcLayer && 'Dölj '}
+          {!showArcLayer && 'Visa '}
+           nästa stopp
         </MenuItem>
         <MenuItem onClick={() => setShowAssignedBookings((on) => !on)}>
           <ListItemIcon>
             <RouteIcon />
           </ListItemIcon>
-          Visa köade bokningar
+          {showAssignedBookings && 'Dölj '}
+          {!showAssignedBookings && 'Visa '}
+          köade bokningar
         </MenuItem>
         <MenuItem onClick={() => setShowActiveDeliveries((on) => !on)}>
           <ListItemIcon>
             <RouteIcon />
           </ListItemIcon>
-          Visa pågående leveranser
+          {showActiveDeliveries && 'Dölj '}
+          {!showActiveDeliveries && 'Visa '}
+          pågående leveranser
         </MenuItem>
         <Divider />
         <MenuItem
