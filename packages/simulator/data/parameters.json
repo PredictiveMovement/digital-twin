@@ -17,45 +17,27 @@
     "Arjeplogs kommun": {
       "fleets": [
         {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
           "name": "Taxi",
           "vehicles": {
-            "taxi": 5
+            "taxi": 2
           }
         },
         {
           "name": "Postnord",
           "vehicles": {
             "tungLastbil": 0,
-            "medeltungLastbil": 4,
+            "medeltungLastbil": 1,
             "lättLastbil": 1,
             "bil": 0
           },
           "marketshare": 0.6,
-          "hub": [21.034263, 64.746704]
-        },
-        {
-          "name": "Röd",
-          "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 2
-          },
-          "marketshare": 0.18,
-          "hub": [21.034263, 64.746704]
-        },
-        {
-          "name": "Gul",
-          "vehicles": {
-            "medeltungLastbil": 1
-          },
-          "marketshare": 0.06,
-          "hub": [21.034263, 64.746704]
-        },
-        {
-          "name": "Brun",
-          "vehicles": {
-            "medeltungLastbil": 1
-          },
-          "marketshare": 0.06,
           "hub": [21.034263, 64.746704]
         }
       ]
@@ -63,51 +45,46 @@
     "Arvidsjaurs kommun": {
       "fleets": [
         {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
           "name": "Taxi",
           "vehicles": {
-            "taxi": 5
+            "taxi": 2
           }
         },
         {
           "name": "Postnord",
           "vehicles": {
             "tungLastbil": 0,
-            "medeltungLastbil": 5,
+            "medeltungLastbil": 1,
             "lättLastbil": 1,
             "bil": 0
           },
           "marketshare": 60,
-          "hub": [21.034263, 64.746704]
-        },
-        {
-          "name": "Röd",
-          "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 3
-          },
-          "marketshare": 18,
-          "hub": [21.034263, 64.746704]
-        },
-        {
-          "name": "Gul",
-          "vehicles": {
-            "lättLastbil": 1
-          },
-          "marketshare": 6,
-          "hub": [21.034263, 64.746704]
-        },
-        {
-          "name": "Brun",
-          "vehicles": {
-            "lättLastbil": 1
-          },
-          "marketshare": 6,
           "hub": [21.034263, 64.746704]
         }
       ]
     },
     "Bodens kommun": {
       "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 3
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 2
+          }
+        },
         {
           "name": "Postnord",
           "vehicles": {
@@ -118,21 +95,22 @@
           },
           "marketshare": 0.6,
           "hub": [22.045246, 65.614869]
-        },
-        {
-          "name": "Taxi",
-          "vehicles": {
-            "taxi": 5
-          }
         }
       ]
     },
     "Gällivare kommun": {
       "fleets": [
         {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
           "name": "Taxi",
           "vehicles": {
-            "taxi": 5
+            "taxi": 2
           }
         }
       ]
@@ -140,9 +118,16 @@
     "Haparanda stad": {
       "fleets": [
         {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
           "name": "Taxi",
           "vehicles": {
-            "taxi": 5
+            "taxi": 2
           }
         }
       ]
@@ -201,9 +186,16 @@
     "Jokkmokks kommun": {
       "fleets": [
         {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
           "name": "Taxi",
           "vehicles": {
-            "taxi": 5
+            "taxi": 2
           }
         }
       ]
@@ -211,15 +203,36 @@
     "Kalix kommun": {
       "fleets": [
         {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 2
+          }
+        }
+      ]
+    },
+    "Kiruna kommun": {
+      "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 10
+          }
+        },
+        {
           "name": "Taxi",
           "vehicles": {
             "taxi": 5
           }
         }
       ]
-    },
-    "Kiruna kommun": {
-      "fleets": []
     },
     "Ljusdals kommun": {
       "fleets": [
@@ -233,39 +246,6 @@
           },
           "marketshare": 60,
           "hub": [17.08409, 61.741754]
-        },
-        {
-          "name": "Röd",
-          "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 1,
-            "lättLastbil": 1,
-            "bil": 0
-          },
-          "marketshare": 12,
-          "hub": [17.08409, 61.741754]
-        },
-        {
-          "name": "Gul",
-          "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 1,
-            "lättLastbil": 1,
-            "bil": 0
-          },
-          "marketshare": 6,
-          "hub": [17.08409, 61.741754]
-        },
-        {
-          "name": "Brun",
-          "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 0,
-            "lättLastbil": 1,
-            "bil": 0
-          },
-          "marketshare": 6,
-          "hub": [17.085194, 61.741017]
         },
         {
           "name": "SNX",
@@ -283,6 +263,19 @@
     "Luleå kommun": {
       "fleets": [
         {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 20
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 7
+          }
+        },
+        {
           "name": "Postnord",
           "vehicles": {
             "tungLastbil": 0,
@@ -292,65 +285,35 @@
           },
           "marketshare": 0.6,
           "hub": [22.046545, 65.614817]
-        },
-        {
-          "name": "Taxi",
-          "vehicles": {
-            "taxi": 5
-          }
         }
       ]
     },
     "Pajala kommun": {
       "fleets": [
         {
-          "name": "Postnord",
+          "name": "Länstrafiken",
+          "type": "bus",
           "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 1,
-            "lättLastbil": 3,
-            "bil": 0
-          },
-          "marketshare": 60,
-          "hub": [22.050702, 65.610326]
+            "bus": 5
+          }
         },
         {
-          "name": "Röd",
+          "name": "Taxi",
           "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 0,
-            "lättLastbil": 2,
-            "bil": 0
-          },
-          "marketshare": 18,
-          "hub": [22.050702, 65.610326]
-        },
-        {
-          "name": "Gul",
-          "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 0,
-            "lättLastbil": 1,
-            "bil": 0
-          },
-          "marketshare": 6,
-          "hub": [22.050702, 65.610326]
-        },
-        {
-          "name": "Brun",
-          "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 0,
-            "lättLastbil": 1,
-            "bil": 0
-          },
-          "marketshare": 6,
-          "hub": [22.050702, 65.610326]
+            "taxi": 2
+          }
         }
       ]
     },
     "Piteå kommun": {
       "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 10
+          }
+        },
         {
           "name": "Taxi",
           "vehicles": {
@@ -362,6 +325,19 @@
     "Storumans kommun": {
       "fleets": [
         {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 2
+          }
+        },
+        {
           "name": "Postnord",
           "vehicles": {
             "tungLastbil": 1,
@@ -371,39 +347,6 @@
           },
           "marketshare": 60,
           "hub": [14.640025, 63.222212]
-        },
-        {
-          "name": "Röd",
-          "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 1,
-            "lättLastbil": 2,
-            "bil": 0
-          },
-          "marketshare": 18,
-          "hub": [20.136678, 63.85036]
-        },
-        {
-          "name": "Gul",
-          "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 1,
-            "lättLastbil": 1,
-            "bil": 0
-          },
-          "marketshare": 6,
-          "hub": [20.136678, 63.85036]
-        },
-        {
-          "name": "Brun",
-          "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 1,
-            "lättLastbil": 0,
-            "bil": 0
-          },
-          "marketshare": 6,
-          "hub": [20.136678, 63.85036]
         }
       ]
     },
@@ -423,9 +366,16 @@
     "Älvsbyns kommun": {
       "fleets": [
         {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
           "name": "Taxi",
           "vehicles": {
-            "taxi": 5
+            "taxi": 2
           }
         }
       ]
@@ -433,9 +383,16 @@
     "Överkalix kommun": {
       "fleets": [
         {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
           "name": "Taxi",
           "vehicles": {
-            "taxi": 5
+            "taxi": 2
           }
         }
       ]
@@ -443,9 +400,16 @@
     "Övertorneå kommun": {
       "fleets": [
         {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
           "name": "Taxi",
           "vehicles": {
-            "taxi": 5
+            "taxi": 2
           }
         }
       ]
