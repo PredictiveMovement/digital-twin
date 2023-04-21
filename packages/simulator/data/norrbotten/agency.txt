@@ -1,2 +1,0 @@
-agency_id,agency_name,agency_url,agency_timezone,agency_lang,agency_fare_url
-252500000000000001,Länstrafiken Norrbotten,https://ltnbd.se/,Europe/Stockholm,sv,https://ltnbd.se/
