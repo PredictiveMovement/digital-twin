@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import logo from '../../icons/svg/pmLogo.svg'
 import { keyframes } from 'styled-components'
 import {
   Stepper,
@@ -36,11 +35,6 @@ const pulseAnimation = keyframes`
     transform: scale( 1.1 );
   }
 `
-const PulseIcon = styled.img`
-  animation-name: ${pulseAnimation};
-  animation-duration: 4s;
-  animation-iteration-count: infinite;
-`
 
 const Loading = ({
   passengers,
@@ -49,10 +43,11 @@ const Loading = ({
   bookings,
   busStops,
   kommuner,
-  lineShapes,
+  parameters,
 }) => {
   let activeStep = 0
   if (!connected) activeStep = 0
+  else if (!parameters) activeStep = 1
   else if (!kommuner) activeStep = 2
   else if (!cars) activeStep = 3
   else if (!passengers || !bookings) activeStep = 4
@@ -82,17 +77,20 @@ const Loading = ({
           )}
         </Step>
         <Step key={2}>
-          <StepLabel>Hämtar {kommuner} kommuner...</StepLabel>
+          <StepLabel>Hämtar experimentparametrar...</StepLabel>
         </Step>
         <Step key={3}>
-          <StepLabel>Skapar {cars} fordon...</StepLabel>
+          <StepLabel>Hämtar {kommuner} kommuner...</StepLabel>
         </Step>
         <Step key={4}>
+          <StepLabel>Skapar {cars} fordon...</StepLabel>
+        </Step>
+        <Step key={5}>
           <StepLabel>
             Genererar {passengers} passagerare och {bookings} bokningar...
           </StepLabel>
         </Step>
-        <Step key={5}>
+        <Step key={6}>
           <StepLabel>Skapar {busStops} busstationer och rutter...</StepLabel>
         </Step>
       </Stepper>

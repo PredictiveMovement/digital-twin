@@ -7,9 +7,6 @@ import styled from 'styled-components'
 import ResetIcon from './icons/svg/resetIcon.svg'
 import TransparentButton from './components/TransparentButton'
 import SideMenu from './components/SideMenu'
-import WelcomeBox from './components/WelcomeBox'
-
-import fleetsJson from './data/fleets.json'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -209,6 +206,9 @@ const App = () => {
       }
     })
 
+    console.log(currentParameters)
+    setFleets(currentParameters.fleets)
+
     setNewParameters(currentParameters)
   })
   const [passengers, setPassengers] = React.useState([])
@@ -249,12 +249,6 @@ const App = () => {
     setActiveCar(null)
   }
 
-  const setupFleets = () => {
-    setFleets(fleetsJson)
-  }
-
-  useEffect(setupFleets, [])
-
   socket.on('disconnect', () => {
     setConnected(false)
   })
@@ -293,6 +287,7 @@ const App = () => {
           busStops={busStops.length}
           kommuner={kommuner.length}
           lineShapes={lineShapes.length}
+          parameters={currentParameters}
         />
       )}
       <Map

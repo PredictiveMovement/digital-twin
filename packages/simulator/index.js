@@ -28,6 +28,7 @@ const engine = {
       startDate: new Date(),
       fixedRoute: savedParams.fixedRoute || 100,
       emitters: defaultEmitters,
+      fleets: savedParams.fleets,
     }
     statistics.collectExperimentMetadata(parameters)
 
