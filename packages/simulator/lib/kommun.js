@@ -128,40 +128,6 @@ class Kommun {
       booking.kommun = this
       this.unhandledBookings.next(booking)
     }
-
-    //   this.handledBookings = this.unhandledBookings.pipe(
-    //     map((booking) => {
-    //       booking.kommun = this
-    //       this.fleets
-    //         .pipe(
-    //           expandFleets(), // otherwise pick one at random
-    //           pickRandom()
-    //         )
-    //         .subscribe((fleet) => fleet.handleBooking(booking))
-
-    //       if (booking.finalDestination?.position) {
-    //         booking.deliveredEvents.pipe(first()).subscribe(() => {
-    //           booking.pickup = booking.destination
-    //           booking.destination = booking.finalDestination
-
-    //           // Create a private car to pickup the package from the nearestOmbud
-    //           // https://transportstyrelsen.se/sv/vagtrafik/statistik/Statistik-over-koldioxidutslapp/statistik-over-koldioxidutslapp-2020/
-    //           const weight = 1500
-    //           const co2perkm = 125 // gram
-    //           const privateCar = new Car({
-    //             position: booking.destination.position,
-    //             isPrivateCar: true,
-    //             weight,
-    //             parcelCapacity: 2,
-    //             co2PerKmKg: co2perkm / 1000 / weight,
-    //           })
-    //           privateCar.handleBooking(booking)
-    //           this.privateCars.next(privateCar)
-    //         })
-    //       }
-    //       return booking
-    //     })
-    //   )
   }
 }
 

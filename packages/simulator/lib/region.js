@@ -145,10 +145,11 @@ class Region {
     )
 
     /*
-    // TODO: Move this to dispatch central:
-    // TODO: add kmeans clustering to group bookings and cars by pickup
-    // send those to vroom and get back a list of assignments
-    // for each assignment, take the booking and dispatch it to the car / fleet */
+     * TODO: Move this to dispatch central:
+     * TODO: add kmeans clustering to group bookings and cars by pickup
+     * send those to vroom and get back a list of assignments
+     * for each assignment, take the booking and dispatch it to the car / fleet
+     */
     this.dispatchedBookings = merge(
       this.stopAssignments.pipe(
         mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5),
@@ -185,7 +186,7 @@ class Region {
               return taxiDispatch(nearestTaxis, bookings).catch((err) => {
                 if (!bookings || !bookings.length) {
                   warn('Region -> Dispatched Bookings -> No bookings!', err)
-                  return of([])  
+                  return of([])
                 }
                 error('Region -> Dispatched Bookings -> Taxi', err)
                 bookings.forEach((booking) => this.manualBookings.next(booking))
@@ -217,17 +218,6 @@ class Region {
         share()
       )
     )
-    // Move this to passenger instead
-    /*this.unhandledBookings.pipe(
-      mergeMap((booking) => taxiDispatch(this.taxis, booking)),
-      mergeAll()
-    ).subscribe(() => {
-      console.log("Thing")
-    })*/
-
-    /*    taxiDispatch(this.taxis, this.passengers).subscribe((e) => {
-      e.map(({ taxi, steps }) => steps.map((step) => taxi.addInstruction(step)))
-    }) */
   }
 }
 
