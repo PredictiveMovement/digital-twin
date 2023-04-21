@@ -8,7 +8,7 @@ const { info, error } = require('../lib/log')
 const AdmZip = require('adm-zip')
 const fetch = require('node-fetch')
 const { shareReplay, Observable } = require('rxjs')
-const { map, toArray, groupBy, mergeMap } = require('rxjs/operators')
+const { map, toArray, groupBy, mergeMap, filter } = require('rxjs/operators')
 const csv = require('csv-stream')
 const Position = require('../lib/models/position')
 
@@ -113,11 +113,52 @@ function gtfs(operator) {
     ),
     shareReplay()
   )
+
   const routeNames = gtfsStream('routes').pipe(
-    map(({ route_id: id, route_short_name: lineNumber }) => ({
-      id,
-      lineNumber,
-    })),
+    map(({ route_id: id, route_short_name: lineNumber }) => {
+      return {
+        id,
+        lineNumber,
+      }
+    }),
+    shareReplay()
+  )
+
+  /**
+   * In addition to bus lines, GTFS data also contains boats, trains and other lines that are not relevant for us.
+   * Therefore we create a stream of excluded line numbers that we can use to filter out unwanted lines.
+   */
+
+  const excludedLineNumbers = gtfsStream('routes').pipe(
+    map(
+      ({
+        route_id: id,
+        route_short_name: lineNumber,
+        route_desc: description,
+      }) => {
+        return { id, lineNumber, description }
+      }
+    ),
+    filter((route) => {
+      switch (route.description) {
+        case 'ForSea':
+        case 'Krösatåg':
+        case 'Plusresor':
+        case 'Pågatåg':
+        case 'PågatågExpress':
+        case 'Spårvagn':
+        case 'TEB planerad':
+        case 'VEN trafiken':
+        case 'Öresundståg':
+          info(
+            `Excluding route ${route.lineNumber} (${route.id}). Reason: ${route.description}`
+          )
+          return true
+        default:
+          return false
+      }
+    }),
+    map((route) => route.lineNumber),
     shareReplay()
   )
 
@@ -188,6 +229,7 @@ function gtfs(operator) {
     trips,
     serviceDates,
     routeNames,
+    excludedLineNumbers,
   }
 }
 
