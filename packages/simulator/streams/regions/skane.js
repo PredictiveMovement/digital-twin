@@ -3,7 +3,11 @@ const { filter, shareReplay, map } = require('rxjs')
 const Region = require('../../lib/region')
 const { isInsideCoordinates } = require('../../lib/polygon')
 
-const includedMunicipalities = ['Helsingborgs stad', 'Malmö stad', 'Lund']
+const includedMunicipalities = [
+  'Helsingborgs stad',
+  'Malmö stad',
+  'Lunds kommun',
+]
 
 const skane = (municipalitiesStream) => {
   const municipalities = municipalitiesStream.pipe(

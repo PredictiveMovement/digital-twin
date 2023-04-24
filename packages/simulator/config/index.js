@@ -1,34 +1,30 @@
-const defaultEmitters = [
-  'bookings',
-  'buses',
-  'busLines',
-  'busStops',
-  'cars',
-  'kommuner',
-  'measureStations',
-  'passengers',
-  'taxis',
-]
+const path = require('path')
+const fs = require('fs')
 
-const includedMunicipalities = [
-  'Arjeplog',
-  'Arvidsjaur',
-  'Boden',
-  'Gällivare',
-  'Haparanda',
-  'Helsingborg',
-  'Jokkmokk',
-  'Kalix',
-  'Kiruna',
-  'Luleå',
-  'Pajala',
-  'Piteå',
-  'Älvsbyn',
-  'Överkalix',
-  'Övertorneå',
-]
+const dataDir = path.join(__dirname, '..', 'config')
+const paramsFileName = 'parameters.json'
+
+// Saves a json parameter object to a parameter file in the data directory
+const save = (value) => {
+  const file = path.join(dataDir, paramsFileName)
+  fs.writeFileSync(file, JSON.stringify(value, null, 2))
+}
+
+// Returns the json parameters as an object from the parameter file in the data directory
+const read = () => {
+  const file = path.join(dataDir, paramsFileName)
+  return JSON.parse(fs.readFileSync(file))
+}
 
 module.exports = {
-  defaultEmitters,
-  includedMunicipalities,
+  emitters: () => {
+    const { emitters } = read()
+    return emitters
+  },
+  municipalities: () => {
+    const { fleets } = read()
+    return Object.keys(fleets)
+  },
+  read,
+  save,
 }

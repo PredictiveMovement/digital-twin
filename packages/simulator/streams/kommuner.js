@@ -23,8 +23,10 @@ const inside = require('point-in-polygon')
 const Pelias = require('../lib/pelias')
 const { getCitizensInSquare } = require('../simulator/citizens')
 const { getAddressesInArea } = require('../simulator/address')
-const { includedMunicipalities } = require('../config')
+const { municipalities } = require('../config')
 const commercialAreas = from(require('../data/scb_companyAreas.json').features)
+
+const activeMunicipalities = municipalities()
 
 const bookings = {
   hm: require('../streams/orders/hm.js'),
@@ -75,7 +77,7 @@ async function getWorkplaces(position, nrOfWorkplaces = 100) {
 function read({ fleets }) {
   return from(data).pipe(
     filter(({ namn }) =>
-      includedMunicipalities.some((name) => namn.startsWith(name))
+      activeMunicipalities.some((name) => namn.startsWith(name))
     ),
     map((kommun) => {
       return {

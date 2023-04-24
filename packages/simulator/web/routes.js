@@ -1,9 +1,11 @@
 const engine = require('../index')
-const { saveParameters } = require('../lib/fileUtils')
+const { save } = require('../config')
 const { info } = require('../lib/log')
-const { defaultEmitters, ignoreWelcomeMessage } = require('../config')
+const { emitters, ignoreWelcomeMessage } = require('../config')
 const cookie = require('cookie')
 const moment = require('moment')
+
+const defaultEmitters = emitters()
 
 function subscribe(experiment, socket) {
   return [
@@ -67,7 +69,7 @@ function register(io) {
     socket.on('busUpdatesToggle', (val) => (socket.data.emitBusUpdates = val))
     socket.on('experimentParameters', (value) => {
       info('New expiriment settings: ', value)
-      saveParameters(value)
+      save(value)
       socket.emit('reset')
     })
 

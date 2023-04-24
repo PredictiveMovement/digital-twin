@@ -10,7 +10,7 @@ const {
 const { virtualTime } = require('./lib/virtualTime')
 
 const { safeId } = require('./lib/id')
-const { readParameters } = require('./lib/fileUtils')
+const { read } = require('./config')
 const statistics = require('./lib/statistics')
 const { info, error } = require('./lib/log')
 const { haversine, getNrOfPointsBetween } = require('./lib/distance')
@@ -18,7 +18,7 @@ const { haversine, getNrOfPointsBetween } = require('./lib/distance')
 const engine = {
   subscriptions: [],
   createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
-    const savedParams = readParameters()
+    const savedParams = read()
     info(`Starting experiment ${id} with params:`, savedParams)
 
     const regions = require('./streams/regions')(savedParams)
