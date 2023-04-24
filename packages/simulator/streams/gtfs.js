@@ -143,6 +143,7 @@ function gtfs(operator) {
       switch (route.description) {
         case 'ForSea':
         case 'Krösatåg':
+        case 'Närtrafik':
         case 'Plusresor':
         case 'Pågatåg':
         case 'PågatågExpress':
