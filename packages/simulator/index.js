@@ -19,7 +19,14 @@ const engine = {
   subscriptions: [],
   createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
     const savedParams = read()
-    info(`Starting experiment ${id} with params:`, savedParams)
+    info(`*** Starting experiment ${id} with params:`, {
+      id: savedParams.id,
+      fixedRoute: savedParams.fixedRoute,
+      emitters: savedParams.emitters,
+      municipalities: Object.keys(savedParams.fleets).map((municipality) => {
+        return `${municipality} (${savedParams.fleets[municipality].fleets.length})`
+      }),
+    })
 
     const regions = require('./streams/regions')(savedParams)
 
