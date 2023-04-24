@@ -24,7 +24,7 @@ const engine = {
       fixedRoute: savedParams.fixedRoute,
       emitters: savedParams.emitters,
       municipalities: Object.keys(savedParams.fleets).map((municipality) => {
-        return `${municipality} (${savedParams.fleets[municipality].fleets.length})`
+        return `${municipality} (${savedParams.fleets[municipality].fleets.length} fleets)`
       }),
     })
 
