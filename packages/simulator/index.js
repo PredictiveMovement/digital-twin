@@ -111,9 +111,9 @@ const engine = {
 
     // TODO: Rename to vehicleUpdates
     experiment.carUpdates = merge(
+      experiment.buses,
       experiment.cars,
-      experiment.taxis,
-      experiment.buses
+      experiment.taxis
     ).pipe(
       mergeMap((car) => car.movedEvents),
       catchError((err) => error('car updates err', err)),
@@ -121,8 +121,11 @@ const engine = {
       share()
     )
 
-    experiment.measureStationUpdates = experiment.cars.pipe(
-      filter((car) => car.vehicleType === 'car'),
+    experiment.measureStationUpdates = merge(
+      experiment.buses,
+      experiment.cars
+    ).pipe(
+      filter((car) => car.vehicleType === 'car' || car.vehicleType === 'bus'),
       filter((car) => !car.isPrivateCar),
       mergeMap(({ id, movedEvents }) =>
         movedEvents.pipe(
