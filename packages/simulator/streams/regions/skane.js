@@ -1,5 +1,5 @@
 const { stops, lineShapes } = require('../publicTransport')('skane')
-const { filter, shareReplay, tap, toArray, map } = require('rxjs')
+const { filter, shareReplay, map } = require('rxjs')
 const Region = require('../../lib/region')
 const { isInsideCoordinates } = require('../../lib/polygon')
 
@@ -7,31 +7,43 @@ const includedMunicipalities = ['Helsingborgs stad', 'Malmö stad', 'Lund']
 
 const skane = (municipalitiesStream) => {
   const municipalities = municipalitiesStream.pipe(
-    filter((munipality) => includedMunicipalities.includes(munipality.name))
+    filter((munipality) => includedMunicipalities.includes(munipality.name)),
+    shareReplay()
   )
 
-  const activeStops = stops
+  const geometries = []
+  municipalities
     .pipe(
-      // tap((stop) => {
-      //   console.log('STOP', stop)
-      // }),
-      filter((stop) => {
-        const stopCoordinates = [stop.position.lon, stop.position.lat]
-        return municipalities.pipe(
-          toArray(),
-          map((municipality) => {
-            const meow = isInsideCoordinates(
-              stopCoordinates,
-              municipality.geometry.coordinates
-            )
-
-            console.log('MEOW', meow)
-          })
-        )
-      }),
-      shareReplay()
+      map((municipality) => {
+        geometries.push({
+          name: municipality.name,
+          coordinates: municipality.geometry.coordinates,
+        })
+      })
     )
     .subscribe()
+
+  /**
+   * Include line shapes that have at least one stop inside the active municipalities.
+   */
+  const localLineShapes = lineShapes.pipe(
+    filter((lineShape) => {
+      let lineShapeHasAnyStopInsideActiveMunicipalities = false
+      geometries.forEach((geometry) => {
+        lineShape.stops.forEach((stop) => {
+          if (isInsideCoordinates(stop, geometry.coordinates)) {
+            lineShapeHasAnyStopInsideActiveMunicipalities = true
+          }
+        })
+      })
+
+      return lineShapeHasAnyStopInsideActiveMunicipalities
+    }),
+    shareReplay()
+  )
+
+  // TODO: Show only stops that belong to line shapes that have at least one stop inside the active municipalities.
+  const localStops = stops.pipe()
 
   return new Region({
     id: 'skane',
@@ -39,8 +51,8 @@ const skane = (municipalitiesStream) => {
     kommuner: municipalities,
 
     // Bus things.
-    stops: stops.pipe(shareReplay()),
-    lineShapes: lineShapes.pipe(shareReplay()),
+    stops: localStops.pipe(shareReplay()),
+    lineShapes: localLineShapes.pipe(shareReplay()),
   })
 }
 
