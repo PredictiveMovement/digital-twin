@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useSocket } from './hooks/useSocket.js'
 import Map from './Map.jsx'
 import PlaybackOptions from './components/PlaybackOptions'
@@ -206,9 +206,7 @@ const App = () => {
       }
     })
 
-    console.log(currentParameters)
     setFleets(currentParameters.fleets)
-
     setNewParameters(currentParameters)
   })
   const [passengers, setPassengers] = React.useState([])
