@@ -28,14 +28,7 @@ const WORKING_DAYS = 220
 const pilots = kommuner.pipe(
   filter((kommun) =>
     //['Arjeplog', 'Arvidsjaur', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
-    [
-      'Arjeplog',
-      'Arvidsjaur',
-      'Pajala',
-      'Storuman',
-      'Västervik',
-      'Ljusdal',
-    ].some((pilot) => kommun.name.startsWith(pilot))
+    ['Västervik'].some((pilot) => kommun.name.startsWith(pilot))
   ),
   // TODO: Dela upp och gör mer läsbart
   mergeMap(async (kommun) => {
@@ -76,6 +69,7 @@ const pilots = kommuner.pipe(
           toArray()
         )
         .subscribe((arr) => {
+          fs.mkdirSync(__dirname + '/cache', { recursive: true })
           fs.writeFileSync(file, JSON.stringify(arr))
           console.log(`*** ${kommun.name}: wrote bookings to cache (${file})`)
         })
