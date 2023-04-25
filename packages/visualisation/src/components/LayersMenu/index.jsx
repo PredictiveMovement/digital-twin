@@ -10,7 +10,7 @@ import Web from '@mui/icons-material/Web'
 import AirlineStopsIcon from '@mui/icons-material/AirlineStops'
 import RouteIcon from '@mui/icons-material/Route'
 import LayersIcon from '@mui/icons-material/Layers'
-import { Link } from '@mui/material'
+import { FormControlLabel, Link, Switch } from '@mui/material'
 
 export default function LayersMenu({
   showArcLayer,
@@ -46,7 +46,6 @@ export default function LayersMenu({
         id="account-menu"
         open={open}
         onClose={handleClose}
-        onClick={handleClose}
         PaperProps={{
           elevation: 0,
           sx: {
@@ -76,46 +75,20 @@ export default function LayersMenu({
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={() => setShowArcLayer((on) => !on)}>
-          <ListItemIcon>
-            <AirlineStopsIcon />
-          </ListItemIcon>
-          {showArcLayer && 'Dölj '}
-          {!showArcLayer && 'Visa '}
-           nästa stopp
+        <MenuItem >
+          <FormControlLabel control={
+          <Switch checked={showArcLayer} onChange={() => setShowArcLayer((on) => !on)}/>
+        } label="Nästa stopp" />
         </MenuItem>
-        <MenuItem onClick={() => setShowAssignedBookings((on) => !on)}>
-          <ListItemIcon>
-            <RouteIcon />
-          </ListItemIcon>
-          {showAssignedBookings && 'Dölj '}
-          {!showAssignedBookings && 'Visa '}
-          köade bokningar
+        <MenuItem>
+          <FormControlLabel control={
+            <Switch checked={showAssignedBookings} onChange={() => setShowAssignedBookings((on) => !on)}/>
+          } label="Köade bokningar" />
         </MenuItem>
-        <MenuItem onClick={() => setShowActiveDeliveries((on) => !on)}>
-          <ListItemIcon>
-            <RouteIcon />
-          </ListItemIcon>
-          {showActiveDeliveries && 'Dölj '}
-          {!showActiveDeliveries && 'Visa '}
-          pågående leveranser
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          onClick={handleClose}
-          LinkComponent={Link}
-          to="https://github.com/predictivemovement"
-        >
-          <ListItemIcon>
-            <GitHub fontSize="small" />
-          </ListItemIcon>
-          Licenser och källkod
-        </MenuItem>
-        <MenuItem LinkComponent={Link} to="https://predictivemovement.se">
-          <ListItemIcon>
-            <Web fontSize="small" />
-          </ListItemIcon>
-          Om oss
+        <MenuItem >
+          <FormControlLabel control={
+              <Switch checked={showActiveDeliveries} onChange={() => setShowActiveDeliveries((on) => !on)}/>
+            } label="Pågående leveranser" />
         </MenuItem>
       </Menu>
     </React.Fragment>

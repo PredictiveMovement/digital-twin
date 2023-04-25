@@ -602,7 +602,7 @@ const Map = ({
         activeLayers.measureStationsLayer && measureStationsLayer,
         bookingLayer,
         showArcLayer && arcLayer,
-        showActiveDeliveries && routesLayer,
+        (showAssignedBookings || showActiveDeliveries) && routesLayer,
         activeLayers.busLineLayer && busLineLayer,
         activeLayers.busStopLayer && busStopLayer,
         activeLayers.carLayer && carLayer,
