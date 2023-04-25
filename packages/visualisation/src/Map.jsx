@@ -15,9 +15,7 @@ import KommunStatisticsBox from './components/KommunStatisticsBox'
 import TimeProgressBar from './components/TimeProgressBar'
 
 import LayersMenu from './components/LayersMenu/index.jsx'
-import mapboxgl from 'mapbox-gl'
 import HoverInfoBox from './components/HoverInfoBox'
-import { IconButton, Menu, MenuItem } from '@mui/material'
 
 const transitionInterpolator = new LinearInterpolator(['bearing'])
 
@@ -379,7 +377,7 @@ const Map = ({
 
   const bookingLayer = new ScatterplotLayer({
     id: 'booking-layer',
-    data: bookings.filter(b => b.type !== 'busstop'), //.filter((b) => !b.assigned), // TODO: revert change
+    data: bookings.filter((b) => b.type !== 'busstop'), //.filter((b) => !b.assigned), // TODO: revert change
     opacity: 1,
     stroked: false,
     filled: true,
