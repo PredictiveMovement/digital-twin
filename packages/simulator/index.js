@@ -42,7 +42,8 @@ const engine = {
     const experiment = {
       busStops: regions.pipe(
         filter((region) => region.stops),
-        mergeMap((region) => region.stops)
+        mergeMap((region) => region.stops),
+        shareReplay()
       ),
       lineShapes: regions.pipe(
         filter((region) => region.lineShapes),
