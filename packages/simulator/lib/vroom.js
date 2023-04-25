@@ -100,9 +100,9 @@ module.exports = {
         )
         .catch((vroomError) => {
           error(`Vroom error: ${vroomError} (enable debug logging for details)`)
-          info('Jobs', jobs.length)
-          info('Shipments', shipments.length)
-          info('Vehicles', vehicles.length)
+          info('Jobs', jobs?.length)
+          info('Shipments', shipments?.length)
+          info('Vehicles', vehicles?.length)
           return vroomError
         })
     )
