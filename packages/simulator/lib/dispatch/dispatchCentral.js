@@ -9,7 +9,7 @@ const {
   retryWhen,
   toArray,
 } = require('rxjs/operators')
-const { info, error, warn } = require('../log')
+const { info, error, warn, debug } = require('../log')
 const { clusterPositions } = require('../kmeans')
 
 const dispatch = (cars, bookings) => {
@@ -52,7 +52,7 @@ const dispatch = (cars, bookings) => {
         mergeAll(),
         filter(({ bookings }) => bookings.length > 0),
         tap(({ car, bookings }) =>
-          info(
+          debug(
             `Plan ${car.id} (${car.fleet.name}) received ${bookings.length} bookings`
           )
         ),

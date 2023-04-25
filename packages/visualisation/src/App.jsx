@@ -7,7 +7,13 @@ import styled from 'styled-components'
 import ResetIcon from './icons/svg/resetIcon.svg'
 import TransparentButton from './components/TransparentButton'
 import SideMenu from './components/SideMenu'
-import { Snackbar, SlideTransition } from '@mui/material'
+import { Snackbar } from '@mui/material'
+
+import Slide from '@mui/material/Slide';
+
+function TransitionUp(props) {
+  return <Slide {...props} direction="up" />
+}
 
 const Wrapper = styled.div`
   position: absolute;
@@ -35,6 +41,7 @@ const App = () => {
   const [currentParameters, setCurrentParameters] = useState({})
   const [fleets, setFleets] = useState({})
   const [latestLogMessage, setLatestLogMessage] = useState('')
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
 
   const [connected, setConnected] = useState(false)
 
@@ -114,6 +121,7 @@ const App = () => {
 
   useSocket('log', (message) => {
     setLatestLogMessage(message)
+    setSnackbarOpen(true)
   })
 
   const [bookings, setBookings] = React.useState([])
@@ -311,15 +319,18 @@ const App = () => {
         setActiveCar={setActiveCar}
         lineShapes={lineShapes}
       />
+      
       <Snackbar
         sx={{ opacity: 0.6  }}
         anchorOrigin={{
-          vertical: 'top',
+          vertical: 'bottom',
           horizontal: 'center',
         }}
-        open={latestLogMessage !== ''}
+        variant="filled"
+        open={snackbarOpen}
         autoHideDuration={1000}
-        transitionDuration={1000}
+        TransitionComponent={TransitionUp}
+        onClose={() => setSnackbarOpen(false)}
         message={latestLogMessage}
       />
     </>

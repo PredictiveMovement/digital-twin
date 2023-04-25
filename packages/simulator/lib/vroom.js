@@ -67,7 +67,7 @@ module.exports = {
   async plan({ jobs, shipments, vehicles }) {
     const result = await getFromCache({ jobs, shipments, vehicles })
     if (result) {
-      info('Vroom cache hit')
+      debug('Vroom cache hit')
       return result
     }
     debug('Vroom cache miss')

@@ -53,7 +53,7 @@ module.exports = {
   },
   info: (message, data, ...rest) => {
     logStream.next(
-      message + [data, ...rest].map((x) => JSON.stringify(x)).join(' ')
+      message + ' ' + [data, ...rest].map((x) => JSON.stringify(x)).join(' ')
     )
 
     if (logLevelIsAtLeastInfo) {
