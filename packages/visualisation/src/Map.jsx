@@ -32,6 +32,8 @@ const Map = ({
   activeCar,
   setActiveCar,
   time,
+  showEditExperimentModal,
+  setShowEditExperimentModal,
 }) => {
   const [mapState, setMapState] = useState({
     latitude: 65.0964472642777,
@@ -624,6 +626,8 @@ const Map = ({
           setShowActiveDeliveries={setShowActiveDeliveries}
           showAssignedBookings={showAssignedBookings}
           setShowAssignedBookings={setShowAssignedBookings}
+          showEditExperimentModal={showEditExperimentModal}
+          setShowEditExperimentModal={setShowEditExperimentModal}
         />
       </div>
       <StaticMap

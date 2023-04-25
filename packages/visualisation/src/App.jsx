@@ -6,7 +6,11 @@ import Loading from './components/Loading'
 import styled from 'styled-components'
 import ResetIcon from './icons/svg/resetIcon.svg'
 import TransparentButton from './components/TransparentButton'
-import SideMenu from './components/SideMenu'
+import { Box, Button, Modal, Typography } from '@mui/material'
+
+// JSON Editor.
+import { JsonEditor as Editor } from 'jsoneditor-react'
+import 'jsoneditor-react/es/editor.min.css'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -62,6 +66,7 @@ const App = () => {
   }
 
   const newExperiment = () => {
+    setShowEditExperimentModal(false)
     socket.emit('experimentParameters', newParameters)
   }
 
@@ -255,6 +260,30 @@ const App = () => {
     setConnected(true)
   })
 
+  /**
+   * Edit experiment modal.
+   */
+
+  const [showEditExperimentModal, setShowEditExperimentModal] = useState(false)
+
+  const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 600,
+    bgcolor: 'background.paper',
+    color: 'white',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  }
+
+  const updateFleetsJson = (updatedJson) => {
+    console.log('Update JSON', updatedJson)
+    setNewParameters({ ...newParameters, fleets: updatedJson })
+  }
+
   return (
     <>
       <Wrapper>
@@ -262,14 +291,26 @@ const App = () => {
           <img src={ResetIcon} alt="Reset" />
         </TransparentButton>
       </Wrapper>
-      <SideMenu
-        activeLayers={activeLayers}
-        currentParameters={currentParameters}
-        newParameters={newParameters}
-        newExperiment={newExperiment}
-        setNewParameters={setNewParameters}
-        fleets={fleets}
-      />
+
+      <Modal
+        open={showEditExperimentModal}
+        onClose={() => setShowEditExperimentModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={modalStyle}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Redigera Experiment
+          </Typography>
+          <Editor value={fleets} onChange={updateFleetsJson} />
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Dina ändringar träder i kraft när experimentet startar om.
+          </Typography>
+          <Button variant="outlined" onClick={newExperiment}>
+            Starta om experiment
+          </Button>
+        </Box>
+      </Modal>
 
       <PlaybackOptions
         onPause={onPause}
@@ -301,6 +342,8 @@ const App = () => {
         time={time}
         setActiveCar={setActiveCar}
         lineShapes={lineShapes}
+        showEditExperimentModal={showEditExperimentModal}
+        setShowEditExperimentModal={setShowEditExperimentModal}
       />
     </>
   )

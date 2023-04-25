@@ -25,6 +25,8 @@ export default function LayersMenu({
   setShowActiveDeliveries,
   showAssignedBookings,
   setShowAssignedBookings,
+  showEditExperimentModal,
+  setShowEditExperimentModal,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl)
@@ -227,7 +229,7 @@ export default function LayersMenu({
           />
         </MenuItem>
         <Divider />
-        <MenuItem>
+        <MenuItem onClick={() => setShowEditExperimentModal((on) => !on)}>
           <ListItemIcon>
             <ContentPaste fontSize="small" />
           </ListItemIcon>
