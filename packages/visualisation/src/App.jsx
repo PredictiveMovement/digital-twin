@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import ResetIcon from './icons/svg/resetIcon.svg'
 import TransparentButton from './components/TransparentButton'
 import SideMenu from './components/SideMenu'
+import { Snackbar, SlideTransition } from '@mui/material'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -33,6 +34,7 @@ const App = () => {
   const [newParameters, setNewParameters] = useState({})
   const [currentParameters, setCurrentParameters] = useState({})
   const [fleets, setFleets] = useState({})
+  const [latestLogMessage, setLatestLogMessage] = useState('')
 
   const [connected, setConnected] = useState(false)
 
@@ -75,6 +77,7 @@ const App = () => {
     setMeasureStations([])
     setBusStops([])
     setLineShapes([])
+    setLatestLogMessage('')
     socket.emit('speed', speed) // reset speed on server
   })
 
@@ -107,6 +110,10 @@ const App = () => {
 
   useSocket('time', (time) => {
     setTime(time)
+  })
+
+  useSocket('log', (message) => {
+    setLatestLogMessage(message)
   })
 
   const [bookings, setBookings] = React.useState([])
@@ -303,6 +310,17 @@ const App = () => {
         time={time}
         setActiveCar={setActiveCar}
         lineShapes={lineShapes}
+      />
+      <Snackbar
+        sx={{ opacity: 0.6  }}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        open={latestLogMessage !== ''}
+        autoHideDuration={1000}
+        transitionDuration={1000}
+        message={latestLogMessage}
       />
     </>
   )
