@@ -93,12 +93,7 @@ function read() {
         'Strandbadsvägen 7, Helsingborg', // TNT.
       ]
 
-      let pickup = key
-      if (importOrigins.includes(key.toLowerCase().trim())) {
-        pickup = distributionCenters[i % 4] // TODO: Improve handling of origins outside of Sweden.
-      }
-
-      return searchOne(pickup).then(({ name, position }) =>
+      return searchOne(distributionCenters[i % 4]).then(({ name, position }) =>
         rows.map((row) => ({ pickup: { name, position }, ...row }))
       )
     }, 1),
