@@ -328,7 +328,7 @@ const App = () => {
         }}
         variant="filled"
         open={snackbarOpen}
-        autoHideDuration={1000}
+        autoHideDuration={3000}
         TransitionComponent={TransitionUp}
         onClose={() => setSnackbarOpen(false)}
         message={latestLogMessage}
