@@ -46,16 +46,13 @@ const skane = (municipalitiesStream) => {
     shareReplay()
   )
 
-  // TODO: Show only stops that belong to line shapes that have at least one stop inside the active municipalities.
-  const localStops = stops.pipe()
-
   return new Region({
     id: 'skane',
     name: 'Skåne',
     kommuner: municipalities,
+    stops,
 
     // Bus things.
-    stops: localStops.pipe(shareReplay()),
     lineShapes: localLineShapes.pipe(shareReplay()),
   })
 }

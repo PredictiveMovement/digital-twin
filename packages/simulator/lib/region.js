@@ -18,6 +18,7 @@ const {
   debounceTime,
   concatMap,
   shareReplay,
+  first,
 } = require('rxjs/operators')
 const { busDispatch } = require('./dispatch/busDispatch')
 const { isInsideCoordinates } = require('../lib/polygon')
@@ -40,7 +41,7 @@ const flattenProperty = (property) => (stream) =>
     )
   )
 
-const busStopsGroupedOnKommun = (kommuner) => (stops) =>
+const tripsInKommun = (kommuner) => (stops) =>
   stops.pipe(
     groupBy(({ tripId }) => tripId),
     mergeMap((s) => s.pipe(toArray())),
@@ -60,12 +61,7 @@ const busStopsGroupedOnKommun = (kommuner) => (stops) =>
           kommun: name,
         }))
       )
-    }),
-    groupBy(({ kommun }) => kommun),
-    map((trips) => ({
-      name: trips.key,
-      trips,
-    }))
+    })
   )
 
 class Region {
@@ -74,7 +70,15 @@ class Region {
 
     this.geometry = geometry
     this.name = name
-    this.stops = stops
+    this.trips = tripsInKommun(kommuner)(stops).pipe(shareReplay()) // trips = bussavgångar
+    this.stops = this.trips.pipe(
+      mergeMap(({ kommun, stops }) =>
+        kommuner.pipe(
+          first(({ name }) => name === kommun, null), // is this an included kommun?
+          mergeMap((kommun) => (kommun ? stops : of(null)))
+        )
+      )
+    )
     this.lineShapes = lineShapes
     this.kommuner = kommuner // TODO: Rename to municipalities.
 
@@ -111,10 +115,12 @@ class Region {
 
     this.citizens = kommuner.pipe(mergeMap((kommun) => kommun.citizens))
 
-    this.stopAssignments = stops.pipe(
-      busStopsGroupedOnKommun(kommuner),
-      map(({ name, trips }) => ({
-        buses: this.buses.pipe(filter((bus) => bus.fleet.kommun.name === name)),
+    this.stopAssignments = this.trips.pipe(
+      groupBy((trip) => trip.kommun),
+      map((trips) => ({
+        buses: this.buses.pipe(
+          filter((bus) => bus.fleet.kommun.name === trips.key)
+        ),
         trips,
       })),
       flattenProperty('buses'),
