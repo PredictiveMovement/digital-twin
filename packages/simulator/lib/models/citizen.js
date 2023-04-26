@@ -59,11 +59,11 @@ class Citizen {
         hour: getHours(date),
         weekDay: getISODay(date),
       })),
-      filter(() => Math.random() > 0.5),
+      filter(() => Math.random() > 0.9),
       map(({ hour }) => {
         if (hour < 4 && hour > 22) return 'sleep'
-        if (hour >= 12 && hour <= 16) return 'lunch'
-        if (hour >= 4 && hour < 10) return 'goToWork'
+        if (hour >= 11 && hour <= 13) return 'lunch'
+        if (hour >= 6 && hour < 10) return 'goToWork'
         if (hour >= 16 && hour <= 18) return 'goHome'
         // pickup kids
         // go to gym
