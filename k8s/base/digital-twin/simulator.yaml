@@ -24,7 +24,6 @@ spec:
         app: simulator
     spec:
       nodeSelector:
-        mem: high
         role: worker
       containers:
         - name: simulator

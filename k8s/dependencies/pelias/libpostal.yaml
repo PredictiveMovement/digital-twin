@@ -35,7 +35,6 @@ spec:
         app: pelias-libpostal
     spec:
       nodeSelector:
-        mem: high
         role: worker
       containers:
         - name: pelias-libpostal

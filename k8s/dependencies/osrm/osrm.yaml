@@ -16,7 +16,6 @@ spec:
         app: osrm
     spec:
       nodeSelector:
-        mem: high
         role: worker
       containers:
         - image: predictivemovement/osrm-sweden:latest
