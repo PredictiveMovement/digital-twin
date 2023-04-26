@@ -5,8 +5,9 @@ import { useSocket } from './hooks/useSocket.js'
 import Map from './Map.jsx'
 import Loading from './components/Loading'
 import PlaybackOptions from './components/PlaybackOptions'
-import ResetExperiment from './components/ResetExperiment/index.jsx'
-import EditExperimentModal from './components/EditExperimentModal/index.jsx'
+import ResetExperiment from './components/ResetExperiment'
+import EditExperimentModal from './components/EditExperimentModal'
+import Logo from './components/Logo'
 
 const App = () => {
   const [activeCar, setActiveCar] = useState(null)
@@ -260,6 +261,8 @@ const App = () => {
 
   return (
     <>
+      <Logo />
+
       {/* Loader. */}
       {(!connected || reset || !cars.length || !bookings.length) && (
         <Loading
