@@ -36,7 +36,7 @@ const EditExperimentModal = ({
   fleets,
   show,
   setShow,
-  resetSiulation,
+  restartSimulation,
   saveFleets,
 }) => {
   return (
@@ -56,7 +56,7 @@ const EditExperimentModal = ({
           <Typography id="modal-modal-description" sx={{ mb: 2, mt: 2 }}>
             Dina ändringar träder i kraft när experimentet startar om.
           </Typography>
-          <Button variant="contained" onClick={resetSiulation}>
+          <Button variant="contained" onClick={restartSimulation}>
             Starta om experiment
           </Button>
           <Button
