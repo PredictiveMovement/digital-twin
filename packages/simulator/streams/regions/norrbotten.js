@@ -1,4 +1,4 @@
-const { stops, lineShapes } = require('../publicTransport')('norrbotten')
+const { stops } = require('../publicTransport')('norrbotten')
 const { filter } = require('rxjs')
 const Region = require('../../lib/region')
 
@@ -32,7 +32,6 @@ const norrbotten = (municipalitiesStream) => {
 
     // Bus things.
     stops,
-    lineShapes,
   })
 }
 
