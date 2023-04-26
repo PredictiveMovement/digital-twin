@@ -156,7 +156,7 @@
           "name": "Skånetrafik",
           "type": "bus",
           "vehicles": {
-            "bus": 20
+            "bus": 40
           }
         },
         {
