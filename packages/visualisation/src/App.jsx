@@ -1,23 +1,12 @@
 import React, { useState } from 'react'
-import { useSocket } from './hooks/useSocket.js'
-import Map from './Map.jsx'
-import PlaybackOptions from './components/PlaybackOptions'
-import Loading from './components/Loading'
-import styled from 'styled-components'
-import ResetIcon from './icons/svg/resetIcon.svg'
-import TransparentButton from './components/TransparentButton'
-import { Box, Button, Modal, Typography } from '@mui/material'
-
-// JSON Editor.
-import { JsonEditor as Editor } from 'jsoneditor-react'
 import 'jsoneditor-react/es/editor.min.css'
-
-const Wrapper = styled.div`
-  position: absolute;
-  z-index: 2;
-  bottom: 3rem;
-  left: 11.3rem;
-`
+import { useSocket } from './hooks/useSocket.js'
+import { Box, Button, Modal, Typography } from '@mui/material'
+import { JsonEditor as Editor } from 'jsoneditor-react'
+import Map from './Map.jsx'
+import Loading from './components/Loading'
+import PlaybackOptions from './components/PlaybackOptions'
+import ResetExperiment from './components/ResetExperiment/index.jsx'
 
 const App = () => {
   const [activeCar, setActiveCar] = useState(null)
@@ -286,12 +275,10 @@ const App = () => {
 
   return (
     <>
-      <Wrapper>
-        <TransparentButton onClick={() => resetSimulation()}>
-          <img src={ResetIcon} alt="Reset" />
-        </TransparentButton>
-      </Wrapper>
+      {/* Reset experiment button. */}
+      <ResetExperiment resetSimulation={resetSimulation} />
 
+      {/* Edit experiment modal. */}
       <Modal
         open={showEditExperimentModal}
         onClose={() => setShowEditExperimentModal(false)}
