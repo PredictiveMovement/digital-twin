@@ -73,22 +73,8 @@ function publicTransport(operator) {
     shareReplay()
   )
 
-  const lineShapes = todaysStops.pipe(
-    groupBy((line) => line.tripId),
-    mergeMap((group) => group.pipe(toArray())),
-    map((stops) => ({
-      tripId: stops[0].tripId,
-      lineNumber: stops[0].lineNumber,
-      from: stops[0].stop.name,
-      to: stops[stops.length - 1].stop.name,
-      stops: stops.map(({ stop }) => stop.position),
-    })),
-    catchError((err) => error('GTFS', err)),
-    shareReplay()
-  )
   return {
     stops: todaysStops,
-    lineShapes,
   }
 }
 

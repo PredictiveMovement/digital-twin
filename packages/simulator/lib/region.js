@@ -55,6 +55,7 @@ const tripsInKommun = (kommuner) => (stops) =>
         ),
         map(({ name }) => ({
           tripId: firstStop.tripId,
+          lineNumber: stops[0].lineNumber,
           stops,
           firstStop,
           lastStop,
@@ -65,7 +66,7 @@ const tripsInKommun = (kommuner) => (stops) =>
   )
 
 class Region {
-  constructor({ id, name, geometry, stops, lineShapes, kommuner }) {
+  constructor({ id, name, geometry, stops, kommuner }) {
     this.id = id
 
     this.geometry = geometry
@@ -79,7 +80,16 @@ class Region {
         )
       )
     )
-    this.lineShapes = lineShapes
+    this.lineShapes = this.trips.pipe(
+      map(({ tripId, stops, lineNumber, firstStop, lastStop, kommun }) => ({
+        tripId,
+        lineNumber,
+        from: firstStop.name,
+        to: lastStop.name,
+        kommun,
+        stops: stops.map(({ stop }) => stop.position),
+      }))
+    )
     this.kommuner = kommuner // TODO: Rename to municipalities.
 
     /**
