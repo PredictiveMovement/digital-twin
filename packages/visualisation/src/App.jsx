@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import 'jsoneditor-react/es/editor.min.css'
 import { useSocket } from './hooks/useSocket.js'
-import { Box, Button, Modal, Typography } from '@mui/material'
-import { JsonEditor as Editor } from 'jsoneditor-react'
+
 import Map from './Map.jsx'
 import Loading from './components/Loading'
 import PlaybackOptions from './components/PlaybackOptions'
 import ResetExperiment from './components/ResetExperiment/index.jsx'
+import EditExperimentModal from './components/EditExperimentModal/index.jsx'
 
 const App = () => {
   const [activeCar, setActiveCar] = useState(null)
@@ -54,7 +54,7 @@ const App = () => {
     setBusLineLayer,
   }
 
-  const newExperiment = () => {
+  const resetSiulation = () => {
     setShowEditExperimentModal(false)
     socket.emit('experimentParameters', newParameters)
   }
@@ -250,60 +250,17 @@ const App = () => {
   })
 
   /**
-   * Edit experiment modal.
+   * Update the fleets part of the parameters.
    */
-
-  const [showEditExperimentModal, setShowEditExperimentModal] = useState(false)
-
-  const modalStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 600,
-    bgcolor: 'background.paper',
-    color: 'white',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  }
-
-  const updateFleetsJson = (updatedJson) => {
-    console.log('Update JSON', updatedJson)
+  const saveFleets = (updatedJson) => {
     setNewParameters({ ...newParameters, fleets: updatedJson })
   }
 
+  const [showEditExperimentModal, setShowEditExperimentModal] = useState(false)
+
   return (
     <>
-      {/* Reset experiment button. */}
-      <ResetExperiment resetSimulation={resetSimulation} />
-
-      {/* Edit experiment modal. */}
-      <Modal
-        open={showEditExperimentModal}
-        onClose={() => setShowEditExperimentModal(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={modalStyle}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Redigera Experiment
-          </Typography>
-          <Editor value={fleets} onChange={updateFleetsJson} />
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Dina ändringar träder i kraft när experimentet startar om.
-          </Typography>
-          <Button variant="outlined" onClick={newExperiment}>
-            Starta om experiment
-          </Button>
-        </Box>
-      </Modal>
-
-      <PlaybackOptions
-        onPause={onPause}
-        onPlay={onPlay}
-        onSpeedChange={onSpeedChange}
-      />
+      {/* Loader. */}
       {(!connected || reset || !cars.length || !bookings.length) && (
         <Loading
           connected={connected}
@@ -316,6 +273,27 @@ const App = () => {
           parameters={currentParameters}
         />
       )}
+
+      {/* Playback controls. */}
+      <PlaybackOptions
+        onPause={onPause}
+        onPlay={onPlay}
+        onSpeedChange={onSpeedChange}
+      />
+
+      {/* Reset experiment button. */}
+      <ResetExperiment resetSimulation={resetSimulation} />
+
+      {/* Edit experiment modal. */}
+      <EditExperimentModal
+        fleets={fleets}
+        show={showEditExperimentModal}
+        setShow={setShowEditExperimentModal}
+        resetSiulation={resetSiulation}
+        saveFleets={saveFleets}
+      />
+
+      {/* Map. */}
       <Map
         activeLayers={activeLayers}
         passengers={passengers}
