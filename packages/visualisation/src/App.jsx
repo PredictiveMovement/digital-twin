@@ -8,6 +8,7 @@ import PlaybackOptions from './components/PlaybackOptions'
 import ResetExperiment from './components/ResetExperiment'
 import EditExperimentModal from './components/EditExperimentModal'
 import Logo from './components/Logo'
+import ExperimentDoneModal from './components/ExperimentDoneModal/index.jsx'
 
 const App = () => {
   const [activeCar, setActiveCar] = useState(null)
@@ -27,6 +28,9 @@ const App = () => {
   const [experimentParameters, setExperimentParameters] = useState({})
   const [currentParameters, setCurrentParameters] = useState({})
   const [fleets, setFleets] = useState({})
+  const [showEditExperimentModal, setShowEditExperimentModal] = useState(false)
+  const [showExperimentDoneModal, setShowExperimentDoneModal] = useState(false)
+  const [previousExperimentId, setPreviousExperimentId] = useState(null)
 
   const [connected, setConnected] = useState(false)
 
@@ -55,13 +59,13 @@ const App = () => {
     setBusLineLayer,
   }
 
-  const resetSiulation = () => {
+  const restartSimulation = () => {
     setShowEditExperimentModal(false)
     socket.emit('experimentParameters', experimentParameters)
   }
 
-  useSocket('reset', () => {
-    console.log('received reset')
+  useSocket('init', () => {
+    console.log('Init experiment')
     setBookings([])
     setPassengers([])
     setCars([])
@@ -71,6 +75,12 @@ const App = () => {
     setBusStops([])
     setLineShapes([])
     socket.emit('speed', speed) // reset speed on server
+  })
+
+  useSocket('reset', () => {
+    console.log('Reset experiment')
+    setPreviousExperimentId(experimentParameters.id)
+    setShowExperimentDoneModal(true)
   })
 
   function upsert(array, object, idProperty = 'id', deep = false) {
@@ -180,6 +190,10 @@ const App = () => {
   useSocket('parameters', (currentParameters) => {
     console.log('ExperimentId', currentParameters.id)
 
+    if (!previousExperimentId) {
+      setPreviousExperimentId(currentParameters.id)
+    }
+
     setCurrentParameters(currentParameters)
     const layerSetFunctions = {
       buses: setBusLayer,
@@ -257,8 +271,6 @@ const App = () => {
     setExperimentParameters({ ...experimentParameters, fleets: updatedJson })
   }
 
-  const [showEditExperimentModal, setShowEditExperimentModal] = useState(false)
-
   return (
     <>
       <Logo />
@@ -292,8 +304,15 @@ const App = () => {
         fleets={fleets}
         show={showEditExperimentModal}
         setShow={setShowEditExperimentModal}
-        resetSiulation={resetSiulation}
+        restartSimulation={restartSimulation}
         saveFleets={saveFleets}
+      />
+
+      {/* Experiment done modal. */}
+      <ExperimentDoneModal
+        experimentId={previousExperimentId}
+        show={showExperimentDoneModal}
+        setShow={setShowExperimentDoneModal}
       />
 
       {/* Map. */}
