@@ -1,12 +1,14 @@
 const { plan, taxiToVehicle, bookingToShipment } = require('../vroom')
 const moment = require('moment')
-const { error, debug, write } = require('../log')
+const { error, debug, write, info } = require('../log')
 const { virtualTime } = require('../virtualTime')
 
 const taxiDispatch = async (taxis, bookings) => {
   const vehicles = taxis.map(taxiToVehicle)
   const shipments = bookings.map(bookingToShipment) // TODO: concat bookings from existing vehicles with previous assignments
-  debug('Calling vroom for taxi', vehicles.length, shipments.length)
+  info(
+    `Finding optimal route for ${vehicles.length} taxis and ${shipments.length} pickups`
+  )
   write('🚕')
   const result = await plan({ shipments, vehicles })
   const virtualNow = await virtualTime.getTimeInMillisecondsAsPromise()

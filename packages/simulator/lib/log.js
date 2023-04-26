@@ -1,4 +1,5 @@
 const chalk = require('chalk')
+const { ReplaySubject } = require('rxjs')
 
 // eslint-disable-next-line no-undef
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info'
@@ -8,6 +9,8 @@ const logLevelIsAtLeastInfo =
   LOG_LEVEL.toUpperCase() === 'INFO' || logLevelIsAtLeastDebug
 const logLevelIsAtLeastWarn =
   LOG_LEVEL.toUpperCase() === 'WARN' || logLevelIsAtLeastInfo
+
+const logStream = new ReplaySubject(10)
 
 const print = (logFn, titleFn, messageFn, title, message, data, ...rest) => {
   if (data) {
@@ -23,6 +26,7 @@ const print = (logFn, titleFn, messageFn, title, message, data, ...rest) => {
 }
 
 module.exports = {
+  logStream,
   debug: (message, data, ...rest) => {
     if (logLevelIsAtLeastDebug) {
       print(
@@ -48,6 +52,10 @@ module.exports = {
     )
   },
   info: (message, data, ...rest) => {
+    logStream.next(
+      message + ' ' + [data, ...rest].map((x) => JSON.stringify(x)).join(' ')
+    )
+
     if (logLevelIsAtLeastInfo) {
       print(
         console.log,

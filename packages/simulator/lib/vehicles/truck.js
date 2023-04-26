@@ -1,5 +1,5 @@
 const { findBestRouteToPickupBookings } = require('../dispatch/truckDispatch')
-const { info, warn } = require('../log')
+const { info, warn, debug } = require('../log')
 const Vehicle = require('./vehicle')
 
 class Truck extends Vehicle {
@@ -53,7 +53,7 @@ class Truck extends Vehicle {
     if (this.cargo.indexOf(this.booking) > -1)
       return warn('Already picked up', this.id, this.booking.id)
 
-    info('Pickup cargo', this.id, this.booking.id)
+    debug('Pickup cargo', this.id, this.booking.id)
     // this.cargo = [...this.cargo, this.booking?.passenger]
     this.cargo.push(this.booking)
     this.cargoEvents.next(this)

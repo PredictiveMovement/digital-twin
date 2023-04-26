@@ -8,11 +8,10 @@ const {
 } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
-
 const { safeId } = require('./lib/id')
 const { read } = require('./config')
 const statistics = require('./lib/statistics')
-const { info, error } = require('./lib/log')
+const { info, error, logStream } = require('./lib/log')
 const { haversine, getNrOfPointsBetween } = require('./lib/distance')
 
 const engine = {
@@ -40,6 +39,7 @@ const engine = {
     statistics.collectExperimentMetadata(parameters)
 
     const experiment = {
+      logStream,
       busStops: regions.pipe(
         filter((region) => region.stops),
         mergeMap((region) => region.stops),

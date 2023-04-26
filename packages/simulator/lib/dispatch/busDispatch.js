@@ -70,7 +70,7 @@ const busDispatch = async (buses, trips) => {
 
   const kommunName = trips[0].kommun
   info(
-    `Calling vroom for ${kommunName} with ${vehicles.length} buses and ${shipments.length} trips`
+    `Finding optimal route in ${kommunName} for ${vehicles.length} buses and ${shipments.length} trips`
   )
 
   const result = await plan({

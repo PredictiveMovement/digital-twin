@@ -3,7 +3,7 @@ const key = process.env.TRAFIKLAB_KEY || 'aea471ef5dde447b87bc7bf4b971aaee'
 
 const fs = require('fs')
 const path = require('path')
-const { info, error } = require('../lib/log')
+const { info, error, debug } = require('../lib/log')
 
 const AdmZip = require('adm-zip')
 const fetch = require('node-fetch')
@@ -151,7 +151,7 @@ function gtfs(operator) {
         case 'TEB planerad':
         case 'VEN trafiken':
         case 'Öresundståg':
-          info(
+          debug(
             `Excluding route ${route.lineNumber} (${route.id}). Reason: ${route.description}`
           )
           return true

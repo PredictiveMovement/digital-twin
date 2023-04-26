@@ -9,7 +9,13 @@ import ResetExperiment from './components/ResetExperiment'
 import EditExperimentModal from './components/EditExperimentModal'
 import Logo from './components/Logo'
 import ExperimentDoneModal from './components/ExperimentDoneModal/index.jsx'
+import { Snackbar, SnackbarContent } from '@mui/material'
 
+import Slide from '@mui/material/Slide';
+
+function TransitionUp(props) {
+  return <Slide {...props} direction="up" />
+}
 const App = () => {
   const [activeCar, setActiveCar] = useState(null)
   const [reset, setReset] = useState(false)
@@ -28,6 +34,8 @@ const App = () => {
   const [experimentParameters, setExperimentParameters] = useState({})
   const [currentParameters, setCurrentParameters] = useState({})
   const [fleets, setFleets] = useState({})
+  const [latestLogMessage, setLatestLogMessage] = useState('')
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [showEditExperimentModal, setShowEditExperimentModal] = useState(false)
   const [showExperimentDoneModal, setShowExperimentDoneModal] = useState(false)
   const [previousExperimentId, setPreviousExperimentId] = useState(null)
@@ -74,6 +82,7 @@ const App = () => {
     setMeasureStations([])
     setBusStops([])
     setLineShapes([])
+    setLatestLogMessage('')
     socket.emit('speed', speed) // reset speed on server
   })
 
@@ -112,6 +121,11 @@ const App = () => {
 
   useSocket('time', (time) => {
     setTime(time)
+  })
+
+  useSocket('log', (message) => {
+    setLatestLogMessage(message)
+    setSnackbarOpen(true)
   })
 
   const [bookings, setBookings] = React.useState([])
@@ -333,6 +347,21 @@ const App = () => {
         setShowEditExperimentModal={setShowEditExperimentModal}
         experimentId={currentParameters.id}
       />
+      
+      <Snackbar
+        sx={{ opacity: 0.8, bottom: 20  }}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        variant="filled"
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        TransitionComponent={TransitionUp}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <SnackbarContent sx={{ backgroundColor: 'black', height: 20, margin: 3, color: 'white' }} message={latestLogMessage} />
+      </Snackbar>
     </>
   )
 }

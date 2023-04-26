@@ -24,6 +24,7 @@ function subscribe(experiment, socket) {
     defaultEmitters.includes('postombud') &&
       require('./routes/postombud').register(experiment, socket),
     require('./routes/time').register(experiment, socket),
+    require('./routes/log').register(experiment, socket),
   ]
     .filter((f) => f)
     .flat()
