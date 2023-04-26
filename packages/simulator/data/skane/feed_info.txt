@@ -1,2 +1,0 @@
-feed_id,feed_publisher_name,feed_publisher_url,feed_lang,feed_version
-SE-st,Samtrafiken i Sverige AB,https://www.samtrafiken.se,sv,2023-04-06
