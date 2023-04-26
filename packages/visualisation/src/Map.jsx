@@ -10,10 +10,8 @@ import DeckGL, {
 import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
 import { ParagraphLarge } from './components/Typography'
-
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 import TimeProgressBar from './components/TimeProgressBar'
-
 import LayersMenu from './components/LayersMenu/index.jsx'
 import HoverInfoBox from './components/HoverInfoBox'
 
@@ -639,7 +637,11 @@ const Map = ({
         mapboxApiAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
       />
       {hoverInfo && mapState.zoom > 6 && <HoverInfoBox data={hoverInfo} />}
+
+      {/* Time progress bar. */}
       <TimeProgressBar time={time} />
+
+      {/* Experiment clock. */}
       <div
         style={{
           right: '3rem',
@@ -659,6 +661,8 @@ const Map = ({
           <br />i simuleringen
         </ParagraphLarge>
       </div>
+
+      {/* Municipality stats. */}
       {kommunInfo && <KommunStatisticsBox {...kommunInfo} />}
     </DeckGL>
   )
