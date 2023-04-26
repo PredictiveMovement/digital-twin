@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import ResetIcon from './icons/svg/resetIcon.svg'
 import TransparentButton from './components/TransparentButton'
 import SideMenu from './components/SideMenu'
-import { Snackbar } from '@mui/material'
+import { Snackbar, SnackbarContent } from '@mui/material'
 
 import Slide from '@mui/material/Slide';
 
@@ -321,7 +321,7 @@ const App = () => {
       />
       
       <Snackbar
-        sx={{ opacity: 0.6  }}
+        sx={{ opacity: 0.8, bottom: 20  }}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'center',
@@ -331,8 +331,9 @@ const App = () => {
         autoHideDuration={3000}
         TransitionComponent={TransitionUp}
         onClose={() => setSnackbarOpen(false)}
-        message={latestLogMessage}
-      />
+      >
+        <SnackbarContent sx={{ backgroundColor: 'black', height: 20, margin: 3, color: 'white' }} message={latestLogMessage} />
+      </Snackbar>
     </>
   )
 }

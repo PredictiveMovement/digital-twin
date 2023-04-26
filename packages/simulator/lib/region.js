@@ -166,7 +166,6 @@ class Region {
       this.taxis.pipe(
         scan((acc, taxi) => acc.push(taxi) && acc, []),
         debounceTime(1000),
-        tap((cars) => info('region taxis', cars.length)),
         filter((taxis) => taxis.length > 0),
         mergeMap((taxis) =>
           merge(this.manualBookings, this.unhandledBookings).pipe(
