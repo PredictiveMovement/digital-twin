@@ -13,9 +13,7 @@ import { Snackbar, SnackbarContent } from '@mui/material'
 
 import Slide from '@mui/material/Slide';
 
-function TransitionUp(props) {
-  return <Slide {...props} direction="up" />
-}
+
 const App = () => {
   const [activeCar, setActiveCar] = useState(null)
   const [reset, setReset] = useState(false)
@@ -349,21 +347,24 @@ const App = () => {
       />
       
       <Snackbar
-        sx={{ opacity: 0.8, bottom: 20  }}
+        sx={{ opacity: 0.8 }}
         anchorOrigin={{
-          vertical: 'bottom',
+          vertical: 'top',
           horizontal: 'center',
         }}
         variant="filled"
         open={snackbarOpen}
         autoHideDuration={3000}
-        TransitionComponent={TransitionUp}
+        TransitionComponent={TransitionDown}
         onClose={() => setSnackbarOpen(false)}
       >
-        <SnackbarContent sx={{ backgroundColor: 'black', height: 20, margin: 3, color: 'white' }} message={latestLogMessage} />
+        <SnackbarContent sx={{ backgroundColor: 'black', color: 'white' }} message={latestLogMessage} />
       </Snackbar>
     </>
   )
 }
 
+function TransitionDown(props) {
+  return <Slide {...props} direction="down" />
+}
 export default App
