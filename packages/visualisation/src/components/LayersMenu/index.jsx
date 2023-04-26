@@ -12,6 +12,7 @@ import {
   AddLocation,
   AirportShuttle,
   Hail,
+  Info,
   Map,
   Person,
 } from '@mui/icons-material'
@@ -25,8 +26,8 @@ export default function LayersMenu({
   setShowActiveDeliveries,
   showAssignedBookings,
   setShowAssignedBookings,
-  showEditExperimentModal,
   setShowEditExperimentModal,
+  experimentId,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl)
@@ -234,6 +235,12 @@ export default function LayersMenu({
             <ContentPaste fontSize="small" />
           </ListItemIcon>
           <ListItemText>Redigera experiment</ListItemText>
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <Info fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Experiment: {experimentId}</ListItemText>
         </MenuItem>
       </Menu>
     </React.Fragment>

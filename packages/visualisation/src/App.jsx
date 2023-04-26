@@ -331,6 +331,7 @@ const App = () => {
         lineShapes={lineShapes}
         showEditExperimentModal={showEditExperimentModal}
         setShowEditExperimentModal={setShowEditExperimentModal}
+        experimentId={currentParameters.id}
       />
     </>
   )
