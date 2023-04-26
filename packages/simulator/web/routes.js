@@ -35,6 +35,7 @@ function start(socket) {
   socket.data.experiment = experiment
   experiment.subscriptions = subscribe(experiment, socket)
   experiment.virtualTime.waitUntil(moment().endOf('day').valueOf()).then(() => {
+    socket.emit('reset')
     info('Experiment finished. Restarting...')
     process.kill(process.pid, 'SIGUSR2')
   })
@@ -59,7 +60,7 @@ function register(io) {
     socket.data.emitTaxiUpdates = defaultEmitters.includes('taxis')
     socket.data.emitBusUpdates = defaultEmitters.includes('buses')
 
-    socket.emit('reset')
+    socket.emit('init')
     socket.on('reset', () => {
       socket.data.experiment.subscriptions.map((e) => e.unsubscribe())
       start(socket)
@@ -71,7 +72,7 @@ function register(io) {
     socket.on('experimentParameters', (value) => {
       info('New expiriment settings: ', value)
       save(value)
-      socket.emit('reset')
+      socket.emit('init')
     })
 
     socket.emit('parameters', socket.data.experiment.parameters)

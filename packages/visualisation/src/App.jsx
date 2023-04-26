@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import 'jsoneditor-react/es/editor.min.css'
 import { useSocket } from './hooks/useSocket.js'
+
 import Map from './Map.jsx'
-import PlaybackOptions from './components/PlaybackOptions'
 import Loading from './components/Loading'
-import styled from 'styled-components'
-import ResetIcon from './icons/svg/resetIcon.svg'
-import TransparentButton from './components/TransparentButton'
-import SideMenu from './components/SideMenu'
+import PlaybackOptions from './components/PlaybackOptions'
+import ResetExperiment from './components/ResetExperiment'
+import EditExperimentModal from './components/EditExperimentModal'
+import Logo from './components/Logo'
+import ExperimentDoneModal from './components/ExperimentDoneModal/index.jsx'
 import { Snackbar, SnackbarContent } from '@mui/material'
 
 import Slide from '@mui/material/Slide';
@@ -14,14 +16,6 @@ import Slide from '@mui/material/Slide';
 function TransitionUp(props) {
   return <Slide {...props} direction="up" />
 }
-
-const Wrapper = styled.div`
-  position: absolute;
-  z-index: 2;
-  bottom: 3rem;
-  left: 11.3rem;
-`
-
 const App = () => {
   const [activeCar, setActiveCar] = useState(null)
   const [reset, setReset] = useState(false)
@@ -37,11 +31,14 @@ const App = () => {
   const [commercialAreasLayer, setCommercialAreasLayer] = useState(false)
   const [busLineLayer, setBusLineLayer] = useState(true)
   const [kommunLayer, setKommunLayer] = useState(true)
-  const [newParameters, setNewParameters] = useState({})
+  const [experimentParameters, setExperimentParameters] = useState({})
   const [currentParameters, setCurrentParameters] = useState({})
   const [fleets, setFleets] = useState({})
   const [latestLogMessage, setLatestLogMessage] = useState('')
   const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [showEditExperimentModal, setShowEditExperimentModal] = useState(false)
+  const [showExperimentDoneModal, setShowExperimentDoneModal] = useState(false)
+  const [previousExperimentId, setPreviousExperimentId] = useState(null)
 
   const [connected, setConnected] = useState(false)
 
@@ -70,12 +67,13 @@ const App = () => {
     setBusLineLayer,
   }
 
-  const newExperiment = () => {
-    socket.emit('experimentParameters', newParameters)
+  const restartSimulation = () => {
+    setShowEditExperimentModal(false)
+    socket.emit('experimentParameters', experimentParameters)
   }
 
-  useSocket('reset', () => {
-    console.log('received reset')
+  useSocket('init', () => {
+    console.log('Init experiment')
     setBookings([])
     setPassengers([])
     setCars([])
@@ -86,6 +84,12 @@ const App = () => {
     setLineShapes([])
     setLatestLogMessage('')
     socket.emit('speed', speed) // reset speed on server
+  })
+
+  useSocket('reset', () => {
+    console.log('Reset experiment')
+    setPreviousExperimentId(experimentParameters.id)
+    setShowExperimentDoneModal(true)
   })
 
   function upsert(array, object, idProperty = 'id', deep = false) {
@@ -198,7 +202,11 @@ const App = () => {
   })
 
   useSocket('parameters', (currentParameters) => {
-    console.log('new experimentId', currentParameters.id)
+    console.log('ExperimentId', currentParameters.id)
+
+    if (!previousExperimentId) {
+      setPreviousExperimentId(currentParameters.id)
+    }
 
     setCurrentParameters(currentParameters)
     const layerSetFunctions = {
@@ -221,10 +229,8 @@ const App = () => {
       }
     })
 
-    console.log(currentParameters)
     setFleets(currentParameters.fleets)
-
-    setNewParameters(currentParameters)
+    setExperimentParameters(currentParameters)
   })
   const [passengers, setPassengers] = React.useState([])
   useSocket('passengers', (passengers) => {
@@ -272,27 +278,18 @@ const App = () => {
     setConnected(true)
   })
 
+  /**
+   * Update the fleets part of the parameters.
+   */
+  const saveFleets = (updatedJson) => {
+    setExperimentParameters({ ...experimentParameters, fleets: updatedJson })
+  }
+
   return (
     <>
-      <Wrapper>
-        <TransparentButton onClick={() => resetSimulation()}>
-          <img src={ResetIcon} alt="Reset" />
-        </TransparentButton>
-      </Wrapper>
-      <SideMenu
-        activeLayers={activeLayers}
-        currentParameters={currentParameters}
-        newParameters={newParameters}
-        newExperiment={newExperiment}
-        setNewParameters={setNewParameters}
-        fleets={fleets}
-      />
+      <Logo />
 
-      <PlaybackOptions
-        onPause={onPause}
-        onPlay={onPlay}
-        onSpeedChange={onSpeedChange}
-      />
+      {/* Loader. */}
       {(!connected || reset || !cars.length || !bookings.length) && (
         <Loading
           connected={connected}
@@ -305,6 +302,34 @@ const App = () => {
           parameters={currentParameters}
         />
       )}
+
+      {/* Playback controls. */}
+      <PlaybackOptions
+        onPause={onPause}
+        onPlay={onPlay}
+        onSpeedChange={onSpeedChange}
+      />
+
+      {/* Reset experiment button. */}
+      <ResetExperiment resetSimulation={resetSimulation} />
+
+      {/* Edit experiment modal. */}
+      <EditExperimentModal
+        fleets={fleets}
+        show={showEditExperimentModal}
+        setShow={setShowEditExperimentModal}
+        restartSimulation={restartSimulation}
+        saveFleets={saveFleets}
+      />
+
+      {/* Experiment done modal. */}
+      <ExperimentDoneModal
+        experimentId={previousExperimentId}
+        show={showExperimentDoneModal}
+        setShow={setShowExperimentDoneModal}
+      />
+
+      {/* Map. */}
       <Map
         activeLayers={activeLayers}
         passengers={passengers}
@@ -318,6 +343,9 @@ const App = () => {
         time={time}
         setActiveCar={setActiveCar}
         lineShapes={lineShapes}
+        showEditExperimentModal={showEditExperimentModal}
+        setShowEditExperimentModal={setShowEditExperimentModal}
+        experimentId={currentParameters.id}
       />
       
       <Snackbar

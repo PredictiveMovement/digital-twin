@@ -27,10 +27,6 @@ const InfoBox = ({ data }) => {
       <H4>{`${title}  ${id}`}</H4>
       <Paragraph>{subTitle}</Paragraph>
       <Paragraph>Kör för {fleet}</Paragraph>
-      {/* <div>
-        <Paragraph thin>Fyllnadsgrad:</Paragraph>
-        <ProgressBar completed={60} />
-      </div> */}
     </Wrapper>
   )
 }

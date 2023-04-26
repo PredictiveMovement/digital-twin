@@ -4,21 +4,30 @@ import MenuItem from '@mui/material/MenuItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
-import GitHub from '@mui/icons-material/GitHub'
-import Web from '@mui/icons-material/Web'
-
-import AirlineStopsIcon from '@mui/icons-material/AirlineStops'
-import RouteIcon from '@mui/icons-material/Route'
 import LayersIcon from '@mui/icons-material/Layers'
-import { FormControlLabel, Link, Switch } from '@mui/material'
+import { FormControlLabel, ListItemText, Switch } from '@mui/material'
+import ContentPaste from '@mui/icons-material/ContentPaste'
+
+import {
+  AddLocation,
+  AirportShuttle,
+  Hail,
+  Info,
+  Map,
+  Person,
+} from '@mui/icons-material'
+import RouteIcon from '@mui/icons-material/Route'
 
 export default function LayersMenu({
+  activeLayers,
   showArcLayer,
   setShowArcLayer,
   showActiveDeliveries,
   setShowActiveDeliveries,
   showAssignedBookings,
   setShowAssignedBookings,
+  setShowEditExperimentModal,
+  experimentId,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl)
@@ -75,20 +84,163 @@ export default function LayersMenu({
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem >
-          <FormControlLabel control={
-          <Switch checked={showArcLayer} onChange={() => setShowArcLayer((on) => !on)}/>
-        } label="Nästa stopp" />
+        <MenuItem>
+          <ListItemIcon>
+            <RouteIcon fontSize="small" />
+          </ListItemIcon>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={showArcLayer}
+                onChange={() => setShowArcLayer((on) => !on)}
+              />
+            }
+            label="Nästa stopp"
+          />
         </MenuItem>
         <MenuItem>
-          <FormControlLabel control={
-            <Switch checked={showAssignedBookings} onChange={() => setShowAssignedBookings((on) => !on)}/>
-          } label="Köade bokningar" />
+          <ListItemIcon>
+            <RouteIcon fontSize="small" />
+          </ListItemIcon>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={showAssignedBookings}
+                onChange={() => setShowAssignedBookings((on) => !on)}
+              />
+            }
+            label="Köade bokningar"
+          />
         </MenuItem>
-        <MenuItem >
-          <FormControlLabel control={
-              <Switch checked={showActiveDeliveries} onChange={() => setShowActiveDeliveries((on) => !on)}/>
-            } label="Pågående leveranser" />
+        <MenuItem>
+          <ListItemIcon>
+            <RouteIcon fontSize="small" />
+          </ListItemIcon>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={showActiveDeliveries}
+                onChange={() => setShowActiveDeliveries((on) => !on)}
+              />
+            }
+            label="Pågående leveranser"
+          />
+        </MenuItem>
+        <Divider />
+        <MenuItem>
+          <ListItemIcon>
+            <Hail fontSize="small" />
+          </ListItemIcon>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={activeLayers.taxiLayer}
+                onChange={() => activeLayers.setTaxiLayer((on) => !on)}
+              />
+            }
+            label="Anropsstyrd kollektivtrafik"
+          />
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <AirportShuttle fontSize="small" />
+          </ListItemIcon>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={activeLayers.busLayer}
+                onChange={() => activeLayers.setBusLayer((on) => !on)}
+              />
+            }
+            label="Bussar"
+          />
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <AirportShuttle fontSize="small" />
+          </ListItemIcon>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={activeLayers.busStopLayer}
+                onChange={() => activeLayers.setBusStopLayer((on) => !on)}
+              />
+            }
+            label="Busshållplatser"
+          />
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <AirportShuttle fontSize="small" />
+          </ListItemIcon>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={activeLayers.busLineLayer}
+                onChange={() => activeLayers.setBusLineLayer((on) => !on)}
+              />
+            }
+            label="Busslinjer"
+          />
+        </MenuItem>
+        <Divider />
+        <MenuItem>
+          <ListItemIcon>
+            <Person fontSize="small" />
+          </ListItemIcon>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={activeLayers.passengerLayer}
+                onChange={() => activeLayers.setPassengerLayer((on) => !on)}
+              />
+            }
+            label="Passagerare"
+          />
+        </MenuItem>
+
+        <MenuItem>
+          <ListItemIcon>
+            <Map fontSize="small" />
+          </ListItemIcon>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={activeLayers.kommunLayer}
+                onChange={() => activeLayers.setKommunLayer((on) => !on)}
+              />
+            }
+            label="Kommungränser"
+          />
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <AddLocation fontSize="small" />
+          </ListItemIcon>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={activeLayers.measureStationsLayer}
+                onChange={() =>
+                  activeLayers.setMeasureStationsLayer((on) => !on)
+                }
+              />
+            }
+            label="Mätpunkter"
+          />
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={() => setShowEditExperimentModal((on) => !on)}>
+          <ListItemIcon>
+            <ContentPaste fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Redigera experiment</ListItemText>
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <Info fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Experiment: {experimentId}</ListItemText>
         </MenuItem>
       </Menu>
     </React.Fragment>

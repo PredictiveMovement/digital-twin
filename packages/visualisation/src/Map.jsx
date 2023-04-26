@@ -10,14 +10,10 @@ import DeckGL, {
 import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
 import { ParagraphLarge } from './components/Typography'
-
 import KommunStatisticsBox from './components/KommunStatisticsBox'
 import TimeProgressBar from './components/TimeProgressBar'
-
 import LayersMenu from './components/LayersMenu/index.jsx'
-import mapboxgl from 'mapbox-gl'
 import HoverInfoBox from './components/HoverInfoBox'
-import { IconButton, Menu, MenuItem } from '@mui/material'
 
 const transitionInterpolator = new LinearInterpolator(['bearing'])
 
@@ -34,6 +30,8 @@ const Map = ({
   activeCar,
   setActiveCar,
   time,
+  setShowEditExperimentModal,
+  experimentId,
 }) => {
   const [mapState, setMapState] = useState({
     latitude: 65.0964472642777,
@@ -379,7 +377,7 @@ const Map = ({
 
   const bookingLayer = new ScatterplotLayer({
     id: 'booking-layer',
-    data: bookings.filter(b => b.type !== 'busstop'), //.filter((b) => !b.assigned), // TODO: revert change
+    data: bookings.filter((b) => b.type !== 'busstop'), //.filter((b) => !b.assigned), // TODO: revert change
     opacity: 1,
     stroked: false,
     filled: true,
@@ -619,12 +617,15 @@ const Map = ({
         }}
       >
         <LayersMenu
+          activeLayers={activeLayers}
           showArcLayer={showArcLayer}
           setShowArcLayer={setShowArcLayer}
           showActiveDeliveries={showActiveDeliveries}
           setShowActiveDeliveries={setShowActiveDeliveries}
           showAssignedBookings={showAssignedBookings}
           setShowAssignedBookings={setShowAssignedBookings}
+          setShowEditExperimentModal={setShowEditExperimentModal}
+          experimentId={experimentId}
         />
       </div>
       <StaticMap
@@ -636,7 +637,11 @@ const Map = ({
         mapboxApiAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
       />
       {hoverInfo && mapState.zoom > 6 && <HoverInfoBox data={hoverInfo} />}
+
+      {/* Time progress bar. */}
       <TimeProgressBar time={time} />
+
+      {/* Experiment clock. */}
       <div
         style={{
           right: '3rem',
@@ -656,6 +661,8 @@ const Map = ({
           <br />i simuleringen
         </ParagraphLarge>
       </div>
+
+      {/* Municipality stats. */}
       {kommunInfo && <KommunStatisticsBox {...kommunInfo} />}
     </DeckGL>
   )
