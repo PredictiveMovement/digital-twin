@@ -23,7 +23,7 @@ const App = () => {
   const [commercialAreasLayer, setCommercialAreasLayer] = useState(false)
   const [busLineLayer, setBusLineLayer] = useState(true)
   const [kommunLayer, setKommunLayer] = useState(true)
-  const [newParameters, setNewParameters] = useState({})
+  const [experimentParameters, setExperimentParameters] = useState({})
   const [currentParameters, setCurrentParameters] = useState({})
   const [fleets, setFleets] = useState({})
 
@@ -56,7 +56,7 @@ const App = () => {
 
   const resetSiulation = () => {
     setShowEditExperimentModal(false)
-    socket.emit('experimentParameters', newParameters)
+    socket.emit('experimentParameters', experimentParameters)
   }
 
   useSocket('reset', () => {
@@ -177,7 +177,7 @@ const App = () => {
   })
 
   useSocket('parameters', (currentParameters) => {
-    console.log('new experimentId', currentParameters.id)
+    console.log('ExperimentId', currentParameters.id)
 
     setCurrentParameters(currentParameters)
     const layerSetFunctions = {
@@ -201,7 +201,7 @@ const App = () => {
     })
 
     setFleets(currentParameters.fleets)
-    setNewParameters(currentParameters)
+    setExperimentParameters(currentParameters)
   })
   const [passengers, setPassengers] = React.useState([])
   useSocket('passengers', (passengers) => {
@@ -253,7 +253,7 @@ const App = () => {
    * Update the fleets part of the parameters.
    */
   const saveFleets = (updatedJson) => {
-    setNewParameters({ ...newParameters, fleets: updatedJson })
+    setExperimentParameters({ ...experimentParameters, fleets: updatedJson })
   }
 
   const [showEditExperimentModal, setShowEditExperimentModal] = useState(false)
