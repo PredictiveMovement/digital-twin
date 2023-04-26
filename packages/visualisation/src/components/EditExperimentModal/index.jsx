@@ -7,12 +7,29 @@ const modalStyle = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 600,
-  bgcolor: 'background.paper',
-  color: 'white',
+  width: 700,
+  height: 600,
+  bgcolor: 'white',
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+}
+
+const editorStyle = {
+  border: '1px solid #dfdfdf',
+  height: 480,
+  overflow: 'scroll',
+}
+
+const closeButtonStyle = {
+  marginLeft: '1rem',
+}
+
+const bottomStyle = {
+  position: 'absolute',
+  bottom: '1rem',
+  width: '90%',
+  paddingRight: '1rem',
 }
 
 const EditExperimentModal = ({
@@ -25,21 +42,31 @@ const EditExperimentModal = ({
   return (
     <Modal
       open={show}
-      onClose={() => setShow(false)}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
       <Box sx={modalStyle}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
+        <Typography id="modal-modal-title" variant="h5" component="h2">
           Redigera Experiment
         </Typography>
-        <Editor value={fleets} onChange={saveFleets} />
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Dina ändringar träder i kraft när experimentet startar om.
-        </Typography>
-        <Button variant="outlined" onClick={resetSiulation}>
-          Starta om experiment
-        </Button>
+        <Box sx={editorStyle}>
+          <Editor value={fleets} onChange={saveFleets} />
+        </Box>
+        <Box sx={bottomStyle}>
+          <Typography id="modal-modal-description" sx={{ mb: 2, mt: 2 }}>
+            Dina ändringar träder i kraft när experimentet startar om.
+          </Typography>
+          <Button variant="contained" onClick={resetSiulation}>
+            Starta om experiment
+          </Button>
+          <Button
+            variant="outlined"
+            sx={closeButtonStyle}
+            onClick={() => setShow(false)}
+          >
+            Stäng
+          </Button>
+        </Box>
       </Box>
     </Modal>
   )
