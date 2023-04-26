@@ -86,17 +86,11 @@ function register(io) {
         clearTimeout(socket.data.timeout)
       }
     })
-
+*/
     socket.on('disconnect', (reason) => {
-      info('Client disconnected', reason, 'shutting down experiment in 60s...')
-
-      clearTimeout(socket.data.timeout)
-      socket.data.timeout = setTimeout(() => {
-        info('Shutting down experiment due to inactivity')
-        process.kill(process.pid, 'SIGUSR2')
-        socket.data.experiment.subscriptions.map((e) => e.unsubscribe())
-      }, 5 * 60_000)
-    })*/
+      info('Client disconnected', reason, 'Removing subscriptions..')
+      socket.data.experiment.subscriptions.map((e) => e.unsubscribe())
+    })
   })
 }
 module.exports = {
