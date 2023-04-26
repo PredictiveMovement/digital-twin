@@ -1,6 +1,6 @@
 {
-  "id": "nJVN-Zke7",
-  "startDate": "2023-04-24T11:58:56.526Z",
+  "id": "pPcM-ucQZ",
+  "startDate": "2023-04-26T13:37:41.083Z",
   "fixedRoute": 21,
   "emitters": [
     "bookings",
@@ -135,6 +135,12 @@
     "Helsingborgs stad": {
       "fleets": [
         {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 100
+          }
+        },
+        {
           "name": "Postnord",
           "vehicles": {
             "tungLastbil": 0,
@@ -150,7 +156,7 @@
           "name": "Skånetrafik",
           "type": "bus",
           "vehicles": {
-            "bus": 40
+            "bus": 20
           }
         },
         {
