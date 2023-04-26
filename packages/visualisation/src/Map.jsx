@@ -565,6 +565,7 @@ const Map = ({
     if (!cars.length) return
     if (!activeCar) return
     const car = cars.filter(({ id }) => id === activeCar.id)[0]
+    if (!car) return
     setMapState((state) => ({
       ...state,
       zoom: 14,
