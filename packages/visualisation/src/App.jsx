@@ -11,8 +11,7 @@ import Logo from './components/Logo'
 import ExperimentDoneModal from './components/ExperimentDoneModal/index.jsx'
 import { Snackbar, SnackbarContent } from '@mui/material'
 
-import Slide from '@mui/material/Slide';
-
+import Slide from '@mui/material/Slide'
 
 const App = () => {
   const [activeCar, setActiveCar] = useState(null)
@@ -345,7 +344,7 @@ const App = () => {
         setShowEditExperimentModal={setShowEditExperimentModal}
         experimentId={currentParameters.id}
       />
-      
+
       <Snackbar
         sx={{ opacity: 0.8 }}
         anchorOrigin={{
@@ -358,7 +357,10 @@ const App = () => {
         TransitionComponent={TransitionDown}
         onClose={() => setSnackbarOpen(false)}
       >
-        <SnackbarContent sx={{ backgroundColor: 'black', color: 'white' }} message={latestLogMessage} />
+        <SnackbarContent
+          sx={{ backgroundColor: 'black', color: 'white' }}
+          message={latestLogMessage}
+        />
       </Snackbar>
     </>
   )
