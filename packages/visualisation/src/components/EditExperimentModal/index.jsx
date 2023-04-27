@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box, Button, Modal, Typography } from '@mui/material'
-import { JsonEditor as Editor } from 'jsoneditor-react'
+import { DataGrid } from '@mui/x-data-grid'
 
 const modalStyle = {
   position: 'absolute',
@@ -9,16 +9,11 @@ const modalStyle = {
   transform: 'translate(-50%, -50%)',
   width: 700,
   height: 600,
-  bgcolor: 'white',
+  bgcolor: 'background.paper',
+  color: 'white',
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
-}
-
-const editorStyle = {
-  border: '1px solid #dfdfdf',
-  height: 480,
-  overflow: 'scroll',
 }
 
 const closeButtonStyle = {
@@ -32,13 +27,67 @@ const bottomStyle = {
   paddingRight: '1rem',
 }
 
-const EditExperimentModal = ({
-  fleets,
+export default function EditExperimentModal({
+  municipalities,
   show,
   setShow,
   restartSimulation,
-  saveFleets,
-}) => {
+  saveMunicipalities,
+}) {
+  /**
+   * DataGrid things.
+   */
+  const [rows, setRows] = React.useState(() => [])
+  const columns = [
+    { field: 'municipality', headerName: 'Kommun', width: 150 },
+    { field: 'fleet', headerName: 'Flotta', width: 100 },
+    { field: 'fleetType', headerName: 'Typ', width: 80 },
+    { field: 'vehicles', headerName: 'Fordon', width: 80, editable: true },
+    {
+      field: 'marketSharePercent',
+      headerName: 'Marknadsandel %',
+      width: 150,
+      editable: true,
+    },
+  ]
+
+  /**
+   * Load municipalities into DataGrid.
+   */
+  useEffect(() => {
+    if (!municipalities) return
+
+    console.log('Load', municipalities)
+    setRows([])
+    Object.keys(municipalities).forEach((municipality, i) => {
+      municipalities[municipality].fleets.forEach((fleet, j) => {
+        const row = {
+          id: (i + 1) * 10 + j,
+          municipality: municipality,
+          fleet: fleet.name,
+          fleetType: fleet.type,
+          vehicles: 1,
+          marketSharePercent: fleet.marketShare ?? 0,
+        }
+
+        console.log('Row', row)
+
+        setRows((rows) => [...rows, row])
+
+        // apiRef.current.updateRows([row])
+      })
+
+      // rows.push({
+      //   id: municipality.id,
+      //   municipality: municipality.municipality,
+      //   fleet: fleet.name,
+      //   fleetType: fleet.type,
+      //   vehicles: fleet.vehicles,
+      //   marketSharePercent: fleet.marketSharePercent,
+      // })
+    })
+  }, [municipalities])
+
   return (
     <Modal
       open={show}
@@ -46,11 +95,24 @@ const EditExperimentModal = ({
       aria-describedby="modal-modal-description"
     >
       <Box sx={modalStyle}>
-        <Typography id="modal-modal-title" variant="h5" component="h2">
+        <Typography
+          id="modal-modal-title"
+          variant="h5"
+          component="h2"
+          sx={{ mb: 2 }}
+        >
           Redigera Experiment
         </Typography>
-        <Box sx={editorStyle}>
-          <Editor value={fleets} onChange={saveFleets} />
+        <Box>
+          <DataGrid
+            columns={columns}
+            rows={rows}
+            style={{ height: 350, width: '100%' }}
+            initialState={{
+              pagination: { paginationModel: { pageSize: 5 } },
+            }}
+            pageSizeOptions={[5, 10]}
+          ></DataGrid>
         </Box>
         <Box sx={bottomStyle}>
           <Typography id="modal-modal-description" sx={{ mb: 2, mt: 2 }}>
@@ -71,5 +133,3 @@ const EditExperimentModal = ({
     </Modal>
   )
 }
-
-export default EditExperimentModal

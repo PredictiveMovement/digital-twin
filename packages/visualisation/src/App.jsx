@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import 'jsoneditor-react/es/editor.min.css'
 import { useSocket } from './hooks/useSocket.js'
 
 import Map from './Map.jsx'
@@ -30,10 +29,10 @@ const App = () => {
   const [kommunLayer, setKommunLayer] = useState(true)
   const [experimentParameters, setExperimentParameters] = useState({})
   const [currentParameters, setCurrentParameters] = useState({})
-  const [fleets, setFleets] = useState({})
+  const [municipalities, setMunicipalities] = useState({})
   const [latestLogMessage, setLatestLogMessage] = useState('')
   const [snackbarOpen, setSnackbarOpen] = useState(false)
-  const [showEditExperimentModal, setShowEditExperimentModal] = useState(false)
+  const [showEditExperimentModal, setShowEditExperimentModal] = useState(true)
   const [showExperimentDoneModal, setShowExperimentDoneModal] = useState(false)
   const [previousExperimentId, setPreviousExperimentId] = useState(null)
 
@@ -226,7 +225,7 @@ const App = () => {
       }
     })
 
-    setFleets(currentParameters.fleets)
+    setMunicipalities(currentParameters.municipalities)
     setExperimentParameters(currentParameters)
   })
   const [passengers, setPassengers] = React.useState([])
@@ -276,10 +275,13 @@ const App = () => {
   })
 
   /**
-   * Update the fleets part of the parameters.
+   * Update the municipalities part of the parameters.
    */
-  const saveFleets = (updatedJson) => {
-    setExperimentParameters({ ...experimentParameters, fleets: updatedJson })
+  const saveMunicipalities = (updatedJson) => {
+    setExperimentParameters({
+      ...experimentParameters,
+      municipalities: updatedJson,
+    })
   }
 
   return (
@@ -312,11 +314,11 @@ const App = () => {
 
       {/* Edit experiment modal. */}
       <EditExperimentModal
-        fleets={fleets}
+        municipalities={municipalities}
         show={showEditExperimentModal}
         setShow={setShowEditExperimentModal}
         restartSimulation={restartSimulation}
-        saveFleets={saveFleets}
+        saveMunicipalities={saveMunicipalities}
       />
 
       {/* Experiment done modal. */}

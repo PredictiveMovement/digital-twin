@@ -1,0 +1,46 @@
+{
+  "id": "pPcM-ucQZ",
+  "startDate": "2023-04-26T13:37:41.083Z",
+  "fixedRoute": 21,
+  "emitters": [
+    "bookings",
+    "buses",
+    "busLines",
+    "busStops",
+    "cars",
+    "kommuner",
+    "measureStations",
+    "passengers",
+    "taxis"
+  ],
+  "municipalities": {
+    "Arjeplogs kommun": {
+      "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 2
+          }
+        },
+        {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 1,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 0.6,
+          "hub": [21.034263, 64.746704]
+        }
+      ]
+    }
+  }
+}

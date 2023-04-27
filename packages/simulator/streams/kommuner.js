@@ -74,7 +74,7 @@ async function getWorkplaces(position, nrOfWorkplaces = 100) {
 }
 
 // function read() {
-function read({ fleets }) {
+function read({ municipalities }) {
   return from(data).pipe(
     filter(({ namn }) =>
       activeMunicipalities.some((name) => namn.startsWith(name))
@@ -82,8 +82,8 @@ function read({ fleets }) {
     map((kommun) => {
       return {
         ...kommun,
-        fleets: fleets[kommun.namn]?.fleets?.length
-          ? fleets[kommun.namn].fleets
+        fleets: municipalities[kommun.namn]?.fleets?.length
+          ? municipalities[kommun.namn].fleets
           : [],
       }
     }),
