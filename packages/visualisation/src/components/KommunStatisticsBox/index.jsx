@@ -47,6 +47,8 @@ const getTitle = (key) => {
     case 'averagePassengerLoad':
     case 'averageParcelLoad':
       return 'Medelfyllnadsgrad per fordon'
+    case 'totalDelivered':
+      return 'Totalt levererade'
     default:
       return ''
   }
@@ -71,6 +73,8 @@ const getUnit = (key) => {
     case 'averagePassengerLoad':
     case 'averageParcelLoad':
       return '%'
+    case 'totalDelivered':
+      return 'st'
     default:
       return ''
   }
@@ -90,6 +94,7 @@ const KommunStatisticsBox = (stats) => (
         'averageParcelCost',
         'averagePassengerLoad',
         'averageParcelLoad',
+        'totalDelivered',
       ].map((key) =>
         stats[key] ? (
           <Grid key={key}>

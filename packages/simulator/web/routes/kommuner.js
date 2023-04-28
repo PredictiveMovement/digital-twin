@@ -144,7 +144,11 @@ const register = (experiment, socket) => {
                   averageParcelLoad,
                 },
                 { averagePassengerDeliveryTime, averagePassengerCost },
-                { averageParcelDeliveryTime, averageParcelCost },
+                {
+                  averageParcelDeliveryTime,
+                  averageParcelCost,
+                  totalDelivered,
+                },
                 totalPassengerCapacity,
                 totalParcelCapacity,
               ]) => ({
@@ -155,6 +159,8 @@ const register = (experiment, socket) => {
                 totalCo2,
                 totalPassengerCapacity,
                 totalParcelCapacity,
+                totalDelivered,
+
                 averagePassengerDeliveryTime,
                 averagePassengerCost,
                 averagePassengerLoad,
