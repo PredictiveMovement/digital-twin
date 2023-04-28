@@ -1,3 +1,20 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulator
+spec:
+  selector: 
+    matchLabels:
+      app: simulator
+  template:
+    spec:
+      containers:
+        - name: simulator
+          env:
+            - name: TRAFIKLAB_KEY
+              value: 4ca25c172513453da871ee9d044544f1
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
