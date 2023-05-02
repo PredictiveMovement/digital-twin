@@ -41,6 +41,13 @@ spec:
               value: http://elasticsearch.elasticsearch:9200
             - name: STREAMS_URL
               value: http://sample-address.pm-streams:4001
+          volumeMounts:
+          - mountPath: /app/.cache
+            name: cache-volume
+      volumes:
+      - name: cache-volume
+        emptyDir:
+          sizeLimit: 5Gi
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
