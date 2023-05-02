@@ -1,4 +1,4 @@
-const key = process.env.TRAFIKLAB_KEY || '37224a42ea9d410cbe325f977d2753b7'
+const key = process.env.TRAFIKLAB_KEY || 'b2fd00015bcd46d08b2a0793bc95a1fb' // Fallback key used for development.
 // log in to trafiklab.se and get a key or use ours - it's free and public domain, shouldn't be a problem to share like this?
 
 const fs = require('fs')
