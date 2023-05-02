@@ -327,23 +327,26 @@ const App = () => {
       />
 
       {/* Map. */}
-      <Map
-        activeLayers={activeLayers}
-        passengers={passengers}
-        cars={cars}
-        bookings={bookings}
-        postombud={postombud}
-        measureStations={measureStations}
-        busStops={busStops}
-        kommuner={kommuner}
-        activeCar={activeCar}
-        time={time}
-        setActiveCar={setActiveCar}
-        lineShapes={lineShapes}
-        showEditExperimentModal={showEditExperimentModal}
-        setShowEditExperimentModal={setShowEditExperimentModal}
-        experimentId={currentParameters.id}
-      />
+      {currentParameters.initMapState && (
+        <Map
+          activeLayers={activeLayers}
+          passengers={passengers}
+          cars={cars}
+          bookings={bookings}
+          postombud={postombud}
+          measureStations={measureStations}
+          busStops={busStops}
+          kommuner={kommuner}
+          activeCar={activeCar}
+          time={time}
+          setActiveCar={setActiveCar}
+          lineShapes={lineShapes}
+          showEditExperimentModal={showEditExperimentModal}
+          setShowEditExperimentModal={setShowEditExperimentModal}
+          experimentId={currentParameters.id}
+          initMapState={currentParameters.initMapState}
+        />
+      )}
 
       <Snackbar
         sx={{ opacity: 0.8 }}

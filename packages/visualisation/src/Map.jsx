@@ -32,13 +32,15 @@ const Map = ({
   time,
   setShowEditExperimentModal,
   experimentId,
+  initMapState,
 }) => {
   const [mapState, setMapState] = useState({
-    latitude: 65.0964472642777,
-    longitude: 17.112050188704504,
+    latitude: initMapState.latitude,
+    longitude: initMapState.longitude,
     bearing: 0,
-    zoom: 5, // NOTE: min ~0.6 max 24.0
+    zoom: initMapState.zoom, // NOTE: min ~0.6 max 24.0
     pitch: 40,
+    // ...initMapState,
   })
 
   const rotateCamera = useCallback(() => {
