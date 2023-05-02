@@ -15,6 +15,11 @@ patches:
       value:
         name: REGIONS
         value: "*"
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: TRAFIKLAB_KEY
+        value: "2e4524c3c5074966bf5204b13d504aca"
   target:
     kind: Deployment
     name: simulator
