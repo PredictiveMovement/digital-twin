@@ -35,12 +35,9 @@ const Map = ({
   initMapState,
 }) => {
   const [mapState, setMapState] = useState({
-    latitude: initMapState.latitude,
-    longitude: initMapState.longitude,
     bearing: 0,
-    zoom: initMapState.zoom, // NOTE: min ~0.6 max 24.0
     pitch: 40,
-    // ...initMapState,
+    ...initMapState,
   })
 
   const rotateCamera = useCallback(() => {
