@@ -15,6 +15,11 @@ patches:
       value:
         name: REGIONS
         value: "norrbotten"
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: TRAFIKLAB_KEY
+        value: "12292a13aa5b46d29a7fe0f5dd4c0d36"
   target:
     kind: Deployment
     name: simulator
