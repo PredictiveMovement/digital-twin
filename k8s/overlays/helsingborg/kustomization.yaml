@@ -15,6 +15,11 @@ patches:
       value:
         name: REGIONS
         value: "skane"
+    - op: replace
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: TRAFIKLAB_KEY
+        value: "4ca25c172513453da871ee9d044544f1"
   target:
     kind: Deployment
     name: simulator
