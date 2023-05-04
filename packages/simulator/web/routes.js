@@ -55,6 +55,12 @@ function register(io) {
       start(socket)
     }
 
+    socket.data.experiment.parameters.initMapState = {
+      latitude: parseFloat(process.env.LATITUDE) || 65.0964472642777,
+      longitude: parseFloat(process.env.LONGITUDE) || 17.112050188704504,
+      zoom: parseInt(process.env.ZOOM) || 5,
+    }
+
     socket.emit('parameters', socket.data.experiment.parameters)
     socket.data.emitCars = defaultEmitters.includes('cars')
     socket.data.emitTaxiUpdates = defaultEmitters.includes('taxis')
