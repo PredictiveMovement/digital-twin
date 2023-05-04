@@ -19,7 +19,7 @@ patches:
       path: /spec/template/spec/containers/0/env/-
       value:
         name: TRAFIKLAB_KEY
-        value: "12292a13aa5b46d29a7fe0f5dd4c0d36"
+        value: "29b576dd52494bcba2ff1bc23937e570"
     - op: add
       path: /spec/template/spec/containers/0/env/-
       value:
@@ -38,3 +38,5 @@ patches:
   target:
     kind: Deployment
     name: simulator
+
+# Trafiklab API: https://developer.trafiklab.se/user/24158/keys
