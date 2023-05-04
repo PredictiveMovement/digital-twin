@@ -20,6 +20,21 @@ patches:
       value:
         name: TRAFIKLAB_KEY
         value: "70fcddcbf2814c49bc93e9694ea3df53"
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: LATITUDE
+        value: "56"
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: LONGITUDE
+        value: "12.8"
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: ZOOM
+        value: "9"
   target:
     kind: Deployment
     name: simulator
