@@ -22,9 +22,11 @@ const engine = {
       id: savedParams.id,
       fixedRoute: savedParams.fixedRoute,
       emitters: savedParams.emitters,
-      municipalities: Object.keys(savedParams.fleets).map((municipality) => {
-        return `${municipality} (${savedParams.fleets[municipality].fleets.length} fleets)`
-      }),
+      municipalities: Object.keys(savedParams.municipalities).map(
+        (municipality) => {
+          return `${municipality} (${savedParams.municipalities[municipality].fleets.length} fleets)`
+        }
+      ),
     })
 
     const regions = require('./streams/regions')(savedParams)
@@ -34,7 +36,7 @@ const engine = {
       startDate: new Date(),
       fixedRoute: savedParams.fixedRoute || 100,
       emitters: defaultEmitters,
-      fleets: savedParams.fleets,
+      municipalities: savedParams.municipalities,
     }
     statistics.collectExperimentMetadata(parameters)
 

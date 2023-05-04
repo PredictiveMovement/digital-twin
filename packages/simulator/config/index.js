@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 
 const dataDir = path.join(__dirname, '..', 'config')
-const paramsFileName = 'parameters.json'
+const paramsFileName = 'config.json'
 
 // Saves a json parameter object to a parameter file in the data directory
 const save = (value) => {
@@ -10,7 +10,7 @@ const save = (value) => {
   fs.writeFileSync(file, JSON.stringify(value, null, 2))
 }
 
-// Returns the json parameters as an object from the parameter file in the data directory
+// Returns the json config as an object from the parameter file in the data directory
 const read = () => {
   const file = path.join(dataDir, paramsFileName)
   return JSON.parse(fs.readFileSync(file))
@@ -22,8 +22,8 @@ module.exports = {
     return emitters
   },
   municipalities: () => {
-    const { fleets } = read()
-    return Object.keys(fleets)
+    const { municipalities } = read()
+    return Object.keys(municipalities)
   },
   read,
   save,
