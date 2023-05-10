@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm:start:simulator\" \"npm:start:visualisation\"",
-    "start:simulator": "cd packages/simulator && npm run dev",
-    "start:visualisation": "cd packages/visualisation && npm run dev"
+    "simulator": "cd packages/simulator && npm run dev",
+    "visualisation": "cd packages/visualisation && npm run dev"
   },
   "repository": {
     "type": "git",
