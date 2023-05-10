@@ -22,13 +22,13 @@ There are a number of environment varibles that you can use to modify the behavi
 
 #### Visualisation
 
-For the map to work you will need an Access token from Mapbox, which is essentially free for personal use. Due to their licensing model we do not keep a shared token in this repository.
+There is a shared Mapbox Access token inside `packages/visualisation/.env`. If you want to use your own token you will need to generate a new one.
 
-1. Go to (https://www.mapbox.com)[https://www.mapbox.com] and login or create an account
-2. Go to (https://account.mapbox.com)[https://account.mapbox.com] and create an Access token
-3. Copy the generated token to your clipboard
-4. Create a `.env` file in the `packages/visualisation` directory
-5. On the first line of the `.env` file, type `VITE_MAPBOX_ACCESS_TOKEN=` and paste your token after the `=`.
+1. Go to (https://www.mapbox.com)[https://www.mapbox.com] and login or create an account.
+2. Go to (https://account.mapbox.com)[https://account.mapbox.com] and create an Access token.
+3. Copy the generated token to your clipboard.
+4. Open the `packages/visualisation/.env` file.
+5. Replace the token on the line starting with `VITE_MAPBOX_ACCESS_TOKEN=`.
 
 > NOTE: if you lack a Mapbox Access token or if there is something wrong with it, you can still access the visualisation in a browser but the background will be a solid gray instead of a map.
 
