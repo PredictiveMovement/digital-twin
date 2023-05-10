@@ -4,7 +4,9 @@
   "description": "## Background",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "concurrently \"npm:start:simulator\" \"npm:start:visualisation\"",
+    "start:simulator": "cd packages/simulator && npm run dev",
+    "start:visualisation": "cd packages/visualisation && npm run dev"
   },
   "repository": {
     "type": "git",
