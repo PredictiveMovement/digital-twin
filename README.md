@@ -4,11 +4,12 @@
 
 The digital twin has a number of external dependencies. At the time of writing all of these dependencies are hosted by Iteam so that anyone can run the digital twin locally without too much hassle.
 
-### Requirements
+To run the digital twin locally, simply install the dependencies and then run the start command. All you need is Node.js v16.
 
-- Node.js 16
-- A Mapbox Access Token
-- Docker Desktop (optional)
+```shell
+npm ci
+npm start
+```
 
 ### Configuration
 
@@ -31,15 +32,6 @@ There is a shared Mapbox Access token inside `packages/visualisation/.env`. If y
 5. Replace the token on the line starting with `VITE_MAPBOX_ACCESS_TOKEN=`.
 
 > NOTE: if you lack a Mapbox Access token or if there is something wrong with it, you can still access the visualisation in a browser but the background will be a solid gray instead of a map.
-
-### Running
-
-To run the digital twin locally, simply install the dependencies and then run the start command.
-
-```shell
-npm ci
-npm start
-```
 
 ## Background
 
