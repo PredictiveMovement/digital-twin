@@ -1,5 +1,51 @@
 # A Digital Twin for transport systems
 
+## Quick start
+
+The digital twin has a number of external dependencies. At the time of writing all of these dependencies are hosted by Iteam so that anyone can run the digital twin locally without too much hassle.
+
+### Requirements
+
+- Node.js 16
+- Docker Desktop (optional)
+
+### Running the simulator
+
+The simulator resides in the `packages/simulator` directory. It acts as the simulation engine for the twin; it both generates citizens, vehicles, packages and intents as well as simulates how these entities move and interact.
+
+```shell
+cd packages/simulator
+npm ci
+npm run dev
+```
+
+There are a number of environment varibles that you can use to modify the behaviour of the simulator. The two most important ones to know are `LOG_LEVEL` and `REGIONS`.
+
+- Use `LOG_LEVEL=debug` to make the simulator more verbose.
+- Use `REGIONS=norrbotten` to limit the simulation to Norrbotten.
+- Use `REGIONS=skane` to limit the simulation to Skåne.
+
+Note that the simulation only runs once the visualisation is running and a client (web browser) is accessing the twin.
+
+### Running the visualisation
+
+The visualisation is a React project that is run using Node.js. To view the map you will need an Access token from Mapbox, which is essentially free for personal use. Due to their licensing model we do not keep a shared token in this repository.
+
+1. Go to (https://www.mapbox.com)[https://www.mapbox.com] and login or create an account
+2. Go to (https://account.mapbox.com)[https://account.mapbox.com] and create an Access token
+3. Copy the generated token to your clipboard
+
+```shell
+export VITE_MAPBOX_ACCESS_TOKEN= # Paste your Mapbox Access token here.
+# You can of course add the token to a .env file, or .envrc if you are using direnv.
+
+cd packages/visualisation
+npm ci
+npm run dev
+```
+
+Note that if you lack a Mapbox Access token or if there is something wrong with it, you can still access the visualisation in a browser but the background will be a solid gray instead of a map.
+
 ## Background
 
 This is a digital twin (agent based model) to both visualise transport data and generate new synthetic data which can be used to perform virtual experiments on transport optimizations such as systems level optimisation, drone deliveries, dynamic routes in public transport, co2 calculations, electric car adaption scenario planning etc.
@@ -35,23 +81,6 @@ This project relies heavily on a set of open source softwares to solve particula
 ## How to contribute
 
 This code is released as open source - which means you can create your own copy of this to use within your own fleet if you want to. You can also contribute by sending Pull Requests or issues to us and we will review and merge them. If you want to receive a closed source license, please contact Christian Landgren at Iteam.
-
-### How to run
-
-We have tried to include as much as possible in the mono-repo, including neccessary data sources. Our goal is that it will be as easy as cloning the repo and run:
-
-    cd packages/simulator
-    npm ci
-    npm run dev
-
-open a new terminal / tmux
-
-    cd packages/visualization
-    npm ci
-
-Add .env with the mapbox token `VITE_MAPBOX_ACCESS_TOKEN=<YOUR TOKEN>` - we want to remove this step by using libremap
-
-    npm start
 
 ### Branch and release strategy
 
