@@ -4,20 +4,16 @@
 
 The digital twin has a number of external dependencies. At the time of writing all of these dependencies are hosted by Iteam so that anyone can run the digital twin locally without too much hassle.
 
-### Requirements
-
-- Node.js 16
-- Docker Desktop (optional)
-
-### Running the simulator
-
-The simulator resides in the `packages/simulator` directory. It acts as the simulation engine for the twin; it both generates citizens, vehicles, packages and intents as well as simulates how these entities move and interact.
+To run the digital twin locally, simply install the dependencies and then run the start command. All you need is Node.js v16.
 
 ```shell
-cd packages/simulator
 npm ci
-npm run dev
+npm start
 ```
+
+### Configuration
+
+#### Simulator
 
 There are a number of environment varibles that you can use to modify the behaviour of the simulator. The two most important ones to know are `LOG_LEVEL` and `REGIONS`.
 
@@ -25,26 +21,17 @@ There are a number of environment varibles that you can use to modify the behavi
 - Use `REGIONS=norrbotten` to limit the simulation to Norrbotten.
 - Use `REGIONS=skane` to limit the simulation to Skåne.
 
-Note that the simulation only runs once the visualisation is running and a client (web browser) is accessing the twin.
+#### Visualisation
 
-### Running the visualisation
+There is a shared Mapbox Access token inside `packages/visualisation/.env`. If you want to use your own token you will need to generate a new one.
 
-The visualisation is a React project that is run using Node.js. To view the map you will need an Access token from Mapbox, which is essentially free for personal use. Due to their licensing model we do not keep a shared token in this repository.
+1. Go to (https://www.mapbox.com)[https://www.mapbox.com] and login or create an account.
+2. Go to (https://account.mapbox.com)[https://account.mapbox.com] and create an Access token.
+3. Copy the generated token to your clipboard.
+4. Open the `packages/visualisation/.env` file.
+5. Replace the token on the line starting with `VITE_MAPBOX_ACCESS_TOKEN=`.
 
-1. Go to (https://www.mapbox.com)[https://www.mapbox.com] and login or create an account
-2. Go to (https://account.mapbox.com)[https://account.mapbox.com] and create an Access token
-3. Copy the generated token to your clipboard
-
-```shell
-export VITE_MAPBOX_ACCESS_TOKEN= # Paste your Mapbox Access token here.
-# You can of course add the token to a .env file, or .envrc if you are using direnv.
-
-cd packages/visualisation
-npm ci
-npm run dev
-```
-
-Note that if you lack a Mapbox Access token or if there is something wrong with it, you can still access the visualisation in a browser but the background will be a solid gray instead of a map.
+> NOTE: if you lack a Mapbox Access token or if there is something wrong with it, you can still access the visualisation in a browser but the background will be a solid gray instead of a map.
 
 ## Background
 

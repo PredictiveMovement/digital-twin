@@ -4,7 +4,9 @@
   "description": "## Background",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "concurrently \"npm:simulator\" \"npm:visualisation\"",
+    "simulator": "cd packages/simulator && npm run dev",
+    "visualisation": "cd packages/visualisation && npm run dev"
   },
   "repository": {
     "type": "git",
@@ -20,8 +22,13 @@
     "dotenv": "^16.0.3"
   },
   "devDependencies": {
+    "concurrently": "^8.0.1",
     "eslint": "^8.39.0",
     "eslint-plugin-rxjs": "^5.0.3",
+    "lerna": "^6.6.2",
     "prettier": "^2.5.1"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }
