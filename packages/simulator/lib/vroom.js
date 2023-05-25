@@ -6,6 +6,8 @@ const { debug, error, info } = require('./log')
 const { getFromCache, updateCache } = require('./cache')
 const queue = require('./queueSubject')
 
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 module.exports = {
   bookingToShipment({ id, pickup, destination }, i) {
     return {
@@ -103,7 +105,7 @@ module.exports = {
           info('Jobs', jobs?.length)
           info('Shipments', shipments?.length)
           info('Vehicles', vehicles?.length)
-          return vroomError
+          return delay(2000).then(() => plan({ jobs, shipments, vehicles }))
         })
     )
   },
