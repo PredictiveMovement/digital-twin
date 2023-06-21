@@ -95,10 +95,10 @@ function register(io) {
       }
     })
 */
-    socket.on('disconnect', (reason) => {
+    /*socket.on('disconnect', (reason) => {
       info('Client disconnected', reason, 'Removing subscriptions..')
       socket.data.experiment.subscriptions.map((e) => e.unsubscribe())
-    })
+    })*/
   })
 }
 module.exports = {
