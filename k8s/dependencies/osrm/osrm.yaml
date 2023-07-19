@@ -1,3 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: osrm
 ---
 apiVersion: apps/v1
 kind: StatefulSet
