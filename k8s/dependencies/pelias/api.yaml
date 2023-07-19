@@ -1,3 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pelias
 ---
 # Source: pelias/templates/api-deployment.tpl
 apiVersion: apps/v1
