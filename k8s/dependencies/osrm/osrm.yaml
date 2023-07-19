@@ -19,8 +19,6 @@ spec:
       labels:
         app: osrm
     spec:
-      nodeSelector:
-        role: worker
       containers:
         - image: predictivemovement/osrm-sweden:latest
           name: osrm
