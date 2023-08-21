@@ -43,15 +43,10 @@ class Bus extends Vehicle {
   }
 
   async handleBooking(booking) {
+    this.queue.push(booking)
+    booking.queued(this)
     if (!this.booking) {
-      this.booking = booking
-      booking.assign(this)
-      this.status = 'toPickup'
-      await this.navigateTo(booking.destination.position)
-      this.movedEvents.next(this)
-    } else {
-      this.queue.push(booking)
-      booking.queued(this)
+      this.pickNextFromQueue()
     }
     return booking
   }
@@ -87,6 +82,28 @@ class Bus extends Vehicle {
     }
     this.status = 'toDelivery'
     return this.navigateTo(this.booking.destination.position) // resume simulation
+  }
+
+  dropOff() {
+    if (this.booking) {
+      this.booking.delivered(this.position)
+      this.delivered.push(this.booking)
+      this.booking = null
+    }
+    this.statusEvents.next(this)
+
+    this.pickNextFromQueue()
+  }
+
+  async pickNextFromQueue() {
+    const booking = this.queue.shift()
+    if (!booking) return
+
+    this.booking = booking
+    booking.assign(this)
+    this.status = 'toPickup'
+    await this.navigateTo(booking.destination.position)
+    this.movedEvents.next(this)
   }
 }
 
