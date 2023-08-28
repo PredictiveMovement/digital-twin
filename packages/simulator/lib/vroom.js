@@ -8,7 +8,7 @@ const queue = require('./queueSubject')
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-module.exports = {
+const vroom = (module.exports = {
   bookingToShipment({ id, pickup, destination }, i) {
     return {
       id: i,
@@ -105,8 +105,10 @@ module.exports = {
           info('Jobs', jobs?.length)
           info('Shipments', shipments?.length)
           info('Vehicles', vehicles?.length)
-          return delay(2000).then(() => plan({ jobs, shipments, vehicles }))
+          return delay(2000).then(() =>
+            vroom.plan({ jobs, shipments, vehicles })
+          )
         })
     )
   },
-}
+})
