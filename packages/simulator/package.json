@@ -32,7 +32,7 @@
     "polyline": "^0.2.0",
     "request": "^2.88.2",
     "rxjs": "^7.2.0",
-    "socket.io": "^4.0",
+    "socket.io": "^4.6",
     "swe-coords": "^1.0.0",
     "xlsx": "^0.17.0"
   },
