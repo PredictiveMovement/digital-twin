@@ -1,4 +1,4 @@
-const key = process.env.TRAFIKLAB_KEY || 'b2fd00015bcd46d08b2a0793bc95a1fb' // Fallback key used for development.
+const key = process.env.TRAFIKLAB_KEY || '29b576dd52494bcba2ff1bc23937e570' // Fallback key used for development.
 // log in to trafiklab.se and get a key or use ours - it's free and public domain, shouldn't be a problem to share like this?
 
 const fs = require('fs')
@@ -14,44 +14,42 @@ const Position = require('../lib/models/position')
 
 const MONTH = 1000 * 60 * 60 * 24 * 30
 
-const downloadAndExtractIfNotExists = (operator) => {
+const downloadIfNotExists = (operator) => {
   const zipFile = path.join(__dirname, `../data/${operator}.zip`)
-  const outPath = path.join(__dirname, `../.cache/${operator}`)
   return new Promise((resolve, reject) => {
     const url = `https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${key}`
     const stream = fs.createWriteStream(zipFile)
     const zipFileAge =
       fs.existsSync(zipFile) && Date.now() - fs.statSync(zipFile).mtimeMs
-    if (
-      !fs.existsSync(zipFile) ||
-      !fs.existsSync(outPath) ||
-      zipFileAge > 1 * MONTH
-    ) {
-      fetch(url).then((res) =>
-        res.body
-          .pipe(stream)
-          .on('finish', () => {
-            info('Downloaded GTFS')
-            try {
-              const zip = new AdmZip(zipFile)
-              if (!fs.existsSync(outPath)) fs.mkdirSync(outPath, true)
-              zip.extractAllTo(outPath, true)
-            } catch (e) {
-              fs.rmSync(zipFile)
-              error('Error extracting GTFS', e)
-              return reject(e)
-            }
-            info('Extracted GTFS')
-            resolve()
-          })
-          .on('error', (err) => {
-            error('Error downloading GTFS', err)
-            reject(err)
-          })
-      )
+    if (!fs.existsSync(zipFile) || zipFileAge > 1 * MONTH) {
+      info('Downloading GTFS', url)
+      fetch(url)
+        .then((res) =>
+          res.body
+            .pipe(stream)
+            .on('finish', () => {
+              info('Downloaded GTFS')
+              resolve(zipFile)
+            })
+            .on('error', (err) => {
+              error('Error downloading GTFS', err)
+              reject(err)
+            })
+        )
+        .catch((err) => error('Error fetching GTFS', err) || reject())
     } else {
       resolve()
     }
+  })
+}
+
+const downloadAndExtractIfNotExists = (operator) => {
+  return downloadIfNotExists(operator).then((zipFile) => {
+    const outPath = path.join(__dirname, `../.cache/${operator}`)
+    const zip = new AdmZip(zipFile)
+    if (!fs.existsSync(outPath)) fs.mkdirSync(outPath, true)
+    zip.extractAllTo(outPath, true)
+    return zipFile
   })
 }
 
