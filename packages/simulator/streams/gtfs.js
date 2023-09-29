@@ -36,21 +36,30 @@ const downloadIfNotExists = (operator) => {
               reject(err)
             })
         )
-        .catch((err) => error('Error fetching GTFS', err) || reject())
+        .catch((err) => error('Error fetching GTFS', err) || reject(err))
     } else {
-      resolve()
+      resolve(zipFile)
     }
   })
 }
 
 const downloadAndExtractIfNotExists = (operator) => {
-  return downloadIfNotExists(operator).then((zipFile) => {
-    const outPath = path.join(__dirname, `../.cache/${operator}`)
-    const zip = new AdmZip(zipFile)
-    if (!fs.existsSync(outPath)) fs.mkdirSync(outPath, true)
-    zip.extractAllTo(outPath, true)
-    return zipFile
-  })
+  return downloadIfNotExists(operator)
+    .then((zipFile) => {
+      try {
+        const outPath = path.join(__dirname, `../.cache/${operator}`)
+        const zip = new AdmZip(zipFile)
+        if (!fs.existsSync(outPath)) fs.mkdirSync(outPath, true)
+        zip.extractAllTo(outPath, true)
+        return zipFile
+      } catch (err) {
+        error('Error unpacking', err)
+        fs.rmSync(zipFile) // try again next time
+      }
+    })
+    .catch((err) => {
+      error('Error when unpacking GTFS file', err)
+    })
 }
 
 function gtfs(operator) {
