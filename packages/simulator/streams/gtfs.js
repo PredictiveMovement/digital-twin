@@ -20,7 +20,12 @@ const downloadIfNotExists = (operator) => {
     const url = `https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${key}`
     const zipFileAge =
       fs.existsSync(zipFile) && Date.now() - fs.statSync(zipFile).mtimeMs
-    if (!fs.existsSync(zipFile) || zipFileAge > 1 * MONTH) {
+    const zipFileSize = fs.existsSync(zipFile) && fs.statSync(zipFile).size
+    if (
+      !fs.existsSync(zipFile) ||
+      zipFileSize < 5000 ||
+      zipFileAge > 1 * MONTH
+    ) {
       const stream = fs.createWriteStream(zipFile)
       info('Downloading GTFS', url)
       fetch(url)
