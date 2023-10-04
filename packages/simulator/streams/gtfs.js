@@ -18,10 +18,10 @@ const downloadIfNotExists = (operator) => {
   const zipFile = path.join(__dirname, `../data/${operator}.zip`)
   return new Promise((resolve, reject) => {
     const url = `https://opendata.samtrafiken.se/gtfs/${operator}/${operator}.zip?key=${key}`
-    const stream = fs.createWriteStream(zipFile)
     const zipFileAge =
       fs.existsSync(zipFile) && Date.now() - fs.statSync(zipFile).mtimeMs
     if (!fs.existsSync(zipFile) || zipFileAge > 1 * MONTH) {
+      const stream = fs.createWriteStream(zipFile)
       info('Downloading GTFS', url)
       fetch(url)
         .then((res) =>
