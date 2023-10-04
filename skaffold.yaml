@@ -1,16 +1,10 @@
-apiVersion: skaffold/v2alpha4
+apiVersion: skaffold/v4beta1
 kind: Config
 metadata:
   name: pm-digital-twin
 build:
   artifacts:
-    # - image: predictivemovement/otp-sweden
-    #   context: k8s/dependencies/opentripplanner
-    #   docker:
-    #     buildArgs:
-    #       apikey: "{{.TRAFIKLAB_KEY}}"
-    #       operator: norrbotten
-    - image:  predictivemovement/sample-address
+    - image: predictivemovement/sample-address
       context: packages/sampleAddresses
     - image: predictivemovement/digital-twin-simulator
       context: packages/simulator
@@ -18,28 +12,21 @@ build:
       context: packages/visualisation
       docker:
         buildArgs:
-          VITE_MAPBOX_ACCESS_TOKEN: "{{.VITE_MAPBOX_ACCESS_TOKEN}}" # these needs to be set at build time
-          VITE_SIMULATOR_URL: "/"
-deploy:
-  # kubectl:
-  #   manifests:
-  # - k8s/dependencies/kibana/*.yaml
-  # - k8s/dependencies/pelias/*.yaml
-  # - k8s/dependencies/osrm/*.yaml
-  # - k8s/dependencies/vroom/*.yaml
-  # - k8s/dependencies/opentripplanner/*.yaml
+          VITE_MAPBOX_ACCESS_TOKEN: "{{.VITE_MAPBOX_ACCESS_TOKEN}}"
+          VITE_SIMULATOR_URL: /
+manifests:
   kustomize:
     paths:
       - k8s/base
+deploy:
   statusCheckDeadlineSeconds: 600
 profiles:
   - name: prod
     activation:
       - env: GITHUB_REF_TYPE=tag
-    deploy:
+    manifests:
       kustomize:
         paths:
           - k8s/overlays/helsingborg
           - k8s/overlays/rorla
           - k8s/overlays/digital-twin
-
