@@ -27,8 +27,14 @@ const { info } = require('./lib/log')
 const WORKING_DAYS = 220
 const pilots = kommuner.pipe(
   filter((kommun) =>
-    //['Arjeplog', 'Arvidsjaur', 'Pajala', 'Storuman', 'Västervik', 'Ljusdal'].some((pilot) =>
-    ['Västervik'].some((pilot) => kommun.name.startsWith(pilot))
+    [
+      'Arjeplog',
+      'Arvidsjaur',
+      'Pajala',
+      'Storuman',
+      'Västervik',
+      'Ljusdal',
+    ].some((pilot) => kommun.name.startsWith(pilot))
   ),
   // TODO: Dela upp och gör mer läsbart
   mergeMap(async (kommun) => {
