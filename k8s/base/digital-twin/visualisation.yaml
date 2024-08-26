@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: visualisation
-          image: ghcr.io/predictivemovement/telge-twin-visualisation:2.0.3 # {"$imagepolicy": "flux-system:visualisation"}
+          image: ghcr.io/predictivemovement/telge-twin-visualisation:2.1.2 # {"$imagepolicy": "flux-system:visualisation"}
           resources:
             requests:
               cpu: 100m
