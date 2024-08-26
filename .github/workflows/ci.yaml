@@ -9,8 +9,6 @@ env:
 on:
   push:
     branches:
-      - master
-      - feat/ci
       - main
     tags:
       - production*
@@ -78,9 +76,24 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 🔧 Build and push Docker Image
+      - name: 🔧 Build and push Simulator
         uses: docker/build-push-action@v4
         with:
+          context: ./packages/simulator
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ steps.imagename.outputs.lowercase  }}:${{ steps.package-version.outputs.current-version}}
+            ${{ env.REGISTRY }}/${{ steps.imagename.outputs.lowercase  }}-simulator:${{ steps.package-version.outputs.current-version}}
+      - name: 🔧 Build and push Visualisation
+        uses: docker/build-push-action@v4
+        with:
+          context: ./packages/visualisation
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ steps.imagename.outputs.lowercase  }}-visualisation:${{ steps.package-version.outputs.current-version}}
+      - name: 🔧 Build and push SampleAdresses
+        uses: docker/build-push-action@v4
+        with:
+          context: ./packages/sampleAddresses
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ steps.imagename.outputs.lowercase  }}-sample:${{ steps.package-version.outputs.current-version}}
