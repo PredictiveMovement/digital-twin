@@ -8,4 +8,3 @@ node_modules
 .vscode/
 .cache
 k8s/dependencies
-.github/workflows
