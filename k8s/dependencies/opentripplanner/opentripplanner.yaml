@@ -20,7 +20,7 @@ spec:
         app: otp
     spec:
       containers:
-        - image: predictivemovement/opentripplanner-sweden:latest
+        - image: swedishdeveloper/opentripplanner-sweden:latest
           name: otp
           resources:
             requests:
@@ -67,10 +67,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - otp.predictivemovement.se
+        - otp.telge.iteam.pub
       secretName: otp-prod-tls
   rules:
-    - host: otp.predictivemovement.se
+    - host: otp.telge.iteam.pub
       http:
         paths:
           - path: /

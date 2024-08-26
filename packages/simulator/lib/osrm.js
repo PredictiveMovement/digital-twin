@@ -3,7 +3,7 @@ const polyline = require('polyline')
 const osrmUrl =
   // eslint-disable-next-line no-undef
   process.env.OSRM_URL ||
-  'https://osrm.predictivemovement.se' ||
+  'https://osrm.telge.iteam.pub' ||
   'http://localhost:5000'
 const { warn, write } = require('./log')
 

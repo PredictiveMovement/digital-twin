@@ -66,10 +66,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - vroom.predictivemovement.se
+        - vroom.telge.iteam.pub
       secretName: vroom-prod-tls
   rules:
-    - host: vroom.predictivemovement.se
+    - host: vroom.telge.iteam.pub
       http:
         paths:
           - path: /

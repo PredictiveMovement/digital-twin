@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: sample-address
-          image: predictivemovement/sample-address
+          image: swedishdeveloper/sample-address
           ports:
             - containerPort: 4001
           resources:
@@ -52,10 +52,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - streams.predictivemovement.se
+        - streams.telge.iteam.pub
       secretName: sampleaddresses-prod-tls
   rules:
-    - host: streams.predictivemovement.se
+    - host: streams.telge.iteam.pub
       http:
         paths:
           - path: /addresses/(.*)

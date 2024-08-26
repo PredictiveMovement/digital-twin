@@ -29,7 +29,7 @@ data:
         "autocomplete": {
           "exclude_address_length": 0
         },
-        "attributionURL": "https://predictivemovement.se",
+        "attributionURL": "https://telge.iteam.pub",
         "indexName": "pelias",
         "services": {
 

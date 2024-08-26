@@ -89,7 +89,7 @@ const WelcomeBox = () => {
           Norrbotten och statistik om befolkningen.
         </ParagraphLarge>
 
-        <Link target="_blank" href="https://predictivemovement.se/">
+        <Link target="_blank" href="https://telge.iteam.pub/">
           Läs mer om Predictive Movement
         </Link>
         <ButtonWrapper>

@@ -82,10 +82,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - pelias.predictivemovement.se
+        - pelias.telge.iteam.pub
       secretName: pelias-prod-tls
   rules:
-    - host: pelias.predictivemovement.se
+    - host: pelias.telge.iteam.pub
       http:
         paths:
           - path: /

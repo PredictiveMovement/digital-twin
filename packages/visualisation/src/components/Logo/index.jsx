@@ -13,7 +13,7 @@ const Wrapper = styled.div`
 const Logo = () => {
   return (
     <Wrapper>
-      <a href="https://predictivemovement.se/" target="_blank" rel="noreferrer">
+      <a href="https://telge.iteam.pub.se/" target="_blank" rel="noreferrer">
         <PMLogo />
       </a>
     </Wrapper>

@@ -83,10 +83,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - opentiles.predictivemovement.se
+        - opentiles.telge.iteam.pub
       secretName: opentiles-prod-tls
   rules:
-    - host: opentiles.predictivemovement.se
+    - host: opentiles.telge.iteam.pub
       http:
         paths:
           - path: /

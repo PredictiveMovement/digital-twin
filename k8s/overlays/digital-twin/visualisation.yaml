@@ -5,10 +5,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - tvilling.predictivemovement.se
+        - tvilling.telge.iteam.pub
       secretName: tvilling-prod-tls
   rules:
-    - host: tvilling.predictivemovement.se
+    - host: tvilling.telge.iteam.pub
       http:
         paths:
           - path: /

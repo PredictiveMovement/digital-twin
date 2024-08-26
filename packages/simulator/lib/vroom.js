@@ -1,6 +1,6 @@
 const fetch = require('node-fetch')
 // eslint-disable-next-line no-undef
-const vroomUrl = process.env.VROOM_URL || 'https://vroom.predictivemovement.se/'
+const vroomUrl = process.env.VROOM_URL || 'https://vroom.telge.iteam.pub/'
 const moment = require('moment')
 const { debug, error, info } = require('./log')
 const { getFromCache, updateCache } = require('./cache')

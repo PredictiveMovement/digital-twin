@@ -20,7 +20,7 @@ spec:
         app: osrm
     spec:
       containers:
-        - image: predictivemovement/osrm-sweden:latest
+        - image: swedishdeveloper/osrm-sweden:latest
           name: osrm
           command: ["/bin/sh"]
           args:
@@ -73,10 +73,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - osrm.predictivemovement.se
+        - osrm.telge.iteam.pub
       secretName: osrm-prod-tls
   rules:
-    - host: osrm.predictivemovement.se
+    - host: osrm.telge.iteam.pub
       http:
         paths:
           - path: /

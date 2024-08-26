@@ -5,10 +5,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - helsingborg.predictivemovement.se # Legacy.
+        - helsingborg.telge.iteam.pub # Legacy.
       secretName: helsingborg-prod-tls
   rules:
-    - host: helsingborg.predictivemovement.se
+    - host: helsingborg.telge.iteam.pub
       http:
         paths:
           - path: /socket.io

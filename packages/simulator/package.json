@@ -46,7 +46,7 @@
   "bugs": {
     "url": "https://github.com/PredictiveMovement/digital-twin/issues"
   },
-  "homepage": "https://www.predictivemovement.se",
+  "homepage": "https://www.telge.iteam.pub",
   "nodemonConfig": {
     "ignore": [
       "data/pm_bookings*.json"

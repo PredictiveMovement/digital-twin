@@ -2,7 +2,7 @@ const fetch = require('node-fetch')
 const { info, error, write } = require('./log')
 const Position = require('./models/position')
 const peliasUrl =
-  process.env.PELIAS_URL || 'https://pelias.predictivemovement.se'
+  process.env.PELIAS_URL || 'http://pelias-api.pelias.svc.cluster.local:3100'
 
 info('Pelias URL', peliasUrl)
 

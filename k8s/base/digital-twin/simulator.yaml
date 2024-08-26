@@ -23,11 +23,9 @@ spec:
       labels:
         app: simulator
     spec:
-      nodeSelector:
-        role: worker
       containers:
         - name: simulator
-          image: predictivemovement/digital-twin-simulator
+          image: swedishdeveloper/digital-twin-simulator:latest
           resources:
             requests:
               cpu: "1"
@@ -61,32 +59,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - tvilling-stage.predictivemovement.se
-        - helsingborg-stage.predictivemovement.se # Legacy.
-        - rorla-stage.predictivemovement.se # Legacy.
+        - tvilling-stage.telge.iteam.pub
       secretName: simulator-stage-tls
   rules:
-    - host: tvilling-stage.predictivemovement.se
-      http:
-        paths:
-          - path: /socket.io
-            pathType: Prefix
-            backend:
-              service:
-                name: simulator
-                port:
-                  number: 4000
-    - host: helsingborg-stage.predictivemovement.se
-      http:
-        paths:
-          - path: /socket.io
-            pathType: Prefix
-            backend:
-              service:
-                name: simulator
-                port:
-                  number: 4000
-    - host: rorla-stage.predictivemovement.se
+    - host: tvilling-stage.telge.iteam.pub
       http:
         paths:
           - path: /socket.io

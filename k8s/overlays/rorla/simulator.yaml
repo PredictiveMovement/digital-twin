@@ -5,10 +5,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - rorla.predictivemovement.se # Legacy.
+        - rorla.telge.iteam.pub # Legacy.
       secretName: rorla-prod-tls
   rules:
-    - host: rorla.predictivemovement.se
+    - host: rorla.telge.iteam.pub
       http:
         paths:
           - path: /socket.io
