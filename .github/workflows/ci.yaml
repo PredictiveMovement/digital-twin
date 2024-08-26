@@ -88,6 +88,9 @@ jobs:
         with:
           context: ./packages/visualisation
           push: true
+          build-args: |
+            VITE_MAPBOX_ACCESS_TOKEN=${{ secrets.VITE_MAPBOX_ACCESS_TOKEN }}
+            VITE_SIMULATOR_URL=${{ secrets.VITE_SIMULATOR_URL }}
           tags: |
             ${{ env.REGISTRY }}/${{ steps.imagename.outputs.lowercase  }}-visualisation:${{ steps.package-version.outputs.current-version}}
       - name: 🔧 Build and push SampleAdresses
