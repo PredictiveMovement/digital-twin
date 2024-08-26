@@ -43,7 +43,7 @@ spec:
   tls:
     - hosts:
         - tvilling-stage.telge.iteam.pub
-      secretName: helsingborg-stage-tls
+      secretName: telge-stage-tls
   rules:
     - host: tvilling-stage.telge.iteam.pub
       http:

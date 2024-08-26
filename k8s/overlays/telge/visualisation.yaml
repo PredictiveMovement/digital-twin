@@ -5,10 +5,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - helsingborg.telge.iteam.pub
-      secretName: helsingborg-prod-tls
+        - telge.iteam.pub
+      secretName: telge-prod-tls
   rules:
-    - host: helsingborg.telge.iteam.pub
+    - host: telge.iteam.pub
       http:
         paths:
           - path: /
