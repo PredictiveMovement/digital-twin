@@ -4,4 +4,4 @@ kind: Kustomization
 namespace: digital-twin
 
 resources:
-- overlays/digital-twin
+- overlays/telge
