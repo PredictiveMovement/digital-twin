@@ -7,3 +7,4 @@ node_modules
 .envrc
 .vscode/
 .cache
+k8s/dependencies/osrm/sweden-latest.osm.pbf
