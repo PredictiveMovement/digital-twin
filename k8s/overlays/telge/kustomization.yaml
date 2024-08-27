@@ -12,7 +12,7 @@ patches:
       path: /spec/template/spec/containers/0/env/-
       value:
         name: REGIONS
-        value: "stockholms"
+        value: "sl"
     - op: add
       path: /spec/template/spec/containers/0/env/-
       value:
