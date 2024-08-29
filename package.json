@@ -1,6 +1,6 @@
 {
   "name": "digital-twin",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "## Background",
   "main": "index.js",
   "scripts": {
