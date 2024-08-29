@@ -14,7 +14,7 @@
     "taxis"
   ],
   "fleets": {
-    "Södertälje kommun": {
+    "Arjeplogs kommun": {
       "fleets": [
         {
           "name": "Länstrafiken",
@@ -38,11 +38,11 @@
             "bil": 0
           },
           "marketshare": 0.6,
-          "hub": [59.163712, 17.639776]
+          "hub": [21.034263, 64.746704]
         }
       ]
     },
-    "Stockholms kommun": {
+    "Arvidsjaurs kommun": {
       "fleets": [
         {
           "name": "Länstrafiken",
@@ -66,7 +66,357 @@
             "bil": 0
           },
           "marketshare": 60,
-          "hub": [59.166512, 17.635154]
+          "hub": [21.034263, 64.746704]
+        }
+      ]
+    },
+    "Bodens kommun": {
+      "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 3
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 2
+          }
+        },
+        {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 2,
+            "lättLastbil": 2,
+            "bil": 0
+          },
+          "marketshare": 0.6,
+          "hub": [22.045246, 65.614869]
+        }
+      ]
+    },
+    "Gällivare kommun": {
+      "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 2
+          }
+        }
+      ]
+    },
+    "Haparanda stad": {
+      "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 2
+          }
+        }
+      ]
+    },
+    "Helsingborgs stad": {
+      "fleets": [
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 100
+          }
+        },
+        {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 4,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 0.6,
+          "hub": [12.783566, 56.069157],
+          "hubAddress": "Mineralgatan 5, Helsingborg"
+        },
+        {
+          "name": "Skånetrafik",
+          "type": "bus",
+          "vehicles": {
+            "bus": 40
+          }
+        },
+        {
+          "name": "Röd",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 2
+          },
+          "marketshare": 0.18,
+          "hub": [12.768723, 56.010354],
+          "hubAddress": "Brunkalundsvägen 4, Helsingborg"
+        },
+        {
+          "name": "Gul",
+          "vehicles": {
+            "lättLastbil": 2
+          },
+          "marketshare": 0.06,
+          "hub": [12.778268, 56.021101],
+          "hubAddress": "Trintegatan 10, Helsingborg"
+        },
+        {
+          "name": "Lila",
+          "vehicles": {
+            "lättLastbil": 2
+          },
+          "marketshare": 0.06,
+          "hub": [12.709821, 56.01995],
+          "hubAddress": "Strandbadsvägen 7, Helsingborg"
+        }
+      ]
+    },
+    "Jokkmokks kommun": {
+      "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 2
+          }
+        }
+      ]
+    },
+    "Kalix kommun": {
+      "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 2
+          }
+        }
+      ]
+    },
+    "Kiruna kommun": {
+      "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 10
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Ljusdals kommun": {
+      "fleets": [
+        {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 3,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 60,
+          "hub": [17.08409, 61.741754]
+        },
+        {
+          "name": "SNX",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 2,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 6,
+          "hub": [16.058036, 61.820841]
+        }
+      ]
+    },
+    "Luleå kommun": {
+      "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 20
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 7
+          }
+        },
+        {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 4,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 0.6,
+          "hub": [22.046545, 65.614817]
+        }
+      ]
+    },
+    "Pajala kommun": {
+      "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 2
+          }
+        }
+      ]
+    },
+    "Piteå kommun": {
+      "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 10
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 5
+          }
+        }
+      ]
+    },
+    "Storumans kommun": {
+      "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 1
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 2
+          }
+        },
+        {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 1,
+            "medeltungLastbil": 2,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 60,
+          "hub": [14.640025, 63.222212]
+        }
+      ]
+    },
+    "Västerviks kommun": {
+      "fleets": [
+        {
+          "name": "Drönarleverans AB",
+          "vehicles": {
+            "drönare": 200
+          },
+          "percentageHomeDelivery": 100,
+          "marketshare": 20,
+          "hub": [16.528936, 57.776915]
+        }
+      ]
+    },
+    "Älvsbyns kommun": {
+      "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 2
+          }
+        }
+      ]
+    },
+    "Överkalix kommun": {
+      "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 2
+          }
+        }
+      ]
+    },
+    "Övertorneå kommun": {
+      "fleets": [
+        {
+          "name": "Länstrafiken",
+          "type": "bus",
+          "vehicles": {
+            "bus": 5
+          }
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 2
+          }
         }
       ]
     }
