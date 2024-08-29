@@ -14,7 +14,7 @@
     "taxis"
   ],
   "fleets": {
-    "Arjeplogs kommun": {
+    "Södertälje kommun": {
       "fleets": [
         {
           "name": "Länstrafiken",
@@ -42,7 +42,7 @@
         }
       ]
     },
-    "Arvidsjaurs kommun": {
+    "Stockholms kommun": {
       "fleets": [
         {
           "name": "Länstrafiken",

@@ -195,7 +195,10 @@ const App = () => {
   const [kommuner, setKommuner] = React.useState([])
   useSocket('kommun', (kommun) => {
     setReset(false)
-    setKommuner((current) => upsert(current, kommun, 'id', true))
+    setKommuner((current) => {
+      console.log('Received kommun data:', kommun)
+      return upsert(current, kommun, 'id', true)
+    })
   })
 
   useSocket('parameters', (currentParameters) => {
@@ -228,6 +231,8 @@ const App = () => {
 
     setFleets(currentParameters.fleets)
     setExperimentParameters(currentParameters)
+
+    console.log('Received parameters:', currentParameters)
   })
   const [passengers, setPassengers] = React.useState([])
   useSocket('passengers', (passengers) => {
