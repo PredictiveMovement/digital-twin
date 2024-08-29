@@ -12,7 +12,7 @@ patches:
       path: /spec/template/spec/containers/0/env/-
       value:
         name: REGIONS
-        value: "sodertalje"
+        value: "skane"
     - op: add
       path: /spec/template/spec/containers/0/env/-
       value:
