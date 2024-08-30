@@ -101,9 +101,11 @@ function read({ fleets }) {
       }) => {
         const squares = getPopulationSquares({ geometry })
         const commercialAreas = getCommercialAreas(kod)
+        console.log("Data till searchOne: " + address || name.split(' ')[0]);
         const { position: center } = await Pelias.searchOne(
           address || name.split(' ')[0]
         )
+        console.log("Center", center);
         const nearbyWorkplaces = from(getWorkplaces(center)).pipe(
           mergeAll(),
           take(100),
