@@ -7,3 +7,4 @@ typings
 data/pm*
 data/parameteres.json
 .cache
+.env
