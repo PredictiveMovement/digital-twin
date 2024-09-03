@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: simulator
-          image: ghcr.io/predictivemovement/telge-twin-simulator:2.6.12 # {"$imagepolicy": "flux-system:simulator"}
+          image: ghcr.io/predictivemovement/telge-twin-simulator:2.6.13 # {"$imagepolicy": "flux-system:simulator"}
           resources:
             requests:
               cpu: "1"
