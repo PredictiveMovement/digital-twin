@@ -39,7 +39,7 @@ spec:
             - name: PELIAS_URL
               value: http://pelias-api.pelias.svc.cluster.local:3100
             - name: STREAMS_URL
-              value: http://sample-address.pm-streams:4001
+              value: http://sample-address:4001
           volumeMounts:
             - mountPath: /app/.cache
               name: cache-volume
