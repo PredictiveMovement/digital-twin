@@ -20,7 +20,7 @@ const { error } = require('../../lib/log')
 
 const importOrigins = ['poznan, pl', 'tilburg, nl']
 const streamsUrl =
-  process.env.STREAMS_URL || 'http://sample-address.pm-streams.svc.cluster.local:4001/addresses'
+  process.env.STREAMS_URL || 'https://streams.telge.iteam.pub/addresses'
 
 function read() {
   // eslint-disable-next-line no-undef

@@ -5,7 +5,7 @@ const { addMeters } = require('../lib/distance')
 const fetch = require('node-fetch')
 const { error } = require('../lib/log')
 const streamsUrl =
-  process.env.STREAMS_URL || 'http://sample-address.pm-streams.svc.cluster.local:4001/addresses'
+  process.env.STREAMS_URL || 'https://streams.telge.iteam.pub/addresses'
 
 const getAddressesInBoundingBox = (
   topLeft,
