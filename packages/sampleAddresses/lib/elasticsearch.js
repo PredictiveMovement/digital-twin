@@ -1,8 +1,8 @@
 const fetch = require('node-fetch')
 const fetchAdresses = async (query) => {
   const peliasHostname =
-    process.env.PELIAS_HOSTNAME || 'https://pelias.telge.iteam.pub'
-  const url = `${peliasHostname}/v1/search`
+    process.env.PELIAS_HOSTNAME || 'http://localhost:9200'
+  const url = `${peliasHostname}/pelias/_search`
 
   const json = await fetch(url, {
     method: 'POST',
