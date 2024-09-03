@@ -99,22 +99,20 @@ function read({ fleets }) {
         pickupPositions,
         fleets,
       }) => {
+        console.log('Processing kommun', name)
         const squares = getPopulationSquares({ geometry })
         const commercialAreas = getCommercialAreas(kod)
 
-        const searchQuery = address || name.split(' ')[0];
-        if (!searchQuery) {
-          console.log("No valid address or name found.");
-          return null;
+        const searchQuery = address || name.split(' ')[0]
+
+        const searchResult = await Pelias.searchOne(searchQuery)
+        if (!searchQuery || !searchResult || !searchResult.position) {
+          throw new Error(
+            `No valid address or name found for kommun: ${name}. Please check parameters.json and add address or position for this kommun. ${searchQuery}`
+          )
         }
 
-        const searchResult = await Pelias.searchOne(searchQuery);
-        if (!searchResult || !searchResult.position) {
-          console.log("No valid position found.");
-          return null;
-        }
-
-        const { position: center } = searchResult;
+        const { position: center } = searchResult
         const nearbyWorkplaces = from(getWorkplaces(center)).pipe(
           mergeAll(),
           take(100),
@@ -150,10 +148,12 @@ function read({ fleets }) {
 
           citizens,
         })
+        console.log('Kommun before', kommun)
         return kommun
       }
     ),
     tap((kommun) => {
+      console.log('Kommun', kommun)
       if (kommun.name.startsWith('Helsingborg')) {
         merge(bookings.hm, bookings.ikea).forEach((booking) =>
           kommun.handleBooking(booking)
