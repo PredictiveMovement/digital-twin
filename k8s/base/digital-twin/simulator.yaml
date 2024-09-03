@@ -36,6 +36,8 @@ spec:
               value: http://vroom.vroom.svc.cluster.local:3000
             - name: ELASTICSEARCH_URL
               value: http://elastic-elasticsearch.elasticsearch.svc.cluster.local:9200
+            - name: PELIAS_URL
+              value: http://pelias-api.pelias.svc.cluster.local:3100
             - name: STREAMS_URL
               value: http://sample-address.pm-streams:4001
           volumeMounts:
