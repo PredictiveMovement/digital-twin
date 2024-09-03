@@ -105,7 +105,6 @@ function read({ fleets }) {
         const { position: center } = await Pelias.searchOne(
           address || name.split(' ')[0]
         )
-        console.log("Center", center);
         const nearbyWorkplaces = from(getWorkplaces(center)).pipe(
           mergeAll(),
           take(100),
