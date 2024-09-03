@@ -104,13 +104,13 @@ function read({ fleets }) {
 
         const searchQuery = address || name.split(' ')[0];
         if (!searchQuery) {
-          console.log("No valid address or name found for " + name);
+          console.log("No valid address or name found.");
           return null;
         }
 
         const searchResult = await Pelias.searchOne(searchQuery);
         if (!searchResult || !searchResult.position) {
-          console.log("No valid position found for " + name);
+          console.log("No valid position found.");
           return null;
         }
 
