@@ -101,10 +101,20 @@ function read({ fleets }) {
       }) => {
         const squares = getPopulationSquares({ geometry })
         const commercialAreas = getCommercialAreas(kod)
-        console.log("Data till searchOne: " + address || name.split(' ')[0]);
-        const { position: center } = await Pelias.searchOne(
-          address || name.split(' ')[0]
-        )
+
+        const searchQuery = address || name.split(' ')[0];
+        if (!searchQuery) {
+          console.log("No valid address or name found for " + name);
+          return null;
+        }
+
+        const searchResult = await Pelias.searchOne(searchQuery);
+        if (!searchResult || !searchResult.position) {
+          console.log("No valid position found for " + name);
+          return null;
+        }
+
+        const { position: center } = searchResult;
         const nearbyWorkplaces = from(getWorkplaces(center)).pipe(
           mergeAll(),
           take(100),
