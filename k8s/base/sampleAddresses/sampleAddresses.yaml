@@ -35,7 +35,7 @@ spec:
               memory: "100Mi"
           env:
             - name: PELIAS_HOSTNAME
-              value: http://elasticsearch-master.pelias.svc.cluster.local:9200
+              value: http://elastic-elasticsearch.elasticsearch.svc.cluster.local:9200
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
