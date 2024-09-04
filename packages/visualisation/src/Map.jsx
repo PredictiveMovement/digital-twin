@@ -24,6 +24,7 @@ const Map = ({
   bookings,
   postombud,
   measureStations,
+  garbageCollectionPoints,
   busStops,
   lineShapes,
   kommuner,
@@ -472,6 +473,25 @@ const Map = ({
     },
   })
 
+  const garbageCollectionLayer = new ScatterplotLayer({
+    id: 'garbage-collection-layer',
+    data: garbageCollectionPoints, // your data source here
+    getPosition: d => [d.longitude, d.latitude],
+    getFillColor: d => d.isFull ? [255, 0, 0, 160] : [0, 128, 0, 160], // Red for full, green for empty
+    getRadius: 10,
+    pickable: true,
+    onHover: ({object, x, y}) => {
+        if (object) {
+            setHoverInfo({
+                title: 'Garbage Bin',
+                description: `Status: ${object.isFull ? 'Full' : 'Empty'}`,
+                x, y
+            })
+        }
+    }
+  })
+
+
   const [showAssignedBookings, setShowAssignedBookings] = useState(false)
   const [showActiveDeliveries, setShowActiveDeliveries] = useState(false)
 
@@ -598,6 +618,7 @@ const Map = ({
         activeLayers.kommunLayer && kommunLayer, // TODO: This hides some items behind it, sort of
         activeLayers.postombudLayer && postombudLayer,
         activeLayers.measureStationsLayer && measureStationsLayer,
+        activeLayers.garbageCollectionLayer && garbageCollectionLayer,
         bookingLayer,
         showArcLayer && arcLayer,
         (showAssignedBookings || showActiveDeliveries) && routesLayer,

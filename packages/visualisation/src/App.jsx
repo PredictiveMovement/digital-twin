@@ -25,6 +25,7 @@ const App = () => {
   const [passengerLayer, setPassengerLayer] = useState(true)
   const [postombudLayer, setPostombudLayer] = useState(false)
   const [measureStationsLayer, setMeasureStationsLayer] = useState(false)
+  const [garbageCollectionLayer, setGarbageCollectionLayer] = useState(false)
   const [commercialAreasLayer, setCommercialAreasLayer] = useState(false)
   const [busLineLayer, setBusLineLayer] = useState(true)
   const [kommunLayer, setKommunLayer] = useState(true)
@@ -50,6 +51,8 @@ const App = () => {
     setPostombudLayer,
     measureStationsLayer,
     setMeasureStationsLayer,
+    garbageCollectionLayer,
+    setGarbageCollectionLayer,
     taxiLayer,
     setTaxiLayer,
     passengerLayer,
@@ -217,6 +220,7 @@ const App = () => {
       passengers: setPassengerLayer,
       postombud: setPostombudLayer,
       measureStations: setMeasureStationsLayer,
+      garbageCollection: setGarbageCollectionLayer,
       kommuner: setKommunLayer,
       commercialAreas: setCommercialAreasLayer,
     }

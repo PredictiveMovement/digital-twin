@@ -11,7 +11,9 @@
     "kommuner",
     "measureStations",
     "passengers",
-    "taxis"
+    "taxis",
+    "garbageTrucks",
+    "garbageCollectionPoints"
   ],
   "fleets": {
     "Helsingborgs stad": {
