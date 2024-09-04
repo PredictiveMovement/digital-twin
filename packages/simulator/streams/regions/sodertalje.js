@@ -1,4 +1,4 @@
-const { stops } = require('../publicTransport')('sodertalje')
+const { stops } = require('../publicTransport')('sl')
 const { filter, shareReplay } = require('rxjs')
 const Region = require('../../lib/region')
 

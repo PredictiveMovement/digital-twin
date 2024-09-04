@@ -19,6 +19,12 @@
     "Södertälje kommun": {
       "fleets": [
         {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 100
+          }
+        },
+        {
           "name": "Postnord",
           "vehicles": {
             "tungLastbil": 0,
@@ -29,6 +35,13 @@
           "marketshare": 0.6,
           "hub": [59.135089454059866, 17.570606619036194],
           "hubAddress": "Lerhaga 50, Södertälje"
+        },
+        {
+          "name": "Skånetrafik",
+          "type": "bus",
+          "vehicles": {
+            "bus": 40
+          }
         }
       ]
     }
