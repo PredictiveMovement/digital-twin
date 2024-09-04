@@ -16,14 +16,8 @@
     "garbageCollectionPoints"
   ],
   "fleets": {
-    "Helsingborgs stad": {
+    "Södertälje kommun": {
       "fleets": [
-        {
-          "name": "Taxi",
-          "vehicles": {
-            "taxi": 100
-          }
-        },
         {
           "name": "Postnord",
           "vehicles": {
@@ -33,43 +27,8 @@
             "bil": 0
           },
           "marketshare": 0.6,
-          "hub": [12.783566, 56.069157],
-          "hubAddress": "Mineralgatan 5, Helsingborg"
-        },
-        {
-          "name": "Skånetrafik",
-          "type": "bus",
-          "vehicles": {
-            "bus": 40
-          }
-        },
-        {
-          "name": "Röd",
-          "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 2
-          },
-          "marketshare": 0.18,
-          "hub": [12.768723, 56.010354],
-          "hubAddress": "Brunkalundsvägen 4, Helsingborg"
-        },
-        {
-          "name": "Gul",
-          "vehicles": {
-            "lättLastbil": 2
-          },
-          "marketshare": 0.06,
-          "hub": [12.778268, 56.021101],
-          "hubAddress": "Trintegatan 10, Helsingborg"
-        },
-        {
-          "name": "Lila",
-          "vehicles": {
-            "lättLastbil": 2
-          },
-          "marketshare": 0.06,
-          "hub": [12.709821, 56.01995],
-          "hubAddress": "Strandbadsvägen 7, Helsingborg"
+          "hub": [59.135089454059866, 17.570606619036194],
+          "hubAddress": "Lerhaga 50, Södertälje"
         }
       ]
     }
