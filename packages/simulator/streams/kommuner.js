@@ -29,8 +29,7 @@ const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const activeMunicipalities = municipalities()
 
 const bookings = {
-  hm: require('../streams/orders/hm.js'),
-  ikea: require('../streams/orders/ikea.js'),
+  telge: require('../streams/orders/telge.js'),
 }
 
 function getPopulationSquares({ geometry: { coordinates } }) {
@@ -148,14 +147,12 @@ function read({ fleets }) {
 
           citizens,
         })
-        console.log('Kommun before', kommun)
         return kommun
       }
     ),
     tap((kommun) => {
-      console.log('Kommun', kommun)
-      if (kommun.name.startsWith('Helsingborg')) {
-        merge(bookings.hm, bookings.ikea).forEach((booking) =>
+      if (kommun.name.startsWith('Södertälje')) {
+        merge(bookings.telge).forEach((booking) =>
           kommun.handleBooking(booking)
         )
       }
