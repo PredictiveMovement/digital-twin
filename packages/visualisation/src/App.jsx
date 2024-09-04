@@ -80,6 +80,7 @@ const App = () => {
     setKommuner([])
     setPostombud([])
     setMeasureStations([])
+    setGarbageCollection([])
     setBusStops([])
     setLineShapes([])
     setLatestLogMessage('')
@@ -175,6 +176,35 @@ const App = () => {
           return { ...station, count: station.count + 1 }
         }
         return station
+      })
+    )
+  })
+
+  const [garbageCollectionPoints, setGarbageCollection] = React.useState([])
+  useSocket('garbageCollection', (newGarbageCollectionPoints) => {
+    setReset(false)
+    setGarbageCollection((current) => [
+      ...current,
+      ...newGarbageCollectionPoints.map(({ position, ...rest }) => ({
+        position: [position.lon, position.lat],
+        ...rest,
+      })),
+    ])
+  })
+
+  useSocket('garbageCollectionUpdates', (garbageCollectionUpdates) => {
+    setGarbageCollection((current) =>
+      current.map((garbageCollectionPoint) => {
+        const garbageCollectionIds = garbageCollectionUpdates.map(
+          ({ garbageCollectionId }) => garbageCollectionId
+        )
+        if (garbageCollectionIds.includes(garbageCollectionPoint.id)) {
+          return {
+            ...garbageCollectionPoint,
+            count: garbageCollectionPoint.count + 1,
+          }
+        }
+        return garbageCollectionPoint
       })
     )
   })
@@ -344,6 +374,7 @@ const App = () => {
           bookings={bookings}
           postombud={postombud}
           measureStations={measureStations}
+          garbageCollectionPoints={garbageCollectionPoints}
           busStops={busStops}
           kommuner={kommuner}
           activeCar={activeCar}

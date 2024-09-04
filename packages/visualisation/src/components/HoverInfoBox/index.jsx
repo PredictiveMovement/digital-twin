@@ -261,9 +261,36 @@ const HoverInfoBox = ({ data }) => {
       return <PassengerInfo data={data} />
     case 'measureStation':
       return <MeasurementStationInfo data={data} />
+    case 'garbageCollectionPoint':
+      return <GarbageCollectionPointInfo data={data} />
     default:
       return <GenericInfo data={data} />
   }
 }
+
+const GarbageCollectionPointInfo = ({ data }) => {
+  return (
+    <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
+      <div>
+        <Paragraph>
+          ID: <strong>{data.id}</strong> {/* Assuming each point has a unique ID */}
+        </Paragraph>
+        <Paragraph>
+          Status: <strong>{data.status}</strong> {/* e.g., 'Full', 'Empty' */}
+        </Paragraph>
+        <Paragraph>
+          Last Collected: <strong>{data.lastCollected}</strong> {/* Last collection date/time */}
+        </Paragraph>
+        <Paragraph>
+          Frequency: <strong>{data.frequency}</strong> {/* Collection frequency */}
+        </Paragraph>
+        <Paragraph>
+          Type of Waste: <strong>{data.wasteType}</strong> {/* Type of waste the point collects */}
+        </Paragraph>
+      </div>
+    </Wrapper>
+  );
+};
+
 
 export default HoverInfoBox
