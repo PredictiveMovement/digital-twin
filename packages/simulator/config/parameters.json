@@ -14,7 +14,7 @@
     "taxis"
   ],
   "fleets": {
-    "Helsingborgs stad": {
+    "Södertälje kommun": {
       "fleets": [
         {
           "name": "Taxi",
@@ -31,8 +31,7 @@
             "bil": 0
           },
           "marketshare": 0.6,
-          "hub": [12.783566, 56.069157],
-          "hubAddress": "Mineralgatan 5, Helsingborg"
+          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
         },
         {
           "name": "Skånetrafik",
@@ -48,8 +47,7 @@
             "medeltungLastbil": 2
           },
           "marketshare": 0.18,
-          "hub": [12.768723, 56.010354],
-          "hubAddress": "Brunkalundsvägen 4, Helsingborg"
+          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
         },
         {
           "name": "Gul",
@@ -57,8 +55,7 @@
             "lättLastbil": 2
           },
           "marketshare": 0.06,
-          "hub": [12.778268, 56.021101],
-          "hubAddress": "Trintegatan 10, Helsingborg"
+          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
         },
         {
           "name": "Lila",
@@ -67,7 +64,7 @@
           },
           "marketshare": 0.06,
           "hub": [12.709821, 56.01995],
-          "hubAddress": "Strandbadsvägen 7, Helsingborg"
+          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
         }
       ]
     }
