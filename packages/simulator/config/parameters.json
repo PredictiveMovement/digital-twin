@@ -19,6 +19,13 @@
           },
           "marketshare": 0.6,
           "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
+        },
+        {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 10
+          },
+          "hubAddress": "Sydhamnsvägen 46, 151 38 Södertälje"
         }
       ]
     }

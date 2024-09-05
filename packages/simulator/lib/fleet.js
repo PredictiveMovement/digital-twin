@@ -8,6 +8,7 @@ const {
 } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
 const GarbageTruck = require('./vehicles/garbageTruck')
+const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')
 const { error, debug } = require('./log')
 
@@ -16,6 +17,12 @@ const vehicleTypes = {
     weight: 10 * 1000,
     parcelCapacity: 500,
     class: GarbageTruck,
+  },
+  taxi: {
+    weight: 1000,
+    parcelCapacity: 0,
+    passengerCapacity: 4,
+    class: Taxi
   }
 }
 
@@ -53,8 +60,7 @@ class Fleet {
           }),
           catchError((err) => {
             error(
-              `Error creating vehicle for fleet ${name}: ${err}\n\n${
-                new Error().stack
+              `Error creating vehicle for fleet ${name}: ${err}\n\n${new Error().stack
               }\n\n`
             )
           })
