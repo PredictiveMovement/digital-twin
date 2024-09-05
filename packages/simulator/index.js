@@ -17,6 +17,7 @@ const { haversine, getNrOfPointsBetween } = require('./lib/distance')
 const engine = {
   subscriptions: [],
   createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
+    console.log('Creating experiment')
     const savedParams = read()
     info(`*** Starting experiment ${id} with params:`, {
       id: savedParams.id,
@@ -37,9 +38,6 @@ const engine = {
       fleets: savedParams.fleets,
     }
     statistics.collectExperimentMetadata(parameters)
-    console.log('parameters', parameters)
-    console.log('regions', regions)
-    console.log('HELLO THERE')
     const experiment = {
       logStream,
       busStops: regions.pipe(

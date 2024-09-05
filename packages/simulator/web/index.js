@@ -21,3 +21,5 @@ const io = require('socket.io')(server, {
 
 server.listen(port)
 routes.register(io)
+
+console.log(`Server running on port ${port}`)
