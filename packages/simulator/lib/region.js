@@ -96,9 +96,6 @@ class Region {
      * Static map objects.
      */
 
-    this.measureStations = kommuner.pipe(
-      mergeMap((kommun) => kommun.measureStations)
-    )
     console.log(
       'Kommun garbage collection: ',
       kommuner.pipe(mergeMap((kommun) => kommun.garbageCollectionPoints))

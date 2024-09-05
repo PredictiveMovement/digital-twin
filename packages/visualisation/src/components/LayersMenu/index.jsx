@@ -213,22 +213,6 @@ export default function LayersMenu({
             label="Kommungränser"
           />
         </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <AddLocation fontSize="small" />
-          </ListItemIcon>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={activeLayers.measureStationsLayer}
-                onChange={() =>
-                  activeLayers.setMeasureStationsLayer((on) => !on)
-                }
-              />
-            }
-            label="Mätpunkter"
-          />
-        </MenuItem>
         <Divider />
         <MenuItem onClick={() => setShowEditExperimentModal((on) => !on)}>
           <ListItemIcon>

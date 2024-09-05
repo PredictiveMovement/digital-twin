@@ -6,8 +6,6 @@
     "bookings",
     "cars",
     "kommuner",
-    "measureStations",
-    "taxis",
     "garbageTrucks",
     "garbageCollectionPoints"
   ],
@@ -15,19 +13,9 @@
     "Södertälje kommun": {
       "fleets": [
         {
-          "name": "Telge Återvinning",
+          "name": "Telge",
           "vehicles": {
-            "taxi": 32
-          },
-          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
-        },
-        {
-          "name": "Postnord",
-          "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 4,
-            "lättLastbil": 1,
-            "bil": 0
+            "garbageTruck": 32
           },
           "marketshare": 0.6,
           "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"

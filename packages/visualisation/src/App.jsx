@@ -24,7 +24,6 @@ const App = () => {
   const [busStopLayer, setBusStopLayer] = useState(true)
   const [passengerLayer, setPassengerLayer] = useState(true)
   const [postombudLayer, setPostombudLayer] = useState(false)
-  const [measureStationsLayer, setMeasureStationsLayer] = useState(false)
   const [garbageCollectionLayer, setGarbageCollectionLayer] = useState(false)
   const [commercialAreasLayer, setCommercialAreasLayer] = useState(false)
   const [busLineLayer, setBusLineLayer] = useState(true)
@@ -49,8 +48,6 @@ const App = () => {
     setBusLayer,
     postombudLayer,
     setPostombudLayer,
-    measureStationsLayer,
-    setMeasureStationsLayer,
     garbageCollectionLayer,
     setGarbageCollectionLayer,
     taxiLayer,
@@ -79,7 +76,6 @@ const App = () => {
     setCars([])
     setKommuner([])
     setPostombud([])
-    setMeasureStations([])
     setGarbageCollection([])
     setBusStops([])
     setLineShapes([])
@@ -156,30 +152,6 @@ const App = () => {
     ])
   })
 
-  const [measureStations, setMeasureStations] = React.useState([])
-  useSocket('measureStations', (newMeasureStations) => {
-    setReset(false)
-    setMeasureStations((current) => [
-      ...current,
-      ...newMeasureStations.map(({ position, ...rest }) => ({
-        position: [position.lon, position.lat],
-        count: 0,
-        ...rest,
-      })),
-    ])
-  })
-  useSocket('measureStationUpdates', (stationUpdates) => {
-    setMeasureStations((current) =>
-      current.map((station) => {
-        const stationIds = stationUpdates.map(({ stationId }) => stationId)
-        if (stationIds.includes(station.id)) {
-          return { ...station, count: station.count + 1 }
-        }
-        return station
-      })
-    )
-  })
-
   const [garbageCollectionPoints, setGarbageCollection] = React.useState([])
   useSocket('garbageCollection', (newGarbageCollectionPoints) => {
     setReset(false)
@@ -249,7 +221,6 @@ const App = () => {
       busLines: setBusLineLayer,
       passengers: setPassengerLayer,
       postombud: setPostombudLayer,
-      measureStations: setMeasureStationsLayer,
       garbageCollection: setGarbageCollectionLayer,
       kommuner: setKommunLayer,
       commercialAreas: setCommercialAreasLayer,
@@ -373,7 +344,6 @@ const App = () => {
           cars={cars}
           bookings={bookings}
           postombud={postombud}
-          measureStations={measureStations}
           garbageCollectionPoints={garbageCollectionPoints}
           busStops={busStops}
           kommuner={kommuner}

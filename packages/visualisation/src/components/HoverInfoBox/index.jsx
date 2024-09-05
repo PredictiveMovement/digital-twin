@@ -35,26 +35,6 @@ const Wrapper = styled.div.attrs((props) => ({
     border-right: solid 10px transparent;
   }
 `
-const MeasurementStationInfo = ({ data }) => {
-  return (
-    <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
-      <div>
-        <Paragraph>
-          Mätpunkt: <strong>{data.id}</strong>
-        </Paragraph>
-        <Paragraph>
-          Antal tunga fordorn: <strong>{data.heavyTrafficCount}</strong>
-        </Paragraph>
-        <Paragraph>
-          Mäter bilar som kör: <strong>{data.direction}</strong>
-        </Paragraph>
-        <Paragraph>
-          Antal passerade fordon: <strong>{data.count}</strong>
-        </Paragraph>
-      </div>
-    </Wrapper>
-  )
-}
 
 const vehicleName = (vehicleType) => {
   switch (vehicleType) {
@@ -259,8 +239,6 @@ const HoverInfoBox = ({ data }) => {
       return <CarInfo data={data} />
     case 'passenger':
       return <PassengerInfo data={data} />
-    case 'measureStation':
-      return <MeasurementStationInfo data={data} />
     case 'garbageCollectionPoint':
       return <GarbageCollectionPointInfo data={data} />
     default:

@@ -7,51 +7,16 @@ const {
   first,
 } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
-const Car = require('./vehicles/car')
-const Truck = require('./vehicles/truck')
-const Drone = require('./vehicles/drone')
-const Taxi = require('./vehicles/taxi')
-const Bus = require('./vehicles/bus')
+const GarbageTruck = require('./vehicles/garbageTruck')
 const Position = require('./models/position')
 const { error, debug } = require('./log')
 
-const packagesPerPallet = 30 // this is a guesstimate
 const vehicleTypes = {
-  tungLastbil: {
-    weight: 26 * 1000,
-    parcelCapacity: 48 * packagesPerPallet,
-    class: Truck,
-  },
-  medeltungLastbil: {
-    weight: 16.5 * 1000,
-    parcelCapacity: 18 * packagesPerPallet,
-    class: Truck,
-  },
-  lättLastbil: {
-    weight: 3.5 * 1000,
-    parcelCapacity: 8 * packagesPerPallet, // TODO: is this number of pallets reasonable?
-    class: Truck,
-  },
-  bil: {
-    weight: 1.5 * 1000,
-    parcelCapacity: 25,
-    class: Car,
-  },
-  drönare: {
-    weight: 5,
-    parcelCapacity: 1,
-    class: Drone,
-  },
-  taxi: {
-    weight: 1.5 * 1000,
-    passengerCapacity: 4,
-    class: Taxi,
-  },
-  bus: {
+  garbageTruck: {
     weight: 10 * 1000,
-    passengerCapacity: 50,
-    class: Bus,
-  },
+    parcelCapacity: 500,
+    class: GarbageTruck,
+  }
 }
 
 class Fleet {
