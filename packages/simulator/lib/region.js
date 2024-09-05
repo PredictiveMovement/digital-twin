@@ -99,7 +99,13 @@ class Region {
     this.measureStations = kommuner.pipe(
       mergeMap((kommun) => kommun.measureStations)
     )
-
+    console.log(
+      'Kommun garbage collection: ',
+      kommuner.pipe(mergeMap((kommun) => kommun.garbageCollectionPoints))
+    )
+    this.garbageCollectionPoints = kommuner.pipe(
+      mergeMap((kommun) => kommun.garbageCollectionPoints)
+    )
     this.postombud = kommuner.pipe(mergeMap((kommun) => kommun.postombud))
 
     /**

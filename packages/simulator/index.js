@@ -85,13 +85,12 @@ const engine = {
 
       // Adding garbage collection points
       garbageCollectionPoints: regions.pipe(
-        mergeMap((region) => region.garbageCollectionPoints),
-        shareReplay()
+        mergeMap((region) => region.garbageCollectionPoints)
       ),
-      garbageCollectionUpdates: regions.pipe(
+      /*garbageCollectionUpdates: regions.pipe(
         mergeMap((region) => region.garbageCollectionUpdates),
         share()
-      ),
+      ),*/
     }
     experiment.passengers
       .pipe(

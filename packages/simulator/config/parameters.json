@@ -17,7 +17,7 @@
         {
           "name": "Telge Återvinning",
           "vehicles": {
-            "garbageTruck": 32
+            "taxi": 32
           },
           "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
         },

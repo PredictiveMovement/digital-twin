@@ -44,6 +44,7 @@ class Kommun {
     postombud,
     population,
     measureStations,
+    garbageCollectionPoints,
     citizens,
     squares,
     fleets,
@@ -58,6 +59,7 @@ class Kommun {
     this.telephone = telephone
     this.postombud = postombud
     this.measureStations = measureStations
+    this.garbageCollectionPoints = garbageCollectionPoints
     this.packageVolumes = packageVolumes
     this.busesPerCapita = 100 / 80_000
     this.population = population
