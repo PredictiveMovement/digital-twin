@@ -153,7 +153,9 @@ const App = () => {
   })
 
   const [garbageCollectionPoints, setGarbageCollection] = React.useState([])
-  useSocket('garbageCollection', (newGarbageCollectionPoints) => {
+  useSocket('garbageCollectionPoints', (newGarbageCollectionPoints) => {
+    console.log('Received garbageCollectionPoints:', newGarbageCollectionPoints); // Log received data
+
     setReset(false)
     setGarbageCollection((current) => [
       ...current,
@@ -162,23 +164,6 @@ const App = () => {
         ...rest,
       })),
     ])
-  })
-
-  useSocket('garbageCollectionUpdates', (garbageCollectionUpdates) => {
-    setGarbageCollection((current) =>
-      current.map((garbageCollectionPoint) => {
-        const garbageCollectionIds = garbageCollectionUpdates.map(
-          ({ garbageCollectionId }) => garbageCollectionId
-        )
-        if (garbageCollectionIds.includes(garbageCollectionPoint.id)) {
-          return {
-            ...garbageCollectionPoint,
-            count: garbageCollectionPoint.count + 1,
-          }
-        }
-        return garbageCollectionPoint
-      })
-    )
   })
 
   const [busStops, setBusStops] = React.useState([])
