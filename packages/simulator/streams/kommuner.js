@@ -19,7 +19,6 @@ const data = require('../data/kommuner.json')
 const population = require('./population')
 const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
-const measureStations = require('./measureStations')
 const inside = require('point-in-polygon')
 const Pelias = require('../lib/pelias')
 const { getCitizensInSquare } = require('../simulator/citizens')
@@ -31,8 +30,6 @@ const activeMunicipalities = municipalities()
 
 const bookings = {
   telge: require('../streams/orders/telge.js'),
-  hm: require('../streams/orders/hm.js'),
-  ikea: require('../streams/orders/ikea.js'),
 }
 
 function getPopulationSquares({ geometry: { coordinates } }) {
@@ -59,12 +56,6 @@ function getCommercialAreas(kommunkod) {
 function getPostombud(kommunName) {
   return postombud.pipe(
     filter((ombud) => kommunName.startsWith(ombud.kommun)),
-    shareReplay()
-  )
-}
-function getMeasureStations(kommunName) {
-  return measureStations.pipe(
-    filter((measureStation) => kommunName.startsWith(measureStation.kommun)),
     shareReplay()
   )
 }
@@ -141,7 +132,6 @@ function read({ fleets }) {
           pickupPositions: pickupPositions || [],
           squares,
           postombud: getPostombud(name),
-          measureStations: getMeasureStations(name),
           population: await squares
             .pipe(reduce((a, b) => a + b.population, 0))
             .toPromise(),

@@ -23,7 +23,6 @@ const Map = ({
   cars,
   bookings,
   postombud,
-  measureStations,
   garbageCollectionPoints,
   busStops,
   lineShapes,
@@ -443,35 +442,6 @@ const Map = ({
   const ICON_MAPPING = {
     marker: { x: 0, y: 0, width: 128, height: 128, anchorY: 150, mask: true },
   }
-  const measureStationsLayer = new IconLayer({
-    id: 'measureStations-layer',
-    data: measureStations,
-    iconAtlas:
-      'https://raw.githubusercontent.com/visgl/deck.gl/8.8-release/examples/website/icon/data/location-icon-atlas.png',
-    iconMapping: ICON_MAPPING,
-    getIcon: (d) => 'marker',
-    getPosition: (c) => c.position,
-    sizeScale: 5,
-    getColor: (d) => [
-      16,
-      (d.count / 10) * 255,
-      255 * (d.heavyTrafficCount / 255),
-      200,
-    ],
-    getSize: (d) => 5,
-    sizeMaxPixels: 15,
-    pickable: true,
-    onHover: ({ object, x, y, viewport }) => {
-      if (!object) return setHoverInfo(null)
-      setHoverInfo({
-        ...object,
-        type: 'measureStation',
-        x,
-        y,
-        viewport,
-      })
-    },
-  })
 
   const garbageCollectionLayer = new ScatterplotLayer({
     id: 'garbage-collection-layer',
@@ -617,7 +587,6 @@ const Map = ({
         // The order of these layers matter, roughly equal to increasing z-index by 1
         activeLayers.kommunLayer && kommunLayer, // TODO: This hides some items behind it, sort of
         activeLayers.postombudLayer && postombudLayer,
-        activeLayers.measureStationsLayer && measureStationsLayer,
         activeLayers.garbageCollectionLayer && garbageCollectionLayer,
         bookingLayer,
         showArcLayer && arcLayer,
