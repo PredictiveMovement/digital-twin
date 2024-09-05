@@ -10,7 +10,6 @@
     "cars",
     "kommuner",
     "measureStations",
-    "passengers",
     "taxis",
     "garbageTrucks",
     "garbageCollectionPoints"
@@ -33,39 +32,6 @@
             "bil": 0
           },
           "marketshare": 0.6,
-          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
-        },
-        {
-          "name": "Skånetrafik",
-          "type": "bus",
-          "vehicles": {
-            "bus": 40
-          }
-        },
-        {
-          "name": "Röd",
-          "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 2
-          },
-          "marketshare": 0.18,
-          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
-        },
-        {
-          "name": "Gul",
-          "vehicles": {
-            "lättLastbil": 2
-          },
-          "marketshare": 0.06,
-          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
-        },
-        {
-          "name": "Lila",
-          "vehicles": {
-            "lättLastbil": 2
-          },
-          "marketshare": 0.06,
-          "hub": [12.709821, 56.01995],
           "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
         }
       ]

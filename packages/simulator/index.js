@@ -73,40 +73,12 @@ const engine = {
         mergeMap((region) => region.measureStations)
       ),
       parameters,
-      passengers: regions.pipe(
-        filter((region) => region.citizens),
-        mergeMap((region) => region.citizens),
-        catchError((err) => error('Experiment -> Passengers', err)),
-        shareReplay()
-      ),
       taxis: regions.pipe(mergeMap((region) => region.taxis)),
     }
-    experiment.passengers
-      .pipe(
-        mergeMap((passenger) => passenger.bookings),
-        catchError((err) => error('passenger statistics err', err)),
-        shareReplay()
-      )
-      // TODO:take care of this subscription so we know how to unsubscribe
-      .subscribe((booking) => {
-        try {
-          statistics.collectBooking(booking, parameters)
-        } catch (err) {
-          error('collectBooking err', err)
-        }
-      })
 
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(
       mergeMap((booking) => booking.statusEvents),
       catchError((err) => error('bookingUpdates', err)),
-      share()
-    )
-
-    experiment.passengerUpdates = experiment.passengers.pipe(
-      mergeMap(({ deliveredEvents, pickedUpEvents }) =>
-        merge(deliveredEvents, pickedUpEvents)
-      ),
-      catchError((err) => error('passengerUpdates', err)),
       share()
     )
 
