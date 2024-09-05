@@ -23,7 +23,7 @@ const Map = ({
   cars,
   bookings,
   postombud,
-  garbageCollectionPoints,
+  recycleCollectionPoints,
   busStops,
   lineShapes,
   kommuner,
@@ -443,24 +443,24 @@ const Map = ({
     marker: { x: 0, y: 0, width: 128, height: 128, anchorY: 150, mask: true },
   }
 
-  const garbageCollectionLayer = new ScatterplotLayer({
-    id: 'garbage-collection-layer',
-    data: garbageCollectionPoints, // your data source here
-    getPosition: d => [d.longitude, d.latitude],
-    getFillColor: d => d.isFull ? [255, 0, 0, 160] : [0, 128, 0, 160], // Red for full, green for empty
+  const recycleCollectionLayer = new ScatterplotLayer({
+    id: 'recycle-collection-layer',
+    data: recycleCollectionPoints, // your data source here
+    getPosition: (d) => [d.longitude, d.latitude],
+    getFillColor: (d) => (d.isFull ? [255, 0, 0, 160] : [0, 128, 0, 160]), // Red for full, green for empty
     getRadius: 10,
     pickable: true,
-    onHover: ({object, x, y}) => {
-        if (object) {
-            setHoverInfo({
-                title: 'Garbage Bin',
-                description: `Status: ${object.isFull ? 'Full' : 'Empty'}`,
-                x, y
-            })
-        }
-    }
+    onHover: ({ object, x, y }) => {
+      if (object) {
+        setHoverInfo({
+          title: 'Recycle Bin',
+          description: `Status: ${object.isFull ? 'Full' : 'Empty'}`,
+          x,
+          y,
+        })
+      }
+    },
   })
-
 
   const [showAssignedBookings, setShowAssignedBookings] = useState(false)
   const [showActiveDeliveries, setShowActiveDeliveries] = useState(false)
@@ -587,7 +587,7 @@ const Map = ({
         // The order of these layers matter, roughly equal to increasing z-index by 1
         activeLayers.kommunLayer && kommunLayer, // TODO: This hides some items behind it, sort of
         activeLayers.postombudLayer && postombudLayer,
-        activeLayers.garbageCollectionLayer && garbageCollectionLayer,
+        activeLayers.recycleCollectionLayer && recycleCollectionLayer,
         bookingLayer,
         showArcLayer && arcLayer,
         (showAssignedBookings || showActiveDeliveries) && routesLayer,

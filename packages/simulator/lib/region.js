@@ -96,13 +96,6 @@ class Region {
      * Static map objects.
      */
 
-    console.log(
-      'Kommun garbage collection: ',
-      kommuner.pipe(mergeMap((kommun) => kommun.garbageCollectionPoints))
-    )
-    this.garbageCollectionPoints = kommuner.pipe(
-      mergeMap((kommun) => kommun.garbageCollectionPoints)
-    )
     this.postombud = kommuner.pipe(mergeMap((kommun) => kommun.postombud))
 
     /**
@@ -119,9 +112,19 @@ class Region {
 
     this.taxis = kommuner.pipe(
       mergeMap((kommun) => kommun.cars),
-      filter((car) => car.vehicleType === 'taxi')
+      filter((car) => car.vehicleType === 'taxi'),
+      catchError((err) => error('taxi err', err))
     )
 
+    this.recycleTrucks = kommuner.pipe(
+      mergeMap((kommun) => kommun.recycleTrucks),
+      catchError((err) => error('recycle trucks err', err))
+    )
+
+    this.recycleCollectionPoints = kommuner.pipe(
+      mergeMap((kommun) => kommun.recycleCollectionPoints),
+      catchError((err) => error('recycleCollectionPoints err', err))
+    )
     /**
      * Transportable objects streams.
      */
@@ -174,6 +177,10 @@ class Region {
         mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5),
         filter((booking) => !booking.assigned),
         catchError((err) => error('region stopAssignments', err)),
+        share()
+      ),
+      this.kommuner.pipe(
+        mergeMap((kommun) => kommun.dispatchedBookings),
         share()
       ),
       this.taxis.pipe(

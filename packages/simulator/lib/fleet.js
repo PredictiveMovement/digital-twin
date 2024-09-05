@@ -7,23 +7,23 @@ const {
   first,
 } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
-const GarbageTruck = require('./vehicles/garbageTruck')
+const RecycleTruck = require('./vehicles/recycleTruck')
 const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')
 const { error, debug } = require('./log')
 
 const vehicleTypes = {
-  garbageTruck: {
+  recycleTruck: {
     weight: 10 * 1000,
     parcelCapacity: 500,
-    class: GarbageTruck,
+    class: RecycleTruck,
   },
   taxi: {
     weight: 1000,
     parcelCapacity: 0,
     passengerCapacity: 4,
-    class: Taxi
-  }
+    class: Taxi,
+  },
 }
 
 class Fleet {
@@ -60,7 +60,8 @@ class Fleet {
           }),
           catchError((err) => {
             error(
-              `Error creating vehicle for fleet ${name}: ${err}\n\n${new Error().stack
+              `Error creating vehicle for fleet ${name}: ${err}\n\n${
+                new Error().stack
               }\n\n`
             )
           })
@@ -80,11 +81,13 @@ class Fleet {
     return firstValueFrom(
       this.cars.pipe(
         first((car) => car.canHandleBooking(booking), false /* defaultValue */)
+        // TODO: handle case when all cars are busy or full?
       )
     )
   }
 
   async handleBooking(booking, car) {
+    info(`🚗 Fleet ${this.name} handling booking ${booking.id}`)
     booking.fleet = this
     if (car) {
       this.manualDispatchedBookings.next(booking)
