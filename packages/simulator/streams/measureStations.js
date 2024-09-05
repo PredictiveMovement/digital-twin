@@ -4,6 +4,7 @@ const { readXlsx } = require('../adapters/xlsx')
 const sweCoords = require('swe-coords')
 
 function execute() {
+  console.log('ALKDMALWKDM Reading file:')
   return from(
     readXlsx(
       `${process.cwd()}/data/helsingborg/${

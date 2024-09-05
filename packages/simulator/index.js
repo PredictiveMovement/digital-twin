@@ -13,10 +13,12 @@ const { read } = require('./config')
 const statistics = require('./lib/statistics')
 const { info, error, logStream } = require('./lib/log')
 const { haversine, getNrOfPointsBetween } = require('./lib/distance')
+const garbageCollectionPoints = require('./streams/garbageCollectionPoints')
 
 const engine = {
   subscriptions: [],
   createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
+    console.log('Creating experiment')
     const savedParams = read()
     info(`*** Starting experiment ${id} with params:`, {
       id: savedParams.id,
@@ -28,7 +30,11 @@ const engine = {
     })
 
     const regions = require('./streams/regions')(savedParams)
-
+    // Add a log to see what data `regions` emits
+    regions.subscribe({
+      next: (data) => console.log('Regions emitted data:', data),
+      error: (err) => console.error('Error in regions observable:', err),
+    })
     const parameters = {
       id,
       startDate: new Date(),
@@ -37,9 +43,6 @@ const engine = {
       fleets: savedParams.fleets,
     }
     statistics.collectExperimentMetadata(parameters)
-    console.log('parameters', parameters)
-    console.log('regions', regions)
-    console.log('HELLO THERE')
     const experiment = {
       logStream,
       busStops: regions.pipe(
@@ -85,7 +88,13 @@ const engine = {
 
       // Adding garbage collection points
       garbageCollectionPoints: regions.pipe(
-        mergeMap((region) => region.garbageCollectionPoints)
+        mergeMap((region) => {
+          console.log(
+            'Region garbageCollectionPoints:',
+            region.garbageCollectionPoints
+          )
+          return region.garbageCollectionPoints
+        })
       ),
       /*garbageCollectionUpdates: regions.pipe(
         mergeMap((region) => region.garbageCollectionUpdates),

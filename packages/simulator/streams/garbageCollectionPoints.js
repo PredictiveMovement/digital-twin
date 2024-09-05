@@ -1,10 +1,11 @@
 const { from } = require('rxjs')
-const { map, mergeMap } = require('rxjs/operators')
+const { map, mergeMap, shareReplay } = require('rxjs/operators')
 const fs = require('fs').promises
 
 function execute() {
   // Adjust the file path as necessary
-  const filePath = `${process.cwd()}/packages/simulator/data/telge/ruttdata 2024-09-03.txt`
+  //const filePath = `${process.cwd()}/data/telge/ruttdata_2024-09-03.txt`
+  const filePath = `${process.cwd()}/data/telge/test.json`
 
   return from(fs.readFile(filePath, 'utf8')).pipe(
     mergeMap((fileContent) => {
@@ -43,9 +44,16 @@ function execute() {
         scheduled: Schemalagd,
         position: { lat: Lat, lon: Lng },
       })
-    )
+    ),
+    shareReplay()
     // You can use shareReplay if you need the data to be multicasted to multiple subscribers
   )
 }
+
+execute().subscribe({
+  next: (value) => console.log('Output value:', value),
+  error: (err) => console.error('Error:', err),
+  complete: () => console.log('Completed reading and processing the JSON file'),
+})
 
 module.exports = execute()

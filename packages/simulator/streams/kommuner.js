@@ -20,6 +20,7 @@ const population = require('./population')
 const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
 const measureStations = require('./measureStations')
+const garbageCollectionPoints = require('./garbageCollectionPoints')
 const inside = require('point-in-polygon')
 const Pelias = require('../lib/pelias')
 const { getCitizensInSquare } = require('../simulator/citizens')
@@ -65,6 +66,14 @@ function getPostombud(kommunName) {
 function getMeasureStations(kommunName) {
   return measureStations.pipe(
     filter((measureStation) => kommunName.startsWith(measureStation.kommun)),
+    shareReplay()
+  )
+}
+function getGarbageCollectionPoints(kommunName) {
+  return garbageCollectionPoints.pipe(
+    filter((garbageCollectionPoint) =>
+      kommunName.startsWith(garbageCollectionPoint.kommun)
+    ),
     shareReplay()
   )
 }
@@ -142,6 +151,7 @@ function read({ fleets }) {
           squares,
           postombud: getPostombud(name),
           measureStations: getMeasureStations(name),
+          garbageCollectionPoints: getGarbageCollectionPoints(name),
           population: await squares
             .pipe(reduce((a, b) => a + b.population, 0))
             .toPromise(),
