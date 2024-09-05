@@ -4,13 +4,9 @@
   "fixedRoute": 21,
   "emitters": [
     "bookings",
-    "buses",
-    "busLines",
-    "busStops",
     "cars",
     "kommuner",
     "measureStations",
-    "passengers",
     "taxis",
     "garbageTrucks",
     "garbageCollectionPoints"
@@ -19,29 +15,20 @@
     "Södertälje kommun": {
       "fleets": [
         {
-          "name": "Röd",
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 100
+          }
+        },
+        {
+          "name": "Postnord",
           "vehicles": {
             "tungLastbil": 0,
-            "medeltungLastbil": 2
+            "medeltungLastbil": 4,
+            "lättLastbil": 1,
+            "bil": 0
           },
-          "marketshare": 0.18,
-          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
-        },
-        {
-          "name": "Gul",
-          "vehicles": {
-            "lättLastbil": 2
-          },
-          "marketshare": 0.06,
-          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
-        },
-        {
-          "name": "Lila",
-          "vehicles": {
-            "lättLastbil": 2
-          },
-          "marketshare": 0.06,
-          "hub": [12.709821, 56.01995],
+          "marketshare": 0.6,
           "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
         }
       ]
