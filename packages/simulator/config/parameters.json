@@ -34,11 +34,12 @@
           "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
         },
         {
-          "name": "Skånetrafik",
+          "name": "SL",
           "type": "bus",
           "vehicles": {
             "bus": 40
-          }
+          },
+          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
         },
         {
           "name": "Röd",

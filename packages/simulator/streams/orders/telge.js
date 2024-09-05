@@ -10,7 +10,6 @@ const {
   tap,
   delay,
 } = require('rxjs/operators')
-const moment = require('moment')
 const { readCsv } = require('../../adapters/csv')
 const { default: fetch } = require('node-fetch')
 const { searchOne } = require('../../lib/pelias')
@@ -22,7 +21,12 @@ const streamsUrl =
   process.env.STREAMS_URL || 'https://streams.telge.iteam.pub/addresses'
 
 function read() {
+  console.log('TELGE -> read')
+  // TODO: add error handling
   return from(readCsv(process.cwd() + '/data/sodertalje/tomningar.csv')).pipe(
+    catchError((err) => {
+      error('TELGE -> from CSV', err)
+    }),
     map(
       ({
         order_id: id,
@@ -47,9 +51,9 @@ function read() {
         length,
       })
     ),
-    filter((row) => moment(row.created).isSame('2022-09-07', 'week')),
+    tap((row) => console.log('TELGE -> row', row)),
     filter((row) => row.deliveryZip),
-    groupBy((row) => row.id), // TODO: Group by IKEA's ID so all parcels sharing an id are treated as one booking.
+    groupBy((row) => row.id),
     mergeMap((group) =>
       group.pipe(
         toArray(),
