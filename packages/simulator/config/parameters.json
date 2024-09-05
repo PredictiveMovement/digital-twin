@@ -4,9 +4,6 @@
   "fixedRoute": 21,
   "emitters": [
     "bookings",
-    "buses",
-    "busLines",
-    "busStops",
     "cars",
     "kommuner",
     "measureStations",
