@@ -15,10 +15,11 @@
     "Södertälje kommun": {
       "fleets": [
         {
-          "name": "Taxi",
+          "name": "Telge Återvinning",
           "vehicles": {
-            "taxi": 100
-          }
+            "garbageTruck": 32
+          },
+          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
         },
         {
           "name": "Postnord",
