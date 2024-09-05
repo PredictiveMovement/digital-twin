@@ -11,6 +11,7 @@ const {
   mergeAll,
   take,
   repeat,
+  share,
 } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const Position = require('../lib/models/position')
@@ -30,6 +31,8 @@ const activeMunicipalities = municipalities()
 
 const bookings = {
   telge: require('../streams/orders/telge.js'),
+  hm: require('../streams/orders/hm.js'),
+  ikea: require('../streams/orders/ikea.js'),
 }
 
 function getPopulationSquares({ geometry: { coordinates } }) {
@@ -151,13 +154,21 @@ function read({ fleets }) {
       }
     ),
     tap((kommun) => {
-      if (kommun.name.startsWith('Södertälje')) {
-        merge(bookings.telge).forEach((booking) =>
-          kommun.handleBooking(booking)
-        )
+      console.log('adding bookings for', kommun.name)
+      switch (kommun.name) {
+        case 'Södertälje':
+          merge(bookings.telge).forEach((booking) =>
+            kommun.handleBooking(booking)
+          )
+          break
+        case 'Helsingborg':
+          merge(bookings.hm, bookings.ikea).forEach((booking) =>
+            kommun.handleBooking(booking)
+          )
+          break
       }
     }),
-    shareReplay()
+    share()
   )
 }
 
