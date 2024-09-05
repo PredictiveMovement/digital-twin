@@ -19,6 +19,30 @@
     "Södertälje kommun": {
       "fleets": [
         {
+          "name": "Taxi",
+          "vehicles": {
+            "taxi": 100
+          }
+        },
+        {
+          "name": "Postnord",
+          "vehicles": {
+            "tungLastbil": 0,
+            "medeltungLastbil": 4,
+            "lättLastbil": 1,
+            "bil": 0
+          },
+          "marketshare": 0.6,
+          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
+        },
+        {
+          "name": "Skånetrafik",
+          "type": "bus",
+          "vehicles": {
+            "bus": 40
+          }
+        },
+        {
           "name": "Röd",
           "vehicles": {
             "tungLastbil": 0,

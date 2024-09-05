@@ -37,7 +37,9 @@ const engine = {
       fleets: savedParams.fleets,
     }
     statistics.collectExperimentMetadata(parameters)
-
+    console.log('parameters', parameters)
+    console.log('regions', regions)
+    console.log('HELLO THERE')
     const experiment = {
       logStream,
       busStops: regions.pipe(
@@ -80,6 +82,16 @@ const engine = {
         shareReplay()
       ),
       taxis: regions.pipe(mergeMap((region) => region.taxis)),
+
+      // Adding garbage collection points
+      garbageCollectionPoints: regions.pipe(
+        mergeMap((region) => region.garbageCollectionPoints),
+        shareReplay()
+      ),
+      garbageCollectionUpdates: regions.pipe(
+        mergeMap((region) => region.garbageCollectionUpdates),
+        share()
+      ),
     }
     experiment.passengers
       .pipe(
