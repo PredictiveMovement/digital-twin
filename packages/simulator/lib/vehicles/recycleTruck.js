@@ -71,7 +71,6 @@ class RecycleTruck extends Vehicle {
   }
 
   async handleBooking(booking) {
-    throw new Error('RecycleTruck does not handle bookings directly')
     info(`🚛 Truck ${this.id} handling booking ${booking.id}`)
     if (this.queue.indexOf(booking) > -1) throw new Error('Already queued')
     this.queue.push(booking)

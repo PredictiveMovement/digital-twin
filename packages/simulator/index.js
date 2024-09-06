@@ -1,19 +1,11 @@
 const { filter, share, merge, shareReplay } = require('rxjs')
-const {
-  mergeMap,
-  map,
-  catchError,
-  toArray,
-  pairwise,
-} = require('rxjs/operators')
+const { mergeMap, catchError } = require('rxjs/operators')
 
 const { virtualTime } = require('./lib/virtualTime')
 const { safeId } = require('./lib/id')
 const { read } = require('./config')
 const statistics = require('./lib/statistics')
 const { info, error, logStream } = require('./lib/log')
-const { haversine, getNrOfPointsBetween } = require('./lib/distance')
-const garbageCollectionPoints = require('./streams/garbageCollectionPoints')
 
 const engine = {
   subscriptions: [],
