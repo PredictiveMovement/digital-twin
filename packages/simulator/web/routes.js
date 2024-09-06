@@ -21,6 +21,8 @@ function subscribe(experiment, socket) {
       require('./routes/passengers').register(experiment, socket),
     defaultEmitters.includes('postombud') &&
       require('./routes/postombud').register(experiment, socket),
+    defaultEmitters.includes('garbageCollectionPoints') &&
+      require('./routes/garbageCollectionPoints').register(experiment, socket),
     require('./routes/time').register(experiment, socket),
     require('./routes/log').register(experiment, socket),
   ]

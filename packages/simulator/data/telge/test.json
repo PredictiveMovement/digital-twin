@@ -1,0 +1,34 @@
+[
+    {
+        "Turid": "2FA1MÅN",
+        "Datum": "2024-09-02T00:00:00",
+        "Bil": "40",
+        "Kundnr": 80010025,
+        "Hsnr": 1,
+        "Tjnr": 4,
+        "Dec": "M",
+        "Turordningsnr": 5,
+        "Avftyp": "PLASTFÖRP",
+        "Tjtyp": "K660L",
+        "Frekvens": "V1V",
+        "Lat": 58.952399898316294,
+        "Lng": 17.580576592959687,
+        "Schemalagd": 1
+    },
+    {
+        "Turid": "2FA1MÅN",
+        "Datum": "2024-09-02T00:00:00",
+        "Bil": "40",
+        "Kundnr": 80018417,
+        "Hsnr": 26,
+        "Tjnr": 7,
+        "Dec": "A",
+        "Turordningsnr": 10,
+        "Avftyp": "BPLASTFÖRP",
+        "Tjtyp": "K370L",
+        "Frekvens": "V1V",
+        "Lat": 58.90840129459726,
+        "Lng": 17.552937713010476,
+        "Schemalagd": 1
+    }
+]

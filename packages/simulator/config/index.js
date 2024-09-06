@@ -13,7 +13,9 @@ const save = (value) => {
 // Returns the json parameters as an object from the parameter file in the data directory
 const read = () => {
   const file = path.join(dataDir, paramsFileName)
-  return JSON.parse(fs.readFileSync(file))
+  const result = JSON.parse(fs.readFileSync(file))
+  console.log('result', result)
+  return result
 }
 
 module.exports = {
