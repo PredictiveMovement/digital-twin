@@ -8,6 +8,7 @@ const clusterPositions = (input, nrOfClusters = 5) => {
     position.lon,
     position.lat,
   ])
+  info('Clustering', vectors, 'positions into', nrOfClusters, 'clusters')
   assert(
     vectors.length < 301,
     'Too many positions to cluster:' + vectors.length
@@ -17,8 +18,14 @@ const clusterPositions = (input, nrOfClusters = 5) => {
     'Expected 2 coordinates, got:' + vectors[0].length
   )
 
-  assert(vectors[0] > -180 && vectors[0] < 180, 'Longitude out of range')
-  assert(vectors[1] > -90 && vectors[1] < 90, 'Latitude out of range')
+  assert(
+    vectors[0] > -180 && vectors[0] < 180,
+    'Longitude out of range: ' + vectors[0]
+  )
+  assert(
+    vectors[1] > -90 && vectors[1] < 90,
+    'Latitude out of range' + vectors[1]
+  )
   write('k..')
   return new Promise((resolve, reject) =>
     kmeans.clusterize(vectors, { k: nrOfClusters }, (err, res) => {
