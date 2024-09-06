@@ -79,17 +79,17 @@ class Kommun {
     )
 
     this.dispatchedBookings = merge(
-      // Should we add more types of bookings?
+      // add recycle collection points to fleet of recycle trucks
       this.recycleCollectionPoints.pipe(
         mergeMap((booking) =>
-          this.recycleTrucks.pipe(
-            filter((fleet) => fleet.canHandleBooking(booking)),
-            first(),
+          this.fleets.pipe(
+            first((fleet) => fleet.canHandleBooking(booking)),
             mergeMap((fleet) => fleet.handleBooking(booking))
           )
         ),
         catchError((err) => error('kommun dispatchedBookings err', err))
       )
+      // Should we add more types of bookings?
     )
 
     this.cars = merge(

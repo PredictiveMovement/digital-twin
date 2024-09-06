@@ -166,94 +166,15 @@ class Region {
       share()
     )
 
-    /*
-     * TODO: Move this to dispatch central:
-     * TODO: add kmeans clustering to group bookings and cars by pickup
-     * send those to vroom and get back a list of assignments
-     * for each assignment, take the booking and dispatch it to the car / fleet
-     */
     this.dispatchedBookings = merge(
-      this.stopAssignments.pipe(
-        mergeMap(({ bus, booking }) => bus.handleBooking(booking), 5),
-        filter((booking) => !booking.assigned),
-        catchError((err) => error('region stopAssignments', err)),
-        share()
-      ),
+      this.kommuner.pipe(mergeMap((kommun) => kommun.dispatchedBookings)),
       this.kommuner.pipe(
-        mergeMap((kommun) => kommun.dispatchedBookings),
-        share()
-      ),
-      this.taxis.pipe(
-        scan((acc, taxi) => acc.push(taxi) && acc, []),
-        debounceTime(1000),
-        filter((taxis) => taxis.length > 0),
-        mergeMap((taxis) =>
-          merge(this.manualBookings, this.unhandledBookings).pipe(
-            bufferTime(5000, null, 100),
-            filter((bookings) => bookings.length > 0),
-            tap((bookings) =>
-              info('Clustering taxi bookings', bookings.length, taxis.length)
-            ),
-            switchMap((bookings) => {
-              const clusters = Math.max(5, Math.ceil(bookings.length / 10))
-              if (bookings.length < taxis.length || bookings.length < clusters)
-                return of([{ center: bookings[0].position, items: bookings }])
-
-              return clusterPositions(bookings, Math.max(5, clusters))
-            }),
-            mergeAll(),
-            map(({ center, items: bookings }) => ({ center, bookings })),
-            catchError((err) => error('taxi cluster err', err)),
-            concatMap(({ center, bookings }) => {
-              const nearestTaxis = takeNearest(taxis, center, 10).filter(
-                (taxi) => taxi.canPickupMorePassengers()
-              )
-              return taxiDispatch(nearestTaxis, bookings).catch((err) => {
-                if (!bookings || !bookings.length) {
-                  warn('Region -> Dispatched Bookings -> No bookings!', err)
-                  return of([])
-                }
-                error('Region -> Dispatched Bookings -> Taxi', err)
-                bookings.forEach((booking) => this.manualBookings.next(booking))
-                return of([])
-              })
-            }),
-            filter((bookings) => bookings.length),
-            mergeAll(),
-            mergeMap(({ taxi, bookings }) =>
-              from(bookings).pipe(
-                // TODO: We have a bug here, the system tries to dispatch taxis that are already full.
-                mergeMap((booking) => taxi.fleet.handleBooking(booking, taxi)),
-                catchError((err) =>
-                  error('Region -> Dispatched Bookings -> Taxis', err)
-                )
-              )
-            ),
-            retryWhen((errors) =>
-              errors.pipe(
-                tap((err) =>
-                  error('region taxi error, retrying in 1s...', err)
-                ),
-                delay(1000)
-              )
-            )
-          )
-        ),
-        catchError((err) => error('region taxiDispatch', err)),
-        share()
+        mergeMap((kommun) => kommun.fleets),
+        mergeMap((fleet) => fleet.dispatchedBookings)
       )
     )
   }
 }
-
-const takeNearest = (taxis, center, count) =>
-  taxis
-    .sort((a, b) => {
-      const aDistance = haversine(a.position, center)
-      const bDistance = haversine(b.position, center)
-      return aDistance - bDistance
-    })
-    .slice(0, count)
 
 const stopsToBooking = ([pickup, destination]) =>
   new Booking({

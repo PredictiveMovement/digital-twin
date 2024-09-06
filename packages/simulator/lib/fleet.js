@@ -10,7 +10,7 @@ const { dispatch } = require('./dispatch/dispatchCentral')
 const RecycleTruck = require('./vehicles/recycleTruck')
 const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')
-const { error, debug } = require('./log')
+const { error, debug, info } = require('./log')
 
 const vehicleTypes = {
   recycleTruck: {
@@ -78,6 +78,7 @@ class Fleet {
   }
 
   async canHandleBooking(booking) {
+    debug(`🚗 Fleet ${this.name} checking booking ${booking.id}`)
     return firstValueFrom(
       this.cars.pipe(
         first((car) => car.canHandleBooking(booking), false /* defaultValue */)
@@ -87,9 +88,9 @@ class Fleet {
   }
 
   async handleBooking(booking, car) {
-    info(`🚗 Fleet ${this.name} handling booking ${booking.id}`)
     booking.fleet = this
     if (car) {
+      debug(`📦 Dispatching ${booking.id} to ${this.name} (manual)`)
       this.manualDispatchedBookings.next(booking)
       return await car.handleBooking(booking)
     } else {

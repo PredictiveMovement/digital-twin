@@ -6,6 +6,7 @@ const {
   tap,
   toArray,
   mergeAll,
+  filter,
 } = require('rxjs/operators')
 const { searchOne } = require('../../lib/pelias')
 const Position = require('../../lib/models/position')
@@ -35,6 +36,7 @@ function read() {
         serviceType,
       })
     ),
+    filter(({ pickup }) => pickup.position.isValid()),
     toArray(),
     mergeMap(async (rows) => {
       // TODO: Where do we leave the trash?
