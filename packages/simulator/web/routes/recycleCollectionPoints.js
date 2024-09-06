@@ -1,6 +1,6 @@
 const { toArray } = require('rxjs')
 
-const registerRecycleCollection = (experiment, socket) => {
+const register = (experiment, socket) => {
   return [
     experiment.recycleCollectionPoints
       .pipe(toArray())
@@ -11,5 +11,5 @@ const registerRecycleCollection = (experiment, socket) => {
 }
 
 module.exports = {
-  registerRecycleCollection,
+  register,
 }

@@ -1,10 +1,9 @@
 /**
  * TODO: Describe the stream that this file exports and what its data means
  */
-const { from, shareReplay, merge } = require('rxjs')
+const { from, shareReplay } = require('rxjs')
 const {
   map,
-  tap,
   filter,
   reduce,
   mergeMap,
@@ -19,7 +18,6 @@ const data = require('../data/kommuner.json')
 const population = require('./population')
 const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
-const garbageCollectionPoints = require('./garbageCollectionPoints')
 const inside = require('point-in-polygon')
 const Pelias = require('../lib/pelias')
 const { getCitizensInSquare } = require('../simulator/citizens')
@@ -60,15 +58,6 @@ function getPostombud(kommunName) {
     shareReplay()
   )
 }
-function getGarbageCollectionPoints(kommunName) {
-  return garbageCollectionPoints.pipe(
-    filter((garbageCollectionPoint) =>
-      kommunName.startsWith(garbageCollectionPoint.kommun)
-    ),
-    shareReplay()
-  )
-}
-
 async function getWorkplaces(position, nrOfWorkplaces = 100) {
   const area = 10000
   const adresses = await getAddressesInArea(position, area, nrOfWorkplaces)
@@ -142,7 +131,6 @@ function read({ fleets }) {
           pickupPositions: pickupPositions || [],
           squares,
           postombud: getPostombud(name),
-          garbageCollectionPoints: getGarbageCollectionPoints(name),
           population: await squares
             .pipe(reduce((a, b) => a + b.population, 0))
             .toPromise(),
