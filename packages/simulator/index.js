@@ -85,13 +85,8 @@ const engine = {
 
       // Adding garbage collection points
       garbageCollectionPoints: regions.pipe(
-        mergeMap((region) => {
-          console.log(
-            'Region garbageCollectionPoints:',
-            region.garbageCollectionPoints
-          )
-          return region.garbageCollectionPoints
-        })
+        mergeMap((region) => region.garbageCollectionPoints),
+        shareReplay()
       ),
       /*garbageCollectionUpdates: regions.pipe(
         mergeMap((region) => region.garbageCollectionUpdates),

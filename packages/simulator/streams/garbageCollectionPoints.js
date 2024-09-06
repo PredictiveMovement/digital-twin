@@ -43,6 +43,7 @@ function execute() {
         frequency: Frekvens,
         scheduled: Schemalagd,
         position: { lat: Lat, lon: Lng },
+        kommun: 'Södertälje kommun',
       })
     ),
     shareReplay()
