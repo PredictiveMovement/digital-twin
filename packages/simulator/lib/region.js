@@ -172,7 +172,7 @@ class Region {
         mergeMap((kommun) => kommun.fleets),
         mergeMap((fleet) => fleet.dispatchedBookings)
       )
-    )
+    ).pipe(share())
   }
 }
 

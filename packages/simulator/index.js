@@ -22,11 +22,7 @@ const engine = {
     })
 
     const regions = require('./streams/regions')(savedParams)
-    // Add a log to see what data `regions` emits
-    regions.subscribe({
-      next: (data) => console.log('Regions emitted data:', data),
-      error: (err) => console.error('Error in regions observable:', err),
-    })
+
     const parameters = {
       id,
       startDate: new Date(),

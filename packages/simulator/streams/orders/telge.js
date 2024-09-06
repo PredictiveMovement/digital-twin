@@ -1,12 +1,13 @@
-const { from, shareReplay } = require('rxjs')
+const { from } = require('rxjs')
 const {
   map,
   mergeMap,
   catchError,
-  tap,
   toArray,
   mergeAll,
   filter,
+  take,
+  share,
 } = require('rxjs/operators')
 const { searchOne } = require('../../lib/pelias')
 const Position = require('../../lib/models/position')
@@ -56,7 +57,9 @@ function read() {
       }))
     }, 1),
     mergeAll(),
+    take(5), // Start with just 500 bookings
     map((row) => new Booking({ type: 'recycle', ...row })),
+    share(),
     catchError((err) => {
       error('TELGE -> from CSV', err)
     })
