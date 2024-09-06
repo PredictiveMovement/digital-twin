@@ -15,13 +15,6 @@
             "recycleTruck": 32
           },
           "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
-        },
-        {
-          "name": "Taxi Södertälje",
-          "vehicles": {
-            "taxi": 10
-          },
-          "hubAddress": "Sydhamnsvägen 46, 151 38 Södertälje"
         }
       ]
     }
