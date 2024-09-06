@@ -24,7 +24,7 @@ const App = () => {
   const [busStopLayer, setBusStopLayer] = useState(true)
   const [passengerLayer, setPassengerLayer] = useState(true)
   const [postombudLayer, setPostombudLayer] = useState(false)
-  const [garbageCollectionLayer, setGarbageCollectionLayer] = useState(false)
+  const [recycleCollectionLayer, setRecycleCollectionLayer] = useState(false)
   const [commercialAreasLayer, setCommercialAreasLayer] = useState(false)
   const [busLineLayer, setBusLineLayer] = useState(true)
   const [kommunLayer, setKommunLayer] = useState(true)
@@ -48,8 +48,8 @@ const App = () => {
     setBusLayer,
     postombudLayer,
     setPostombudLayer,
-    garbageCollectionLayer,
-    setGarbageCollectionLayer,
+    recycleCollectionLayer,
+    setRecycleCollectionLayer,
     taxiLayer,
     setTaxiLayer,
     passengerLayer,
@@ -76,7 +76,7 @@ const App = () => {
     setCars([])
     setKommuner([])
     setPostombud([])
-    setGarbageCollection([])
+    setRecycleCollection([])
     setBusStops([])
     setLineShapes([])
     setLatestLogMessage('')
@@ -152,18 +152,33 @@ const App = () => {
     ])
   })
 
-  const [garbageCollectionPoints, setGarbageCollection] = React.useState([])
-  useSocket('garbageCollectionPoints', (newGarbageCollectionPoints) => {
-    console.log('Received garbageCollectionPoints:', newGarbageCollectionPoints); // Log received data
-
+  const [recycleCollectionPoints, setRecycleCollection] = React.useState([])
+  useSocket('recycleCollection', (newRecycleCollectionPoints) => {
     setReset(false)
-    setGarbageCollection((current) => [
+    setRecycleCollection((current) => [
       ...current,
-      ...newGarbageCollectionPoints.map(({ position, ...rest }) => ({
+      ...newRecycleCollectionPoints.map(({ position, ...rest }) => ({
         position: [position.lon, position.lat],
         ...rest,
       })),
     ])
+  })
+
+  useSocket('recycleCollectionUpdates', (recycleCollectionUpdates) => {
+    setRecycleCollection((current) =>
+      current.map((recycleCollectionPoint) => {
+        const recycleCollectionIds = recycleCollectionUpdates.map(
+          ({ recycleCollectionId }) => recycleCollectionId
+        )
+        if (recycleCollectionIds.includes(recycleCollectionPoint.id)) {
+          return {
+            ...recycleCollectionPoint,
+            count: recycleCollectionPoint.count + 1,
+          }
+        }
+        return recycleCollectionPoint
+      })
+    )
   })
 
   const [busStops, setBusStops] = React.useState([])
@@ -206,7 +221,7 @@ const App = () => {
       busLines: setBusLineLayer,
       passengers: setPassengerLayer,
       postombud: setPostombudLayer,
-      garbageCollection: setGarbageCollectionLayer,
+      recycleCollection: setRecycleCollectionLayer,
       kommuner: setKommunLayer,
       commercialAreas: setCommercialAreasLayer,
     }
@@ -329,7 +344,7 @@ const App = () => {
           cars={cars}
           bookings={bookings}
           postombud={postombud}
-          garbageCollectionPoints={garbageCollectionPoints}
+          recycleCollectionPoints={recycleCollectionPoints}
           busStops={busStops}
           kommuner={kommuner}
           activeCar={activeCar}

@@ -15,6 +15,7 @@ const { clusterPositions } = require('../kmeans')
 const dispatch = (cars, bookings) => {
   return cars.pipe(
     toArray(),
+    tap((cars) => info(`🚚 Dispatch ${cars.length} vehicles`)),
     tap((cars) => {
       if (!cars.length) {
         warn('Fleet has no cars, dispatch is not possible.')
@@ -29,7 +30,7 @@ const dispatch = (cars, bookings) => {
     mergeMap((cars) =>
       bookings.pipe(
         filter((booking) => !booking.car),
-        bufferTime(5000, null, 100),
+        bufferTime(5000, null, 300),
         filter((b) => b.length > 0),
         //mergeMap((bookings) => getVroomPlan(cars, bookings)),
         mergeMap(async (bookings) => {
@@ -42,6 +43,9 @@ const dispatch = (cars, bookings) => {
             ]
           }
 
+          info(
+            `Clustering ${bookings.length} bookings into ${cars.length} cars`
+          )
           const clusters = await clusterPositions(bookings, cars.length)
           return clusters.map(({ items: bookings }, i) => ({
             car: cars[i],

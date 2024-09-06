@@ -1,27 +1,23 @@
 {
-  "id": "pPcM-ucQZ",
-  "startDate": "2023-04-26T13:37:41.083Z",
-  "fixedRoute": 21,
   "emitters": [
     "bookings",
     "cars",
     "kommuner",
-    "garbageTrucks",
-    "garbageCollectionPoints"
+    "recycleTrucks",
+    "recycleCollectionPoints"
   ],
   "fleets": {
     "Södertälje kommun": {
       "fleets": [
         {
-          "name": "Telge",
+          "name": "Telge Återvinning AB",
           "vehicles": {
-            "garbageTruck": 32
+            "recycleTruck": 32
           },
-          "marketshare": 0.6,
           "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
         },
         {
-          "name": "Taxi",
+          "name": "Taxi Södertälje",
           "vehicles": {
             "taxi": 10
           },

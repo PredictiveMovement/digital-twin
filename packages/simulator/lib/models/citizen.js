@@ -61,10 +61,11 @@ class Citizen {
       })),
       filter(() => Math.random() > 0.9),
       map(({ hour }) => {
-        if (hour < 4 && hour > 22) return 'sleep'
-        if (hour >= 11 && hour <= 13) return 'lunch'
-        if (hour >= 6 && hour < 10) return 'goToWork'
-        if (hour >= 16 && hour <= 18) return 'goHome'
+        // TODO: activate intents for throwing out trash
+        //if (hour < 4 && hour > 22) return 'sleep'
+        //if (hour >= 11 && hour <= 13) return 'lunch'
+        //if (hour >= 6 && hour < 10) return 'goToWork'
+        //if (hour >= 16 && hour <= 18) return 'goHome'
         // pickup kids
         // go to gym
         // go to school etc

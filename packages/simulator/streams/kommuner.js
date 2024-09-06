@@ -137,6 +137,7 @@ function read({ fleets }) {
           zip: postnummer,
           telephone: telefon,
           fleets: fleets || [],
+          recycleCollectionPoints: bookings.telge, // if södertälje..
           center,
           pickupPositions: pickupPositions || [],
           squares,
@@ -153,21 +154,6 @@ function read({ fleets }) {
         return kommun
       }
     ),
-    tap((kommun) => {
-      console.log('adding bookings for', kommun.name)
-      switch (kommun.name) {
-        case 'Södertälje':
-          merge(bookings.telge).forEach((booking) =>
-            kommun.handleBooking(booking)
-          )
-          break
-        case 'Helsingborg':
-          merge(bookings.hm, bookings.ikea).forEach((booking) =>
-            kommun.handleBooking(booking)
-          )
-          break
-      }
-    }),
     share()
   )
 }

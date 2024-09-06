@@ -5,31 +5,13 @@ const {
   ReplaySubject,
   mergeMap,
   merge,
-  range,
-} = require('rxjs')
-const {
-  catchError,
-  map,
-  toArray,
   filter,
-  tap,
-  retryWhen,
-  delay,
-} = require('rxjs/operators')
+  catchError,
+  first,
+} = require('rxjs')
 const Fleet = require('./fleet')
 const { error } = require('./log')
 const { searchOne } = require('./pelias')
-const expandFleets = () => (fleets) =>
-  fleets.pipe(
-    mergeMap((fleet) => range(0, fleet.marketshare * 10).pipe(map(() => fleet)))
-  )
-
-// pick a random item in an array-like stream
-const pickRandom = () => (stream) =>
-  stream.pipe(
-    toArray(),
-    map((arr) => arr[Math.floor(arr.length * Math.random())])
-  )
 
 class Kommun {
   constructor({
@@ -43,7 +25,7 @@ class Kommun {
     telephone,
     postombud,
     population,
-    garbageCollectionPoints,
+    recycleCollectionPoints,
     citizens,
     squares,
     fleets,
@@ -57,7 +39,7 @@ class Kommun {
     this.center = center
     this.telephone = telephone
     this.postombud = postombud
-    this.garbageCollectionPoints = garbageCollectionPoints
+    this.recycleCollectionPoints = recycleCollectionPoints
     this.packageVolumes = packageVolumes
     this.busesPerCapita = 100 / 80_000
     this.population = population
@@ -80,54 +62,40 @@ class Kommun {
       shareReplay()
     )
 
-    this.cars = merge(
-      this.privateCars,
-      this.fleets.pipe(
-        filter((fleet) => fleet.type !== 'bus'),
-        mergeMap((fleet) => fleet.cars)
-      )
-    ).pipe(shareReplay())
-
     this.buses = this.fleets.pipe(
-      filter((fleet) => fleet.type === 'bus'),
-      tap((bus) => (bus.kommun = this)),
       mergeMap((fleet) => fleet.cars),
-      shareReplay()
+      filter((car) => car.type === 'bus'),
+      catchError((err) => {
+        error('buses -> fleet', err)
+      })
     )
 
-    this.pickNextEligbleFleet = (booking) =>
-      this.fleets.pipe(
-        mergeMap((fleet) =>
-          fleet.canHandleBooking(booking).then((ok) => [ok, fleet])
-        ),
-        filter(([ok]) => ok),
-        map(([, fleet]) => fleet),
-        expandFleets(),
-        pickRandom(),
-        map((fleet) =>
-          !fleet
-            ? error('No eligble fleet found for booking, retrying...', booking)
-            : fleet
-        ),
-        retryWhen((errors) => errors.pipe(delay(10000))),
-        map((fleet) => ({ booking, fleet })),
-        catchError((err) => error('pickNextEligbleFleet', err))
-      )
+    this.recycleTrucks = this.fleets.pipe(
+      mergeMap((fleet) => fleet.cars),
+      filter((car) => car.vehicleType === 'recycleTruck'),
+      catchError((err) => {
+        error('recycleTrucks -> fleet', err)
+      })
+    )
 
     this.dispatchedBookings = merge(
-      this.unhandledBookings.pipe(
-        mergeMap((booking) => this.pickNextEligbleFleet(booking)),
-        mergeMap(({ booking, fleet }) => fleet.handleBooking(booking), 1),
-        catchError((err) => error('dispatchedBookings', err)),
-        shareReplay()
-      ),
-      this.fleets.pipe(mergeMap((fleet) => fleet.dispatchedBookings))
+      // add recycle collection points to fleet of recycle trucks
+      this.recycleCollectionPoints.pipe(
+        mergeMap((booking) =>
+          this.fleets.pipe(
+            first((fleet) => fleet.canHandleBooking(booking)),
+            mergeMap((fleet) => fleet.handleBooking(booking))
+          )
+        ),
+        catchError((err) => error('kommun dispatchedBookings err', err))
+      )
+      // Should we add more types of bookings?
     )
 
-    this.handleBooking = (booking) => {
-      booking.kommun = this
-      this.unhandledBookings.next(booking)
-    }
+    this.cars = merge(
+      this.privateCars,
+      this.fleets.pipe(mergeMap((fleet) => fleet.cars))
+    ).pipe(shareReplay())
   }
 }
 

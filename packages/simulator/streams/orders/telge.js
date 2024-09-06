@@ -1,117 +1,65 @@
-const { from, shareReplay, filter } = require('rxjs')
+const { from, shareReplay } = require('rxjs')
 const {
   map,
-  toArray,
   mergeMap,
-  groupBy,
-  mergeAll,
   catchError,
-  retryWhen,
   tap,
-  delay,
+  toArray,
+  mergeAll,
+  filter,
 } = require('rxjs/operators')
-const { readCsv } = require('../../adapters/csv')
-const { default: fetch } = require('node-fetch')
 const { searchOne } = require('../../lib/pelias')
 const Position = require('../../lib/models/position')
 const Booking = require('../../lib/models/booking')
 const { error } = require('../../lib/log')
 
-const streamsUrl =
-  process.env.STREAMS_URL || 'https://streams.telge.iteam.pub/addresses'
-
 function read() {
+  const rutter = require('../../data/telge/ruttdata_2024-09-03.json')
   console.log('TELGE -> read')
   // TODO: add error handling
-  return from(readCsv(process.cwd() + '/data/sodertalje/tomningar.csv')).pipe(
-    catchError((err) => {
-      error('TELGE -> from CSV', err)
-    }),
+  return from(rutter).pipe(
     map(
       ({
-        order_id: id,
-        quantity,
-        delivery_zip: deliveryZip,
-        delivery_date: deliveryDate,
-        origin,
-        created,
-        volume,
-        weight,
-        length,
+        Turid: id,
+        Datum: pickupDate,
+        Tjtyp: serviceType,
+        Lat: lat,
+        Lng: lon,
       }) => ({
         id,
-        quantity,
-        deliveryZip,
-        deliveryDate,
-        origin,
+        pickup: {
+          name: serviceType,
+          date: pickupDate,
+          position: new Position({ lat, lon }),
+        },
         sender: 'TELGE',
-        created,
-        volume,
-        weight,
-        length,
+        serviceType,
       })
     ),
-    tap((row) => console.log('TELGE -> row', row)),
-    filter((row) => row.deliveryZip),
-    groupBy((row) => row.id),
-    mergeMap((group) =>
-      group.pipe(
-        toArray(),
-        map((rows) => ({ key: group.key, rows }))
-      )
-    ),
-    mergeMap(
-      ({ key, rows }) =>
-        fetch(`${streamsUrl}/zip/${rows[0].deliveryZip}?size=1&seed=${key}`)
-          .then((res) => res.json())
-          .then((addresses) =>
-            addresses.map(({ address, position }, i) => ({
-              destination: { address, position: new Position(position) },
-              ...rows[i],
-            }))
-          ),
-      1
-    ),
-    retryWhen((errors) =>
-      errors.pipe(
-        tap((err) => error('Zip streams error, retrying in 1s...', err)),
-        delay(1000)
-      )
-    ),
-    mergeAll(),
-    groupBy((row) => row.origin),
-    mergeMap((group) =>
-      group.pipe(
-        toArray(),
-        map((rows) => ({ key: group.key, rows }))
-      )
-    ),
-    mergeMap(({ rows }, i) => {
-      // TODO: Figure out a good way to distribute the orders to the distribution centers.
-      const distributionCenters = [
+    filter(({ pickup }) => pickup.position.isValid()),
+    toArray(),
+    mergeMap(async (rows) => {
+      // TODO: Where do we leave the trash?
+      const recyleCenters = [
         'Pålhagsvägen 4, Södertälje',
         'Bovallsvägen 5, 152 42 Södertälje',
       ]
-
-      return searchOne(
-        distributionCenters[i % distributionCenters.length]
-      ).then(({ name, position }) =>
-        rows.map((row) => ({ pickup: { name, position }, ...row }))
+      const deliveryPoints = await Promise.all(
+        recyleCenters.map((addr) =>
+          searchOne(addr).then(({ name, position }) => ({ name, position }))
+        )
       )
+      return rows.map((row, i) => ({
+        ...row,
+        id: row.id + '_' + i,
+        destination: deliveryPoints[i % deliveryPoints.length],
+      }))
     }, 1),
     mergeAll(),
-    map((row) => new Booking({ type: 'parcel', ...row })),
-    toArray(),
-
-    map((bookings) => {
-      console.log('TELGE -> bookings', bookings.length)
-      return bookings
-    }),
-    mergeAll(),
+    map((row) => new Booking({ type: 'recycle', ...row })),
     catchError((err) => {
       error('TELGE -> from CSV', err)
-    }),
-    shareReplay()
+    })
   )
 }
 

@@ -2,10 +2,10 @@ const { findBestRouteToPickupBookings } = require('../dispatch/truckDispatch')
 const { info, warn, debug } = require('../log')
 const Vehicle = require('./vehicle')
 
-class Truck extends Vehicle {
+class RecycleTruck extends Vehicle {
   constructor(args) {
     super(args)
-    this.vehicleType = 'car'
+    this.vehicleType = 'recycleTruck'
     this.isPrivateCar = false
     this.co2PerKmKg = 0.1201 // NOTE: From a quick google. Needs to be verified.
     this.parcelCapacity = args.parcelCapacity
@@ -67,10 +67,12 @@ class Truck extends Vehicle {
   }
 
   canHandleBooking(booking) {
-    return booking.type === 'parcel' && this.cargo.length < this.parcelCapacity
+    return booking.type === 'recycle' && this.cargo.length < this.parcelCapacity
   }
 
   async handleBooking(booking) {
+    throw new Error('RecycleTruck does not handle bookings directly')
+    info(`🚛 Truck ${this.id} handling booking ${booking.id}`)
     if (this.queue.indexOf(booking) > -1) throw new Error('Already queued')
     this.queue.push(booking)
     booking.assign(this)
@@ -91,4 +93,4 @@ class Truck extends Vehicle {
   }
 }
 
-module.exports = Truck
+module.exports = RecycleTruck
