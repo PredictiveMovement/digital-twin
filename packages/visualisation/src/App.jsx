@@ -24,7 +24,7 @@ const App = () => {
   const [busStopLayer, setBusStopLayer] = useState(true)
   const [passengerLayer, setPassengerLayer] = useState(true)
   const [postombudLayer, setPostombudLayer] = useState(false)
-  const [measureStationsLayer, setMeasureStationsLayer] = useState(false)
+  const [recycleCollectionLayer, setRecycleCollectionLayer] = useState(false)
   const [commercialAreasLayer, setCommercialAreasLayer] = useState(false)
   const [busLineLayer, setBusLineLayer] = useState(true)
   const [kommunLayer, setKommunLayer] = useState(true)
@@ -48,8 +48,8 @@ const App = () => {
     setBusLayer,
     postombudLayer,
     setPostombudLayer,
-    measureStationsLayer,
-    setMeasureStationsLayer,
+    recycleCollectionLayer,
+    setRecycleCollectionLayer,
     taxiLayer,
     setTaxiLayer,
     passengerLayer,
@@ -76,7 +76,7 @@ const App = () => {
     setCars([])
     setKommuner([])
     setPostombud([])
-    setMeasureStations([])
+    setRecycleCollection([])
     setBusStops([])
     setLineShapes([])
     setLatestLogMessage('')
@@ -152,26 +152,31 @@ const App = () => {
     ])
   })
 
-  const [measureStations, setMeasureStations] = React.useState([])
-  useSocket('measureStations', (newMeasureStations) => {
+  const [recycleCollectionPoints, setRecycleCollection] = React.useState([])
+  useSocket('recycleCollection', (newRecycleCollectionPoints) => {
     setReset(false)
-    setMeasureStations((current) => [
+    setRecycleCollection((current) => [
       ...current,
-      ...newMeasureStations.map(({ position, ...rest }) => ({
+      ...newRecycleCollectionPoints.map(({ position, ...rest }) => ({
         position: [position.lon, position.lat],
-        count: 0,
         ...rest,
       })),
     ])
   })
-  useSocket('measureStationUpdates', (stationUpdates) => {
-    setMeasureStations((current) =>
-      current.map((station) => {
-        const stationIds = stationUpdates.map(({ stationId }) => stationId)
-        if (stationIds.includes(station.id)) {
-          return { ...station, count: station.count + 1 }
+
+  useSocket('recycleCollectionUpdates', (recycleCollectionUpdates) => {
+    setRecycleCollection((current) =>
+      current.map((recycleCollectionPoint) => {
+        const recycleCollectionIds = recycleCollectionUpdates.map(
+          ({ recycleCollectionId }) => recycleCollectionId
+        )
+        if (recycleCollectionIds.includes(recycleCollectionPoint.id)) {
+          return {
+            ...recycleCollectionPoint,
+            count: recycleCollectionPoint.count + 1,
+          }
         }
-        return station
+        return recycleCollectionPoint
       })
     )
   })
@@ -216,7 +221,7 @@ const App = () => {
       busLines: setBusLineLayer,
       passengers: setPassengerLayer,
       postombud: setPostombudLayer,
-      measureStations: setMeasureStationsLayer,
+      recycleCollection: setRecycleCollectionLayer,
       kommuner: setKommunLayer,
       commercialAreas: setCommercialAreasLayer,
     }
@@ -339,7 +344,7 @@ const App = () => {
           cars={cars}
           bookings={bookings}
           postombud={postombud}
-          measureStations={measureStations}
+          recycleCollectionPoints={recycleCollectionPoints}
           busStops={busStops}
           kommuner={kommuner}
           activeCar={activeCar}

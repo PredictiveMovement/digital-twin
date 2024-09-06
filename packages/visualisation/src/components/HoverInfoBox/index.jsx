@@ -35,26 +35,6 @@ const Wrapper = styled.div.attrs((props) => ({
     border-right: solid 10px transparent;
   }
 `
-const MeasurementStationInfo = ({ data }) => {
-  return (
-    <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
-      <div>
-        <Paragraph>
-          Mätpunkt: <strong>{data.id}</strong>
-        </Paragraph>
-        <Paragraph>
-          Antal tunga fordorn: <strong>{data.heavyTrafficCount}</strong>
-        </Paragraph>
-        <Paragraph>
-          Mäter bilar som kör: <strong>{data.direction}</strong>
-        </Paragraph>
-        <Paragraph>
-          Antal passerade fordon: <strong>{data.count}</strong>
-        </Paragraph>
-      </div>
-    </Wrapper>
-  )
-}
 
 const vehicleName = (vehicleType) => {
   switch (vehicleType) {
@@ -193,7 +173,9 @@ const PassengerInfo = ({ data }) => {
         Namn: <strong>{data.name}</strong>
       </Paragraph>
       {data.home && <Paragraph>Bostad: {data.home.name}</Paragraph>}
-      {data.workplace && <Paragraph>Arbetsplats: {data.workplace.name}</Paragraph>}
+      {data.workplace && (
+        <Paragraph>Arbetsplats: {data.workplace.name}</Paragraph>
+      )}
       <Paragraph>
         CO<sub>2</sub>:{' '}
         <strong>{Math.ceil((10 * data.co2) / 10) || 0} kg</strong>
@@ -259,11 +241,39 @@ const HoverInfoBox = ({ data }) => {
       return <CarInfo data={data} />
     case 'passenger':
       return <PassengerInfo data={data} />
-    case 'measureStation':
-      return <MeasurementStationInfo data={data} />
+    case 'recycleCollectionPoint':
+      return <RecycleCollectionPointInfo data={data} />
     default:
       return <GenericInfo data={data} />
   }
+}
+
+const RecycleCollectionPointInfo = ({ data }) => {
+  return (
+    <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
+      <div>
+        <Paragraph>
+          ID: <strong>{data.id}</strong>{' '}
+          {/* Assuming each point has a unique ID */}
+        </Paragraph>
+        <Paragraph>
+          Status: <strong>{data.status}</strong> {/* e.g., 'Full', 'Empty' */}
+        </Paragraph>
+        <Paragraph>
+          Last Collected: <strong>{data.lastCollected}</strong>{' '}
+          {/* Last collection date/time */}
+        </Paragraph>
+        <Paragraph>
+          Frequency: <strong>{data.frequency}</strong>{' '}
+          {/* Collection frequency */}
+        </Paragraph>
+        <Paragraph>
+          Type of Waste: <strong>{data.wasteType}</strong>{' '}
+          {/* Type of waste the point collects */}
+        </Paragraph>
+      </div>
+    </Wrapper>
+  )
 }
 
 export default HoverInfoBox

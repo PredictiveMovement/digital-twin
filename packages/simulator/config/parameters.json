@@ -1,73 +1,20 @@
 {
-  "id": "pPcM-ucQZ",
-  "startDate": "2023-04-26T13:37:41.083Z",
-  "fixedRoute": 21,
   "emitters": [
     "bookings",
-    "buses",
-    "busLines",
-    "busStops",
     "cars",
     "kommuner",
-    "measureStations",
-    "passengers",
-    "taxis"
+    "recycleTrucks",
+    "recycleCollectionPoints"
   ],
   "fleets": {
-    "Helsingborgs stad": {
+    "Södertälje kommun": {
       "fleets": [
         {
-          "name": "Taxi",
+          "name": "Telge Återvinning AB",
           "vehicles": {
-            "taxi": 100
-          }
-        },
-        {
-          "name": "Postnord",
-          "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 4,
-            "lättLastbil": 1,
-            "bil": 0
+            "recycleTruck": 32
           },
-          "marketshare": 0.6,
-          "hub": [12.783566, 56.069157],
-          "hubAddress": "Mineralgatan 5, Helsingborg"
-        },
-        {
-          "name": "Skånetrafik",
-          "type": "bus",
-          "vehicles": {
-            "bus": 40
-          }
-        },
-        {
-          "name": "Röd",
-          "vehicles": {
-            "tungLastbil": 0,
-            "medeltungLastbil": 2
-          },
-          "marketshare": 0.18,
-          "hub": [12.768723, 56.010354],
-          "hubAddress": "Brunkalundsvägen 4, Helsingborg"
-        },
-        {
-          "name": "Gul",
-          "vehicles": {
-            "lättLastbil": 2
-          },
-          "marketshare": 0.06,
-          "hub": [12.778268, 56.021101],
-          "hubAddress": "Trintegatan 10, Helsingborg"
-        },
-        {
-          "name": "Lila",
-          "vehicles": {
-            "lättLastbil": 2
-          },
-          "marketshare": 0.06,
-          "hub": [12.709821, 56.01995],
-          "hubAddress": "Strandbadsvägen 7, Helsingborg"
+          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
         }
       ]
     }

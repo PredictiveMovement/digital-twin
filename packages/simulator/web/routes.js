@@ -17,12 +17,12 @@ function subscribe(experiment, socket) {
       require('./routes/cars').register(experiment, socket),
     defaultEmitters.includes('kommuner') &&
       require('./routes/kommuner').register(experiment, socket),
-    defaultEmitters.includes('measureStations') &&
-      require('./routes/measureStations').register(experiment, socket),
     defaultEmitters.includes('passengers') &&
       require('./routes/passengers').register(experiment, socket),
     defaultEmitters.includes('postombud') &&
       require('./routes/postombud').register(experiment, socket),
+    defaultEmitters.includes('garbageCollectionPoints') &&
+      require('./routes/garbageCollectionPoints').register(experiment, socket),
     require('./routes/time').register(experiment, socket),
     require('./routes/log').register(experiment, socket),
   ]

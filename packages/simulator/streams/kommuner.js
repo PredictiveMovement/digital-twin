@@ -11,6 +11,7 @@ const {
   mergeAll,
   take,
   repeat,
+  share,
 } = require('rxjs/operators')
 const Kommun = require('../lib/kommun')
 const Position = require('../lib/models/position')
@@ -18,7 +19,7 @@ const data = require('../data/kommuner.json')
 const population = require('./population')
 const packageVolumes = require('./packageVolumes')
 const postombud = require('./postombud')
-const measureStations = require('./measureStations')
+const garbageCollectionPoints = require('./garbageCollectionPoints')
 const inside = require('point-in-polygon')
 const Pelias = require('../lib/pelias')
 const { getCitizensInSquare } = require('../simulator/citizens')
@@ -29,8 +30,7 @@ const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const activeMunicipalities = municipalities()
 
 const bookings = {
-  hm: require('../streams/orders/hm.js'),
-  ikea: require('../streams/orders/ikea.js'),
+  telge: require('../streams/orders/telge.js'),
 }
 
 function getPopulationSquares({ geometry: { coordinates } }) {
@@ -60,9 +60,11 @@ function getPostombud(kommunName) {
     shareReplay()
   )
 }
-function getMeasureStations(kommunName) {
-  return measureStations.pipe(
-    filter((measureStation) => kommunName.startsWith(measureStation.kommun)),
+function getGarbageCollectionPoints(kommunName) {
+  return garbageCollectionPoints.pipe(
+    filter((garbageCollectionPoint) =>
+      kommunName.startsWith(garbageCollectionPoint.kommun)
+    ),
     shareReplay()
   )
 }
@@ -135,11 +137,12 @@ function read({ fleets }) {
           zip: postnummer,
           telephone: telefon,
           fleets: fleets || [],
+          recycleCollectionPoints: bookings.telge, // if södertälje..
           center,
           pickupPositions: pickupPositions || [],
           squares,
           postombud: getPostombud(name),
-          measureStations: getMeasureStations(name),
+          garbageCollectionPoints: getGarbageCollectionPoints(name),
           population: await squares
             .pipe(reduce((a, b) => a + b.population, 0))
             .toPromise(),
@@ -148,19 +151,10 @@ function read({ fleets }) {
 
           citizens,
         })
-        console.log('Kommun before', kommun)
         return kommun
       }
     ),
-    tap((kommun) => {
-      console.log('Kommun', kommun)
-      if (kommun.name.startsWith('Helsingborg')) {
-        merge(bookings.hm, bookings.ikea).forEach((booking) =>
-          kommun.handleBooking(booking)
-        )
-      }
-    }),
-    shareReplay()
+    share()
   )
 }
 

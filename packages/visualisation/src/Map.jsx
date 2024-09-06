@@ -23,7 +23,7 @@ const Map = ({
   cars,
   bookings,
   postombud,
-  measureStations,
+  recycleCollectionPoints,
   busStops,
   lineShapes,
   kommuner,
@@ -442,33 +442,23 @@ const Map = ({
   const ICON_MAPPING = {
     marker: { x: 0, y: 0, width: 128, height: 128, anchorY: 150, mask: true },
   }
-  const measureStationsLayer = new IconLayer({
-    id: 'measureStations-layer',
-    data: measureStations,
-    iconAtlas:
-      'https://raw.githubusercontent.com/visgl/deck.gl/8.8-release/examples/website/icon/data/location-icon-atlas.png',
-    iconMapping: ICON_MAPPING,
-    getIcon: (d) => 'marker',
-    getPosition: (c) => c.position,
-    sizeScale: 5,
-    getColor: (d) => [
-      16,
-      (d.count / 10) * 255,
-      255 * (d.heavyTrafficCount / 255),
-      200,
-    ],
-    getSize: (d) => 5,
-    sizeMaxPixels: 15,
+
+  const recycleCollectionLayer = new ScatterplotLayer({
+    id: 'recycle-collection-layer',
+    data: recycleCollectionPoints, // your data source here
+    getPosition: (d) => [d.longitude, d.latitude],
+    getFillColor: (d) => (d.isFull ? [255, 0, 0, 160] : [0, 128, 0, 160]), // Red for full, green for empty
+    getRadius: 10,
     pickable: true,
-    onHover: ({ object, x, y, viewport }) => {
-      if (!object) return setHoverInfo(null)
-      setHoverInfo({
-        ...object,
-        type: 'measureStation',
-        x,
-        y,
-        viewport,
-      })
+    onHover: ({ object, x, y }) => {
+      if (object) {
+        setHoverInfo({
+          title: 'Recycle Bin',
+          description: `Status: ${object.isFull ? 'Full' : 'Empty'}`,
+          x,
+          y,
+        })
+      }
     },
   })
 
@@ -597,7 +587,7 @@ const Map = ({
         // The order of these layers matter, roughly equal to increasing z-index by 1
         activeLayers.kommunLayer && kommunLayer, // TODO: This hides some items behind it, sort of
         activeLayers.postombudLayer && postombudLayer,
-        activeLayers.measureStationsLayer && measureStationsLayer,
+        activeLayers.recycleCollectionLayer && recycleCollectionLayer,
         bookingLayer,
         showArcLayer && arcLayer,
         (showAssignedBookings || showActiveDeliveries) && routesLayer,

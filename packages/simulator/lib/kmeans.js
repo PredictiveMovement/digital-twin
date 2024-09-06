@@ -1,16 +1,32 @@
 const kmeans = require('node-kmeans')
 const assert = require('assert')
 const { write } = require('./log')
+const { info } = require('console')
 
 const clusterPositions = (input, nrOfClusters = 5) => {
   const vectors = input.map(({ pickup, position = pickup.position }) => [
     position.lon,
     position.lat,
   ])
+  info('Clustering', vectors.length, 'positions into', nrOfClusters, 'clusters')
   assert(
-    vectors.length < 300,
+    vectors.length < 301,
     'Too many positions to cluster:' + vectors.length
   )
+  vectors.forEach((vector, index) => {
+    assert(
+      vector.length === 2,
+      `Expected 2 coordinates at index ${index}, got: ${vector.length}`
+    );
+    assert(
+      vector[0] > -180 && vector[0] < 180,
+      `Longitude out of range at index ${index}: ${vector[0]}`
+    );
+    assert(
+      vector[1] > -90 && vector[1] < 90,
+      `Latitude out of range at index ${index}: ${vector[1]}`
+    );
+  });
   write('k..')
   return new Promise((resolve, reject) =>
     kmeans.clusterize(vectors, { k: nrOfClusters }, (err, res) => {

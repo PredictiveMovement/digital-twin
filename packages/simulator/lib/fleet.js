@@ -7,50 +7,22 @@ const {
   first,
 } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
-const Car = require('./vehicles/car')
-const Truck = require('./vehicles/truck')
-const Drone = require('./vehicles/drone')
+const RecycleTruck = require('./vehicles/recycleTruck')
 const Taxi = require('./vehicles/taxi')
-const Bus = require('./vehicles/bus')
 const Position = require('./models/position')
-const { error, debug } = require('./log')
+const { error, debug, info } = require('./log')
 
-const packagesPerPallet = 30 // this is a guesstimate
 const vehicleTypes = {
-  tungLastbil: {
-    weight: 26 * 1000,
-    parcelCapacity: 48 * packagesPerPallet,
-    class: Truck,
-  },
-  medeltungLastbil: {
-    weight: 16.5 * 1000,
-    parcelCapacity: 18 * packagesPerPallet,
-    class: Truck,
-  },
-  lättLastbil: {
-    weight: 3.5 * 1000,
-    parcelCapacity: 8 * packagesPerPallet, // TODO: is this number of pallets reasonable?
-    class: Truck,
-  },
-  bil: {
-    weight: 1.5 * 1000,
-    parcelCapacity: 25,
-    class: Car,
-  },
-  drönare: {
-    weight: 5,
-    parcelCapacity: 1,
-    class: Drone,
+  recycleTruck: {
+    weight: 10 * 1000,
+    parcelCapacity: 500,
+    class: RecycleTruck,
   },
   taxi: {
-    weight: 1.5 * 1000,
+    weight: 1000,
+    parcelCapacity: 0,
     passengerCapacity: 4,
     class: Taxi,
-  },
-  bus: {
-    weight: 10 * 1000,
-    passengerCapacity: 50,
-    class: Bus,
   },
 }
 
@@ -106,9 +78,11 @@ class Fleet {
   }
 
   async canHandleBooking(booking) {
+    debug(`🚗 Fleet ${this.name} checking booking ${booking.id}`)
     return firstValueFrom(
       this.cars.pipe(
         first((car) => car.canHandleBooking(booking), false /* defaultValue */)
+        // TODO: handle case when all cars are busy or full?
       )
     )
   }
@@ -116,6 +90,7 @@ class Fleet {
   async handleBooking(booking, car) {
     booking.fleet = this
     if (car) {
+      debug(`📦 Dispatching ${booking.id} to ${this.name} (manual)`)
       this.manualDispatchedBookings.next(booking)
       return await car.handleBooking(booking)
     } else {
