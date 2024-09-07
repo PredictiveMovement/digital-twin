@@ -10,7 +10,7 @@ import DeckGL, {
 import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
 import { ParagraphLarge } from './components/Typography'
-import KommunStatisticsBox from './components/KommunStatisticsBox'
+import MunicipalityStatisticsBox from './components/MunicipalityStatisticsBox'
 import TimeProgressBar from './components/TimeProgressBar'
 import LayersMenu from './components/LayersMenu/index.jsx'
 import HoverInfoBox from './components/HoverInfoBox'
@@ -26,7 +26,7 @@ const Map = ({
   recycleCollectionPoints,
   busStops,
   lineShapes,
-  kommuner,
+  municipalities,
   activeCar,
   setActiveCar,
   time,
@@ -51,10 +51,10 @@ const Map = ({
   }, [])
 
   const [hoverInfo, setHoverInfo] = useState(null)
-  const [kommunInfo, setKommunInfo] = useState(null)
-  const kommunLayer = new PolygonLayer({
-    id: 'kommun-layer',
-    data: kommuner,
+  const [municipalityInfo, setMunicipalityInfo] = useState(null)
+  const municipalityLayer = new PolygonLayer({
+    id: 'municipality-layer',
+    data: municipalities,
     stroked: true,
     // we need the fill layer for our hover function
     filled: true,
@@ -73,7 +73,7 @@ const Map = ({
     pickable: true,
     onHover: (info, event) => {
       const { object } = info
-      setKommunInfo((current) => {
+      setMunicipalityInfo((current) => {
         if (!!object) return object
         // Seems to happen if you leave the viewport at the same time you leave a polygon
         if (!Array.isArray(info.coordinate)) return null
@@ -585,7 +585,7 @@ const Map = ({
       controller={true}
       layers={[
         // The order of these layers matter, roughly equal to increasing z-index by 1
-        activeLayers.kommunLayer && kommunLayer, // TODO: This hides some items behind it, sort of
+        activeLayers.municipalityLayer && municipalityLayer, // TODO: This hides some items behind it, sort of
         activeLayers.postombudLayer && postombudLayer,
         activeLayers.recycleCollectionLayer && recycleCollectionLayer,
         bookingLayer,
@@ -653,7 +653,7 @@ const Map = ({
       </div>
 
       {/* Municipality stats. */}
-      {kommunInfo && <KommunStatisticsBox {...kommunInfo} />}
+      {municipalityInfo && <MunicipalityStatisticsBox {...municipalityInfo} />}
     </DeckGL>
   )
 }

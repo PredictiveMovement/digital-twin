@@ -2,7 +2,7 @@ const { stops } = require('../publicTransport')('sl')
 const { filter, shareReplay } = require('rxjs')
 const Region = require('../../lib/region')
 
-const includedMunicipalities = ['Södertälje kommun']
+const includedMunicipalities = ['Södertälje municipality']
 
 const stockholm = (municipalitiesStream) => {
   const municipalities = municipalitiesStream.pipe(
@@ -15,7 +15,7 @@ const stockholm = (municipalitiesStream) => {
   return new Region({
     id: 'stockholm',
     name: 'Stockholm',
-    kommuner: municipalities,
+    municipalities: municipalities,
     stops,
   })
 }

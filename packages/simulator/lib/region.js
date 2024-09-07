@@ -41,7 +41,7 @@ const flattenProperty = (property) => (stream) =>
     )
   )
 
-const tripsInKommun = (kommuner) => (stops) =>
+const tripsInMunicipality = (municipalities) => (stops) =>
   stops.pipe(
     groupBy(({ tripId }) => tripId),
     mergeMap((s) => s.pipe(toArray())),
@@ -49,7 +49,7 @@ const tripsInKommun = (kommuner) => (stops) =>
     mergeMap((stops) => {
       const firstStop = stops[0]
       const lastStop = stops[stops.length - 1]
-      return kommuner.pipe(
+      return municipalities.pipe(
         filter(({ geometry }) =>
           isInsideCoordinates(firstStop.position, geometry.coordinates)
         ),
@@ -59,90 +59,98 @@ const tripsInKommun = (kommuner) => (stops) =>
           stops,
           firstStop,
           lastStop,
-          kommun: name,
+          municipality: name,
         }))
       )
     })
   )
 
 class Region {
-  constructor({ id, name, geometry, stops, kommuner }) {
+  constructor({ id, name, geometry, stops, municipalities }) {
     this.id = id
 
     this.geometry = geometry
     this.name = name
-    this.trips = tripsInKommun(kommuner)(stops).pipe(shareReplay()) // trips = bussavgångar
+    this.trips = tripsInMunicipality(municipalities)(stops).pipe(shareReplay()) // trips = bussavgångar
     this.stops = this.trips.pipe(
-      mergeMap(({ kommun, stops }) =>
-        kommuner.pipe(
-          first(({ name }) => name === kommun, null), // is this an included kommun?
-          mergeMap((kommun) => (kommun ? stops : of(null)))
+      mergeMap(({ municipality, stops }) =>
+        municipalities.pipe(
+          first(({ name }) => name === municipality, null), // is this an included municipality?
+          mergeMap((municipality) => (municipality ? stops : of(null)))
         )
       )
     )
     this.lineShapes = this.trips.pipe(
-      map(({ tripId, stops, lineNumber, firstStop, lastStop, kommun }) => ({
-        tripId,
-        lineNumber,
-        from: firstStop.name,
-        to: lastStop.name,
-        kommun,
-        stops: stops.map(({ stop }) => stop.position),
-      }))
+      map(
+        ({ tripId, stops, lineNumber, firstStop, lastStop, municipality }) => ({
+          tripId,
+          lineNumber,
+          from: firstStop.name,
+          to: lastStop.name,
+          municipality,
+          stops: stops.map(({ stop }) => stop.position),
+        })
+      )
     )
-    this.kommuner = kommuner // TODO: Rename to municipalities.
+    this.municipalities = municipalities // TODO: Rename to municipalities.
 
     /**
      * Static map objects.
      */
 
-    this.postombud = kommuner.pipe(mergeMap((kommun) => kommun.postombud))
+    this.postombud = municipalities.pipe(
+      mergeMap((municipality) => municipality.postombud)
+    )
 
     /**
      * Vehicle streams.
      */
 
-    this.buses = kommuner.pipe(
-      map((kommun) => kommun.buses),
+    this.buses = municipalities.pipe(
+      map((municipality) => municipality.buses),
       mergeAll(),
       shareReplay()
     )
 
-    this.cars = kommuner.pipe(mergeMap((kommun) => kommun.cars))
+    this.cars = municipalities.pipe(
+      mergeMap((municipality) => municipality.cars)
+    )
 
-    this.taxis = kommuner.pipe(
-      mergeMap((kommun) => kommun.cars),
+    this.taxis = municipalities.pipe(
+      mergeMap((municipality) => municipality.cars),
       filter((car) => car.vehicleType === 'taxi'),
       catchError((err) => error('taxi err', err))
     )
 
-    this.recycleTrucks = kommuner.pipe(
-      mergeMap((kommun) => kommun.recycleTrucks),
+    this.recycleTrucks = municipalities.pipe(
+      mergeMap((municipality) => municipality.recycleTrucks),
       catchError((err) => error('recycle trucks err', err))
     )
 
-    this.recycleCollectionPoints = kommuner.pipe(
-      mergeMap((kommun) => kommun.recycleCollectionPoints),
+    this.recycleCollectionPoints = municipalities.pipe(
+      mergeMap((municipality) => municipality.recycleCollectionPoints),
       catchError((err) => error('recycleCollectionPoints err', err))
     )
     /**
      * Transportable objects streams.
      */
 
-    this.citizens = kommuner.pipe(mergeMap((kommun) => kommun.citizens))
+    this.citizens = municipalities.pipe(
+      mergeMap((municipality) => municipality.citizens)
+    )
 
     this.stopAssignments = this.trips.pipe(
-      groupBy((trip) => trip.kommun),
+      groupBy((trip) => trip.municipality),
       map((trips) => ({
         buses: this.buses.pipe(
-          filter((bus) => bus.fleet.kommun.name === trips.key)
+          filter((bus) => bus.fleet.municipality.name === trips.key)
         ),
         trips,
       })),
       flattenProperty('buses'),
       flattenProperty('trips'),
       filter(({ buses, trips }) => buses.length && trips.length),
-      mergeMap(({ buses, trips }) => busDispatch(buses, trips), 1), // try to find optimal plan x kommun at a time
+      mergeMap(({ buses, trips }) => busDispatch(buses, trips), 1), // try to find optimal plan x municipality at a time
       catchError((err) => error('stopAssignments', err)),
       retryWhen((errors) => errors.pipe(delay(1000), take(10))),
       mergeAll(),
@@ -167,9 +175,11 @@ class Region {
     )
 
     this.dispatchedBookings = merge(
-      this.kommuner.pipe(mergeMap((kommun) => kommun.dispatchedBookings)),
-      this.kommuner.pipe(
-        mergeMap((kommun) => kommun.fleets),
+      this.municipalities.pipe(
+        mergeMap((municipality) => municipality.dispatchedBookings)
+      ),
+      this.municipalities.pipe(
+        mergeMap((municipality) => municipality.fleets),
         mergeMap((fleet) => fleet.dispatchedBookings)
       )
     ).pipe(share())

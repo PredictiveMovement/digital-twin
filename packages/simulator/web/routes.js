@@ -15,8 +15,8 @@ function subscribe(experiment, socket) {
       require('./routes/buses').register(experiment, socket),
     defaultEmitters.includes('cars') &&
       require('./routes/cars').register(experiment, socket),
-    defaultEmitters.includes('kommuner') &&
-      require('./routes/kommuner').register(experiment, socket),
+    defaultEmitters.includes('municipalities') &&
+      require('./routes/municipalities').register(experiment, socket),
     defaultEmitters.includes('passengers') &&
       require('./routes/passengers').register(experiment, socket),
     defaultEmitters.includes('postombud') &&

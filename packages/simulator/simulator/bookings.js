@@ -13,11 +13,11 @@ const randomPositions = perlin
   .map((probability, i) => ({ x: xy(i).x * 10, y: xy(i).y * 10, probability }))
   .sort((a, b) => b.probability - a.probability) // sort them so we can just pick how many we want
 
-function generateBookingsInKommun(kommun) {
+function generateBookingsInMunicipality(municipality) {
   // a square is a km2 box with a population total. We will here populate each square with nearest postombud
-  const squaresWithNearestPostombud = kommun.squares.pipe(
+  const squaresWithNearestPostombud = municipality.squares.pipe(
     mergeMap((square) =>
-      kommun.postombud.pipe(
+      municipality.postombud.pipe(
         map((ombud) => ({
           ...ombud,
           distance: haversine(ombud.position, square.position),
@@ -43,9 +43,11 @@ function generateBookingsInKommun(kommun) {
     toArray(), // convert to array to be able to sort the addresses
     mergeMap((a) => from(a.sort(() => Math.random() - 0.5))),
     mergeMap(({ nearestOmbud, position }) =>
-      kommun.fleets.pipe(
+      municipality.fleets.pipe(
         first((fleet) => nearestOmbud.operator.startsWith(fleet.name), null), // Find DHL_Express or DHL_Freight from DHL
-        mergeMap((fleet) => (fleet ? of(fleet) : kommun.fleets.pipe(first()))), // TODO: defaultIfEmpty
+        mergeMap((fleet) =>
+          fleet ? of(fleet) : municipality.fleets.pipe(first())
+        ), // TODO: defaultIfEmpty
         map((fleet) => ({ nearestOmbud, position, fleet }))
       )
     ),
@@ -84,4 +86,4 @@ function generateBookingsInKommun(kommun) {
   return bookings
 }
 
-module.exports = { generateBookingsInKommun }
+module.exports = { generateBookingsInMunicipality }

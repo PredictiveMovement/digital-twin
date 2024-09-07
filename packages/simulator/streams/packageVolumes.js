@@ -5,12 +5,12 @@ module.exports = volumes
 // const fs = require('fs')
 
 // const packageVolumes = readXlsx(
-//   `${process.cwd()}/data/Volym_2020_per_kommun.xlsx`,
+//   `${process.cwd()}/data/Volym_2020_per_municipality.xlsx`,
 //   `${'Sammanställning'}`
 // ).map(
 //   ({
-//     Kommunkod: id,
-//     Kommun: name,
+//     Municipalitykod: id,
+//     Municipality: name,
 //     'Total paket 2020': totalPaket = 0,
 //     'Total B2B paket 2020': totalB2B = 0,
 //     'Total B2C paket 2020': totalB2C = 0,

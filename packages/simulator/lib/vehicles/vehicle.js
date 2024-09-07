@@ -275,7 +275,7 @@ class Vehicle {
 
     const co2 = this.updateCarbonDioxide(km)
 
-    // TODO: Find which kommun the vehicle is moving in now and add the co2 for this position change to that kommun
+    // TODO: Find which municipality the vehicle is moving in now and add the co2 for this position change to that municipality
 
     this.distance += km
     this.pointsPassedSinceLastUpdate = pointsPassedSinceLastUpdate

@@ -27,7 +27,14 @@ const { getHours, getISODay } = require('date-fns')
 const Position = require('./position')
 
 class Citizen {
-  constructor({ name, position, workplace, home, startPosition, kommun }) {
+  constructor({
+    name,
+    position,
+    workplace,
+    home,
+    startPosition,
+    municipality,
+  }) {
     this.id = 'p-' + safeId()
     this.workplace = {
       name: workplace.name || 'arbetsplats',
@@ -40,7 +47,7 @@ class Citizen {
     this.name = name
     this.position = new Position(position)
     this.startPosition = new Position(startPosition || this.position)
-    this.kommun = kommun
+    this.municipality = municipality
     this.distance = 0
     this.cost = 0
     this.co2 = 0
@@ -201,7 +208,7 @@ class Citizen {
       name: this.name,
       position: this.position,
       waitTime: this.waitTime,
-      kommun: this.kommun.name,
+      municipality: this.municipality.name,
       home: this.home,
       workplace: this.workplace,
     }

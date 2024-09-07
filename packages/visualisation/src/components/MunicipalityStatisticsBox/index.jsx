@@ -79,7 +79,7 @@ const getUnit = (key) => {
       return ''
   }
 }
-const KommunStatisticsBox = (stats) => (
+const MunicipalityStatisticsBox = (stats) => (
   <Wrapper>
     <H4>{stats.name}</H4>
     <GridWrapper>
@@ -98,7 +98,9 @@ const KommunStatisticsBox = (stats) => (
       ].map((key) =>
         stats[key] ? (
           <Grid key={key}>
-            <ParagraphBold key={1} black>{getTitle(key)}</ParagraphBold>
+            <ParagraphBold key={1} black>
+              {getTitle(key)}
+            </ParagraphBold>
             <Paragraph key={2} black>
               {Math.round(stats[key] * 100) / 100} {getUnit(key)}
             </Paragraph>
@@ -111,4 +113,4 @@ const KommunStatisticsBox = (stats) => (
   </Wrapper>
 )
 
-export default KommunStatisticsBox
+export default MunicipalityStatisticsBox

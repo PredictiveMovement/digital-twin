@@ -12,23 +12,23 @@ const {
   repeat,
   share,
 } = require('rxjs/operators')
-const Kommun = require('../lib/kommun')
-const Position = require('../lib/models/position')
-const data = require('../data/kommuner.json')
-const population = require('./population')
-const packageVolumes = require('./packageVolumes')
-const postombud = require('./postombud')
+const Municipality = require('../lib/municipality.js')
+const Position = require('../lib/models/position.js')
+const data = require('../data/municipalities.json')
+const population = require('./population.js')
+const packageVolumes = require('./packageVolumes.js')
+const postombud = require('./postombud.js')
 const inside = require('point-in-polygon')
-const Pelias = require('../lib/pelias')
-const { getCitizensInSquare } = require('../simulator/citizens')
-const { getAddressesInArea } = require('../simulator/address')
-const { municipalities } = require('../config')
+const Pelias = require('../lib/pelias.js')
+const { getCitizensInSquare } = require('../simulator/citizens.js')
+const { getAddressesInArea } = require('../simulator/address.js')
+const { municipalities } = require('../config/index.js')
 const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 
 const activeMunicipalities = municipalities()
 
 const bookings = {
-  telge: require('../streams/orders/telge.js'),
+  telge: require('./orders/telge.js'),
 }
 
 function getPopulationSquares({ geometry: { coordinates } }) {
@@ -45,16 +45,16 @@ function getPopulationSquares({ geometry: { coordinates } }) {
   )
 }
 
-function getCommercialAreas(kommunkod) {
+function getCommercialAreas(municipalityId) {
   return commercialAreas.pipe(
-    filter((area) => area.properties.KOMMUNKOD === kommunkod),
+    filter((area) => area.properties.KOMMUNKOD === municipalityId),
     shareReplay()
   )
 }
 
-function getPostombud(kommunName) {
+function getPostombud(municipalityName) {
   return postombud.pipe(
-    filter((ombud) => kommunName.startsWith(ombud.kommun)),
+    filter((ombud) => municipalityName.startsWith(ombud.municipality)),
     shareReplay()
   )
 }
@@ -70,11 +70,11 @@ function read({ fleets }) {
     filter(({ namn }) =>
       activeMunicipalities.some((name) => namn.startsWith(name))
     ),
-    map((kommun) => {
+    map((municipality) => {
       return {
-        ...kommun,
-        fleets: fleets[kommun.namn]?.fleets?.length
-          ? fleets[kommun.namn].fleets
+        ...municipality,
+        fleets: fleets[municipality.namn]?.fleets?.length
+          ? fleets[municipality.namn].fleets
           : [],
       }
     }),
@@ -90,7 +90,7 @@ function read({ fleets }) {
         pickupPositions,
         fleets,
       }) => {
-        console.log('Processing kommun', name)
+        console.log('Processing municipality', name)
         const squares = getPopulationSquares({ geometry })
         const commercialAreas = getCommercialAreas(kod)
 
@@ -99,7 +99,7 @@ function read({ fleets }) {
         const searchResult = await Pelias.searchOne(searchQuery)
         if (!searchQuery || !searchResult || !searchResult.position) {
           throw new Error(
-            `No valid address or name found for kommun: ${name}. Please check parameters.json and add address or position for this kommun. ${searchQuery}`
+            `No valid address or name found for municipality: ${name}. Please check parameters.json and add address or position for this municipality. ${searchQuery}`
           )
         }
 
@@ -118,7 +118,7 @@ function read({ fleets }) {
           shareReplay()
         )
 
-        const kommun = new Kommun({
+        const municipality = new Municipality({
           geometry,
           name,
           id: kod,
@@ -139,7 +139,7 @@ function read({ fleets }) {
 
           citizens,
         })
-        return kommun
+        return municipality
       }
     ),
     share()

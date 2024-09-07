@@ -8,7 +8,7 @@
     "busLines",
     "busStops",
     "cars",
-    "kommuner",
+    "municipalities",
     "measureStations",
     "passengers",
     "taxis",
@@ -16,7 +16,7 @@
     "recycleCollectionPoints"
   ],
   "fleets": {
-    "Södertälje kommun": {
+    "Södertälje municipality": {
       "fleets": [
         {
           "name": "Taxi",

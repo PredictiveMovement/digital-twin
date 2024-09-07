@@ -42,13 +42,13 @@ const Loading = ({
   cars,
   bookings,
   busStops,
-  kommuner,
+  municipalities,
   parameters,
 }) => {
   let activeStep = 0
   if (!connected) activeStep = 0
   else if (!parameters) activeStep = 1
-  else if (!kommuner) activeStep = 2
+  else if (!municipalities) activeStep = 2
   else if (!cars) activeStep = 3
   else if (!passengers || !bookings) activeStep = 4
   else activeStep = 5
@@ -80,7 +80,7 @@ const Loading = ({
           <StepLabel>Hämtar experimentparametrar...</StepLabel>
         </Step>
         <Step key={3}>
-          <StepLabel>Hämtar {kommuner} kommuner...</StepLabel>
+          <StepLabel>Hämtar {municipalities} municipalities...</StepLabel>
         </Step>
         <Step key={4}>
           <StepLabel>Skapar {cars} fordon...</StepLabel>
@@ -90,35 +90,40 @@ const Loading = ({
             Genererar {passengers} passagerare och {bookings} bokningar...
           </StepLabel>
           <StepContent>
-              <Typography
-                color="white"
-                sx={{
-                  color: 'white',
-                  fontSize: '0.9rem',
-                  maxWidth: '300px',
-                }}
-              >
-                Vi hämtar data från SCB över var människor i varje kommun bor och därefter slår vi upp adresser från 
-                Lantmäteriet och genererar därefter fiktiva personer som bor och arbetar på olika adresser och rör sig på ett regelbundet sätt.
-              </Typography>
-            </StepContent>
+            <Typography
+              color="white"
+              sx={{
+                color: 'white',
+                fontSize: '0.9rem',
+                maxWidth: '300px',
+              }}
+            >
+              Vi hämtar data från SCB över var människor i varje municipality
+              bor och därefter slår vi upp adresser från Lantmäteriet och
+              genererar därefter fiktiva personer som bor och arbetar på olika
+              adresser och rör sig på ett regelbundet sätt.
+            </Typography>
+          </StepContent>
         </Step>
         <Step key={6}>
-          <StepLabel>Skapar {busStops} avgångar och beräknar rutter...</StepLabel>
+          <StepLabel>
+            Skapar {busStops} avgångar och beräknar rutter...
+          </StepLabel>
           <StepContent>
-              <Typography
-                color="white"
-                sx={{
-                  color: 'white',
-                  fontSize: '0.9rem',
-                  maxWidth: '300px',
-                }}
-              >
-                Vi hämtar data från Trafiklab och beräknar rutter för varje
-                avgång. Dessa matchas mot de fordon som finns i varje kommun så att fordonen utnyttjas optimalt.
-                Du kan redigera hur många fordon som finns i varje kommun i inställningarna.
-              </Typography>
-            </StepContent>
+            <Typography
+              color="white"
+              sx={{
+                color: 'white',
+                fontSize: '0.9rem',
+                maxWidth: '300px',
+              }}
+            >
+              Vi hämtar data från Trafiklab och beräknar rutter för varje
+              avgång. Dessa matchas mot de fordon som finns i varje municipality
+              så att fordonen utnyttjas optimalt. Du kan redigera hur många
+              fordon som finns i varje municipality i inställningarna.
+            </Typography>
+          </StepContent>
         </Step>
       </Stepper>
     </Wrapper>
