@@ -2,12 +2,12 @@
   "emitters": [
     "bookings",
     "cars",
-    "kommuner",
+    "municipalities",
     "recycleTrucks",
     "recycleCollectionPoints"
   ],
   "fleets": {
-    "Södertälje kommun": {
+    "Södertälje municipality": {
       "fleets": [
         {
           "name": "Telge Återvinning AB",

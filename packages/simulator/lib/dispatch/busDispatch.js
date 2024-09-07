@@ -68,9 +68,9 @@ const busDispatch = async (buses, trips) => {
   const shipments = trips.map(tripToShipment)
   const vehicles = buses.map(busToVehicle)
 
-  const kommunName = trips[0].kommun
+  const municipalityName = trips[0].municipality
   info(
-    `Finding optimal route in ${kommunName} for ${vehicles.length} buses and ${shipments.length} trips`
+    `Finding optimal route in ${municipalityName} for ${vehicles.length} buses and ${shipments.length} trips`
   )
 
   const result = await plan({
@@ -82,7 +82,7 @@ const busDispatch = async (buses, trips) => {
     .filter((s) => s.type === 'pickup')
     .map((step) => trips[step.id].tripId)
   if (unassigned.length)
-    warn(`Unassigned in ${kommunName}: ${unassigned.length}`)
+    warn(`Unassigned in ${municipalityName}: ${unassigned.length}`)
   return result.routes.map((route) => {
     const toFirstStop = stepToBookingEntity(route.steps[0])
     const toHub = stepToBookingEntity(route.steps[route.steps.length - 1])

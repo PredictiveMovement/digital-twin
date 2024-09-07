@@ -16,7 +16,7 @@
         "lat": 65.911768
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "QmUa-bXJx",
@@ -35,7 +35,7 @@
         "lat": 67.177849
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "SCeG-S5qV",
@@ -54,7 +54,7 @@
         "lat": 67.857328
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "5GAE-asnP",
@@ -73,7 +73,7 @@
         "lat": 66.087452
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "teM4-mtGr",
@@ -92,7 +92,7 @@
         "lat": 67.412268
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "Gtch-fJK6",
@@ -111,7 +111,7 @@
         "lat": 65.584423
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "HdVx-qC5u",
@@ -130,7 +130,7 @@
         "lat": 65.838554
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "2cke-2sAF",
@@ -149,7 +149,7 @@
         "lat": 65.596469
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "EMut-2vvM",
@@ -168,7 +168,7 @@
         "lat": 66.15139
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "2QD4-Lz4x",
@@ -187,7 +187,7 @@
         "lat": 65.592145
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "99mZ-LDQz",
@@ -206,7 +206,7 @@
         "lat": 66.320863
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "Zx3R-S7cn",
@@ -225,7 +225,7 @@
         "lat": 66.564354
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "XJfU-3Twe",
@@ -244,7 +244,7 @@
         "lat": 65.668297
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "ccMR-gn9r",
@@ -263,7 +263,7 @@
         "lat": 65.32095
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "DLKd-mQLn",
@@ -282,7 +282,7 @@
         "lat": 68.377821
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "NnCx-JuDw",
@@ -301,7 +301,7 @@
         "lat": 67.226155
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "abxw-W5q3",
@@ -320,7 +320,7 @@
         "lat": 66.075087
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "XUSA-UNmP",
@@ -339,7 +339,7 @@
         "lat": 66.014817
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "qqvb-DNjL",
@@ -358,7 +358,7 @@
         "lat": 65.852461
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "Ecmf-P7Gy",
@@ -377,7 +377,7 @@
         "lat": 65.260919
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "vxxW-nZym",
@@ -396,7 +396,7 @@
         "lat": 65.838797
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "LSDt-rwHx",
@@ -415,7 +415,7 @@
         "lat": 67.419614
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "mUCK-fLsP",
@@ -434,7 +434,7 @@
         "lat": 65.584373
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "zKJD-DmB6",
@@ -453,7 +453,7 @@
         "lat": 66.431415
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "7jfc-XfTt",
@@ -472,7 +472,7 @@
         "lat": 65.678294
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "y2qd-QRU7",
@@ -491,7 +491,7 @@
         "lat": 66.325447
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "uZBc-bZJ6",
@@ -510,7 +510,7 @@
         "lat": 66.91885
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "uL66-4qqp",
@@ -529,7 +529,7 @@
         "lat": 68.367677
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "jArd-rQSn",
@@ -548,7 +548,7 @@
         "lat": 66.383943
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "9sqP-tgKw",
@@ -567,7 +567,7 @@
         "lat": 65.147041
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "Rqsv-HvBd",
@@ -586,7 +586,7 @@
         "lat": 65.830847
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "gePk-aEEs",
@@ -605,7 +605,7 @@
         "lat": 66.048164
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "4AFa-AE8E",
@@ -624,7 +624,7 @@
         "lat": 65.832934
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "BVaP-JJYM",
@@ -643,7 +643,7 @@
         "lat": 66.919815
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "HchK-GRJg",
@@ -662,7 +662,7 @@
         "lat": 65.406617
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "vv3n-TWvZ",
@@ -681,7 +681,7 @@
         "lat": 65.83774
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "SqAU-yh42",
@@ -700,7 +700,7 @@
         "lat": 67.207751
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "2mG6-Fyes",
@@ -719,7 +719,7 @@
         "lat": 65.823361
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "JBx6-9w94",
@@ -738,7 +738,7 @@
         "lat": 65.262349
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "KT5t-qXDE",
@@ -757,7 +757,7 @@
         "lat": 65.858385
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "NgHs-xFs7",
@@ -776,7 +776,7 @@
         "lat": 66.426778
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "Dmev-6qtM",
@@ -795,7 +795,7 @@
         "lat": 65.573855
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "x6Rj-r4Pv",
@@ -814,7 +814,7 @@
         "lat": 66.054985
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "6Cjr-cgxm",
@@ -833,7 +833,7 @@
         "lat": 66.32246
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "Cg83-Y7YR",
@@ -852,7 +852,7 @@
         "lat": 66.802824
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "WBQP-uXUB",
@@ -871,7 +871,7 @@
         "lat": 65.85421
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "5xu2-z873",
@@ -890,7 +890,7 @@
         "lat": 67.682316
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "s3Gg-APGm",
@@ -909,7 +909,7 @@
         "lat": 65.738912
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "qg6u-EcEt",
@@ -928,7 +928,7 @@
         "lat": 66.848462
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "78Vm-r7LH",
@@ -947,7 +947,7 @@
         "lat": 65.851516
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "x2NP-WY4B",
@@ -966,7 +966,7 @@
         "lat": 65.574486
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "Vm8R-zW8E",
@@ -985,7 +985,7 @@
         "lat": 66.39159
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "2qBU-DJ5w",
@@ -1004,7 +1004,7 @@
         "lat": 65.317464
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "9RCZ-GHqp",
@@ -1023,7 +1023,7 @@
         "lat": 65.591217
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "v8pb-8fqU",
@@ -1042,7 +1042,7 @@
         "lat": 66.147084
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "PU2E-yWtK",
@@ -1061,7 +1061,7 @@
         "lat": 65.827434
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "aEyH-G32c",
@@ -1080,7 +1080,7 @@
         "lat": 66.324849
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "jggN-m99h",
@@ -1099,7 +1099,7 @@
         "lat": 66.856714
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "a6xv-JYAD",
@@ -1118,7 +1118,7 @@
         "lat": 65.85149
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "wDwX-k8qf",
@@ -1137,7 +1137,7 @@
         "lat": 68.087463
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "82Ft-z8wb",
@@ -1156,7 +1156,7 @@
         "lat": 67.413222
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "DrTn-uqxq",
@@ -1175,7 +1175,7 @@
         "lat": 65.842241
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "TTuL-g5xs",
@@ -1194,7 +1194,7 @@
         "lat": 65.852807
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "XQdK-kL9z",
@@ -1213,7 +1213,7 @@
         "lat": 67.214921
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "f6GH-swBn",
@@ -1232,7 +1232,7 @@
         "lat": 66.052148
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "rQyX-mKHV",
@@ -1251,7 +1251,7 @@
         "lat": 65.815473
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "Chk5-QVeD",
@@ -1270,7 +1270,7 @@
         "lat": 65.262943
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "nU64-xXD2",
@@ -1289,7 +1289,7 @@
         "lat": 65.152682
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "wMhR-G4hQ",
@@ -1308,7 +1308,7 @@
         "lat": 65.645956
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "mYcg-pUmZ",
@@ -1327,7 +1327,7 @@
         "lat": 66.803174
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "Vdzc-3Yhf",
@@ -1346,7 +1346,7 @@
         "lat": 67.673614
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "W5Mb-BSkk",
@@ -1365,7 +1365,7 @@
         "lat": 66.76784
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "CeVL-TVuC",
@@ -1384,7 +1384,7 @@
         "lat": 65.839528
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "e5c2-Pw2V",
@@ -1403,7 +1403,7 @@
         "lat": 65.856924
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "sCVU-S9ck",
@@ -1422,7 +1422,7 @@
         "lat": 66.32367
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "kCER-tRpy",
@@ -1441,7 +1441,7 @@
         "lat": 66.604009
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "A6gN-EaMa",
@@ -1460,7 +1460,7 @@
         "lat": 66.392602
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "S5Rv-F4Mv",
@@ -1479,7 +1479,7 @@
         "lat": 65.675308
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "rbH2-hUW3",
@@ -1498,7 +1498,7 @@
         "lat": 65.260432
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "Qw4G-ckBg",
@@ -1517,7 +1517,7 @@
         "lat": 67.21362
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "N6be-CdcX",
@@ -1536,7 +1536,7 @@
         "lat": 65.828045
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "qSry-VXVY",
@@ -1555,7 +1555,7 @@
         "lat": 65.385524
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "6B3S-TUee",
@@ -1574,7 +1574,7 @@
         "lat": 66.798823
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "V3Zf-3Sqy",
@@ -1593,7 +1593,7 @@
         "lat": 65.611224
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "4JL3-sg4n",
@@ -1612,7 +1612,7 @@
         "lat": 68.347179
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "e662-Up37",
@@ -1631,7 +1631,7 @@
         "lat": 65.859042
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "vjmY-zyVN",
@@ -1650,7 +1650,7 @@
         "lat": 66.327728
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "Gzam-Km3J",
@@ -1669,7 +1669,7 @@
         "lat": 66.60883
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "f45c-PVXP",
@@ -1688,7 +1688,7 @@
         "lat": 65.832624
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "CPjh-GSWr",
@@ -1707,7 +1707,7 @@
         "lat": 66.390496
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "6UM7-CMXR",
@@ -1726,7 +1726,7 @@
         "lat": 67.411717
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "445g-bLsd",
@@ -1745,7 +1745,7 @@
         "lat": 67.943718
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "W5ZH-eGSh",
@@ -1764,7 +1764,7 @@
         "lat": 65.412066
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "hdrU-n4xR",
@@ -1783,7 +1783,7 @@
         "lat": 65.839208
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "Cyhg-Cnab",
@@ -1802,7 +1802,7 @@
         "lat": 65.765339
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "bgbj-QJPc",
@@ -1821,7 +1821,7 @@
         "lat": 65.580415
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "QmHb-7dr3",
@@ -1840,7 +1840,7 @@
         "lat": 65.593198
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "gP6n-NVGw",
@@ -1859,7 +1859,7 @@
         "lat": 66.389221
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "qWpD-j8JK",
@@ -1878,7 +1878,7 @@
         "lat": 67.861587
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "Qmsa-4wCm",
@@ -1897,7 +1897,7 @@
         "lat": 66.053103
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "PyMN-Nrnj",
@@ -1916,7 +1916,7 @@
         "lat": 66.91885
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "GdbH-ZWfw",
@@ -1935,7 +1935,7 @@
         "lat": 66.471749
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "jXTZ-W4jk",
@@ -1954,7 +1954,7 @@
         "lat": 65.849464
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "Q6GE-PtEU",
@@ -1973,7 +1973,7 @@
         "lat": 65.618098
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "c7hN-qk4x",
@@ -1992,7 +1992,7 @@
         "lat": 65.67035
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "XhAU-ACk2",
@@ -2011,7 +2011,7 @@
         "lat": 66.323133
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "75yL-egae",
@@ -2030,7 +2030,7 @@
         "lat": 66.80466
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "UvmL-AWyV",
@@ -2049,7 +2049,7 @@
         "lat": 67.94539
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "5bNK-Asx2",
@@ -2068,7 +2068,7 @@
         "lat": 65.286864
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "dEDg-4Uft",
@@ -2087,7 +2087,7 @@
         "lat": 65.837321
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "yjcY-kmf3",
@@ -2106,7 +2106,7 @@
         "lat": 66.087623
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "5Qaq-7dpv",
@@ -2125,7 +2125,7 @@
         "lat": 65.586602
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "vYTz-JmMZ",
@@ -2144,7 +2144,7 @@
         "lat": 68.43873
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "dSf9-wQKM",
@@ -2163,7 +2163,7 @@
         "lat": 65.587912
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "nwKA-5rqm",
@@ -2182,7 +2182,7 @@
         "lat": 66.144091
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "RdHe-SkhQ",
@@ -2201,7 +2201,7 @@
         "lat": 65.857153
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "CVWh-DptR",
@@ -2220,7 +2220,7 @@
         "lat": 65.586137
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "L5Vy-Lywk",
@@ -2239,7 +2239,7 @@
         "lat": 67.144765
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "QGzQ-7vUb",
@@ -2258,7 +2258,7 @@
         "lat": 66.324129
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "saE7-Fg6d",
@@ -2277,7 +2277,7 @@
         "lat": 65.831009
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "5Gw5-udgw",
@@ -2296,7 +2296,7 @@
         "lat": 65.830908
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "g9xV-STwL",
@@ -2315,7 +2315,7 @@
         "lat": 66.387262
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "ebqL-Xpcd",
@@ -2334,7 +2334,7 @@
         "lat": 65.909865
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "uxdV-CRX8",
@@ -2353,7 +2353,7 @@
         "lat": 66.853018
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "4zby-rT6D",
@@ -2372,7 +2372,7 @@
         "lat": 65.282322
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "GLFV-e5z2",
@@ -2391,7 +2391,7 @@
         "lat": 65.827623
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "rAz2-kbWR",
@@ -2410,7 +2410,7 @@
         "lat": 65.594581
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "Zr4Y-TK4q",
@@ -2429,7 +2429,7 @@
         "lat": 68.085912
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "K9b7-ASx4",
@@ -2448,7 +2448,7 @@
         "lat": 66.324259
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "VfFL-W4X7",
@@ -2467,7 +2467,7 @@
         "lat": 66.548147
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "SsR6-f9Sg",
@@ -2486,7 +2486,7 @@
         "lat": 66.426971
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "qKw6-ebeZ",
@@ -2505,7 +2505,7 @@
         "lat": 65.576791
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "N5yJ-KTsC",
@@ -2524,7 +2524,7 @@
         "lat": 67.941854
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "QhTS-cmeD",
@@ -2543,7 +2543,7 @@
         "lat": 65.857645
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "AJkG-hkSF",
@@ -2562,7 +2562,7 @@
         "lat": 65.828976
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "GkFY-KjdK",
@@ -2581,7 +2581,7 @@
         "lat": 67.137568
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "Q4PC-DBMu",
@@ -2600,7 +2600,7 @@
         "lat": 65.837956
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "V5HE-nhJF",
@@ -2619,7 +2619,7 @@
         "lat": 66.798593
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "zXn2-57w3",
@@ -2638,7 +2638,7 @@
         "lat": 67.866174
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "e7yK-pcjM",
@@ -2657,7 +2657,7 @@
         "lat": 65.258903
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "NDau-ht3f",
@@ -2676,7 +2676,7 @@
         "lat": 65.837321
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "EFXN-9zTZ",
@@ -2695,7 +2695,7 @@
         "lat": 65.383101
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "9LkU-jfqx",
@@ -2714,7 +2714,7 @@
         "lat": 65.588584
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "nuPN-bNrk",
@@ -2733,7 +2733,7 @@
         "lat": 66.323791
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "6JVz-Jc5n",
@@ -2752,7 +2752,7 @@
         "lat": 66.602263
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "dm65-KZQT",
@@ -2771,7 +2771,7 @@
         "lat": 67.213012
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "UE9w-Khr9",
@@ -2790,7 +2790,7 @@
         "lat": 65.589317
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "rKQx-7VcQ",
@@ -2809,7 +2809,7 @@
         "lat": 65.852263
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "QHW8-Dv86",
@@ -2828,7 +2828,7 @@
         "lat": 66.920945
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "3s55-hqT6",
@@ -2847,7 +2847,7 @@
         "lat": 65.852264
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "syre-pc3x",
@@ -2866,7 +2866,7 @@
         "lat": 66.857654
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "gmtb-fQqE",
@@ -2885,7 +2885,7 @@
         "lat": 68.089803
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "e9BK-QWvW",
@@ -2904,7 +2904,7 @@
         "lat": 65.817294
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "Qfvv-6bfS",
@@ -2923,7 +2923,7 @@
         "lat": 65.597064
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "2gFb-XxXA",
@@ -2942,7 +2942,7 @@
         "lat": 65.316802
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "THY6-XCDk",
@@ -2961,7 +2961,7 @@
         "lat": 65.843642
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "mPqN-6LAM",
@@ -2980,7 +2980,7 @@
         "lat": 66.603676
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "uCuu-8tr4",
@@ -2999,7 +2999,7 @@
         "lat": 66.05461
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "sQms-mbUL",
@@ -3018,7 +3018,7 @@
         "lat": 66.31995
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "uqwf-jJfA",
@@ -3037,7 +3037,7 @@
         "lat": 67.943147
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "EXuJ-Fbfh",
@@ -3056,7 +3056,7 @@
         "lat": 66.76784
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "uULP-WzZG",
@@ -3075,7 +3075,7 @@
         "lat": 65.582722
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "z5cu-62Xc",
@@ -3094,7 +3094,7 @@
         "lat": 65.852475
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "B7EY-BEQm",
@@ -3113,7 +3113,7 @@
         "lat": 65.85367
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "A9xk-GLan",
@@ -3132,7 +3132,7 @@
         "lat": 66.563323
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "nZ34-LvJR",
@@ -3151,7 +3151,7 @@
         "lat": 67.645013
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "5GmN-WphT",
@@ -3170,7 +3170,7 @@
         "lat": 66.081122
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "YFLD-XSZk",
@@ -3189,7 +3189,7 @@
         "lat": 65.263438
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "ahtk-4aBQ",
@@ -3208,7 +3208,7 @@
         "lat": 65.381709
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "xJ6E-Q9WG",
@@ -3227,7 +3227,7 @@
         "lat": 65.841053
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "kXjp-nDsw",
@@ -3246,7 +3246,7 @@
         "lat": 66.144091
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "gFJ9-2S69",
@@ -3265,7 +3265,7 @@
         "lat": 66.389472
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "XvEc-A343",
@@ -3284,7 +3284,7 @@
         "lat": 66.325472
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "8C5s-qzFy",
@@ -3303,7 +3303,7 @@
         "lat": 67.945437
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "PWWe-hMpb",
@@ -3322,7 +3322,7 @@
         "lat": 65.598473
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "drEC-3T2f",
@@ -3341,7 +3341,7 @@
         "lat": 67.133986
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "NM8c-7uPZ",
@@ -3360,7 +3360,7 @@
         "lat": 65.852793
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "YZ29-xkJF",
@@ -3379,7 +3379,7 @@
         "lat": 65.831891
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "k3H8-vPGU",
@@ -3398,7 +3398,7 @@
         "lat": 68.438075
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "eTQY-wSsC",
@@ -3417,7 +3417,7 @@
         "lat": 65.45151
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "qJQQ-ksGt",
@@ -3436,7 +3436,7 @@
         "lat": 65.774077
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "u2zN-SfpG",
@@ -3455,7 +3455,7 @@
         "lat": 65.316534
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "dCnC-98dx",
@@ -3474,7 +3474,7 @@
         "lat": 65.66834
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "7D6n-vhzZ",
@@ -3493,7 +3493,7 @@
         "lat": 66.386777
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "mHhQ-7wJt",
@@ -3512,7 +3512,7 @@
         "lat": 67.16981
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "P8bJ-tdbt",
@@ -3531,7 +3531,7 @@
         "lat": 65.570556
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "Gf5s-85te",
@@ -3550,7 +3550,7 @@
         "lat": 66.467895
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "XXS3-R3tg",
@@ -3569,7 +3569,7 @@
         "lat": 66.321095
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "9Uea-gaVr",
@@ -3588,7 +3588,7 @@
         "lat": 66.130505
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "rgrk-nBab",
@@ -3607,7 +3607,7 @@
         "lat": 65.834583
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "dRPw-anRE",
@@ -3626,7 +3626,7 @@
         "lat": 67.410659
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "gYy4-Mf7J",
@@ -3645,7 +3645,7 @@
         "lat": 66.567309
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "xvjM-mHtp",
@@ -3664,7 +3664,7 @@
         "lat": 66.058558
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "WgkA-HUKC",
@@ -3683,7 +3683,7 @@
         "lat": 67.844307
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "KKzE-u4HM",
@@ -3702,7 +3702,7 @@
         "lat": 65.321761
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "xVmA-XFVx",
@@ -3721,7 +3721,7 @@
         "lat": 65.450102
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "YrGV-wKrX",
@@ -3740,7 +3740,7 @@
         "lat": 65.85143
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "8KDj-7uss",
@@ -3759,7 +3759,7 @@
         "lat": 66.428904
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "acbT-YgVm",
@@ -3778,7 +3778,7 @@
         "lat": 66.047354
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "nwb8-R6ba",
@@ -3797,7 +3797,7 @@
         "lat": 67.000466
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "uTdb-hY7D",
@@ -3816,7 +3816,7 @@
         "lat": 66.019811
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "9zqa-YZbX",
@@ -3835,7 +3835,7 @@
         "lat": 67.018371
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "Ysrq-fC6R",
@@ -3854,7 +3854,7 @@
         "lat": 65.821277
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "9uq7-6yQQ",
@@ -3873,7 +3873,7 @@
         "lat": 66.322846
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "KwZh-RjK3",
@@ -3892,7 +3892,7 @@
         "lat": 65.841931
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "hE7p-m4zJ",
@@ -3911,7 +3911,7 @@
         "lat": 65.596688
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "ASk8-vemA",
@@ -3930,7 +3930,7 @@
         "lat": 66.430334
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "TtSF-MKbR",
@@ -3949,7 +3949,7 @@
         "lat": 65.847753
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "C35p-BABp",
@@ -3968,7 +3968,7 @@
         "lat": 66.854295
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "2TTM-hKUk",
@@ -3987,7 +3987,7 @@
         "lat": 66.760152
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "Ybtb-SXkQ",
@@ -4006,7 +4006,7 @@
         "lat": 66.088098
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "HHKg-6wxR",
@@ -4025,7 +4025,7 @@
         "lat": 67.840032
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "KNer-LMxx",
@@ -4044,7 +4044,7 @@
         "lat": 65.344123
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "qUF2-pjya",
@@ -4063,7 +4063,7 @@
         "lat": 65.855093
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "Dcsc-cNhg",
@@ -4082,7 +4082,7 @@
         "lat": 66.385196
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "bMMm-7EDC",
@@ -4101,7 +4101,7 @@
         "lat": 67.214366
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "ZXzS-YatQ",
@@ -4120,7 +4120,7 @@
         "lat": 65.839713
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "FNGN-whTv",
@@ -4139,7 +4139,7 @@
         "lat": 65.260019
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "KN7U-DPFP",
@@ -4158,7 +4158,7 @@
         "lat": 66.326625
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "ncPj-np9f",
@@ -4177,7 +4177,7 @@
         "lat": 65.845611
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "uKLg-rwks",
@@ -4196,7 +4196,7 @@
         "lat": 66.871447
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "2McJ-nQLj",
@@ -4215,7 +4215,7 @@
         "lat": 65.610262
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "LMGC-7CDu",
@@ -4234,7 +4234,7 @@
         "lat": 67.841946
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "MLvd-6ayd",
@@ -4253,7 +4253,7 @@
         "lat": 65.14702
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "pzaV-4gQV",
@@ -4272,7 +4272,7 @@
         "lat": 66.604871
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "hWyD-VQ7g",
@@ -4291,7 +4291,7 @@
         "lat": 65.832979
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "gXLd-3AZE",
@@ -4310,7 +4310,7 @@
         "lat": 67.015235
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "mb2h-crxq",
@@ -4329,7 +4329,7 @@
         "lat": 65.765523
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "3xmw-LM54",
@@ -4348,7 +4348,7 @@
         "lat": 66.055573
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "Dtjd-46cp",
@@ -4367,7 +4367,7 @@
         "lat": 66.31995
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "sURW-9s6U",
@@ -4386,7 +4386,7 @@
         "lat": 67.000771
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "gnEF-k7CD",
@@ -4405,7 +4405,7 @@
         "lat": 66.057608
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "QutV-7Jd7",
@@ -4424,7 +4424,7 @@
         "lat": 65.85143
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "dYgr-hAK2",
@@ -4443,7 +4443,7 @@
         "lat": 66.802193
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "2QNd-zkY5",
@@ -4462,7 +4462,7 @@
         "lat": 65.597239
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "Vjpt-xr3c",
@@ -4481,7 +4481,7 @@
         "lat": 67.67715
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "7KN2-Dfws",
@@ -4500,7 +4500,7 @@
         "lat": 65.410319
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "h8pc-Pwfy",
@@ -4519,7 +4519,7 @@
         "lat": 65.61646
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "JWmQ-YcDJ",
@@ -4538,7 +4538,7 @@
         "lat": 65.736205
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "LrZw-cJYG",
@@ -4557,7 +4557,7 @@
         "lat": 65.82154
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "MTkz-qYet",
@@ -4576,7 +4576,7 @@
         "lat": 66.151031
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "4u6N-Tn34",
@@ -4595,7 +4595,7 @@
         "lat": 67.945437
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "sK4d-ua9E",
@@ -4614,7 +4614,7 @@
         "lat": 65.84645
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "BABC-ydDx",
@@ -4633,7 +4633,7 @@
         "lat": 65.835509
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "Ltt7-zsyG",
@@ -4652,7 +4652,7 @@
         "lat": 66.325602
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "L399-EbHZ",
@@ -4671,7 +4671,7 @@
         "lat": 65.311896
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "mXvW-EMhp",
@@ -4690,7 +4690,7 @@
         "lat": 65.580804
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "ywEV-AjbQ",
@@ -4709,7 +4709,7 @@
         "lat": 66.383251
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "J9Sf-TMcd",
@@ -4728,7 +4728,7 @@
         "lat": 67.151951
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "7TkN-rnCV",
@@ -4747,7 +4747,7 @@
         "lat": 65.448677
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "fBKH-GVjd",
@@ -4766,7 +4766,7 @@
         "lat": 67.847573
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "GFAq-EKGK",
@@ -4785,7 +4785,7 @@
         "lat": 66.392049
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "VgGJ-BP5p",
@@ -4804,7 +4804,7 @@
         "lat": 65.822963
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "8Aqf-8GqA",
@@ -4823,7 +4823,7 @@
         "lat": 66.43108
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "wBW4-w2Sz",
@@ -4842,7 +4842,7 @@
         "lat": 66.844403
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "cSVt-UZkS",
@@ -4861,7 +4861,7 @@
         "lat": 65.856484
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "KrQZ-TQrt",
@@ -4880,7 +4880,7 @@
         "lat": 65.676444
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "jXrA-vVWv",
@@ -4899,7 +4899,7 @@
         "lat": 66.323942
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "9vsH-dmRF",
@@ -4918,7 +4918,7 @@
         "lat": 66.803174
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "3FJR-fUMY",
@@ -4937,7 +4937,7 @@
         "lat": 67.150812
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "GDUC-6ZZL",
@@ -4956,7 +4956,7 @@
         "lat": 66.548147
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "VSaZ-Gtva",
@@ -4975,7 +4975,7 @@
         "lat": 65.843143
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "4NWk-UNC7",
@@ -4994,7 +4994,7 @@
         "lat": 67.846674
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "V4Kw-8eRc",
@@ -5013,7 +5013,7 @@
         "lat": 65.285072
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "wD9U-eZQf",
@@ -5032,7 +5032,7 @@
         "lat": 65.590484
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "WKz7-m24z",
@@ -5051,7 +5051,7 @@
         "lat": 66.078217
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "bPzF-BUAf",
@@ -5070,7 +5070,7 @@
         "lat": 66.018738
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "GaDw-n4Ba",
@@ -5089,7 +5089,7 @@
         "lat": 66.428738
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "U5Xb-zVaj",
@@ -5108,7 +5108,7 @@
         "lat": 67.212234
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "xkjK-jxAa",
@@ -5127,7 +5127,7 @@
         "lat": 65.8588
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "AnA6-CDvK",
@@ -5146,7 +5146,7 @@
         "lat": 65.83265
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "kBKf-WTmd",
@@ -5165,7 +5165,7 @@
         "lat": 66.320863
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "sFh7-VNaH",
@@ -5184,7 +5184,7 @@
         "lat": 67.861732
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "rN5s-L2Wj",
@@ -5203,7 +5203,7 @@
         "lat": 65.319835
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "X9av-ktrb",
@@ -5222,7 +5222,7 @@
         "lat": 66.802446
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "ea4f-NMwb",
@@ -5241,7 +5241,7 @@
         "lat": 67.410659
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "sS6E-sZYr",
@@ -5260,7 +5260,7 @@
         "lat": 66.387528
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "9cd7-8aUY",
@@ -5279,7 +5279,7 @@
         "lat": 65.261173
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "eAbw-amGG",
@@ -5298,7 +5298,7 @@
         "lat": 65.839541
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "69zL-uYKG",
@@ -5317,7 +5317,7 @@
         "lat": 65.77321
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "Y4qp-ewEN",
@@ -5336,7 +5336,7 @@
         "lat": 65.630033
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "E3ap-erkP",
@@ -5355,7 +5355,7 @@
         "lat": 66.604294
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "np37-gFHk",
@@ -5374,7 +5374,7 @@
         "lat": 66.845965
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "vgf9-JyLv",
@@ -5393,7 +5393,7 @@
         "lat": 65.910182
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "yuh5-m8UG",
@@ -5412,7 +5412,7 @@
         "lat": 65.675085
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "38gC-jMrr",
@@ -5431,7 +5431,7 @@
         "lat": 66.324471
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "PBQX-HjNe",
@@ -5450,7 +5450,7 @@
         "lat": 67.410659
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "a926-s3ZF",
@@ -5469,7 +5469,7 @@
         "lat": 66.382508
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "jHXS-puL7",
@@ -5488,7 +5488,7 @@
         "lat": 67.859235
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "p5dW-4TtT",
@@ -5507,7 +5507,7 @@
         "lat": 65.842933
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "D9me-ZRhn",
@@ -5526,7 +5526,7 @@
         "lat": 65.585629
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "HANM-qHqe",
@@ -5545,7 +5545,7 @@
         "lat": 66.075586
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "ShQy-nMMU",
@@ -5564,7 +5564,7 @@
         "lat": 65.586402
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "VDWU-zdE3",
@@ -5583,7 +5583,7 @@
         "lat": 66.609715
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "9Cjr-FBaj",
@@ -5602,7 +5602,7 @@
         "lat": 65.281616
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "FhgX-sbHg",
@@ -5621,7 +5621,7 @@
         "lat": 67.003749
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "VfBV-qZUu",
@@ -5640,7 +5640,7 @@
         "lat": 65.570118
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "yxgN-8HkL",
@@ -5659,7 +5659,7 @@
         "lat": 65.85836
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "RQML-dMyA",
@@ -5678,7 +5678,7 @@
         "lat": 65.85431
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "B7WM-NzsF",
@@ -5697,7 +5697,7 @@
         "lat": 66.328473
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "pfRD-Ly7E",
@@ -5716,7 +5716,7 @@
         "lat": 67.849368
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "h47L-mGjR",
@@ -5735,7 +5735,7 @@
         "lat": 66.387239
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "Bpam-Zt3w",
@@ -5754,7 +5754,7 @@
         "lat": 66.135148
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "tMRm-tJXT",
@@ -5773,7 +5773,7 @@
         "lat": 67.418827
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "qerd-Tubh",
@@ -5792,7 +5792,7 @@
         "lat": 65.841053
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "NVZL-xtKB",
@@ -5811,7 +5811,7 @@
         "lat": 65.594486
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "8xCn-aHNP",
@@ -5830,7 +5830,7 @@
         "lat": 65.769057
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "wmQF-5Q8e",
@@ -5849,7 +5849,7 @@
         "lat": 66.431128
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "EpMd-8Mzk",
@@ -5868,7 +5868,7 @@
         "lat": 65.383622
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "Tf2b-UyzE",
@@ -5887,7 +5887,7 @@
         "lat": 65.676407
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "Z7sU-kzPd",
@@ -5906,7 +5906,7 @@
         "lat": 67.859972
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "QzGY-2AEP",
@@ -5925,7 +5925,7 @@
         "lat": 67.212077
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "tvkb-nWz9",
@@ -5944,7 +5944,7 @@
         "lat": 65.6108
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "UCDP-YyGC",
@@ -5963,7 +5963,7 @@
         "lat": 65.738912
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "GeBu-6X5L",
@@ -5982,7 +5982,7 @@
         "lat": 66.607651
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "KBtQ-NDer",
@@ -6001,7 +6001,7 @@
         "lat": 65.445425
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "ZSFx-UetT",
@@ -6020,7 +6020,7 @@
         "lat": 65.90998
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "jdDL-y4yp",
@@ -6039,7 +6039,7 @@
         "lat": 66.323133
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "N4Uy-JNkw",
@@ -6058,7 +6058,7 @@
         "lat": 65.841782
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "QjFB-hGss",
@@ -6077,7 +6077,7 @@
         "lat": 65.581238
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "h4bZ-vv7m",
@@ -6096,7 +6096,7 @@
         "lat": 66.381389
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "GH7g-qpX9",
@@ -6115,7 +6115,7 @@
         "lat": 67.417145
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "FKX5-fhjg",
@@ -6134,7 +6134,7 @@
         "lat": 65.585433
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "EtYh-b8w4",
@@ -6153,7 +6153,7 @@
         "lat": 66.327363
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "fXef-U4Jp",
@@ -6172,7 +6172,7 @@
         "lat": 65.84137
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "RQmR-XJR3",
@@ -6191,7 +6191,7 @@
         "lat": 66.392317
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "h34E-3mLm",
@@ -6210,7 +6210,7 @@
         "lat": 66.467895
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "dzvR-6fxf",
@@ -6229,7 +6229,7 @@
         "lat": 65.3488
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "auDT-Y5hG",
@@ -6248,7 +6248,7 @@
         "lat": 65.825244
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "FckB-cqdJ",
@@ -6267,7 +6267,7 @@
         "lat": 65.86123
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "89zE-TCJ5",
@@ -6286,7 +6286,7 @@
         "lat": 65.853882
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "8USz-E45H",
@@ -6305,7 +6305,7 @@
         "lat": 67.427042
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "mS4g-7YJt",
@@ -6324,7 +6324,7 @@
         "lat": 68.436472
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "TmR2-BXS8",
@@ -6343,7 +6343,7 @@
         "lat": 66.322953
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "Na8a-Lmvu",
@@ -6362,7 +6362,7 @@
         "lat": 66.384175
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "qapW-sGdw",
@@ -6381,7 +6381,7 @@
         "lat": 66.917538
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "fHXG-XC8S",
@@ -6400,7 +6400,7 @@
         "lat": 66.391566
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "2SxB-Lz85",
@@ -6419,7 +6419,7 @@
         "lat": 65.637533
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "jbLs-GEnh",
@@ -6438,7 +6438,7 @@
         "lat": 66.603039
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "Uw48-rpgE",
@@ -6457,7 +6457,7 @@
         "lat": 65.278642
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "N6Dh-3QKp",
@@ -6476,7 +6476,7 @@
         "lat": 67.429657
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "xyvu-ngFS",
@@ -6495,7 +6495,7 @@
         "lat": 67.649623
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "CGB2-GLvH",
@@ -6514,7 +6514,7 @@
         "lat": 65.822054
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "ExJQ-acXY",
@@ -6533,7 +6533,7 @@
         "lat": 65.451222
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "ywyY-ZBAZ",
@@ -6552,7 +6552,7 @@
         "lat": 65.84228
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "5QZY-KeaB",
@@ -6571,7 +6571,7 @@
         "lat": 65.912639
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "Sy2a-XEa6",
@@ -6590,7 +6590,7 @@
         "lat": 65.669159
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "qsaw-yZpQ",
@@ -6609,7 +6609,7 @@
         "lat": 66.329309
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "UyHy-2QCB",
@@ -6628,7 +6628,7 @@
         "lat": 66.568227
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "Sjwn-9QxJ",
@@ -6647,7 +6647,7 @@
         "lat": 66.753936
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "NTNu-LTRT",
@@ -6666,7 +6666,7 @@
         "lat": 66.054985
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "en9m-DJSd",
@@ -6685,7 +6685,7 @@
         "lat": 65.585743
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "UXbz-ZKev",
@@ -6704,7 +6704,7 @@
         "lat": 65.81524
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "3d7x-pF2R",
@@ -6723,7 +6723,7 @@
         "lat": 65.597686
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "9cJK-qVEV",
@@ -6742,7 +6742,7 @@
         "lat": 68.369238
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "SXDG-Faaj",
@@ -6761,7 +6761,7 @@
         "lat": 65.842321
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "WMwB-jutv",
@@ -6780,7 +6780,7 @@
         "lat": 65.689925
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "2JUm-z6NE",
@@ -6799,7 +6799,7 @@
         "lat": 66.796864
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "hDa8-mGxz",
@@ -6818,7 +6818,7 @@
         "lat": 66.548147
       }
     },
-    "kommun": "Arjeplogs kommun"
+    "municipality": "Arjeplogs municipality"
   },
   {
     "id": "y2zA-hfss",
@@ -6837,7 +6837,7 @@
         "lat": 66.324793
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "8rcX-RYXG",
@@ -6856,7 +6856,7 @@
         "lat": 67.138201
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "wv4F-Arf2",
@@ -6875,7 +6875,7 @@
         "lat": 66.470397
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "XJkA-3fT5",
@@ -6894,7 +6894,7 @@
         "lat": 67.818579
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "UVVE-HzB5",
@@ -6913,7 +6913,7 @@
         "lat": 65.341394
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "kmRz-4dP6",
@@ -6932,7 +6932,7 @@
         "lat": 65.852792
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "DSDv-d8Dg",
@@ -6951,7 +6951,7 @@
         "lat": 65.583424
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "2WjP-9MsJ",
@@ -6970,7 +6970,7 @@
         "lat": 65.827029
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "Nm5x-RHkC",
@@ -6989,7 +6989,7 @@
         "lat": 65.259791
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "Ghp6-pxv4",
@@ -7008,7 +7008,7 @@
         "lat": 67.833754
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "ZZsN-7tBJ",
@@ -7027,7 +7027,7 @@
         "lat": 66.861342
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "UqxQ-FEgT",
@@ -7046,7 +7046,7 @@
         "lat": 66.326105
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "V2gZ-chfF",
@@ -7065,7 +7065,7 @@
         "lat": 66.915274
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "CNwH-GPqm",
@@ -7084,7 +7084,7 @@
         "lat": 67.212758
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "Dbn6-nsyU",
@@ -7103,7 +7103,7 @@
         "lat": 65.57894
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "8Hqu-mNRw",
@@ -7122,7 +7122,7 @@
         "lat": 65.831944
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "JBTd-TbvM",
@@ -7141,7 +7141,7 @@
         "lat": 68.091129
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "7Zfy-3kam",
@@ -7160,7 +7160,7 @@
         "lat": 65.589972
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "MEVx-s8Rc",
@@ -7179,7 +7179,7 @@
         "lat": 66.145665
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "fKMS-c4XV",
@@ -7198,7 +7198,7 @@
         "lat": 65.854035
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "khpH-uSFa",
@@ -7217,7 +7217,7 @@
         "lat": 65.842961
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "WVwt-VYtk",
@@ -7236,7 +7236,7 @@
         "lat": 65.323398
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "FEtJ-XGva",
@@ -7255,7 +7255,7 @@
         "lat": 65.771303
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "ygxp-u9gq",
@@ -7274,7 +7274,7 @@
         "lat": 65.598853
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "tWdh-px93",
@@ -7293,7 +7293,7 @@
         "lat": 66.803174
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "UAwa-RSFk",
@@ -7312,7 +7312,7 @@
         "lat": 66.329482
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "eR3b-gWe9",
@@ -7331,7 +7331,7 @@
         "lat": 65.833456
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "q9Ap-a54r",
@@ -7350,7 +7350,7 @@
         "lat": 67.673984
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "kTFR-mzZM",
@@ -7369,7 +7369,7 @@
         "lat": 65.594332
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "2DmS-rFAZ",
@@ -7388,7 +7388,7 @@
         "lat": 67.144742
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "xxUd-VmT4",
@@ -7407,7 +7407,7 @@
         "lat": 66.853018
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "R8Zn-7Eg5",
@@ -7426,7 +7426,7 @@
         "lat": 65.283953
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "VzyJ-LRLk",
@@ -7445,7 +7445,7 @@
         "lat": 66.564736
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "LnAE-dVNm",
@@ -7464,7 +7464,7 @@
         "lat": 66.321095
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "rxt5-UVUt",
@@ -7483,7 +7483,7 @@
         "lat": 65.852821
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "JMjx-RfAR",
@@ -7502,7 +7502,7 @@
         "lat": 65.838184
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "z3Re-j6wM",
@@ -7521,7 +7521,7 @@
         "lat": 66.602158
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "zN7H-57zB",
@@ -7540,7 +7540,7 @@
         "lat": 65.677112
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "6SaQ-JH57",
@@ -7559,7 +7559,7 @@
         "lat": 65.84401
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "h35w-Ywcy",
@@ -7578,7 +7578,7 @@
         "lat": 66.752621
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "N8pc-EUdT",
@@ -7597,7 +7597,7 @@
         "lat": 67.424227
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "MsSf-GZ8r",
@@ -7616,7 +7616,7 @@
         "lat": 65.260541
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "MBZk-jcyg",
@@ -7635,7 +7635,7 @@
         "lat": 65.825584
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "c2Vj-puEw",
@@ -7654,7 +7654,7 @@
         "lat": 65.584445
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "TXXF-XrAR",
@@ -7673,7 +7673,7 @@
         "lat": 67.13734
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "hvd2-7wTL",
@@ -7692,7 +7692,7 @@
         "lat": 66.606544
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "a82c-8gcd",
@@ -7711,7 +7711,7 @@
         "lat": 67.857311
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "ppTn-C2Gj",
@@ -7730,7 +7730,7 @@
         "lat": 65.285723
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "fLVB-rxDs",
@@ -7749,7 +7749,7 @@
         "lat": 65.823263
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "bUvA-RVDT",
@@ -7768,7 +7768,7 @@
         "lat": 66.386091
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "LNEG-EfdC",
@@ -7787,7 +7787,7 @@
         "lat": 65.840518
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "4Wds-r4jA",
@@ -7806,7 +7806,7 @@
         "lat": 66.323133
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "rkbC-PByT",
@@ -7825,7 +7825,7 @@
         "lat": 65.85367
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "nNJp-J5bt",
@@ -7844,7 +7844,7 @@
         "lat": 65.85618
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "hAtY-9hDC",
@@ -7863,7 +7863,7 @@
         "lat": 66.148078
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "5Wqg-JUdw",
@@ -7882,7 +7882,7 @@
         "lat": 66.913598
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "cvK2-rPXD",
@@ -7901,7 +7901,7 @@
         "lat": 68.349095
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "qCML-wha7",
@@ -7920,7 +7920,7 @@
         "lat": 65.821612
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "DmHj-6Sga",
@@ -7939,7 +7939,7 @@
         "lat": 65.261552
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "MdzJ-d7EX",
@@ -7958,7 +7958,7 @@
         "lat": 66.800242
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "ZXCW-H4zr",
@@ -7977,7 +7977,7 @@
         "lat": 67.429709
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "Zgy2-uFe9",
@@ -7996,7 +7996,7 @@
         "lat": 65.580242
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "jn4F-M8J4",
@@ -8015,7 +8015,7 @@
         "lat": 65.850273
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "Sp98-ek7G",
@@ -8034,7 +8034,7 @@
         "lat": 65.343227
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "t8Nh-bkbJ",
@@ -8053,7 +8053,7 @@
         "lat": 66.31995
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "psFr-fjha",
@@ -8072,7 +8072,7 @@
         "lat": 66.069445
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "FzRW-pTZC",
@@ -8091,7 +8091,7 @@
         "lat": 66.431291
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "axv3-ccwP",
@@ -8110,7 +8110,7 @@
         "lat": 68.094431
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "XLEP-pPYT",
@@ -8129,7 +8129,7 @@
         "lat": 65.821889
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "dbRV-MgR2",
@@ -8148,7 +8148,7 @@
         "lat": 66.802193
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "4Dqh-F9Le",
@@ -8167,7 +8167,7 @@
         "lat": 67.210729
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "zTvU-7fuC",
@@ -8186,7 +8186,7 @@
         "lat": 66.75123
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "Ywgw-R65v",
@@ -8205,7 +8205,7 @@
         "lat": 65.844069
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "abTF-b6Pc",
@@ -8224,7 +8224,7 @@
         "lat": 65.262067
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "q9Xs-bDAk",
@@ -8243,7 +8243,7 @@
         "lat": 66.329457
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "MX82-6J8M",
@@ -8262,7 +8262,7 @@
         "lat": 65.670484
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "WEvk-HAwc",
@@ -8281,7 +8281,7 @@
         "lat": 65.349772
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "BhBy-pgaP",
@@ -8300,7 +8300,7 @@
         "lat": 65.915477
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "LEyU-zsce",
@@ -8319,7 +8319,7 @@
         "lat": 65.847944
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "f8zc-GDq9",
@@ -8338,7 +8338,7 @@
         "lat": 66.390995
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "fz9S-vz6w",
@@ -8357,7 +8357,7 @@
         "lat": 65.597299
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "U5NW-BURV",
@@ -8376,7 +8376,7 @@
         "lat": 66.089116
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "KKPB-VLmx",
@@ -8395,7 +8395,7 @@
         "lat": 66.848169
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "ZT59-qTY2",
@@ -8414,7 +8414,7 @@
         "lat": 67.230429
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "9uR6-EQkQ",
@@ -8433,7 +8433,7 @@
         "lat": 65.846462
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "TzMw-wXAQ",
@@ -8452,7 +8452,7 @@
         "lat": 66.426056
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "pqGq-nPRP",
@@ -8471,7 +8471,7 @@
         "lat": 67.850129
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "rMjy-6XgA",
@@ -8490,7 +8490,7 @@
         "lat": 66.321095
       }
     },
-    "kommun": "Överkalix kommun"
+    "municipality": "Överkalix municipality"
   },
   {
     "id": "YGte-mN2B",
@@ -8509,7 +8509,7 @@
         "lat": 65.675976
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "GK8S-bDNP",
@@ -8528,7 +8528,7 @@
         "lat": 65.412998
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "S5t9-tGnv",
@@ -8547,7 +8547,7 @@
         "lat": 65.853852
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "eN4N-YvX7",
@@ -8566,7 +8566,7 @@
         "lat": 66.019818
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "9nMX-Fz8n",
@@ -8585,7 +8585,7 @@
         "lat": 66.385537
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "QKLX-QdDe",
@@ -8604,7 +8604,7 @@
         "lat": 65.825207
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "mRL8-KLbE",
@@ -8623,7 +8623,7 @@
         "lat": 65.450915
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "fNfR-7w3N",
@@ -8642,7 +8642,7 @@
         "lat": 65.427041
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "4sza-Bdb3",
@@ -8661,7 +8661,7 @@
         "lat": 65.600699
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "ftfZ-DsGU",
@@ -8680,7 +8680,7 @@
         "lat": 67.208071
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "RmbU-m5jW",
@@ -8699,7 +8699,7 @@
         "lat": 67.015083
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "UEb5-wNJp",
@@ -8718,7 +8718,7 @@
         "lat": 65.842684
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "tLVw-zkbK",
@@ -8737,7 +8737,7 @@
         "lat": 66.432124
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "xKtu-L8de",
@@ -8756,7 +8756,7 @@
         "lat": 67.852098
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "Mad6-C8Af",
@@ -8775,7 +8775,7 @@
         "lat": 65.672693
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "RWwL-utVM",
@@ -8794,7 +8794,7 @@
         "lat": 65.857823
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "k7D6-wwp3",
@@ -8813,7 +8813,7 @@
         "lat": 66.387959
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "fgeB-zHdH",
@@ -8832,7 +8832,7 @@
         "lat": 65.279434
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "2ZNc-sqYf",
@@ -8851,7 +8851,7 @@
         "lat": 66.021454
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "VeVW-9Nnn",
@@ -8870,7 +8870,7 @@
         "lat": 66.850495
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "YnpR-QPBM",
@@ -8889,7 +8889,7 @@
         "lat": 67.23056
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "Bmkx-zx7R",
@@ -8908,7 +8908,7 @@
         "lat": 65.825871
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "gL6U-Y4Nj",
@@ -8927,7 +8927,7 @@
         "lat": 65.594881
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "s4Cj-jywh",
@@ -8946,7 +8946,7 @@
         "lat": 66.471749
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "2xYF-mYuU",
@@ -8965,7 +8965,7 @@
         "lat": 65.732799
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "TG4F-wzDw",
@@ -8984,7 +8984,7 @@
         "lat": 68.090748
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "WVNX-tYgV",
@@ -9003,7 +9003,7 @@
         "lat": 66.386455
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "NWHF-WAtp",
@@ -9022,7 +9022,7 @@
         "lat": 65.689925
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "Sx9x-J9Uk",
@@ -9041,7 +9041,7 @@
         "lat": 65.857247
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "Xu63-Uvrm",
@@ -9060,7 +9060,7 @@
         "lat": 67.147729
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "UFZe-6pjP",
@@ -9079,7 +9079,7 @@
         "lat": 67.002289
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "6u5Z-jvk8",
@@ -9098,7 +9098,7 @@
         "lat": 65.621807
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "s9wz-s33R",
@@ -9117,7 +9117,7 @@
         "lat": 65.346701
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "jpMp-PHvF",
@@ -9136,7 +9136,7 @@
         "lat": 67.679793
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "FGMR-nqet",
@@ -9155,7 +9155,7 @@
         "lat": 65.587179
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "6jUw-vkDS",
@@ -9174,7 +9174,7 @@
         "lat": 65.831729
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "CSbT-B2tV",
@@ -9193,7 +9193,7 @@
         "lat": 66.426056
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "3E8p-pkgv",
@@ -9212,7 +9212,7 @@
         "lat": 65.838004
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "fM49-3BTJ",
@@ -9231,7 +9231,7 @@
         "lat": 66.799511
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "Gub3-SPSA",
@@ -9250,7 +9250,7 @@
         "lat": 65.829553
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "HdUy-deEW",
@@ -9269,7 +9269,7 @@
         "lat": 65.85176
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "Mxx9-RWKX",
@@ -9288,7 +9288,7 @@
         "lat": 67.138332
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "VsMm-hwGJ",
@@ -9307,7 +9307,7 @@
         "lat": 65.347563
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "SzhF-w5ba",
@@ -9326,7 +9326,7 @@
         "lat": 67.170853
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "sT5J-kVqx",
@@ -9345,7 +9345,7 @@
         "lat": 67.675988
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "BJDu-aqVL",
@@ -9364,7 +9364,7 @@
         "lat": 65.592807
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "hSbt-gW7n",
@@ -9383,7 +9383,7 @@
         "lat": 65.81491
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "AxHV-2SAX",
@@ -9402,7 +9402,7 @@
         "lat": 65.622181
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "XPT8-Ttzf",
@@ -9421,7 +9421,7 @@
         "lat": 66.145786
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "kQDL-ERL6",
@@ -9440,7 +9440,7 @@
         "lat": 65.843649
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "gGdN-6ZbS",
@@ -9459,7 +9459,7 @@
         "lat": 66.382949
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "y4ea-fWsy",
@@ -9478,7 +9478,7 @@
         "lat": 65.694402
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "H7EB-ZkNw",
@@ -9497,7 +9497,7 @@
         "lat": 65.90998
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "bCT8-tUud",
@@ -9516,7 +9516,7 @@
         "lat": 65.383622
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "Vm7j-t33J",
@@ -9535,7 +9535,7 @@
         "lat": 67.003484
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "rUJJ-NmYe",
@@ -9554,7 +9554,7 @@
         "lat": 65.594978
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "8jZf-3zRu",
@@ -9573,7 +9573,7 @@
         "lat": 66.801378
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "pnWM-AMXE",
@@ -9592,7 +9592,7 @@
         "lat": 67.168456
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "pua9-Whmp",
@@ -9611,7 +9611,7 @@
         "lat": 65.829611
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "cztB-7gXj",
@@ -9630,7 +9630,7 @@
         "lat": 67.844304
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "7k3c-vnAr",
@@ -9649,7 +9649,7 @@
         "lat": 65.693692
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "Jfzs-7yDc",
@@ -9668,7 +9668,7 @@
         "lat": 65.740884
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "vyve-F7zj",
@@ -9687,7 +9687,7 @@
         "lat": 66.140927
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "fbZH-398q",
@@ -9706,7 +9706,7 @@
         "lat": 65.583556
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "LvXY-bS7d",
@@ -9725,7 +9725,7 @@
         "lat": 65.407969
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "bysn-KmFm",
@@ -9744,7 +9744,7 @@
         "lat": 65.852495
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "4vkJ-nPMn",
@@ -9763,7 +9763,7 @@
         "lat": 67.945437
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "aPcK-8NWa",
@@ -9782,7 +9782,7 @@
         "lat": 66.572324
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "rJLx-8qNp",
@@ -9801,7 +9801,7 @@
         "lat": 65.591443
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "GPJH-6VCP",
@@ -9820,7 +9820,7 @@
         "lat": 65.819843
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "PCYN-ZnBQ",
@@ -9839,7 +9839,7 @@
         "lat": 67.148728
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "S2WR-WqJ7",
@@ -9858,7 +9858,7 @@
         "lat": 68.093482
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "WRQD-b2Aj",
@@ -9877,7 +9877,7 @@
         "lat": 65.586852
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "CQCC-MPQN",
@@ -9896,7 +9896,7 @@
         "lat": 65.693642
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "jPn6-sb29",
@@ -9915,7 +9915,7 @@
         "lat": 65.831615
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "vJpg-Z5G4",
@@ -9934,7 +9934,7 @@
         "lat": 66.607034
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "x7LH-GEyz",
@@ -9953,7 +9953,7 @@
         "lat": 65.380916
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "CC7P-VwxJ",
@@ -9972,7 +9972,7 @@
         "lat": 67.210326
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "YSeG-ghR6",
@@ -9991,7 +9991,7 @@
         "lat": 65.912863
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "kJe3-fsm5",
@@ -10010,7 +10010,7 @@
         "lat": 66.877306
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "6Nem-VJA3",
@@ -10029,7 +10029,7 @@
         "lat": 65.597297
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "vKuD-Tj5a",
@@ -10048,7 +10048,7 @@
         "lat": 65.595567
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "4HeC-T9m3",
@@ -10067,7 +10067,7 @@
         "lat": 66.147084
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "sC7R-JxJ4",
@@ -10086,7 +10086,7 @@
         "lat": 65.821136
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "SByG-LyGX",
@@ -10105,7 +10105,7 @@
         "lat": 67.851499
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "L36Z-nxTt",
@@ -10124,7 +10124,7 @@
         "lat": 65.338596
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "6PdN-5j7k",
@@ -10143,7 +10143,7 @@
         "lat": 66.844403
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "8X5C-wMfF",
@@ -10162,7 +10162,7 @@
         "lat": 65.692153
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "p2Vm-a8sU",
@@ -10181,7 +10181,7 @@
         "lat": 65.837537
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "fACm-zERZ",
@@ -10200,7 +10200,7 @@
         "lat": 67.416608
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "63fZ-BY8y",
@@ -10219,7 +10219,7 @@
         "lat": 65.86123
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "j2kC-wBGV",
@@ -10238,7 +10238,7 @@
         "lat": 66.803989
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "eAaX-eQUR",
@@ -10257,7 +10257,7 @@
         "lat": 66.427836
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "MTHw-hzCp",
@@ -10276,7 +10276,7 @@
         "lat": 67.858106
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "BTXR-9cLD",
@@ -10295,7 +10295,7 @@
         "lat": 65.827614
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "rLQt-7LzH",
@@ -10314,7 +10314,7 @@
         "lat": 65.59182
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "nvxA-2Sh6",
@@ -10333,7 +10333,7 @@
         "lat": 65.628167
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "eprf-Hg89",
@@ -10352,7 +10352,7 @@
         "lat": 67.481778
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "c5rc-HMdA",
@@ -10371,7 +10371,7 @@
         "lat": 65.305211
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "dnHc-Wwf5",
@@ -10390,7 +10390,7 @@
         "lat": 66.755489
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "XAkF-6xhp",
@@ -10409,7 +10409,7 @@
         "lat": 65.852458
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "r8nB-XJEk",
@@ -10428,7 +10428,7 @@
         "lat": 65.83445
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "jJaY-Uq4R",
@@ -10447,7 +10447,7 @@
         "lat": 65.859855
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "H6qk-2rGE",
@@ -10466,7 +10466,7 @@
         "lat": 66.803174
       }
     },
-    "kommun": "Övertorneå kommun"
+    "municipality": "Övertorneå municipality"
   },
   {
     "id": "Ehsy-YPES",
@@ -10485,7 +10485,7 @@
         "lat": 66.089008
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "h3sQ-vuRx",
@@ -10504,7 +10504,7 @@
         "lat": 67.851091
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "AfKg-YzVV",
@@ -10523,7 +10523,7 @@
         "lat": 65.5933
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "2Gp6-VFSY",
@@ -10542,7 +10542,7 @@
         "lat": 66.430408
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "V3zP-WQfF",
@@ -10561,7 +10561,7 @@
         "lat": 67.481795
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "Dg7j-8kAq",
@@ -10580,7 +10580,7 @@
         "lat": 67.133619
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "bdpc-g7NT",
@@ -10599,7 +10599,7 @@
         "lat": 65.330868
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "kDCZ-byfx",
@@ -10618,7 +10618,7 @@
         "lat": 65.8316
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "SmBV-k8cH",
@@ -10637,7 +10637,7 @@
         "lat": 65.738189
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "2Mjv-FPqp",
@@ -10656,7 +10656,7 @@
         "lat": 65.911129
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "HUme-vdHM",
@@ -10675,7 +10675,7 @@
         "lat": 65.615654
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "5cAA-MejA",
@@ -10694,7 +10694,7 @@
         "lat": 65.772128
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "AfpR-RSTB",
@@ -10713,7 +10713,7 @@
         "lat": 67.845256
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "HTJQ-YY62",
@@ -10732,7 +10732,7 @@
         "lat": 65.836738
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "c3kv-KJnk",
@@ -10751,7 +10751,7 @@
         "lat": 65.912965
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "WtS8-8Zft",
@@ -10770,7 +10770,7 @@
         "lat": 67.16931
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "3UKr-p4mp",
@@ -10789,7 +10789,7 @@
         "lat": 67.824414
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "ZMzb-cGD3",
@@ -10808,7 +10808,7 @@
         "lat": 66.427629
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "Bgqu-fVWc",
@@ -10827,7 +10827,7 @@
         "lat": 65.589011
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "mtrW-TBgN",
@@ -10846,7 +10846,7 @@
         "lat": 65.145218
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "kJSY-p8MY",
@@ -10865,7 +10865,7 @@
         "lat": 65.668167
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "GhZD-Jg6h",
@@ -10884,7 +10884,7 @@
         "lat": 66.755902
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "kqQt-cJR2",
@@ -10903,7 +10903,7 @@
         "lat": 65.84384
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "UYgN-7s69",
@@ -10922,7 +10922,7 @@
         "lat": 65.609504
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "f5rA-3rQe",
@@ -10941,7 +10941,7 @@
         "lat": 65.822487
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "LVmP-Wwyt",
@@ -10960,7 +10960,7 @@
         "lat": 66.142179
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "m2BP-3dkB",
@@ -10979,7 +10979,7 @@
         "lat": 65.689925
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "sux8-UNVV",
@@ -10998,7 +10998,7 @@
         "lat": 67.852309
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "QGwT-K7fg",
@@ -11017,7 +11017,7 @@
         "lat": 65.824838
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "g7ej-GHFs",
@@ -11036,7 +11036,7 @@
         "lat": 65.383357
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "rN36-Eemg",
@@ -11055,7 +11055,7 @@
         "lat": 67.942587
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "KR66-zcWe",
@@ -11074,7 +11074,7 @@
         "lat": 65.258903
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "xnJC-f2m6",
@@ -11093,7 +11093,7 @@
         "lat": 65.847255
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "4rpX-g7ms",
@@ -11112,7 +11112,7 @@
         "lat": 67.132135
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "2nhc-rTJN",
@@ -11131,7 +11131,7 @@
         "lat": 65.837321
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "G6Kw-yQtE",
@@ -11150,7 +11150,7 @@
         "lat": 66.15123
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "zwmG-2Q74",
@@ -11169,7 +11169,7 @@
         "lat": 65.669932
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "xSzd-BNbz",
@@ -11188,7 +11188,7 @@
         "lat": 65.573578
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "nNHv-F4kz",
@@ -11207,7 +11207,7 @@
         "lat": 66.081778
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "rK4f-f8FG",
@@ -11226,7 +11226,7 @@
         "lat": 67.675109
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "qf64-Y4jw",
@@ -11245,7 +11245,7 @@
         "lat": 65.590333
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "BPn4-UYCh",
@@ -11264,7 +11264,7 @@
         "lat": 67.941854
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "dK3n-9j3M",
@@ -11283,7 +11283,7 @@
         "lat": 65.274441
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "c67N-yn9L",
@@ -11302,7 +11302,7 @@
         "lat": 65.786557
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "7dGU-wJE8",
@@ -11321,7 +11321,7 @@
         "lat": 65.837321
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "x3wU-9Ay7",
@@ -11340,7 +11340,7 @@
         "lat": 67.40496
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "gL86-PWyW",
@@ -11359,7 +11359,7 @@
         "lat": 66.607882
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "t4uT-uycq",
@@ -11378,7 +11378,7 @@
         "lat": 65.676444
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "eV9q-vLKf",
@@ -11397,7 +11397,7 @@
         "lat": 65.628587
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "jnRd-8xqh",
@@ -11416,7 +11416,7 @@
         "lat": 67.849542
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "39Uh-vFxM",
@@ -11435,7 +11435,7 @@
         "lat": 65.822973
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "B63u-McDn",
@@ -11454,7 +11454,7 @@
         "lat": 65.588637
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "SEkm-pK2c",
@@ -11473,7 +11473,7 @@
         "lat": 65.350182
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "bVU5-PWNK",
@@ -11492,7 +11492,7 @@
         "lat": 65.842871
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "T7Fq-FTTN",
@@ -11511,7 +11511,7 @@
         "lat": 67.00364
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "UhSv-jfj5",
@@ -11530,7 +11530,7 @@
         "lat": 65.860469
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "TDHn-LAJQ",
@@ -11549,7 +11549,7 @@
         "lat": 66.918906
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "Cekx-vHFH",
@@ -11568,7 +11568,7 @@
         "lat": 65.855896
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "rRmR-jUMM",
@@ -11587,7 +11587,7 @@
         "lat": 65.693692
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "tw7t-SWAB",
@@ -11606,7 +11606,7 @@
         "lat": 66.146748
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "thZm-fm5h",
@@ -11625,7 +11625,7 @@
         "lat": 65.144297
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "E2Mn-zKCK",
@@ -11644,7 +11644,7 @@
         "lat": 65.821662
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "4dXU-rThf",
@@ -11663,7 +11663,7 @@
         "lat": 67.644608
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "63bC-vQXW",
@@ -11682,7 +11682,7 @@
         "lat": 65.262943
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "63QH-2dDq",
@@ -11701,7 +11701,7 @@
         "lat": 65.835637
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "T7MZ-SUrn",
@@ -11720,7 +11720,7 @@
         "lat": 67.410659
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "hdyh-kqFb",
@@ -11739,7 +11739,7 @@
         "lat": 65.858623
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "ryFV-nr7c",
@@ -11758,7 +11758,7 @@
         "lat": 67.4228
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "aktR-g5ed",
@@ -11777,7 +11777,7 @@
         "lat": 65.638659
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "QGmX-TWHY",
@@ -11796,7 +11796,7 @@
         "lat": 66.078298
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "J8t3-jatj",
@@ -11815,7 +11815,7 @@
         "lat": 67.679531
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "MgXe-Ydwg",
@@ -11834,7 +11834,7 @@
         "lat": 67.410659
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "sgFh-fPdM",
@@ -11853,7 +11853,7 @@
         "lat": 65.594551
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "umaL-PyLh",
@@ -11872,7 +11872,7 @@
         "lat": 65.69465
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "NHsz-w6QB",
@@ -11891,7 +11891,7 @@
         "lat": 66.608834
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "nK9X-CkBW",
@@ -11910,7 +11910,7 @@
         "lat": 65.406404
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "TcTg-gH9m",
@@ -11929,7 +11929,7 @@
         "lat": 66.065935
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "Qka3-RcNv",
@@ -11948,7 +11948,7 @@
         "lat": 65.57196
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "jGVg-ZqaR",
@@ -11967,7 +11967,7 @@
         "lat": 65.84114
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "9uPw-dubb",
@@ -11986,7 +11986,7 @@
         "lat": 65.766576
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "JfJa-HckT",
@@ -12005,7 +12005,7 @@
         "lat": 68.438184
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "yEfv-Vpa4",
@@ -12024,7 +12024,7 @@
         "lat": 67.000466
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "9LEs-rw7r",
@@ -12043,7 +12043,7 @@
         "lat": 65.59068
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "nNT7-j83G",
@@ -12062,7 +12062,7 @@
         "lat": 65.673504
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "R8db-eeg4",
@@ -12081,7 +12081,7 @@
         "lat": 67.147954
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "JjUu-Dww4",
@@ -12100,7 +12100,7 @@
         "lat": 66.603027
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "BXBE-wVDq",
@@ -12119,7 +12119,7 @@
         "lat": 66.066755
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "FDFq-RYtu",
@@ -12138,7 +12138,7 @@
         "lat": 65.414186
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "AEgG-m3wb",
@@ -12157,7 +12157,7 @@
         "lat": 65.8447
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "CNDN-dnSj",
@@ -12176,7 +12176,7 @@
         "lat": 67.860302
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "HGtx-WuX7",
@@ -12195,7 +12195,7 @@
         "lat": 65.824638
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "ZsQ7-6qCJ",
@@ -12214,7 +12214,7 @@
         "lat": 65.564196
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "5RHJ-XfQm",
@@ -12233,7 +12233,7 @@
         "lat": 67.210033
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "TLZ8-DUAQ",
@@ -12252,7 +12252,7 @@
         "lat": 65.45151
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "9bjf-Q6LP",
@@ -12271,7 +12271,7 @@
         "lat": 65.676444
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "WH6K-YZQH",
@@ -12290,7 +12290,7 @@
         "lat": 65.148858
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "XzH8-kBAk",
@@ -12309,7 +12309,7 @@
         "lat": 66.143784
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "9CPr-dDrg",
@@ -12328,7 +12328,7 @@
         "lat": 66.755612
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "4ZgY-7xMK",
@@ -12347,7 +12347,7 @@
         "lat": 65.86132
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "Btzw-UVZv",
@@ -12366,7 +12366,7 @@
         "lat": 65.837303
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "jSgH-eRap",
@@ -12385,7 +12385,7 @@
         "lat": 65.820098
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "wDhS-6Am4",
@@ -12404,7 +12404,7 @@
         "lat": 65.579734
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "v3q6-nCbd",
@@ -12423,7 +12423,7 @@
         "lat": 67.854268
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "5paG-Xh8P",
@@ -12442,7 +12442,7 @@
         "lat": 67.214244
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "uWYL-U98R",
@@ -12461,7 +12461,7 @@
         "lat": 65.841816
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "gLWh-amdn",
@@ -12480,7 +12480,7 @@
         "lat": 65.317126
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "33dv-Xf8Y",
@@ -12499,7 +12499,7 @@
         "lat": 65.26193
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "TzWz-hDUz",
@@ -12518,7 +12518,7 @@
         "lat": 66.602987
       }
     },
-    "kommun": "Jokkmokks kommun"
+    "municipality": "Jokkmokks municipality"
   },
   {
     "id": "3JBB-NMrj",
@@ -12537,7 +12537,7 @@
         "lat": 66.058558
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "Hj3z-QvTY",
@@ -12556,7 +12556,7 @@
         "lat": 67.138355
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "rhuv-N5LV",
@@ -12575,7 +12575,7 @@
         "lat": 65.808804
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "LwYm-7My5",
@@ -12594,7 +12594,7 @@
         "lat": 65.830157
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "VSMx-begb",
@@ -12613,7 +12613,7 @@
         "lat": 65.848018
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "MpL6-yd7u",
@@ -12632,7 +12632,7 @@
         "lat": 65.69453
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "RuJ3-NPVR",
@@ -12651,7 +12651,7 @@
         "lat": 65.427701
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "6a3F-NHRF",
@@ -12670,7 +12670,7 @@
         "lat": 65.595929
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "gYbA-QjEX",
@@ -12689,7 +12689,7 @@
         "lat": 68.352743
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "NDt8-nt7k",
@@ -12708,7 +12708,7 @@
         "lat": 66.080632
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "eQU9-cUHh",
@@ -12727,7 +12727,7 @@
         "lat": 65.843087
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "6tjC-hHwc",
@@ -12746,7 +12746,7 @@
         "lat": 65.614647
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "zk7r-czyT",
@@ -12765,7 +12765,7 @@
         "lat": 67.945691
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "MC3t-3gWU",
@@ -12784,7 +12784,7 @@
         "lat": 65.348463
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "Fm47-Xb2e",
@@ -12803,7 +12803,7 @@
         "lat": 65.911228
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "nyB9-vEmn",
@@ -12822,7 +12822,7 @@
         "lat": 67.676786
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "cQyb-DWsE",
@@ -12841,7 +12841,7 @@
         "lat": 66.918517
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "2enL-6YxS",
@@ -12860,7 +12860,7 @@
         "lat": 66.084977
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "hSwY-dPFA",
@@ -12879,7 +12879,7 @@
         "lat": 65.836211
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "dAAp-JaGJ",
@@ -12898,7 +12898,7 @@
         "lat": 65.594148
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "889p-nbSJ",
@@ -12917,7 +12917,7 @@
         "lat": 65.612802
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "jhup-ZPyd",
@@ -12936,7 +12936,7 @@
         "lat": 65.85421
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "fHfA-rMre",
@@ -12955,7 +12955,7 @@
         "lat": 67.165789
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "hYWm-c4CE",
@@ -12974,7 +12974,7 @@
         "lat": 67.648499
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "hCXn-yA7L",
@@ -12993,7 +12993,7 @@
         "lat": 67.138542
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "Pks7-Zc8X",
@@ -13012,7 +13012,7 @@
         "lat": 67.208071
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "yYBs-4BXs",
@@ -13031,7 +13031,7 @@
         "lat": 65.844552
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "8M6t-PtGm",
@@ -13050,7 +13050,7 @@
         "lat": 65.304188
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "vL3E-3PKe",
@@ -13069,7 +13069,7 @@
         "lat": 65.447565
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "9Ccb-3TW2",
@@ -13088,7 +13088,7 @@
         "lat": 65.820502
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "sKfv-f8W6",
@@ -13107,7 +13107,7 @@
         "lat": 65.851027
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "VDGH-2tem",
@@ -13126,7 +13126,7 @@
         "lat": 65.84384
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "D9RY-Fuj7",
@@ -13145,7 +13145,7 @@
         "lat": 65.914119
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "EMvL-qXHZ",
@@ -13164,7 +13164,7 @@
         "lat": 67.840423
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "Y8Cy-5F7E",
@@ -13183,7 +13183,7 @@
         "lat": 65.59685
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "LpgL-eD7F",
@@ -13202,7 +13202,7 @@
         "lat": 65.849557
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "qugc-NCLa",
@@ -13221,7 +13221,7 @@
         "lat": 67.207236
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "aYJf-eHMs",
@@ -13240,7 +13240,7 @@
         "lat": 67.152394
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "DFmF-H8qj",
@@ -13259,7 +13259,7 @@
         "lat": 65.446237
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "d3Dr-4UGM",
@@ -13278,7 +13278,7 @@
         "lat": 65.280168
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "xTYj-CfEA",
@@ -13297,7 +13297,7 @@
         "lat": 65.826017
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "T3MS-VLAt",
@@ -13316,7 +13316,7 @@
         "lat": 65.852429
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "Pvjw-Fabr",
@@ -13335,7 +13335,7 @@
         "lat": 65.667349
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "sJtD-n6hG",
@@ -13354,7 +13354,7 @@
         "lat": 67.129949
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "MG5t-JEkn",
@@ -13373,7 +13373,7 @@
         "lat": 65.583326
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "fak9-7h5G",
@@ -13392,7 +13392,7 @@
         "lat": 68.438685
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "nmeN-FC45",
@@ -13411,7 +13411,7 @@
         "lat": 65.40418
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "YCvg-7Xef",
@@ -13430,7 +13430,7 @@
         "lat": 65.841088
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "AsAH-W3Qu",
@@ -13449,7 +13449,7 @@
         "lat": 67.426572
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "95zN-zQFT",
@@ -13468,7 +13468,7 @@
         "lat": 65.45151
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "SxXD-7s85",
@@ -13487,7 +13487,7 @@
         "lat": 65.771585
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "z9b3-6CyJ",
@@ -13506,7 +13506,7 @@
         "lat": 66.069569
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "Uy4w-YAA7",
@@ -13525,7 +13525,7 @@
         "lat": 65.670269
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "QAwG-qegB",
@@ -13544,7 +13544,7 @@
         "lat": 65.317628
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "FPSA-gbB2",
@@ -13563,7 +13563,7 @@
         "lat": 65.838657
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "8k5x-YzmF",
@@ -13582,7 +13582,7 @@
         "lat": 67.232895
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "QBwz-vGSY",
@@ -13601,7 +13601,7 @@
         "lat": 66.089918
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "uHNr-LgxW",
@@ -13620,7 +13620,7 @@
         "lat": 67.175321
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "Edf6-hJgQ",
@@ -13639,7 +13639,7 @@
         "lat": 65.589899
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "9mtC-nDvt",
@@ -13658,7 +13658,7 @@
         "lat": 65.578716
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "8n6G-rrB8",
@@ -13677,7 +13677,7 @@
         "lat": 67.651255
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "ZSTc-UYFj",
@@ -13696,7 +13696,7 @@
         "lat": 65.857125
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "BwqA-jfZz",
@@ -13715,7 +13715,7 @@
         "lat": 65.383357
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "e7BZ-mqUN",
@@ -13734,7 +13734,7 @@
         "lat": 65.802991
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "875w-CkXJ",
@@ -13753,7 +13753,7 @@
         "lat": 65.260848
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "x9TN-P2yf",
@@ -13772,7 +13772,7 @@
         "lat": 67.64847
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "4Rze-HVdQ",
@@ -13791,7 +13791,7 @@
         "lat": 65.553576
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "cKAL-8VzC",
@@ -13810,7 +13810,7 @@
         "lat": 65.826659
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "azPR-AAeR",
@@ -13829,7 +13829,7 @@
         "lat": 65.834643
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "zxUU-5Z8T",
@@ -13848,7 +13848,7 @@
         "lat": 66.850245
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "bWXm-Vbke",
@@ -13867,7 +13867,7 @@
         "lat": 66.916884
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "kaaD-HBQQ",
@@ -13886,7 +13886,7 @@
         "lat": 65.91625
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "sFHP-3beY",
@@ -13905,7 +13905,7 @@
         "lat": 65.309385
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "TA64-zgpC",
@@ -13924,7 +13924,7 @@
         "lat": 67.225263
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "pjG9-nk36",
@@ -13943,7 +13943,7 @@
         "lat": 65.829464
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "TZdX-YVye",
@@ -13962,7 +13962,7 @@
         "lat": 65.597413
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "PkfN-WvPK",
@@ -13981,7 +13981,7 @@
         "lat": 67.854599
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "nJgy-f4kd",
@@ -14000,7 +14000,7 @@
         "lat": 65.583383
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "RTFu-RkfA",
@@ -14019,7 +14019,7 @@
         "lat": 65.851419
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "5MaU-mUUY",
@@ -14038,7 +14038,7 @@
         "lat": 67.208582
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "kLG3-ZKzd",
@@ -14057,7 +14057,7 @@
         "lat": 65.839637
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "nccB-FCMk",
@@ -14076,7 +14076,7 @@
         "lat": 65.322253
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "Jrnq-Ark8",
@@ -14095,7 +14095,7 @@
         "lat": 65.450915
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "qEdz-n5DV",
@@ -14114,7 +14114,7 @@
         "lat": 67.212205
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "RhFy-GeeZ",
@@ -14133,7 +14133,7 @@
         "lat": 65.837633
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "gV3D-x8kE",
@@ -14152,7 +14152,7 @@
         "lat": 66.058558
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "uQBs-M73f",
@@ -14171,7 +14171,7 @@
         "lat": 65.321305
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "R9x6-bb7F",
@@ -14190,7 +14190,7 @@
         "lat": 67.133094
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "DfJY-MGMa",
@@ -14209,7 +14209,7 @@
         "lat": 65.829464
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "rVBe-wysj",
@@ -14228,7 +14228,7 @@
         "lat": 67.682316
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "nuJh-cbzD",
@@ -14247,7 +14247,7 @@
         "lat": 65.611364
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "BVW7-Hfyr",
@@ -14266,7 +14266,7 @@
         "lat": 65.852458
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "7JT4-Lf3m",
@@ -14285,7 +14285,7 @@
         "lat": 67.17668
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "RmZm-GMfX",
@@ -14304,7 +14304,7 @@
         "lat": 65.432807
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "HFp6-7d8T",
@@ -14323,7 +14323,7 @@
         "lat": 65.852436
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "nDq8-JsZB",
@@ -14342,7 +14342,7 @@
         "lat": 67.137083
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "vak3-kxYF",
@@ -14361,7 +14361,7 @@
         "lat": 67.644373
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "pu2J-b9JS",
@@ -14380,7 +14380,7 @@
         "lat": 65.259306
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "7ATZ-nEk6",
@@ -14399,7 +14399,7 @@
         "lat": 65.738106
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "qWdW-3ZNv",
@@ -14418,7 +14418,7 @@
         "lat": 65.826707
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "2WJv-E9BW",
@@ -14437,7 +14437,7 @@
         "lat": 65.600054
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "Jakn-upJs",
@@ -14456,7 +14456,7 @@
         "lat": 67.429709
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "8QVh-zUGK",
@@ -14475,7 +14475,7 @@
         "lat": 65.690103
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "pj3b-NtbV",
@@ -14494,7 +14494,7 @@
         "lat": 65.855335
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "HNan-fWkH",
@@ -14513,7 +14513,7 @@
         "lat": 67.941622
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "SFm2-92dx",
@@ -14532,7 +14532,7 @@
         "lat": 65.841053
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "ehYQ-6jHB",
@@ -14551,7 +14551,7 @@
         "lat": 65.598535
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "Vccq-bZ2Z",
@@ -14570,7 +14570,7 @@
         "lat": 67.679537
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "6GDA-R5Yz",
@@ -14589,7 +14589,7 @@
         "lat": 65.823962
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "grhW-EyqH",
@@ -14608,7 +14608,7 @@
         "lat": 66.770041
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "jvZb-U5SP",
@@ -14627,7 +14627,7 @@
         "lat": 65.14318
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "agRE-cHUC",
@@ -14646,7 +14646,7 @@
         "lat": 65.263438
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "hhwh-3sHQ",
@@ -14665,7 +14665,7 @@
         "lat": 65.685999
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "AG9z-xrfa",
@@ -14684,7 +14684,7 @@
         "lat": 65.910863
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "9qAk-SCFx",
@@ -14703,7 +14703,7 @@
         "lat": 65.733893
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "9mfu-88jX",
@@ -14722,7 +14722,7 @@
         "lat": 65.147063
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "YTc7-NkCt",
@@ -14741,7 +14741,7 @@
         "lat": 67.941854
       }
     },
-    "kommun": "Pajala kommun"
+    "municipality": "Pajala municipality"
   },
   {
     "id": "pKr8-DbL4",
@@ -14760,7 +14760,7 @@
         "lat": 68.370777
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "qKjD-QaHb",
@@ -14779,7 +14779,7 @@
         "lat": 66.08509
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "36MP-PSyG",
@@ -14798,7 +14798,7 @@
         "lat": 66.918684
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "hHkL-HquQ",
@@ -14817,7 +14817,7 @@
         "lat": 65.610669
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "qgSf-7pKS",
@@ -14836,7 +14836,7 @@
         "lat": 65.857173
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "eJqn-D4zv",
@@ -14855,7 +14855,7 @@
         "lat": 65.451057
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "63wP-knRa",
@@ -14874,7 +14874,7 @@
         "lat": 65.831643
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "AmbK-tBkh",
@@ -14893,7 +14893,7 @@
         "lat": 67.85492
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "2Dje-t5c7",
@@ -14912,7 +14912,7 @@
         "lat": 65.842287
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "jpyB-xLaG",
@@ -14931,7 +14931,7 @@
         "lat": 65.765339
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "yYB2-aFDL",
@@ -14950,7 +14950,7 @@
         "lat": 65.588547
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "4PRm-LrKK",
@@ -14969,7 +14969,7 @@
         "lat": 65.305836
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "FmJT-wvUz",
@@ -14988,7 +14988,7 @@
         "lat": 65.85886
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "SQF7-VsYN",
@@ -15007,7 +15007,7 @@
         "lat": 66.752063
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "46Lz-nwpL",
@@ -15026,7 +15026,7 @@
         "lat": 65.263438
       }
     },
-    "kommun": "Arvidsjaurs kommun"
+    "municipality": "Arvidsjaurs municipality"
   },
   {
     "id": "gCeb-ZNFw",
@@ -15045,7 +15045,7 @@
         "lat": 65.668904
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "2sBa-9crT",
@@ -15064,7 +15064,7 @@
         "lat": 65.84384
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "m98Y-GHTa",
@@ -15083,7 +15083,7 @@
         "lat": 67.851595
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "Z8Pv-Zprg",
@@ -15102,7 +15102,7 @@
         "lat": 65.617837
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "PyMr-NPzn",
@@ -15121,7 +15121,7 @@
         "lat": 66.089918
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "hNQS-mTWm",
@@ -15140,7 +15140,7 @@
         "lat": 65.86123
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "muLr-z9La",
@@ -15159,7 +15159,7 @@
         "lat": 65.406617
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "Yq9k-U57C",
@@ -15178,7 +15178,7 @@
         "lat": 65.672028
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "Dzac-pRk4",
@@ -15197,7 +15197,7 @@
         "lat": 67.146941
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "6wKb-hnRg",
@@ -15216,7 +15216,7 @@
         "lat": 67.676146
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "NnPb-JG3B",
@@ -15235,7 +15235,7 @@
         "lat": 65.837998
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "TFrY-nsas",
@@ -15254,7 +15254,7 @@
         "lat": 65.601215
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "UCas-f2ct",
@@ -15273,7 +15273,7 @@
         "lat": 65.814669
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "9Bsz-jwyf",
@@ -15292,7 +15292,7 @@
         "lat": 65.853874
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "hWcX-TSx8",
@@ -15311,7 +15311,7 @@
         "lat": 67.138898
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "Gm5D-KceZ",
@@ -15330,7 +15330,7 @@
         "lat": 65.692153
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "f7RU-RBnr",
@@ -15349,7 +15349,7 @@
         "lat": 65.417369
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "zSmZ-zMYe",
@@ -15368,7 +15368,7 @@
         "lat": 67.850265
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "LuxV-ugwL",
@@ -15387,7 +15387,7 @@
         "lat": 65.738524
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "GsGx-JftS",
@@ -15406,7 +15406,7 @@
         "lat": 65.615917
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "ZPpp-B7bR",
@@ -15425,7 +15425,7 @@
         "lat": 65.822706
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "jxUD-rdrk",
@@ -15444,7 +15444,7 @@
         "lat": 65.856088
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "raqR-jsAq",
@@ -15463,7 +15463,7 @@
         "lat": 65.85431
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "p8GS-V3h9",
@@ -15482,7 +15482,7 @@
         "lat": 67.013686
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "C5em-VHWf",
@@ -15501,7 +15501,7 @@
         "lat": 67.866174
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "LBXp-5Pu7",
@@ -15520,7 +15520,7 @@
         "lat": 65.311055
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "4xXp-KPQ4",
@@ -15539,7 +15539,7 @@
         "lat": 65.8335
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "8yFe-nkAY",
@@ -15558,7 +15558,7 @@
         "lat": 65.618477
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "aBHC-8fpm",
@@ -15577,7 +15577,7 @@
         "lat": 65.823263
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "WJPA-6KzS",
@@ -15596,7 +15596,7 @@
         "lat": 65.854154
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "GeBR-mDSV",
@@ -15615,7 +15615,7 @@
         "lat": 65.670484
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "4RAJ-LWeq",
@@ -15634,7 +15634,7 @@
         "lat": 67.015353
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "mJNR-SUxK",
@@ -15653,7 +15653,7 @@
         "lat": 68.091928
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "SqvF-VNjQ",
@@ -15672,7 +15672,7 @@
         "lat": 65.410997
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "eSVS-3EXC",
@@ -15691,7 +15691,7 @@
         "lat": 65.846135
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "vg7j-nmEq",
@@ -15710,7 +15710,7 @@
         "lat": 65.581665
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "nXbX-Edv2",
@@ -15729,7 +15729,7 @@
         "lat": 65.820596
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "w7L4-VAqK",
@@ -15748,7 +15748,7 @@
         "lat": 68.442848
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "nUcv-TUXK",
@@ -15767,7 +15767,7 @@
         "lat": 65.735936
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "Vseu-sRXc",
@@ -15786,7 +15786,7 @@
         "lat": 65.833797
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "uyjD-3fq6",
@@ -15805,7 +15805,7 @@
         "lat": 68.084012
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "J9xJ-GcZd",
@@ -15824,7 +15824,7 @@
         "lat": 65.857564
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "Vt9G-39Kv",
@@ -15843,7 +15843,7 @@
         "lat": 67.161545
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "qmyY-UHsH",
@@ -15862,7 +15862,7 @@
         "lat": 65.734995
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "Wfwn-RUBb",
@@ -15881,7 +15881,7 @@
         "lat": 65.41179
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "Y37A-qPmz",
@@ -15900,7 +15900,7 @@
         "lat": 65.575643
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "KD6s-ZaD6",
@@ -15919,7 +15919,7 @@
         "lat": 66.082907
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "8jTJ-m3nt",
@@ -15938,7 +15938,7 @@
         "lat": 65.856243
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "ayPw-BAAm",
@@ -15957,7 +15957,7 @@
         "lat": 65.844212
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "6DUF-dyGS",
@@ -15976,7 +15976,7 @@
         "lat": 66.754309
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "Vc39-WqcP",
@@ -15995,7 +15995,7 @@
         "lat": 65.669932
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "sCda-53Q2",
@@ -16014,7 +16014,7 @@
         "lat": 68.380821
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "L6MC-AjqE",
@@ -16033,7 +16033,7 @@
         "lat": 65.829783
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "RPdM-EtsA",
@@ -16052,7 +16052,7 @@
         "lat": 65.575775
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "yBDV-9P6g",
@@ -16071,7 +16071,7 @@
         "lat": 65.282556
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "MFEb-eNj7",
@@ -16090,7 +16090,7 @@
         "lat": 66.058558
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "gXW4-FTSc",
@@ -16109,7 +16109,7 @@
         "lat": 65.735336
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "eEhz-KRSC",
@@ -16128,7 +16128,7 @@
         "lat": 67.410659
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "TuKN-4ZMY",
@@ -16147,7 +16147,7 @@
         "lat": 67.851395
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "x3qN-vnBn",
@@ -16166,7 +16166,7 @@
         "lat": 65.67559
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "zu8s-EqTz",
@@ -16185,7 +16185,7 @@
         "lat": 66.086001
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "MF5Y-5cLk",
@@ -16204,7 +16204,7 @@
         "lat": 65.560003
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "Apt4-cvnA",
@@ -16223,7 +16223,7 @@
         "lat": 65.343017
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "ekcM-GWGv",
@@ -16242,7 +16242,7 @@
         "lat": 65.73625
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "zK4Z-GfEb",
@@ -16261,7 +16261,7 @@
         "lat": 68.381112
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "65m8-AZ7Q",
@@ -16280,7 +16280,7 @@
         "lat": 67.017706
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "V3mA-u3Z5",
@@ -16299,7 +16299,7 @@
         "lat": 65.8533
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "3TTK-gcW4",
@@ -16318,7 +16318,7 @@
         "lat": 65.850806
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "K4yh-nBUx",
@@ -16337,7 +16337,7 @@
         "lat": 65.830637
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "dm7J-cw6q",
@@ -16356,7 +16356,7 @@
         "lat": 65.320375
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "LDkn-gzc5",
@@ -16375,7 +16375,7 @@
         "lat": 65.59766
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "XP3V-73rk",
@@ -16394,7 +16394,7 @@
         "lat": 65.836067
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "Q5nE-g7GB",
@@ -16413,7 +16413,7 @@
         "lat": 65.851072
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "rvY9-Kx7M",
@@ -16432,7 +16432,7 @@
         "lat": 67.229294
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "2KcQ-GLsn",
@@ -16451,7 +16451,7 @@
         "lat": 65.816446
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "8BVK-Vete",
@@ -16470,7 +16470,7 @@
         "lat": 67.673984
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "sDaX-aWmv",
@@ -16489,7 +16489,7 @@
         "lat": 65.677927
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "dguK-wPTU",
@@ -16508,7 +16508,7 @@
         "lat": 67.137568
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "puw9-FGT8",
@@ -16527,7 +16527,7 @@
         "lat": 65.148858
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "XtVX-RCKW",
@@ -16546,7 +16546,7 @@
         "lat": 65.582174
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "W8CT-YSTp",
@@ -16565,7 +16565,7 @@
         "lat": 65.830989
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "uMc7-eqGY",
@@ -16584,7 +16584,7 @@
         "lat": 65.850761
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "LsUR-C9f4",
@@ -16603,7 +16603,7 @@
         "lat": 65.666249
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "mAyh-DAH5",
@@ -16622,7 +16622,7 @@
         "lat": 65.830196
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "sYvP-Pt5g",
@@ -16641,7 +16641,7 @@
         "lat": 67.853561
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "vV4P-u5H2",
@@ -16660,7 +16660,7 @@
         "lat": 67.410588
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "t7EU-CzWE",
@@ -16679,7 +16679,7 @@
         "lat": 65.341078
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "5ekU-ME8G",
@@ -16698,7 +16698,7 @@
         "lat": 65.839713
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "JjLa-ZjkM",
@@ -16717,7 +16717,7 @@
         "lat": 65.85371
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "NZsC-Xbnn",
@@ -16736,7 +16736,7 @@
         "lat": 65.617938
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "ncH8-9Zfs",
@@ -16755,7 +16755,7 @@
         "lat": 68.084441
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "7yJu-qgcm",
@@ -16774,7 +16774,7 @@
         "lat": 65.675308
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "Tajb-p6S7",
@@ -16793,7 +16793,7 @@
         "lat": 65.76736
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "tGpc-PEtR",
@@ -16812,7 +16812,7 @@
         "lat": 67.418774
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "nmxG-869k",
@@ -16831,7 +16831,7 @@
         "lat": 65.435348
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "pPzR-Chdv",
@@ -16850,7 +16850,7 @@
         "lat": 65.84401
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "j7nt-pP2b",
@@ -16869,7 +16869,7 @@
         "lat": 65.838137
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "f8hh-drWd",
@@ -16888,7 +16888,7 @@
         "lat": 65.673995
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "mg44-XyzE",
@@ -16907,7 +16907,7 @@
         "lat": 65.816063
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "Dt8u-vDbq",
@@ -16926,7 +16926,7 @@
         "lat": 65.858697
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "WG93-73EL",
@@ -16945,7 +16945,7 @@
         "lat": 67.843588
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "HqBe-QGsK",
@@ -16964,7 +16964,7 @@
         "lat": 67.419155
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "UAQ5-rTmL",
@@ -16983,7 +16983,7 @@
         "lat": 65.154072
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "KezU-3URp",
@@ -17002,7 +17002,7 @@
         "lat": 65.83773
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "MNTB-bK62",
@@ -17021,7 +17021,7 @@
         "lat": 65.673321
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "Zhnc-JB8M",
@@ -17040,7 +17040,7 @@
         "lat": 67.679537
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "QGrV-LAsc",
@@ -17059,7 +17059,7 @@
         "lat": 65.826707
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "5e24-6Wqt",
@@ -17078,7 +17078,7 @@
         "lat": 66.058558
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "p6Km-RAZS",
@@ -17097,7 +17097,7 @@
         "lat": 65.586761
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "7xtb-Sjbf",
@@ -17116,7 +17116,7 @@
         "lat": 67.147729
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "WCKY-LHmw",
@@ -17135,7 +17135,7 @@
         "lat": 65.284695
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "kH6g-4nJE",
@@ -17154,7 +17154,7 @@
         "lat": 65.76664
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "TA3M-EkBN",
@@ -17173,7 +17173,7 @@
         "lat": 65.742553
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "dBXN-wSAD",
@@ -17192,7 +17192,7 @@
         "lat": 65.677333
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "7wPC-WMQg",
@@ -17211,7 +17211,7 @@
         "lat": 67.651252
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "K6RC-fafE",
@@ -17230,7 +17230,7 @@
         "lat": 65.853281
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "uUtw-UF6u",
@@ -17249,7 +17249,7 @@
         "lat": 65.638184
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "pNTL-xW9v",
@@ -17268,7 +17268,7 @@
         "lat": 66.917963
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "xDJ5-JtjM",
@@ -17287,7 +17287,7 @@
         "lat": 65.830838
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "7dtV-mMN7",
@@ -17306,7 +17306,7 @@
         "lat": 65.825729
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "ejAR-dK7T",
@@ -17325,7 +17325,7 @@
         "lat": 65.145551
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "NAv7-jFPL",
@@ -17344,7 +17344,7 @@
         "lat": 67.857887
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "rNsw-sjR5",
@@ -17363,7 +17363,7 @@
         "lat": 65.674452
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "fryG-MghL",
@@ -17382,7 +17382,7 @@
         "lat": 65.853152
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "zSvm-aKb4",
@@ -17401,7 +17401,7 @@
         "lat": 65.642022
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "5ma2-UBvq",
@@ -17420,7 +17420,7 @@
         "lat": 67.181375
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "sbjh-pZhX",
@@ -17439,7 +17439,7 @@
         "lat": 65.841947
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "bLFN-FKEj",
@@ -17458,7 +17458,7 @@
         "lat": 65.816518
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "XAPJ-9EMV",
@@ -17477,7 +17477,7 @@
         "lat": 65.433467
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "9tUU-EtYd",
@@ -17496,7 +17496,7 @@
         "lat": 67.861775
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "NjYf-sREa",
@@ -17515,7 +17515,7 @@
         "lat": 65.672066
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "86U5-73cY",
@@ -17534,7 +17534,7 @@
         "lat": 65.912893
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "FMRt-jqNg",
@@ -17553,7 +17553,7 @@
         "lat": 67.162575
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "cHj2-ZUeT",
@@ -17572,7 +17572,7 @@
         "lat": 65.576008
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "TXJv-WGX7",
@@ -17591,7 +17591,7 @@
         "lat": 68.377821
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "vuzy-EDa9",
@@ -17610,7 +17610,7 @@
         "lat": 65.834515
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "8nNz-K4Rs",
@@ -17629,7 +17629,7 @@
         "lat": 65.825289
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "fgwV-ZvMa",
@@ -17648,7 +17648,7 @@
         "lat": 65.84137
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "mLGr-rd66",
@@ -17667,7 +17667,7 @@
         "lat": 65.853148
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "bLCw-A8m9",
@@ -17686,7 +17686,7 @@
         "lat": 67.228294
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "929k-26EG",
@@ -17705,7 +17705,7 @@
         "lat": 68.091459
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "UgAK-NB2g",
@@ -17724,7 +17724,7 @@
         "lat": 65.832624
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "jU9J-wWYD",
@@ -17743,7 +17743,7 @@
         "lat": 65.829621
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "hX4p-DaPd",
@@ -17762,7 +17762,7 @@
         "lat": 65.143074
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "shJQ-tf6Y",
@@ -17781,7 +17781,7 @@
         "lat": 67.139676
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "3BYg-p8ep",
@@ -17800,7 +17800,7 @@
         "lat": 65.638184
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "VQpv-pWex",
@@ -17819,7 +17819,7 @@
         "lat": 65.322388
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "fehJ-RskC",
@@ -17838,7 +17838,7 @@
         "lat": 65.81544
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "5Z2P-hKNt",
@@ -17857,7 +17857,7 @@
         "lat": 65.840122
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "M2Q6-uBvS",
@@ -17876,7 +17876,7 @@
         "lat": 67.136859
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "hHtr-E9Ag",
@@ -17895,7 +17895,7 @@
         "lat": 65.852703
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "HaA5-E532",
@@ -17914,7 +17914,7 @@
         "lat": 65.286557
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "AKQk-u63X",
@@ -17933,7 +17933,7 @@
         "lat": 68.085912
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "ep5R-JmLd",
@@ -17952,7 +17952,7 @@
         "lat": 65.67198
       }
     },
-    "kommun": "Älvsbyns kommun"
+    "municipality": "Älvsbyns municipality"
   },
   {
     "id": "6XpG-R7jY",
@@ -17971,7 +17971,7 @@
         "lat": 65.555636
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "Vh8Q-psa4",
@@ -17990,7 +17990,7 @@
         "lat": 66.08744
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "4MGa-kaJR",
@@ -18009,7 +18009,7 @@
         "lat": 65.836359
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "RzKe-KEsT",
@@ -18028,7 +18028,7 @@
         "lat": 66.765736
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "GZwR-Wkgq",
@@ -18047,7 +18047,7 @@
         "lat": 65.910207
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "Gt9K-EdDh",
@@ -18066,7 +18066,7 @@
         "lat": 65.419919
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "46ea-rWrW",
@@ -18085,7 +18085,7 @@
         "lat": 65.580415
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "F5H9-DGDn",
@@ -18104,7 +18104,7 @@
         "lat": 67.681024
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "r9B3-PUsD",
@@ -18123,7 +18123,7 @@
         "lat": 65.816446
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "HfeL-UbKP",
@@ -18142,7 +18142,7 @@
         "lat": 67.129391
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "jbE6-5DjF",
@@ -18161,7 +18161,7 @@
         "lat": 66.061274
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "GeqX-r6Vz",
@@ -18180,7 +18180,7 @@
         "lat": 65.835762
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "WfTa-nrk5",
@@ -18199,7 +18199,7 @@
         "lat": 65.855954
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "htV2-xQwE",
@@ -18218,7 +18218,7 @@
         "lat": 67.13284
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "psQV-JyrG",
@@ -18237,7 +18237,7 @@
         "lat": 65.316985
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "7Phj-6sGa",
@@ -18256,7 +18256,7 @@
         "lat": 65.613732
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "39m8-j6Ag",
@@ -18275,7 +18275,7 @@
         "lat": 65.742553
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "SYVA-n7ZF",
@@ -18294,7 +18294,7 @@
         "lat": 67.861621
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "q38w-LJG4",
@@ -18313,7 +18313,7 @@
         "lat": 65.851998
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "uZxb-9RQz",
@@ -18332,7 +18332,7 @@
         "lat": 67.137524
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "bc5h-Dges",
@@ -18351,7 +18351,7 @@
         "lat": 65.837166
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "VvxK-z95H",
@@ -18370,7 +18370,7 @@
         "lat": 67.677693
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "4NY6-LGwF",
@@ -18389,7 +18389,7 @@
         "lat": 66.058558
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "8ZjF-YwZU",
@@ -18408,7 +18408,7 @@
         "lat": 65.76987
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "HRVc-eyJ8",
@@ -18427,7 +18427,7 @@
         "lat": 65.303888
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "2PPM-T2CB",
@@ -18446,7 +18446,7 @@
         "lat": 65.589475
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "DnDZ-dHeq",
@@ -18465,7 +18465,7 @@
         "lat": 66.916821
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "Trga-fgJ5",
@@ -18484,7 +18484,7 @@
         "lat": 65.829409
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "kjkn-VsMH",
@@ -18503,7 +18503,7 @@
         "lat": 65.858152
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "mVcg-QxVB",
@@ -18522,7 +18522,7 @@
         "lat": 65.823066
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "b92J-QBV9",
@@ -18541,7 +18541,7 @@
         "lat": 65.147041
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "6rAB-gh5G",
@@ -18560,7 +18560,7 @@
         "lat": 67.674816
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "pPbx-zjjL",
@@ -18579,7 +18579,7 @@
         "lat": 65.630033
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "8ECh-gdUB",
@@ -18598,7 +18598,7 @@
         "lat": 67.148728
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "jVcb-BnuV",
@@ -18617,7 +18617,7 @@
         "lat": 65.793436
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "2TAM-yN5r",
@@ -18636,7 +18636,7 @@
         "lat": 65.838116
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "54hY-R4cC",
@@ -18655,7 +18655,7 @@
         "lat": 65.381641
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "QG4S-Fmcm",
@@ -18674,7 +18674,7 @@
         "lat": 67.865931
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "Yc4d-CWEt",
@@ -18693,7 +18693,7 @@
         "lat": 67.137524
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "hYCf-SwaT",
@@ -18712,7 +18712,7 @@
         "lat": 65.828399
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "ZbQc-rt6B",
@@ -18731,7 +18731,7 @@
         "lat": 65.628086
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "L8wn-QzMv",
@@ -18750,7 +18750,7 @@
         "lat": 65.734995
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "BTeL-HKmw",
@@ -18769,7 +18769,7 @@
         "lat": 65.847899
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "TMAz-KeY4",
@@ -18788,7 +18788,7 @@
         "lat": 65.419919
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "JUpk-teAm",
@@ -18807,7 +18807,7 @@
         "lat": 67.841946
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "F9Qs-3KBV",
@@ -18826,7 +18826,7 @@
         "lat": 67.146945
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "CMHK-CkeW",
@@ -18845,7 +18845,7 @@
         "lat": 65.580026
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "nvjx-2EPL",
@@ -18864,7 +18864,7 @@
         "lat": 66.084193
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "CKZ5-TLPT",
@@ -18883,7 +18883,7 @@
         "lat": 65.914415
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "d4tz-DUvp",
@@ -18902,7 +18902,7 @@
         "lat": 65.841154
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "yGDu-gJGQ",
@@ -18921,7 +18921,7 @@
         "lat": 65.288153
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "mCtj-ZWVC",
@@ -18940,7 +18940,7 @@
         "lat": 67.8515
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "gHu8-jrgE",
@@ -18959,7 +18959,7 @@
         "lat": 67.147439
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "dKzD-QrMf",
@@ -18978,7 +18978,7 @@
         "lat": 65.808572
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "38ye-3EEF",
@@ -18997,7 +18997,7 @@
         "lat": 65.853631
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "b7gf-phe5",
@@ -19016,7 +19016,7 @@
         "lat": 65.839284
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "GJwD-QKpe",
@@ -19035,7 +19035,7 @@
         "lat": 65.911685
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "qaWV-ZJtQ",
@@ -19054,7 +19054,7 @@
         "lat": 65.330976
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "SDbY-G8Eb",
@@ -19073,7 +19073,7 @@
         "lat": 67.865931
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "bdUe-BaKm",
@@ -19092,7 +19092,7 @@
         "lat": 67.419155
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "3whe-XVu2",
@@ -19111,7 +19111,7 @@
         "lat": 65.829663
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "ydMf-F2zG",
@@ -19130,7 +19130,7 @@
         "lat": 65.616482
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "wa7V-v4zq",
@@ -19149,7 +19149,7 @@
         "lat": 65.73776
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "5tqM-SU4U",
@@ -19168,7 +19168,7 @@
         "lat": 66.05989
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "FGhg-RPqY",
@@ -19187,7 +19187,7 @@
         "lat": 66.083892
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "dnXV-Vws5",
@@ -19206,7 +19206,7 @@
         "lat": 65.415621
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "XkyT-8eLc",
@@ -19225,7 +19225,7 @@
         "lat": 67.017946
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "tYDg-K3hD",
@@ -19244,7 +19244,7 @@
         "lat": 65.597584
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "DKy5-epD6",
@@ -19263,7 +19263,7 @@
         "lat": 68.37042
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "zZhv-E3wK",
@@ -19282,7 +19282,7 @@
         "lat": 65.830275
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "76JD-Fjm5",
@@ -19301,7 +19301,7 @@
         "lat": 65.852475
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "AkyM-79y2",
@@ -19320,7 +19320,7 @@
         "lat": 65.306371
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "YGUt-uTgd",
@@ -19339,7 +19339,7 @@
         "lat": 65.582595
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "pSsM-CqDd",
@@ -19358,7 +19358,7 @@
         "lat": 67.863173
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "dQZ2-8GN6",
@@ -19377,7 +19377,7 @@
         "lat": 65.803344
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "rmFk-EWgj",
@@ -19396,7 +19396,7 @@
         "lat": 65.733893
       }
     },
-    "kommun": "Haparanda stad"
+    "municipality": "Haparanda stad"
   },
   {
     "id": "KrZ8-EbG2",
@@ -19415,7 +19415,7 @@
         "lat": 65.846166
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "QzP6-gdp9",
@@ -19434,7 +19434,7 @@
         "lat": 67.417858
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "BDYw-kzGv",
@@ -19453,7 +19453,7 @@
         "lat": 65.577245
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "9FTU-Mj6g",
@@ -19472,7 +19472,7 @@
         "lat": 67.674823
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "xcyp-TgmG",
@@ -19491,7 +19491,7 @@
         "lat": 65.827824
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "KuXQ-C7vw",
@@ -19510,7 +19510,7 @@
         "lat": 65.34668
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "mDw4-M6gy",
@@ -19529,7 +19529,7 @@
         "lat": 65.852703
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "7fFx-LcmB",
@@ -19548,7 +19548,7 @@
         "lat": 66.924046
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "ehDh-AdYF",
@@ -19567,7 +19567,7 @@
         "lat": 65.826109
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "778b-kKAE",
@@ -19586,7 +19586,7 @@
         "lat": 65.586364
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "dCVH-P2bQ",
@@ -19605,7 +19605,7 @@
         "lat": 67.673984
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "FNMU-kq2v",
@@ -19624,7 +19624,7 @@
         "lat": 65.325443
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "XctS-2bk3",
@@ -19643,7 +19643,7 @@
         "lat": 66.071068
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "ggp7-23AA",
@@ -19662,7 +19662,7 @@
         "lat": 67.145018
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "ezC6-ekGZ",
@@ -19681,7 +19681,7 @@
         "lat": 65.275635
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "f5YG-VYbW",
@@ -19700,7 +19700,7 @@
         "lat": 65.813959
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "K55c-G6jF",
@@ -19719,7 +19719,7 @@
         "lat": 68.08341
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "YFJj-45AG",
@@ -19738,7 +19738,7 @@
         "lat": 65.857657
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "5YGV-p2YZ",
@@ -19757,7 +19757,7 @@
         "lat": 67.131927
       }
     },
-    "kommun": "Gällivare kommun"
+    "municipality": "Gällivare municipality"
   },
   {
     "id": "JE9z-gt5j",
@@ -19776,7 +19776,7 @@
         "lat": 65.586127
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "PJwD-G2Wg",
@@ -19795,7 +19795,7 @@
         "lat": 65.410291
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "HkV6-tNEK",
@@ -19814,7 +19814,7 @@
         "lat": 68.351318
       }
     },
-    "kommun": "Kiruna kommun"
+    "municipality": "Kiruna municipality"
   },
   {
     "id": "rb5D-uysY",
@@ -19833,7 +19833,7 @@
         "lat": 65.8588
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "Phkb-Y4UL",
@@ -19852,7 +19852,7 @@
         "lat": 66.08488
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "uVcP-p47q",
@@ -19871,7 +19871,7 @@
         "lat": 65.855486
       }
     },
-    "kommun": "Kalix kommun"
+    "municipality": "Kalix municipality"
   },
   {
     "id": "vY46-kSVv",
@@ -19890,7 +19890,7 @@
         "lat": 65.306371
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "r6yd-TfK5",
@@ -19909,7 +19909,7 @@
         "lat": 65.598692
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "J37t-vUZw",
@@ -19928,7 +19928,7 @@
         "lat": 65.823349
       }
     },
-    "kommun": "Bodens kommun"
+    "municipality": "Bodens municipality"
   },
   {
     "id": "EGHU-smj7",
@@ -19947,7 +19947,7 @@
         "lat": 65.578055
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "LLA4-2fB4",
@@ -19966,7 +19966,7 @@
         "lat": 65.317722
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "ZXeG-LpqD",
@@ -19985,7 +19985,7 @@
         "lat": 65.855896
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "n3ns-jJ4T",
@@ -20004,7 +20004,7 @@
         "lat": 65.344123
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "qwR6-bf6x",
@@ -20023,7 +20023,7 @@
         "lat": 65.585297
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "7fzB-r9N2",
@@ -20042,7 +20042,7 @@
         "lat": 65.406404
       }
     },
-    "kommun": "Piteå kommun"
+    "municipality": "Piteå municipality"
   },
   {
     "id": "22kL-rnJt",
@@ -20061,7 +20061,7 @@
         "lat": 65.578215
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   },
   {
     "id": "EHrs-vHJu",
@@ -20080,6 +20080,6 @@
         "lat": 66.014817
       }
     },
-    "kommun": "Luleå kommun"
+    "municipality": "Luleå municipality"
   }
 ]

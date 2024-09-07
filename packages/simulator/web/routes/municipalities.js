@@ -14,10 +14,10 @@ const count = () => pipe(scan((acc) => acc + 1, 0))
 
 const register = (experiment, socket) => {
   return [
-    experiment.kommuner
+    experiment.municipalities
       .pipe(
         tap(({ id, name, geometry, co2 }) =>
-          socket.emit('kommun', { id, name, geometry, co2 })
+          socket.emit('municipality', { id, name, geometry, co2 })
         ),
         mergeMap(({ id, dispatchedBookings, name, cars }) => {
           const passengerDeliveryStatistics = dispatchedBookings.pipe(
@@ -169,14 +169,14 @@ const register = (experiment, socket) => {
                 averageParcelCost,
               })
             ),
-            // Do not emit more than 1 event per kommun per second
+            // Do not emit more than 1 event per municipality per second
             throttleTime(1000)
           )
         }),
         filter(({ totalCars }) => totalCars > 0)
       )
-      .subscribe((kommun) => {
-        socket.emit('kommun', kommun)
+      .subscribe((municipality) => {
+        socket.emit('municipality', municipality)
       }),
   ]
 }

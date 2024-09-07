@@ -4,10 +4,10 @@ const regions = {
   stockholm: require('./stockholm'),
 }
 
-const kommuner = require('../kommuner')
+const municipalities = require('../municipalities')
 
 module.exports = (savedParams) => {
-  const kommunerStream = kommuner.read(savedParams)
+  const municipalitiesStream = municipalities.read(savedParams)
   const includedRegions = Object.entries(regions)
     .filter(
       ([region]) =>
@@ -16,7 +16,7 @@ module.exports = (savedParams) => {
         !process.env.REGIONS
     )
     .map(([, region]) => region)
-  return from(includedRegions.map((region) => region(kommunerStream))).pipe(
-    share()
-  )
+  return from(
+    includedRegions.map((region) => region(municipalitiesStream))
+  ).pipe(share())
 }

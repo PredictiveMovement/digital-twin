@@ -13,7 +13,7 @@ const Fleet = require('./fleet')
 const { error } = require('./log')
 const { searchOne } = require('./pelias')
 
-class Kommun {
+class Municipality {
   constructor({
     geometry,
     name,
@@ -57,7 +57,7 @@ class Kommun {
               .catch((err) => error(err) || center)
           : center
 
-        return new Fleet({ hub, ...fleet, kommun: this })
+        return new Fleet({ hub, ...fleet, municipality: this })
       }),
       shareReplay()
     )
@@ -87,7 +87,7 @@ class Kommun {
             mergeMap((fleet) => fleet.handleBooking(booking))
           )
         ),
-        catchError((err) => error('kommun dispatchedBookings err', err))
+        catchError((err) => error('municipality dispatchedBookings err', err))
       )
       // Should we add more types of bookings?
     )
@@ -99,4 +99,4 @@ class Kommun {
   }
 }
 
-module.exports = Kommun
+module.exports = Municipality

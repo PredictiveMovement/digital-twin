@@ -3,8 +3,8 @@
     "kod": "1440",
     "postnummer": "44980",
     "telefon": "0303-330000",
-    "epost": "kommun@ale.se",
-    "namn": "Ale kommun",
+    "epost": "municipality@ale.se",
+    "namn": "Ale municipality",
     "geometry": {
       "coordinates": [
         [
@@ -61,8 +61,8 @@
     "kod": "1489",
     "postnummer": "44181",
     "telefon": "0322-616000",
-    "epost": "kommunstyrelsen@alingsas.se",
-    "namn": "Alingsås kommun",
+    "epost": "municipalitystyrelsen@alingsas.se",
+    "namn": "Alingsås municipality",
     "geometry": {
       "coordinates": [
         [
@@ -164,7 +164,7 @@
     "postnummer": "34280",
     "telefon": "0472-15000",
     "epost": "klk@alvesta.se",
-    "namn": "Alvesta kommun",
+    "namn": "Alvesta municipality",
     "geometry": {
       "coordinates": [
         [
@@ -291,8 +291,8 @@
     "postadress": "Box 53",
     "postnummer": "57822",
     "telefon": "0380-46100",
-    "epost": "aneby.kommun@aneby.se",
-    "namn": "Aneby kommun",
+    "epost": "aneby.municipality@aneby.se",
+    "namn": "Aneby municipality",
     "geometry": {
       "coordinates": [
         [
@@ -397,8 +397,8 @@
     "postadress": "Box 45",
     "postnummer": "73221",
     "telefon": "0589-87000",
-    "epost": "arboga.kommun@arboga.se",
-    "namn": "Arboga kommun",
+    "epost": "arboga.municipality@arboga.se",
+    "namn": "Arboga municipality",
     "geometry": {
       "coordinates": [
         [
@@ -458,8 +458,8 @@
     "kod": "2506",
     "postnummer": "93881",
     "telefon": "0961-14000",
-    "epost": "arjeplogs.kommun@arjeplog.se",
-    "namn": "Arjeplogs kommun",
+    "epost": "arjeplogs.municipality@arjeplog.se",
+    "namn": "Arjeplogs municipality",
 
     "geometry": {
       "coordinates": [
@@ -526,8 +526,8 @@
     "kod": "2505",
     "postnummer": "93381",
     "telefon": "0960-15500",
-    "epost": "kommun@arvidsjaur.se",
-    "namn": "Arvidsjaurs kommun",
+    "epost": "municipality@arvidsjaur.se",
+    "namn": "Arvidsjaurs municipality",
 
     "geometry": {
       "coordinates": [
@@ -666,8 +666,8 @@
     "kod": "1784",
     "postnummer": "67181",
     "telefon": "0570-81600",
-    "epost": "arvika.kommun@arvika.se",
-    "namn": "Arvika kommun",
+    "epost": "arvika.municipality@arvika.se",
+    "namn": "Arvika municipality",
     "geometry": {
       "coordinates": [
         [
@@ -780,8 +780,8 @@
     "kod": "1882",
     "postnummer": "69682",
     "telefon": "0583-81000",
-    "epost": "kommun@askersund.se",
-    "namn": "Askersunds kommun",
+    "epost": "municipality@askersund.se",
+    "namn": "Askersunds municipality",
     "geometry": {
       "coordinates": [
         [
@@ -859,8 +859,8 @@
     "kod": "2084",
     "postnummer": "77481",
     "telefon": "0226-645000",
-    "epost": "kommun@avesta.se",
-    "namn": "Avesta kommun",
+    "epost": "municipality@avesta.se",
+    "namn": "Avesta municipality",
     "geometry": {
       "coordinates": [
         [
@@ -930,8 +930,8 @@
     "postadress": "Box 14",
     "postnummer": "66621",
     "telefon": "0531-526000",
-    "epost": "kommun@bengtsfors.se",
-    "namn": "Bengtsfors kommun",
+    "epost": "municipality@bengtsfors.se",
+    "namn": "Bengtsfors municipality",
     "geometry": {
       "coordinates": [
         [
@@ -1066,8 +1066,8 @@
     "postadress": "Box 73",
     "postnummer": "84040",
     "telefon": "0687-16100",
-    "epost": "bergs.kommun@berg.se",
-    "namn": "Bergs kommun",
+    "epost": "bergs.municipality@berg.se",
+    "namn": "Bergs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -1213,8 +1213,8 @@
     "kod": "2403",
     "postnummer": "91681",
     "telefon": "0932-14000",
-    "epost": "kommunen@bjurholm.se",
-    "namn": "Bjurholms kommun",
+    "epost": "municipalityen@bjurholm.se",
+    "namn": "Bjurholms municipality",
     "geometry": {
       "coordinates": [
         [
@@ -1305,7 +1305,7 @@
     "postnummer": "26725",
     "telefon": "042-4585000",
     "epost": "info@bjuv.se",
-    "namn": "Bjuvs kommun",
+    "namn": "Bjuvs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -1390,8 +1390,8 @@
     "kod": "2582",
     "postnummer": "96186",
     "telefon": "0921-62000",
-    "epost": "kommunen@boden.se",
-    "namn": "Bodens kommun",
+    "epost": "municipalityen@boden.se",
+    "namn": "Bodens municipality",
     "geometry": {
       "coordinates": [
         [
@@ -1481,8 +1481,8 @@
     "kod": "1443",
     "postnummer": "51783",
     "telefon": "033-231300",
-    "epost": "kommunen@bollebygd.se",
-    "namn": "Bollebygds kommun",
+    "epost": "municipalityen@bollebygd.se",
+    "namn": "Bollebygds municipality",
     "geometry": {
       "coordinates": [
         [
@@ -1539,7 +1539,7 @@
     "postnummer": "82180",
     "telefon": "0278-25000",
     "epost": "bollnas@bollnas.se",
-    "namn": "Bollnäs kommun",
+    "namn": "Bollnäs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -1633,8 +1633,8 @@
     "postadress": "Box 52",
     "postnummer": "38721",
     "telefon": "0485-88000",
-    "epost": "kommun@borgholm.se",
-    "namn": "Borgholms kommun",
+    "epost": "municipality@borgholm.se",
+    "namn": "Borgholms municipality",
     "geometry": {
       "coordinates": [
         [
@@ -1684,8 +1684,8 @@
     "kod": "2081",
     "postnummer": "78181",
     "telefon": "0243-74000",
-    "epost": "kommun@borlange.se",
-    "namn": "Borlänge kommun",
+    "epost": "municipality@borlange.se",
+    "namn": "Borlänge municipality",
     "geometry": {
       "coordinates": [
         [
@@ -1865,8 +1865,8 @@
     "kod": "0127",
     "postnummer": "14785",
     "telefon": "08-53061000",
-    "epost": "kommun@botkyrka.se",
-    "namn": "Botkyrka kommun",
+    "epost": "municipality@botkyrka.se",
+    "namn": "Botkyrka municipality",
     "geometry": {
       "coordinates": [
         [
@@ -2048,8 +2048,8 @@
     "postadress": "Box 79",
     "postnummer": "59010",
     "telefon": "0142-89500",
-    "epost": "kommun@boxholm.se",
-    "namn": "Boxholms kommun",
+    "epost": "municipality@boxholm.se",
+    "namn": "Boxholms municipality",
     "geometry": {
       "coordinates": [
         [
@@ -2135,8 +2135,8 @@
     "postadress": "Box 18",
     "postnummer": "29521",
     "telefon": "0456-822000",
-    "epost": "kommunstyrelsen@bromolla.se",
-    "namn": "Bromölla kommun",
+    "epost": "municipalitystyrelsen@bromolla.se",
+    "namn": "Bromölla municipality",
     "geometry": {
       "coordinates": [
         [
@@ -2187,7 +2187,7 @@
     "postnummer": "84060",
     "telefon": "0693-16100",
     "epost": "bracke@bracke.se",
-    "namn": "Bräcke kommun",
+    "namn": "Bräcke municipality",
     "geometry": {
       "coordinates": [
         [
@@ -2274,8 +2274,8 @@
     "postadress": "Box 53",
     "postnummer": "23221",
     "telefon": "040-439000",
-    "epost": "burlovs.kommun@burlov.se",
-    "namn": "Burlövs kommun",
+    "epost": "burlovs.municipality@burlov.se",
+    "namn": "Burlövs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -2356,8 +2356,8 @@
     "kod": "1278",
     "postnummer": "26980",
     "telefon": "0431-77000",
-    "epost": "bastads.kommun@bastad.se",
-    "namn": "Båstads kommun",
+    "epost": "bastads.municipality@bastad.se",
+    "namn": "Båstads municipality",
     "geometry": {
       "coordinates": [
         [
@@ -2398,8 +2398,8 @@
     "postadress": "Box 31",
     "postnummer": "66821",
     "telefon": "0534-19000",
-    "epost": "kommunstyrelsen@dalsed.se",
-    "namn": "Dals-Eds kommun",
+    "epost": "municipalitystyrelsen@dalsed.se",
+    "namn": "Dals-Eds municipality",
     "geometry": {
       "coordinates": [
         [
@@ -2492,8 +2492,8 @@
     "postadress": "Box 66",
     "postnummer": "18205",
     "telefon": "08-56891000",
-    "epost": "kommunen@danderyd.se",
-    "namn": "Danderyds kommun",
+    "epost": "municipalityen@danderyd.se",
+    "namn": "Danderyds municipality",
     "geometry": {
       "coordinates": [
         [
@@ -2567,8 +2567,8 @@
     "kod": "1862",
     "postnummer": "69380",
     "telefon": "0586-48100",
-    "epost": "kommun@degerfors.se",
-    "namn": "Degerfors kommun",
+    "epost": "municipality@degerfors.se",
+    "namn": "Degerfors municipality",
     "geometry": {
       "coordinates": [
         [
@@ -2631,7 +2631,7 @@
     "postnummer": "91781",
     "telefon": "0942-14000",
     "epost": "info@dorotea.se",
-    "namn": "Dorotea kommun",
+    "namn": "Dorotea municipality",
     "geometry": {
       "coordinates": [
         [
@@ -2743,8 +2743,8 @@
     "postadress": "Box 66",
     "postnummer": "67322",
     "telefon": "0571-28100",
-    "epost": "kommun@eda.se",
-    "namn": "Eda kommun",
+    "epost": "municipality@eda.se",
+    "namn": "Eda municipality",
     "geometry": {
       "coordinates": [
         [
@@ -2822,8 +2822,8 @@
     "postadress": "Box 205",
     "postnummer": "17823",
     "telefon": "08-56039100",
-    "epost": "kommunstyrelsen@ekero.se",
-    "namn": "Ekerö kommun",
+    "epost": "municipalitystyrelsen@ekero.se",
+    "namn": "Ekerö municipality",
     "geometry": {
       "coordinates": [
         [
@@ -2974,8 +2974,8 @@
     "kod": "0686",
     "postnummer": "57580",
     "telefon": "0381-36000",
-    "epost": "kommun@eksjo.se",
-    "namn": "Eksjö kommun",
+    "epost": "municipality@eksjo.se",
+    "namn": "Eksjö municipality",
     "geometry": {
       "coordinates": [
         [
@@ -3069,8 +3069,8 @@
     "postadress": "Box 54",
     "postnummer": "36121",
     "telefon": "0471-249000",
-    "epost": "kommunen@emmaboda.se",
-    "namn": "Emmaboda kommun",
+    "epost": "municipalityen@emmaboda.se",
+    "namn": "Emmaboda municipality",
     "geometry": {
       "coordinates": [
         [
@@ -3160,8 +3160,8 @@
     "kod": "0381",
     "postnummer": "74580",
     "telefon": "0171-625000",
-    "epost": "kommunstyrelsekontor@enkoping.se",
-    "namn": "Enköpings kommun",
+    "epost": "municipalitystyrelsekontor@enkoping.se",
+    "namn": "Enköpings municipality",
     "geometry": {
       "coordinates": [
         [
@@ -3260,8 +3260,8 @@
     "kod": "0484",
     "postnummer": "63186",
     "telefon": "016-7101000",
-    "epost": "eskilstuna.kommun@eskilstuna.se",
-    "namn": "Eskilstuna kommun",
+    "epost": "eskilstuna.municipality@eskilstuna.se",
+    "namn": "Eskilstuna municipality",
     "geometry": {
       "coordinates": [
         [
@@ -3342,8 +3342,8 @@
     "kod": "1285",
     "postnummer": "24180",
     "telefon": "0413-62000",
-    "epost": "kommunstyrelsen@eslov.se",
-    "namn": "Eslövs kommun",
+    "epost": "municipalitystyrelsen@eslov.se",
+    "namn": "Eslövs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -3742,8 +3742,8 @@
     "kod": "1445",
     "postnummer": "46582",
     "telefon": "0512-57000",
-    "epost": "kommun@essunga.se",
-    "namn": "Essunga kommun",
+    "epost": "municipality@essunga.se",
+    "namn": "Essunga municipality",
     "geometry": {
       "coordinates": [
         [
@@ -3822,7 +3822,7 @@
     "postnummer": "73780",
     "telefon": "0223-44000",
     "epost": "info@fagersta.se",
-    "namn": "Fagersta kommun",
+    "namn": "Fagersta municipality",
     "geometry": {
       "coordinates": [
         [
@@ -3874,8 +3874,8 @@
     "kod": "1382",
     "postnummer": "31180",
     "telefon": "0346-886000",
-    "epost": "kommun@falkenberg.se",
-    "namn": "Falkenbergs kommun",
+    "epost": "municipality@falkenberg.se",
+    "namn": "Falkenbergs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -4000,8 +4000,8 @@
     "kod": "1499",
     "postnummer": "52181",
     "telefon": "0515-885000",
-    "epost": "kommunen@falkoping.se",
-    "namn": "Falköpings kommun",
+    "epost": "municipalityen@falkoping.se",
+    "namn": "Falköpings municipality",
     "geometry": {
       "coordinates": [
         [
@@ -4147,7 +4147,7 @@
     "postnummer": "79183",
     "telefon": "023-83000",
     "epost": "info@falun.se",
-    "namn": "Falu kommun",
+    "namn": "Falu municipality",
     "geometry": {
       "coordinates": [
         [
@@ -4269,8 +4269,8 @@
     "postadress": "Box 303",
     "postnummer": "68227",
     "telefon": "0590-61100",
-    "epost": "kommun@filipstad.se",
-    "namn": "Filipstads kommun",
+    "epost": "municipality@filipstad.se",
+    "namn": "Filipstads municipality",
     "geometry": {
       "coordinates": [
         [
@@ -4358,8 +4358,8 @@
     "kod": "0562",
     "postnummer": "61280",
     "telefon": "0122-85000",
-    "epost": "kommun@finspang.se",
-    "namn": "Finspångs kommun",
+    "epost": "municipality@finspang.se",
+    "namn": "Finspångs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -4474,8 +4474,8 @@
     "kod": "0482",
     "postnummer": "64281",
     "telefon": "0157-430000",
-    "epost": "flenskommun@flen.se",
-    "namn": "Flens kommun",
+    "epost": "flensmunicipality@flen.se",
+    "namn": "Flens municipality",
     "geometry": {
       "coordinates": [
         [
@@ -4571,8 +4571,8 @@
     "postadress": "Box 93",
     "postnummer": "66722",
     "telefon": "054-172000",
-    "epost": "kommun@forshaga.se",
-    "namn": "Forshaga kommun",
+    "epost": "municipality@forshaga.se",
+    "namn": "Forshaga municipality",
     "geometry": {
       "coordinates": [
         [
@@ -4642,8 +4642,8 @@
     "kod": "1439",
     "postnummer": "45880",
     "telefon": "0528-567000",
-    "epost": "kommun@fargelanda.se",
-    "namn": "Färgelanda kommun",
+    "epost": "municipality@fargelanda.se",
+    "namn": "Färgelanda municipality",
     "geometry": {
       "coordinates": [
         [
@@ -4714,7 +4714,7 @@
     "postnummer": "78580",
     "telefon": "0241-15100",
     "epost": "registrator@gagnef.se",
-    "namn": "Gagnefs kommun",
+    "namn": "Gagnefs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -4779,8 +4779,8 @@
     "kod": "0662",
     "postnummer": "33280",
     "telefon": "0371-81000",
-    "epost": "kommunen@gislaved.se",
-    "namn": "Gislaveds kommun",
+    "epost": "municipalityen@gislaved.se",
+    "namn": "Gislaveds municipality",
     "geometry": {
       "coordinates": [
         [
@@ -4955,8 +4955,8 @@
     "kod": "0461",
     "postnummer": "64680",
     "telefon": "0158-275000",
-    "epost": "gnesta.kommun@gnesta.se",
-    "namn": "Gnesta kommun",
+    "epost": "gnesta.municipality@gnesta.se",
+    "namn": "Gnesta municipality",
     "geometry": {
       "coordinates": [
         [
@@ -5017,8 +5017,8 @@
     "kod": "0617",
     "postnummer": "33580",
     "telefon": "0370-331000",
-    "epost": "kommun@gnosjo.se",
-    "namn": "Gnosjö kommun",
+    "epost": "municipality@gnosjo.se",
+    "namn": "Gnosjö municipality",
     "geometry": {
       "coordinates": [
         [
@@ -5192,8 +5192,8 @@
     "kod": "1764",
     "postnummer": "66480",
     "telefon": "0555-42000",
-    "epost": "kommunstyrelse@grums.se",
-    "namn": "Grums kommun",
+    "epost": "municipalitystyrelse@grums.se",
+    "namn": "Grums municipality",
     "geometry": {
       "coordinates": [
         [
@@ -5259,8 +5259,8 @@
     "kod": "1444",
     "postnummer": "46780",
     "telefon": "0514-58000",
-    "epost": "kommun@grastorp.se",
-    "namn": "Grästorps kommun",
+    "epost": "municipality@grastorp.se",
+    "namn": "Grästorps municipality",
     "geometry": {
       "coordinates": [
         [
@@ -5331,8 +5331,8 @@
     "postadress": "Box 80",
     "postnummer": "54822",
     "telefon": "0506-36000",
-    "epost": "kommun@gullspang.se",
-    "namn": "Gullspångs kommun",
+    "epost": "municipality@gullspang.se",
+    "namn": "Gullspångs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -5404,7 +5404,7 @@
     "postnummer": "98281",
     "telefon": "0970-18000",
     "epost": "post@gallivare.se",
-    "namn": "Gällivare kommun",
+    "namn": "Gällivare municipality",
     "geometry": {
       "coordinates": [
         [
@@ -5626,8 +5626,8 @@
     "kod": "2180",
     "postnummer": "80184",
     "telefon": "026-178000",
-    "epost": "gavle.kommun@gavle.se",
-    "namn": "Gävle kommun",
+    "epost": "gavle.municipality@gavle.se",
+    "namn": "Gävle municipality",
     "geometry": {
       "coordinates": [
         [
@@ -5791,8 +5791,8 @@
     "postadress": "Centrumhuset",
     "postnummer": "53380",
     "telefon": "0511-386000",
-    "epost": "gotene.kommun@gotene.se",
-    "namn": "Götene kommun",
+    "epost": "gotene.municipality@gotene.se",
+    "namn": "Götene municipality",
     "geometry": {
       "coordinates": [
         [
@@ -5860,8 +5860,8 @@
     "postadress": "Box 212",
     "postnummer": "56624",
     "telefon": "036-4428000",
-    "epost": "info@habokommun.se",
-    "namn": "Habo kommun",
+    "epost": "info@habomunicipality.se",
+    "namn": "Habo municipality",
     "geometry": {
       "coordinates": [
         [
@@ -5918,15 +5918,15 @@
       ],
       "type": "Polygon"
     },
-    "url": "http://www.habokommun.se/",
+    "url": "http://www.habomunicipality.se/",
     "postort": "HABO"
   },
   {
     "kod": "1783",
     "postnummer": "68380",
     "telefon": "0563-18500",
-    "epost": "kommun@hagfors.se",
-    "namn": "Hagfors kommun",
+    "epost": "municipality@hagfors.se",
+    "namn": "Hagfors municipality",
     "geometry": {
       "coordinates": [
         [
@@ -6036,8 +6036,8 @@
     "kod": "1861",
     "postnummer": "69480",
     "telefon": "0582-685000",
-    "epost": "kommun@hallsberg.se",
-    "namn": "Hallsbergs kommun",
+    "epost": "municipality@hallsberg.se",
+    "namn": "Hallsbergs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -6140,8 +6140,8 @@
     "kod": "1961",
     "postnummer": "73480",
     "telefon": "0220-24000",
-    "epost": "kommun@hallstahammar.se",
-    "namn": "Hallstahammars kommun",
+    "epost": "municipality@hallstahammar.se",
+    "namn": "Hallstahammars municipality",
     "geometry": {
       "coordinates": [
         [
@@ -6206,8 +6206,8 @@
     "postadress": "Box 153",
     "postnummer": "30105",
     "telefon": "035-137000",
-    "epost": "halmstad.kommun@halmstad.se",
-    "namn": "Halmstads kommun",
+    "epost": "halmstad.municipality@halmstad.se",
+    "namn": "Halmstads municipality",
     "geometry": {
       "coordinates": [
         [
@@ -6295,7 +6295,7 @@
     "postnummer": "66321",
     "telefon": "054-515000",
     "epost": "hammaro@hammaro.se",
-    "namn": "Hammarö kommun",
+    "namn": "Hammarö municipality",
     "geometry": {
       "coordinates": [
         [
@@ -6328,8 +6328,8 @@
     "kod": "0136",
     "postnummer": "13681",
     "telefon": "08-6067000",
-    "epost": "haningekommun@haninge.se",
-    "namn": "Haninge kommun",
+    "epost": "haningemunicipality@haninge.se",
+    "namn": "Haninge municipality",
     "geometry": {
       "coordinates": [
         [
@@ -6549,7 +6549,7 @@
     "kod": "2583",
     "postnummer": "95385",
     "telefon": "0922-26000",
-    "epost": "kommun@haparanda.se",
+    "epost": "municipality@haparanda.se",
     "namn": "Haparanda stad",
     "geometry": {
       "coordinates": [
@@ -6660,7 +6660,7 @@
     "postnummer": "74488",
     "telefon": "0224-36000",
     "epost": "information@heby.se",
-    "namn": "Heby kommun",
+    "namn": "Heby municipality",
     "geometry": {
       "coordinates": [
         [
@@ -6755,8 +6755,8 @@
     "postadress": "Box 201",
     "postnummer": "77628",
     "telefon": "0225-34000",
-    "epost": "kommun@hedemora.se",
-    "namn": "Hedemora kommun",
+    "epost": "municipality@hedemora.se",
+    "namn": "Hedemora municipality",
     "geometry": {
       "coordinates": [
         [
@@ -6983,8 +6983,8 @@
     "postadress": "Box 201",
     "postnummer": "52423",
     "telefon": "0513-17000",
-    "epost": "herrljunga.kommun@admin.herrljunga.se",
-    "namn": "Herrljunga kommun",
+    "epost": "herrljunga.municipality@admin.herrljunga.se",
+    "namn": "Herrljunga municipality",
     "geometry": {
       "coordinates": [
         [
@@ -7059,8 +7059,8 @@
     "postadress": "Stadshuset",
     "postnummer": "54481",
     "telefon": "0503-35000",
-    "epost": "kommunen@hjo.se",
-    "namn": "Hjo kommun",
+    "epost": "municipalityen@hjo.se",
+    "namn": "Hjo municipality",
     "geometry": {
       "coordinates": [
         [
@@ -7127,8 +7127,8 @@
     "kod": "2104",
     "postnummer": "81381",
     "telefon": "0290-29000",
-    "epost": "hofors.kommun@hofors.se",
-    "namn": "Hofors kommun",
+    "epost": "hofors.municipality@hofors.se",
+    "namn": "Hofors municipality",
     "geometry": {
       "coordinates": [
         [
@@ -7178,7 +7178,7 @@
     "postnummer": "14185",
     "telefon": "08-53530000",
     "epost": "huddinge@huddinge.se",
-    "namn": "Huddinge kommun",
+    "namn": "Huddinge municipality",
     "geometry": {
       "coordinates": [
         [
@@ -7330,8 +7330,8 @@
     "kod": "2184",
     "postnummer": "82480",
     "telefon": "0650-19000",
-    "epost": "kommun@hudiksvall.se",
-    "namn": "Hudiksvalls kommun",
+    "epost": "municipality@hudiksvall.se",
+    "namn": "Hudiksvalls municipality",
     "geometry": {
       "coordinates": [
         [
@@ -7411,8 +7411,8 @@
     "postadress": "Box 500",
     "postnummer": "57726",
     "telefon": "0495-240000",
-    "epost": "kommunen@hultsfred.se",
-    "namn": "Hultsfreds kommun",
+    "epost": "municipalityen@hultsfred.se",
+    "namn": "Hultsfreds municipality",
     "geometry": {
       "coordinates": [
         [
@@ -7521,8 +7521,8 @@
     "kod": "1315",
     "postnummer": "31480",
     "telefon": "0345-18000",
-    "epost": "kommunen@hylte.se",
-    "namn": "Hylte kommun",
+    "epost": "municipalityen@hylte.se",
+    "namn": "Hylte municipality",
     "geometry": {
       "coordinates": [
         [
@@ -7660,8 +7660,8 @@
     "kod": "0305",
     "postnummer": "74680",
     "telefon": "0171-52500",
-    "epost": "kommun@habo.se",
-    "namn": "Håbo kommun",
+    "epost": "municipality@habo.se",
+    "namn": "Håbo municipality",
     "geometry": {
       "coordinates": [
         [
@@ -7708,8 +7708,8 @@
     "kod": "1863",
     "postnummer": "71283",
     "telefon": "0591-64100",
-    "epost": "kommun@hellefors.se",
-    "namn": "Hällefors kommun",
+    "epost": "municipality@hellefors.se",
+    "namn": "Hällefors municipality",
     "geometry": {
       "coordinates": [
         [
@@ -7791,8 +7791,8 @@
     "postadress": "Medborgarhuset",
     "postnummer": "84280",
     "telefon": "0680-16100",
-    "epost": "kommun@herjedalen.se",
-    "namn": "Härjedalens kommun",
+    "epost": "municipality@herjedalen.se",
+    "namn": "Härjedalens municipality",
     "geometry": {
       "coordinates": [
         [
@@ -7940,8 +7940,8 @@
     "kod": "2280",
     "postnummer": "87180",
     "telefon": "0611-348000",
-    "epost": "kommun@harnosand.se",
-    "namn": "Härnösands kommun",
+    "epost": "municipality@harnosand.se",
+    "namn": "Härnösands municipality",
     "geometry": {
       "coordinates": [
         [
@@ -8009,8 +8009,8 @@
     "kod": "1401",
     "postnummer": "43580",
     "telefon": "031-7246100",
-    "epost": "kommun@harryda.se",
-    "namn": "Härryda kommun",
+    "epost": "municipality@harryda.se",
+    "namn": "Härryda municipality",
     "geometry": {
       "coordinates": [
         [
@@ -8072,8 +8072,8 @@
     "postadress": "Stadshuset",
     "postnummer": "28180",
     "telefon": "0451-267000",
-    "epost": "kommunen@hassleholm.se",
-    "namn": "Hässleholms kommun",
+    "epost": "municipalityen@hassleholm.se",
+    "namn": "Hässleholms municipality",
     "geometry": {
       "coordinates": [
         [
@@ -8200,8 +8200,8 @@
     "postadress": "Stadshuset",
     "postnummer": "26382",
     "telefon": "042-337100",
-    "epost": "kommunen@hoganas.se",
-    "namn": "Höganäs kommun",
+    "epost": "municipalityen@hoganas.se",
+    "namn": "Höganäs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -8246,8 +8246,8 @@
     "kod": "0821",
     "postnummer": "57980",
     "telefon": "0491-29000",
-    "epost": "kommunkontoret@hogsby.se",
-    "namn": "Högsby kommun",
+    "epost": "municipalitykontoret@hogsby.se",
+    "namn": "Högsby municipality",
     "geometry": {
       "coordinates": [
         [
@@ -8344,8 +8344,8 @@
     "kod": "1266",
     "postnummer": "24280",
     "telefon": "0415-378000",
-    "epost": "kommunen@horby.se",
-    "namn": "Hörby kommun",
+    "epost": "municipalityen@horby.se",
+    "namn": "Hörby municipality",
     "geometry": {
       "coordinates": [
         [
@@ -8484,8 +8484,8 @@
     "postadress": "Box 53",
     "postnummer": "24321",
     "telefon": "0413-28000",
-    "epost": "kommun@hoor.se",
-    "namn": "Höörs kommun",
+    "epost": "municipality@hoor.se",
+    "namn": "Höörs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -8661,8 +8661,8 @@
     "kod": "2510",
     "postnummer": "96285",
     "telefon": "0971-17000",
-    "epost": "kommun@jokkmokk.se",
-    "namn": "Jokkmokks kommun",
+    "epost": "municipality@jokkmokk.se",
+    "namn": "Jokkmokks municipality",
     "geometry": {
       "coordinates": [
         [
@@ -8840,8 +8840,8 @@
     "kod": "0123",
     "postnummer": "17780",
     "telefon": "08-58028500",
-    "epost": "jarfalla.kommun@jarfalla.se",
-    "namn": "Järfälla kommun",
+    "epost": "jarfalla.municipality@jarfalla.se",
+    "namn": "Järfälla municipality",
     "geometry": {
       "coordinates": [
         [
@@ -8954,8 +8954,8 @@
     "postadress": "Rådhuset",
     "postnummer": "55189",
     "telefon": "036-105000",
-    "epost": "kommunstyrelse@jonkoping.se",
-    "namn": "Jönköpings kommun",
+    "epost": "municipalitystyrelse@jonkoping.se",
+    "namn": "Jönköpings municipality",
     "geometry": {
       "coordinates": [
         [
@@ -9121,8 +9121,8 @@
     "kod": "2514",
     "postnummer": "95281",
     "telefon": "0923-65000",
-    "epost": "kommun@kalix.se",
-    "namn": "Kalix kommun",
+    "epost": "municipality@kalix.se",
+    "namn": "Kalix municipality",
     "geometry": {
       "coordinates": [
         [
@@ -9189,8 +9189,8 @@
     "postadress": "Box 611",
     "postnummer": "39126",
     "telefon": "0480-450000",
-    "epost": "kommun@kalmar.se",
-    "namn": "Kalmar kommun",
+    "epost": "municipality@kalmar.se",
+    "namn": "Kalmar municipality",
     "geometry": {
       "coordinates": [
         [
@@ -9284,8 +9284,8 @@
     "kod": "1446",
     "postnummer": "54682",
     "telefon": "0505-17000",
-    "epost": "karlsborg.kommun@karlsborg.se",
-    "namn": "Karlsborgs kommun",
+    "epost": "karlsborg.municipality@karlsborg.se",
+    "namn": "Karlsborgs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -9349,7 +9349,7 @@
     "postnummer": "37481",
     "telefon": "0454-81000",
     "epost": "info@karlshamn.se",
-    "namn": "Karlshamns kommun",
+    "namn": "Karlshamns municipality",
     "geometry": {
       "coordinates": [
         [
@@ -9402,8 +9402,8 @@
     "kod": "1883",
     "postnummer": "69183",
     "telefon": "0586-61000",
-    "epost": "kommun@karlskoga.se",
-    "namn": "Karlskoga kommun",
+    "epost": "municipality@karlskoga.se",
+    "namn": "Karlskoga municipality",
     "geometry": {
       "coordinates": [
         [
@@ -9473,8 +9473,8 @@
     "kod": "1080",
     "postnummer": "37183",
     "telefon": "0455-303000",
-    "epost": "karlskrona.kommun@karlskrona.se",
-    "namn": "Karlskrona kommun",
+    "epost": "karlskrona.municipality@karlskrona.se",
+    "namn": "Karlskrona municipality",
     "geometry": {
       "coordinates": [
         [
@@ -9581,8 +9581,8 @@
     "kod": "1780",
     "postnummer": "65184",
     "telefon": "054-5400000",
-    "epost": "karlstadskommun@karlstad.se",
-    "namn": "Karlstads kommun",
+    "epost": "karlstadsmunicipality@karlstad.se",
+    "namn": "Karlstads municipality",
     "geometry": {
       "coordinates": [
         [
@@ -9680,8 +9680,8 @@
     "kod": "0483",
     "postnummer": "64180",
     "telefon": "0150-57000",
-    "epost": "kommunledningsforvaltning@katrineholm.se",
-    "namn": "Katrineholms kommun",
+    "epost": "municipalityledningsforvaltning@katrineholm.se",
+    "namn": "Katrineholms municipality",
     "geometry": {
       "coordinates": [
         [
@@ -9785,8 +9785,8 @@
     "postadress": "Box 88",
     "postnummer": "66523",
     "telefon": "0554-19100",
-    "epost": "kommun@kil.se",
-    "namn": "Kils kommun",
+    "epost": "municipality@kil.se",
+    "namn": "Kils municipality",
     "geometry": {
       "coordinates": [
         [
@@ -9862,7 +9862,7 @@
     "postnummer": "59040",
     "telefon": "0494-19000",
     "epost": "kinda@kinda.se",
-    "namn": "Kinda kommun",
+    "namn": "Kinda municipality",
     "geometry": {
       "coordinates": [
         [
@@ -9965,8 +9965,8 @@
     "kod": "2584",
     "postnummer": "98185",
     "telefon": "0980-70000",
-    "epost": "kommun@kommun.kiruna.se",
-    "namn": "Kiruna kommun",
+    "epost": "municipality@municipality.kiruna.se",
+    "namn": "Kiruna municipality",
     "geometry": {
       "coordinates": [
         [
@@ -10268,8 +10268,8 @@
     "kod": "1276",
     "postnummer": "26480",
     "telefon": "0435-28000",
-    "epost": "kommun@klippan.se",
-    "namn": "Klippans kommun",
+    "epost": "municipality@klippan.se",
+    "namn": "Klippans municipality",
     "geometry": {
       "coordinates": [
         [
@@ -10356,7 +10356,7 @@
     "postnummer": "74175",
     "telefon": "018-347000",
     "epost": "knivsta@knivsta.se",
-    "namn": "Knivsta kommun",
+    "namn": "Knivsta municipality",
     "geometry": {
       "coordinates": [
         [
@@ -10428,8 +10428,8 @@
     "kod": "2282",
     "postnummer": "87280",
     "telefon": "0612-80000",
-    "epost": "kommun@kramfors.se",
-    "namn": "Kramfors kommun",
+    "epost": "municipality@kramfors.se",
+    "namn": "Kramfors municipality",
     "geometry": {
       "coordinates": [
         [
@@ -10496,8 +10496,8 @@
     "postadress": "Rådhuset",
     "postnummer": "29180",
     "telefon": "044-135000",
-    "epost": "kommun@kristianstad.se",
-    "namn": "Kristianstads kommun",
+    "epost": "municipality@kristianstad.se",
+    "namn": "Kristianstads municipality",
     "geometry": {
       "coordinates": [
         [
@@ -10611,8 +10611,8 @@
     "kod": "1781",
     "postnummer": "68184",
     "telefon": "0550-88000",
-    "epost": "kommunen@kristinehamn.se",
-    "namn": "Kristinehamns kommun",
+    "epost": "municipalityen@kristinehamn.se",
+    "namn": "Kristinehamns municipality",
     "geometry": {
       "coordinates": [
         [
@@ -10679,8 +10679,8 @@
     "kod": "2309",
     "postnummer": "83580",
     "telefon": "0640-16100",
-    "epost": "krokoms.kommun@krokom.se",
-    "namn": "Krokoms kommun",
+    "epost": "krokoms.municipality@krokom.se",
+    "namn": "Krokoms municipality",
     "geometry": {
       "coordinates": [
         [
@@ -10838,8 +10838,8 @@
     "postadress": "Stadshuset",
     "postnummer": "69280",
     "telefon": "019-588000",
-    "epost": "kommun@kumla.se",
-    "namn": "Kumla kommun",
+    "epost": "municipality@kumla.se",
+    "namn": "Kumla municipality",
     "geometry": {
       "coordinates": [
         [
@@ -10899,8 +10899,8 @@
     "postadress": "Stadshuset",
     "postnummer": "43481",
     "telefon": "0300-834000",
-    "epost": "kommun@kungsbacka.se",
-    "namn": "Kungsbacka kommun",
+    "epost": "municipality@kungsbacka.se",
+    "namn": "Kungsbacka municipality",
     "geometry": {
       "coordinates": [
         [
@@ -10953,7 +10953,7 @@
     "postnummer": "73685",
     "telefon": "0227-600000",
     "epost": "info@kungsor.se",
-    "namn": "Kungsörs kommun",
+    "namn": "Kungsörs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -11000,8 +11000,8 @@
     "kod": "1482",
     "postnummer": "44281",
     "telefon": "0303-238000",
-    "epost": "kommun@kungalv.se",
-    "namn": "Kungälvs kommun",
+    "epost": "municipality@kungalv.se",
+    "namn": "Kungälvs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -11064,8 +11064,8 @@
     "kod": "1261",
     "postnummer": "24480",
     "telefon": "046-739000",
-    "epost": "kommunen@kavlinge.se",
-    "namn": "Kävlinge kommun",
+    "epost": "municipalityen@kavlinge.se",
+    "namn": "Kävlinge municipality",
     "geometry": {
       "coordinates": [
         [
@@ -11215,8 +11215,8 @@
     "kod": "1983",
     "postnummer": "73185",
     "telefon": "0221-25000",
-    "epost": "kopings.kommun@koping.se",
-    "namn": "Köpings kommun",
+    "epost": "kopings.municipality@koping.se",
+    "namn": "Köpings municipality",
     "geometry": {
       "coordinates": [
         [
@@ -11307,8 +11307,8 @@
     "postadress": "Stadshuset",
     "postnummer": "31280",
     "telefon": "0430-15000",
-    "epost": "kommun@laholm.se",
-    "namn": "Laholms kommun",
+    "epost": "municipality@laholm.se",
+    "namn": "Laholms municipality",
     "geometry": {
       "coordinates": [
         [
@@ -11374,7 +11374,7 @@
     "postadress": "Stadshuset",
     "postnummer": "26180",
     "telefon": "0418-470000",
-    "epost": "kommun@landskrona.se",
+    "epost": "municipality@landskrona.se",
     "namn": "Landskrona stad",
     "geometry": {
       "coordinates": [
@@ -11513,8 +11513,8 @@
     "kod": "1860",
     "postnummer": "69580",
     "telefon": "0584-473100",
-    "epost": "kommun@laxa.se",
-    "namn": "Laxå kommun",
+    "epost": "municipality@laxa.se",
+    "namn": "Laxå municipality",
     "geometry": {
       "coordinates": [
         [
@@ -11593,8 +11593,8 @@
     "kod": "1814",
     "postnummer": "71681",
     "telefon": "0585-48700",
-    "epost": "lekebergs.kommun@lekeberg.se",
-    "namn": "Lekebergs kommun",
+    "epost": "lekebergs.municipality@lekeberg.se",
+    "namn": "Lekebergs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -11663,8 +11663,8 @@
     "kod": "2029",
     "postnummer": "79380",
     "telefon": "0247-80000",
-    "epost": "kommun@leksand.se",
-    "namn": "Leksands kommun",
+    "epost": "municipality@leksand.se",
+    "namn": "Leksands municipality",
     "geometry": {
       "coordinates": [
         [
@@ -11766,8 +11766,8 @@
     "kod": "1441",
     "postnummer": "44380",
     "telefon": "0302-521000",
-    "epost": "lerums.kommun@lerum.se",
-    "namn": "Lerums kommun",
+    "epost": "lerums.municipality@lerum.se",
+    "namn": "Lerums municipality",
     "geometry": {
       "coordinates": [
         [
@@ -11838,7 +11838,7 @@
     "postnummer": "36050",
     "telefon": "0478-12500",
     "epost": "info@lessebo.se",
-    "namn": "Lessebo kommun",
+    "namn": "Lessebo municipality",
     "geometry": {
       "coordinates": [
         [
@@ -11995,8 +11995,8 @@
     "kod": "1494",
     "postnummer": "53188",
     "telefon": "0510-770000",
-    "epost": "kommun@lidkoping.se",
-    "namn": "Lidköpings kommun",
+    "epost": "municipality@lidkoping.se",
+    "namn": "Lidköpings municipality",
     "geometry": {
       "coordinates": [
         [
@@ -12092,8 +12092,8 @@
     "kod": "1462",
     "postnummer": "46380",
     "telefon": "0520-659500",
-    "epost": "kommunen@lillaedet.se",
-    "namn": "Lilla Edets kommun",
+    "epost": "municipalityen@lillaedet.se",
+    "namn": "Lilla Edets municipality",
     "geometry": {
       "coordinates": [
         [
@@ -12166,8 +12166,8 @@
     "kod": "1885",
     "postnummer": "71180",
     "telefon": "0581-81000",
-    "epost": "kommun@lindesberg.se",
-    "namn": "Lindesbergs kommun",
+    "epost": "municipality@lindesberg.se",
+    "namn": "Lindesbergs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -12270,8 +12270,8 @@
     "kod": "0580",
     "postnummer": "58181",
     "telefon": "013-206000",
-    "epost": "kommun@linkoping.se",
-    "namn": "Linköpings kommun",
+    "epost": "municipality@linkoping.se",
+    "namn": "Linköpings municipality",
     "geometry": {
       "coordinates": [
         [
@@ -12424,8 +12424,8 @@
     "kod": "0781",
     "postnummer": "34183",
     "telefon": "0372-789000",
-    "epost": "kommunstyrelsen@ljungby.se",
-    "namn": "Ljungby kommun",
+    "epost": "municipalitystyrelsen@ljungby.se",
+    "namn": "Ljungby municipality",
     "geometry": {
       "coordinates": [
         [
@@ -12547,8 +12547,8 @@
     "kod": "2161",
     "postnummer": "82780",
     "telefon": "0651-18000",
-    "epost": "kommun@ljusdal.se",
-    "namn": "Ljusdals kommun",
+    "epost": "municipality@ljusdal.se",
+    "namn": "Ljusdals municipality",
     "geometry": {
       "coordinates": [
         [
@@ -12698,8 +12698,8 @@
     "kod": "1864",
     "postnummer": "71480",
     "telefon": "0580-80500",
-    "epost": "kommun@ljusnarsberg.se",
-    "namn": "Ljusnarsbergs kommun",
+    "epost": "municipality@ljusnarsberg.se",
+    "namn": "Ljusnarsbergs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -12753,8 +12753,8 @@
     "kod": "1262",
     "postnummer": "23481",
     "telefon": "040-6411000",
-    "epost": "kommunstyrelsen@lomma.se",
-    "namn": "Lomma kommun",
+    "epost": "municipalitystyrelsen@lomma.se",
+    "namn": "Lomma municipality",
     "geometry": {
       "coordinates": [
         [
@@ -12849,7 +12849,7 @@
     "postnummer": "77182",
     "telefon": "0240-86000",
     "epost": "info@ludvika.se",
-    "namn": "Ludvika kommun",
+    "namn": "Ludvika municipality",
     "geometry": {
       "coordinates": [
         [
@@ -12940,8 +12940,8 @@
     "postadress": "Box 41",
     "postnummer": "22100",
     "telefon": "046-355000",
-    "epost": "lunds.kommun@lund.se",
-    "namn": "Lunds kommun",
+    "epost": "lunds.municipality@lund.se",
+    "namn": "Lunds municipality",
     "geometry": {
       "coordinates": [
         [
@@ -13335,8 +13335,8 @@
     "kod": "2481",
     "postnummer": "92181",
     "telefon": "0950-16600",
-    "epost": "kommun@lycksele.se",
-    "namn": "Lycksele kommun",
+    "epost": "municipality@lycksele.se",
+    "namn": "Lycksele municipality",
     "geometry": {
       "coordinates": [
         [
@@ -13411,7 +13411,7 @@
     "postnummer": "45380",
     "telefon": "0523-613000",
     "epost": "registrator@lysekil.se",
-    "namn": "Lysekils kommun",
+    "namn": "Lysekils municipality",
     "geometry": {
       "coordinates": [
         [
@@ -13455,7 +13455,7 @@
     "kod": "1280",
     "postnummer": "20580",
     "telefon": "040-341000",
-    "epost": "kommunstyrelsen@malmo.se",
+    "epost": "municipalitystyrelsen@malmo.se",
     "namn": "Malmö stad",
     "geometry": {
       "coordinates": [
@@ -13587,8 +13587,8 @@
     "postadress": "Box 14",
     "postnummer": "78221",
     "telefon": "0280-18100",
-    "epost": "kommun@malung-salen.se",
-    "namn": "Malung-Sälens kommun",
+    "epost": "municipality@malung-salen.se",
+    "namn": "Malung-Sälens municipality",
     "geometry": {
       "coordinates": [
         [
@@ -13669,7 +13669,7 @@
     "postnummer": "93070",
     "telefon": "0953-14000",
     "epost": "ks@mala.se",
-    "namn": "Malå kommun",
+    "namn": "Malå municipality",
     "geometry": {
       "coordinates": [
         [
@@ -13720,7 +13720,7 @@
     "postnummer": "54286",
     "telefon": "0501-755000",
     "epost": "info@mariestad.se",
-    "namn": "Mariestads kommun",
+    "namn": "Mariestads municipality",
     "geometry": {
       "coordinates": [
         [
@@ -13815,7 +13815,7 @@
     "postnummer": "28522",
     "telefon": "0433-72000",
     "epost": "ks@markaryd.se",
-    "namn": "Markaryds kommun",
+    "namn": "Markaryds municipality",
     "geometry": {
       "coordinates": [
         [
@@ -13881,8 +13881,8 @@
     "kod": "1463",
     "postnummer": "51180",
     "telefon": "0320-217000",
-    "epost": "markskommun@mark.se",
-    "namn": "Marks kommun",
+    "epost": "marksmunicipality@mark.se",
+    "namn": "Marks municipality",
     "geometry": {
       "coordinates": [
         [
@@ -13992,8 +13992,8 @@
     "kod": "1461",
     "postnummer": "46480",
     "telefon": "0530-18000",
-    "epost": "kommunen@mellerud.se",
-    "namn": "Melleruds kommun",
+    "epost": "municipalityen@mellerud.se",
+    "namn": "Melleruds municipality",
     "geometry": {
       "coordinates": [
         [
@@ -14060,8 +14060,8 @@
     "kod": "0586",
     "postnummer": "59580",
     "telefon": "0142-85000",
-    "epost": "kommunstyrelsen@mjolby.se",
-    "namn": "Mjölby kommun",
+    "epost": "municipalitystyrelsen@mjolby.se",
+    "namn": "Mjölby municipality",
     "geometry": {
       "coordinates": [
         [
@@ -14157,8 +14157,8 @@
     "kod": "2062",
     "postnummer": "79280",
     "telefon": "0250-26000",
-    "epost": "mora.kommun@mora.se",
-    "namn": "Mora kommun",
+    "epost": "mora.municipality@mora.se",
+    "namn": "Mora municipality",
     "geometry": {
       "coordinates": [
         [
@@ -14237,8 +14237,8 @@
     "kod": "0583",
     "postnummer": "59186",
     "telefon": "0141-225000",
-    "epost": "motala.kommun@motala.se",
-    "namn": "Motala kommun",
+    "epost": "motala.municipality@motala.se",
+    "namn": "Motala municipality",
     "geometry": {
       "coordinates": [
         [
@@ -14365,8 +14365,8 @@
     "postadress": "Box 800",
     "postnummer": "56518",
     "telefon": "0392-14000",
-    "epost": "kommun@mullsjo.se",
-    "namn": "Mullsjö kommun",
+    "epost": "municipality@mullsjo.se",
+    "namn": "Mullsjö municipality",
     "geometry": {
       "coordinates": [
         [
@@ -14425,8 +14425,8 @@
     "kod": "1430",
     "postnummer": "45580",
     "telefon": "0524-18000",
-    "epost": "munkedal.kommun@munkedal.se",
-    "namn": "Munkedals kommun",
+    "epost": "munkedal.municipality@munkedal.se",
+    "namn": "Munkedals municipality",
     "geometry": {
       "coordinates": [
         [
@@ -14522,8 +14522,8 @@
     "postadress": "Box 13",
     "postnummer": "68421",
     "telefon": "0563-541000",
-    "epost": "munkfors.kommun@munkfors.se",
-    "namn": "Munkfors kommun",
+    "epost": "munkfors.municipality@munkfors.se",
+    "namn": "Munkfors municipality",
     "geometry": {
       "coordinates": [
         [
@@ -14615,8 +14615,8 @@
     "postadress": "Box 54",
     "postnummer": "38322",
     "telefon": "0499-17000",
-    "epost": "kommun@monsteras.se",
-    "namn": "Mönsterås kommun",
+    "epost": "municipality@monsteras.se",
+    "namn": "Mönsterås municipality",
     "geometry": {
       "coordinates": [
         [
@@ -14691,8 +14691,8 @@
     "kod": "0840",
     "postnummer": "38680",
     "telefon": "0485-47000",
-    "epost": "kommun@morbylanga.se",
-    "namn": "Mörbylånga kommun",
+    "epost": "municipality@morbylanga.se",
+    "namn": "Mörbylånga municipality",
     "geometry": {
       "coordinates": [
         [
@@ -14748,7 +14748,7 @@
     "postnummer": "13181",
     "telefon": "08-7188000",
     "epost": "info@nacka.se",
-    "namn": "Nacka kommun",
+    "namn": "Nacka municipality",
     "geometry": {
       "coordinates": [
         [
@@ -14908,8 +14908,8 @@
     "postadress": "Tingshuset",
     "postnummer": "71380",
     "telefon": "0587-81000",
-    "epost": "nora.kommun@nora.se",
-    "namn": "Nora kommun",
+    "epost": "nora.municipality@nora.se",
+    "namn": "Nora municipality",
     "geometry": {
       "coordinates": [
         [
@@ -14993,7 +14993,7 @@
     "postnummer": "73821",
     "telefon": "0223-29000",
     "epost": "info@norberg.se",
-    "namn": "Norbergs kommun",
+    "namn": "Norbergs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -15062,8 +15062,8 @@
     "postadress": "Box 56",
     "postnummer": "82070",
     "telefon": "0652-36000",
-    "epost": "kommun@nordanstig.se",
-    "namn": "Nordanstigs kommun",
+    "epost": "municipality@nordanstig.se",
+    "namn": "Nordanstigs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -15126,8 +15126,8 @@
     "kod": "2401",
     "postnummer": "91481",
     "telefon": "0930-14000",
-    "epost": "kommun@nordmaling.se",
-    "namn": "Nordmalings kommun",
+    "epost": "municipality@nordmaling.se",
+    "namn": "Nordmalings municipality",
     "geometry": {
       "coordinates": [
         [
@@ -15199,8 +15199,8 @@
     "postadress": "Rådhuset",
     "postnummer": "60181",
     "telefon": "011-150000",
-    "epost": "norrkoping.kommun@norrkoping.se",
-    "namn": "Norrköpings kommun",
+    "epost": "norrkoping.municipality@norrkoping.se",
+    "namn": "Norrköpings municipality",
     "geometry": {
       "coordinates": [
         [
@@ -15340,8 +15340,8 @@
     "postadress": "Box 800",
     "postnummer": "76128",
     "telefon": "0176-71000",
-    "epost": "norrtalje.kommun@norrtalje.se",
-    "namn": "Norrtälje kommun",
+    "epost": "norrtalje.municipality@norrtalje.se",
+    "namn": "Norrtälje municipality",
     "geometry": {
       "coordinates": [
         [
@@ -15490,7 +15490,7 @@
     "postnummer": "93581",
     "telefon": "0918-14000",
     "epost": "info@norsjo.se",
-    "namn": "Norsjö kommun",
+    "namn": "Norsjö municipality",
     "geometry": {
       "coordinates": [
         [
@@ -15550,8 +15550,8 @@
     "kod": "0881",
     "postnummer": "38280",
     "telefon": "0481-45000",
-    "epost": "kommun@nybro.se",
-    "namn": "Nybro kommun",
+    "epost": "municipality@nybro.se",
+    "namn": "Nybro municipality",
     "geometry": {
       "coordinates": [
         [
@@ -15675,8 +15675,8 @@
     "kod": "0140",
     "postnummer": "15580",
     "telefon": "08-55501000",
-    "epost": "kommun@nykvarn.se",
-    "namn": "Nykvarns kommun",
+    "epost": "municipality@nykvarn.se",
+    "namn": "Nykvarns municipality",
     "geometry": {
       "coordinates": [
         [
@@ -15715,8 +15715,8 @@
     "kod": "0480",
     "postnummer": "61183",
     "telefon": "0155-248000",
-    "epost": "kommun@nykoping.se",
-    "namn": "Nyköpings kommun",
+    "epost": "municipality@nykoping.se",
+    "namn": "Nyköpings municipality",
     "geometry": {
       "coordinates": [
         [
@@ -15825,8 +15825,8 @@
     "kod": "0192",
     "postnummer": "14981",
     "telefon": "08-52068000",
-    "epost": "kommunstyrelsen@nynashamn.se",
-    "namn": "Nynäshamns kommun",
+    "epost": "municipalitystyrelsen@nynashamn.se",
+    "namn": "Nynäshamns municipality",
     "geometry": {
       "coordinates": [
         [
@@ -15979,8 +15979,8 @@
     "postadress": "Stadshuset",
     "postnummer": "57180",
     "telefon": "0380-518000",
-    "epost": "kommunstyrelsen@nassjo.se",
-    "namn": "Nässjö kommun",
+    "epost": "municipalitystyrelsen@nassjo.se",
+    "namn": "Nässjö municipality",
     "geometry": {
       "coordinates": [
         [
@@ -16109,8 +16109,8 @@
     "kod": "2101",
     "postnummer": "81680",
     "telefon": "0297-55500",
-    "epost": "kommun@ockelbo.se",
-    "namn": "Ockelbo kommun",
+    "epost": "municipality@ockelbo.se",
+    "namn": "Ockelbo municipality",
     "geometry": {
       "coordinates": [
         [
@@ -16163,7 +16163,7 @@
     "postnummer": "29324",
     "telefon": "0454-93000",
     "epost": "ks@olofstrom.se",
-    "namn": "Olofströms kommun",
+    "namn": "Olofströms municipality",
     "geometry": {
       "coordinates": [
         [
@@ -16219,8 +16219,8 @@
     "postadress": "Box 23",
     "postnummer": "79421",
     "telefon": "0250-552100",
-    "epost": "orsa.kommun@orsa.se",
-    "namn": "Orsa kommun",
+    "epost": "orsa.municipality@orsa.se",
+    "namn": "Orsa municipality",
     "geometry": {
       "coordinates": [
         [
@@ -16276,8 +16276,8 @@
     "kod": "1421",
     "postnummer": "47380",
     "telefon": "0304-334000",
-    "epost": "orustkommun@orust.se",
-    "namn": "Orust kommun",
+    "epost": "orustmunicipality@orust.se",
+    "namn": "Orust municipality",
     "geometry": {
       "coordinates": [
         [
@@ -16336,8 +16336,8 @@
     "kod": "1273",
     "postnummer": "28380",
     "telefon": "0479-18000",
-    "epost": "kommun@osby.se",
-    "namn": "Osby kommun",
+    "epost": "municipality@osby.se",
+    "namn": "Osby municipality",
     "geometry": {
       "coordinates": [
         [
@@ -16437,8 +16437,8 @@
     "postadress": "Box 706",
     "postnummer": "57228",
     "telefon": "0491-88000",
-    "epost": "kommunen@oskarshamn.se",
-    "namn": "Oskarshamns kommun",
+    "epost": "municipalityen@oskarshamn.se",
+    "namn": "Oskarshamns municipality",
     "geometry": {
       "coordinates": [
         [
@@ -16521,8 +16521,8 @@
     "kod": "2121",
     "postnummer": "82880",
     "telefon": "0271-57000",
-    "epost": "kommun@ovanaker.se",
-    "namn": "Ovanåkers kommun",
+    "epost": "municipality@ovanaker.se",
+    "namn": "Ovanåkers municipality",
     "geometry": {
       "coordinates": [
         [
@@ -16601,8 +16601,8 @@
     "kod": "0481",
     "postnummer": "61381",
     "telefon": "0155-38000",
-    "epost": "kommun@oxelosund.se",
-    "namn": "Oxelösunds kommun",
+    "epost": "municipality@oxelosund.se",
+    "namn": "Oxelösunds municipality",
     "geometry": {
       "coordinates": [
         [
@@ -16641,8 +16641,8 @@
     "kod": "2521",
     "postnummer": "98485",
     "telefon": "0978-12000",
-    "epost": "kommun@pajala.se",
-    "namn": "Pajala kommun",
+    "epost": "municipality@pajala.se",
+    "namn": "Pajala municipality",
 
     "geometry": {
       "coordinates": [
@@ -16838,8 +16838,8 @@
     "kod": "1402",
     "postnummer": "43382",
     "telefon": "031-7921000",
-    "epost": "partille.kommun@partille.se",
-    "namn": "Partille kommun",
+    "epost": "partille.municipality@partille.se",
+    "namn": "Partille municipality",
     "geometry": {
       "coordinates": [
         [
@@ -16869,8 +16869,8 @@
     "kod": "1275",
     "postnummer": "28485",
     "telefon": "0435-39000",
-    "epost": "kommunhuset@perstorp.se",
-    "namn": "Perstorps kommun",
+    "epost": "municipalityhuset@perstorp.se",
+    "namn": "Perstorps municipality",
     "geometry": {
       "coordinates": [
         [
@@ -16915,8 +16915,8 @@
     "kod": "2581",
     "postnummer": "94185",
     "telefon": "0911-696000",
-    "epost": "kommun@pitea.se",
-    "namn": "Piteå kommun",
+    "epost": "municipality@pitea.se",
+    "namn": "Piteå municipality",
     "geometry": {
       "coordinates": [
         [
@@ -16994,8 +16994,8 @@
     "postadress": "Box 150",
     "postnummer": "84070",
     "telefon": "0696-682000",
-    "epost": "ragunda.kommun@ragunda.se",
-    "namn": "Ragunda kommun",
+    "epost": "ragunda.municipality@ragunda.se",
+    "namn": "Ragunda municipality",
     "geometry": {
       "coordinates": [
         [
@@ -17087,8 +17087,8 @@
     "kod": "2409",
     "postnummer": "91581",
     "telefon": "0934-14000",
-    "epost": "kommun@robertsfors.se",
-    "namn": "Robertsfors kommun",
+    "epost": "municipality@robertsfors.se",
+    "namn": "Robertsfors municipality",
     "geometry": {
       "coordinates": [
         [
@@ -17167,7 +17167,7 @@
     "postnummer": "37280",
     "telefon": "0457-618000",
     "epost": "stadshuset@ronneby.se",
-    "namn": "Ronneby kommun",
+    "namn": "Ronneby municipality",
     "geometry": {
       "coordinates": [
         [
@@ -17279,7 +17279,7 @@
     "postnummer": "79580",
     "telefon": "0248-70000",
     "epost": "rattvik@rattvik.se",
-    "namn": "Rättviks kommun",
+    "namn": "Rättviks municipality",
     "geometry": {
       "coordinates": [
         [
@@ -17349,8 +17349,8 @@
     "postadress": "Box 304",
     "postnummer": "73325",
     "telefon": "0224-747000",
-    "epost": "kommun.info@sala.se",
-    "namn": "Sala kommun",
+    "epost": "municipality.info@sala.se",
+    "namn": "Sala municipality",
     "geometry": {
       "coordinates": [
         [
@@ -17461,7 +17461,7 @@
     "postnummer": "14480",
     "telefon": "08-53259800",
     "epost": "info@salem.se",
-    "namn": "Salems kommun",
+    "namn": "Salems municipality",
     "geometry": {
       "coordinates": [
         [
@@ -17603,8 +17603,8 @@
     "kod": "2181",
     "postnummer": "81180",
     "telefon": "026-240000",
-    "epost": "kommun@sandviken.se",
-    "namn": "Sandvikens kommun",
+    "epost": "municipality@sandviken.se",
+    "namn": "Sandvikens municipality",
     "geometry": {
       "coordinates": [
         [
@@ -17704,8 +17704,8 @@
     "kod": "0191",
     "postnummer": "19585",
     "telefon": "08-59126000",
-    "epost": "sigtuna.kommun@sigtuna.se",
-    "namn": "Sigtuna kommun",
+    "epost": "sigtuna.municipality@sigtuna.se",
+    "namn": "Sigtuna municipality",
     "geometry": {
       "coordinates": [
         [
@@ -17858,8 +17858,8 @@
     "kod": "1291",
     "postnummer": "27280",
     "telefon": "0414-819000",
-    "epost": "kommunledningskontoret@simrishamn.se",
-    "namn": "Simrishamns kommun",
+    "epost": "municipalityledningskontoret@simrishamn.se",
+    "namn": "Simrishamns municipality",
     "geometry": {
       "coordinates": [
         [
@@ -17929,7 +17929,7 @@
     "postnummer": "27580",
     "telefon": "0416-27000",
     "epost": "kanslihuset@sjobo.se",
-    "namn": "Sjöbo kommun",
+    "namn": "Sjöbo municipality",
     "geometry": {
       "coordinates": [
         [
@@ -18129,8 +18129,8 @@
     "kod": "1495",
     "postnummer": "53288",
     "telefon": "0511-32000",
-    "epost": "skara.kommun@skara.se",
-    "namn": "Skara kommun",
+    "epost": "skara.municipality@skara.se",
+    "namn": "Skara municipality",
     "geometry": {
       "coordinates": [
         [
@@ -18215,7 +18215,7 @@
     "postnummer": "93185",
     "telefon": "0910-735000",
     "epost": "kundtjanst@skelleftea.se",
-    "namn": "Skellefteå kommun",
+    "namn": "Skellefteå municipality",
     "geometry": {
       "coordinates": [
         [
@@ -18352,8 +18352,8 @@
     "postadress": "Box 101",
     "postnummer": "73922",
     "telefon": "0222-45000",
-    "epost": "kommun@skinnskatteberg.se",
-    "namn": "Skinnskattebergs kommun",
+    "epost": "municipality@skinnskatteberg.se",
+    "namn": "Skinnskattebergs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -18422,7 +18422,7 @@
     "postnummer": "27480",
     "telefon": "0411-536000",
     "epost": "kansli@skurup.se",
-    "namn": "Skurups kommun",
+    "namn": "Skurups municipality",
     "geometry": {
       "coordinates": [
         [
@@ -18633,8 +18633,8 @@
     "kod": "1496",
     "postnummer": "54183",
     "telefon": "0500-498000",
-    "epost": "kommunstyrelsen@skovde.se",
-    "namn": "Skövde kommun",
+    "epost": "municipalitystyrelsen@skovde.se",
+    "namn": "Skövde municipality",
     "geometry": {
       "coordinates": [
         [
@@ -18739,8 +18739,8 @@
     "kod": "2061",
     "postnummer": "77781",
     "telefon": "0240-660000",
-    "epost": "kommun@smedjebacken.se",
-    "namn": "Smedjebackens kommun",
+    "epost": "municipality@smedjebacken.se",
+    "namn": "Smedjebackens municipality",
     "geometry": {
       "coordinates": [
         [
@@ -18825,8 +18825,8 @@
     "kod": "2283",
     "postnummer": "88180",
     "telefon": "0620-682000",
-    "epost": "kommun@solleftea.se",
-    "namn": "Sollefteå kommun",
+    "epost": "municipality@solleftea.se",
+    "namn": "Sollefteå municipality",
     "geometry": {
       "coordinates": [
         [
@@ -18954,8 +18954,8 @@
     "kod": "0163",
     "postnummer": "19186",
     "telefon": "08-57921000",
-    "epost": "sollentuna.kommun@sollentuna.se",
-    "namn": "Sollentuna kommun",
+    "epost": "sollentuna.municipality@sollentuna.se",
+    "namn": "Sollentuna municipality",
     "geometry": {
       "coordinates": [
         [
@@ -19089,7 +19089,7 @@
     "kod": "0184",
     "postnummer": "17186",
     "telefon": "08-7342000",
-    "epost": "kommunstyrelsen@solna.se",
+    "epost": "municipalitystyrelsen@solna.se",
     "namn": "Solna stad",
     "geometry": {
       "coordinates": [
@@ -19184,8 +19184,8 @@
     "kod": "2422",
     "postnummer": "92481",
     "telefon": "0952-14000",
-    "epost": "kommun@sorsele.se",
-    "namn": "Sorsele kommun",
+    "epost": "municipality@sorsele.se",
+    "namn": "Sorsele municipality",
     "geometry": {
       "coordinates": [
         [
@@ -19246,7 +19246,7 @@
     "postnummer": "45680",
     "telefon": "0523-664000",
     "epost": "info@sotenas.se",
-    "namn": "Sotenäs kommun",
+    "namn": "Sotenäs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -19280,8 +19280,8 @@
     "kod": "1230",
     "postnummer": "24580",
     "telefon": "046-251100",
-    "epost": "kommunen@staffanstorp.se",
-    "namn": "Staffanstorps kommun",
+    "epost": "municipalityen@staffanstorp.se",
+    "namn": "Staffanstorps municipality",
     "geometry": {
       "coordinates": [
         [
@@ -19449,8 +19449,8 @@
     "kod": "1415",
     "postnummer": "44482",
     "telefon": "0303-730000",
-    "epost": "kommun@stenungsund.se",
-    "namn": "Stenungsunds kommun",
+    "epost": "municipality@stenungsund.se",
+    "namn": "Stenungsunds municipality",
     "geometry": {
       "coordinates": [
         [
@@ -19502,7 +19502,7 @@
     "postadress": "Stadshuset",
     "postnummer": "10535",
     "telefon": "08-50829000",
-    "epost": "kommunstyrelsen@stockholm.se",
+    "epost": "municipalitystyrelsen@stockholm.se",
     "namn": "Stockholms stad",
     "geometry": {
       "coordinates": [
@@ -19814,8 +19814,8 @@
     "postadress": "Box 1001",
     "postnummer": "68829",
     "telefon": "0550-65100",
-    "epost": "storfors.kommun@storfors.se",
-    "namn": "Storfors kommun",
+    "epost": "storfors.municipality@storfors.se",
+    "namn": "Storfors municipality",
     "geometry": {
       "coordinates": [
         [
@@ -19881,7 +19881,7 @@
     "postnummer": "92381",
     "telefon": "0951-14000",
     "epost": "ks@storuman.se",
-    "namn": "Storumans kommun",
+    "namn": "Storumans municipality",
 
     "geometry": {
       "coordinates": [
@@ -19954,8 +19954,8 @@
     "kod": "0486",
     "postnummer": "64580",
     "telefon": "0152-29100",
-    "epost": "kommunstyrelsen@strangnas.se",
-    "namn": "Strängnäs kommun",
+    "epost": "municipalitystyrelsen@strangnas.se",
+    "namn": "Strängnäs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -20028,8 +20028,8 @@
     "kod": "1486",
     "postnummer": "45280",
     "telefon": "0526-19000",
-    "epost": "kommun@stromstad.se",
-    "namn": "Strömstads kommun",
+    "epost": "municipality@stromstad.se",
+    "namn": "Strömstads municipality",
     "geometry": {
       "coordinates": [
         [
@@ -20087,8 +20087,8 @@
     "postadress": "Box 500",
     "postnummer": "83324",
     "telefon": "0670-16100",
-    "epost": "stromsunds.kommun@stromsund.se",
-    "namn": "Strömsunds kommun",
+    "epost": "stromsunds.municipality@stromsund.se",
+    "namn": "Strömsunds municipality",
     "geometry": {
       "coordinates": [
         [
@@ -20261,7 +20261,7 @@
     "kod": "0183",
     "postnummer": "17292",
     "telefon": "08-7068000",
-    "epost": "kommunstyrelsen@sundbyberg.se",
+    "epost": "municipalitystyrelsen@sundbyberg.se",
     "namn": "Sundbybergs stad",
     "geometry": {
       "coordinates": [
@@ -20330,8 +20330,8 @@
     "kod": "2281",
     "postnummer": "85185",
     "telefon": "060-191000",
-    "epost": "sundsvalls.kommun@sundsvall.se",
-    "namn": "Sundsvalls kommun",
+    "epost": "sundsvalls.municipality@sundsvall.se",
+    "namn": "Sundsvalls municipality",
     "geometry": {
       "coordinates": [
         [
@@ -20425,8 +20425,8 @@
     "kod": "1766",
     "postnummer": "68680",
     "telefon": "0565-16000",
-    "epost": "kommun.kansli@sunne.se",
-    "namn": "Sunne kommun",
+    "epost": "municipality.kansli@sunne.se",
+    "namn": "Sunne municipality",
     "geometry": {
       "coordinates": [
         [
@@ -20521,8 +20521,8 @@
     "postadress": "Box 203",
     "postnummer": "73553",
     "telefon": "0220-39000",
-    "epost": "kommunen@surahammar.se",
-    "namn": "Surahammars kommun",
+    "epost": "municipalityen@surahammar.se",
+    "namn": "Surahammars municipality",
     "geometry": {
       "coordinates": [
         [
@@ -20576,7 +20576,7 @@
     "postnummer": "26880",
     "telefon": "0418-475000",
     "epost": "info@svalov.se",
-    "namn": "Svalövs kommun",
+    "namn": "Svalövs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -20763,8 +20763,8 @@
     "kod": "1263",
     "postnummer": "23380",
     "telefon": "040-6268000",
-    "epost": "kommunen@svedala.se",
-    "namn": "Svedala kommun",
+    "epost": "municipalityen@svedala.se",
+    "namn": "Svedala municipality",
     "geometry": {
       "coordinates": [
         [
@@ -21014,7 +21014,7 @@
     "postnummer": "51280",
     "telefon": "0325-18000",
     "epost": "kansliet@svenljunga.se",
-    "namn": "Svenljunga kommun",
+    "namn": "Svenljunga municipality",
     "geometry": {
       "coordinates": [
         [
@@ -21127,8 +21127,8 @@
     "kod": "1785",
     "postnummer": "66180",
     "telefon": "0533-681000",
-    "epost": "kommun@saffle.se",
-    "namn": "Säffle kommun",
+    "epost": "municipality@saffle.se",
+    "namn": "Säffle municipality",
     "geometry": {
       "coordinates": [
         [
@@ -21228,8 +21228,8 @@
     "postadress": "Rådhuset",
     "postnummer": "78327",
     "telefon": "0225-55000",
-    "epost": "kommun@sater.se",
-    "namn": "Säters kommun",
+    "epost": "municipality@sater.se",
+    "namn": "Säters municipality",
     "geometry": {
       "coordinates": [
         [
@@ -21310,8 +21310,8 @@
     "kod": "0684",
     "postnummer": "57680",
     "telefon": "0382-15200",
-    "epost": "kommun@savsjo.se",
-    "namn": "Sävsjö kommun",
+    "epost": "municipality@savsjo.se",
+    "namn": "Sävsjö municipality",
     "geometry": {
       "coordinates": [
         [
@@ -21403,8 +21403,8 @@
     "kod": "2182",
     "postnummer": "82680",
     "telefon": "0270-75000",
-    "epost": "kommunstyrelsen@soderhamn.se",
-    "namn": "Söderhamns kommun",
+    "epost": "municipalitystyrelsen@soderhamn.se",
+    "namn": "Söderhamns municipality",
     "geometry": {
       "coordinates": [
         [
@@ -21459,8 +21459,8 @@
     "kod": "0582",
     "postnummer": "61480",
     "telefon": "0121-18100",
-    "epost": "kommun@soderkoping.se",
-    "namn": "Söderköpings kommun",
+    "epost": "municipality@soderkoping.se",
+    "namn": "Söderköpings municipality",
     "geometry": {
       "coordinates": [
         [
@@ -21571,9 +21571,9 @@
     "kod": "0181",
     "postnummer": "15189",
     "telefon": "08-52301000",
-    "epost": "sodertalje.kommun@sodertalje.se",
+    "epost": "sodertalje.municipality@sodertalje.se",
     "address": "Lerhaga 50, 151 66 Södertälje",
-    "namn": "Södertälje kommun",
+    "namn": "Södertälje municipality",
     "address": "Pålhagsvägen 4",
     "geometry": {
       "coordinates": [
@@ -21742,7 +21742,7 @@
     "postnummer": "29480",
     "telefon": "0456-816000",
     "epost": "info@solvesborg.se",
-    "namn": "Sölvesborgs kommun",
+    "namn": "Sölvesborgs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -21780,7 +21780,7 @@
     "postnummer": "45781",
     "telefon": "0525-18000",
     "epost": "ks.diarium@tanum.se",
-    "namn": "Tanums kommun",
+    "namn": "Tanums municipality",
     "geometry": {
       "coordinates": [
         [
@@ -21875,8 +21875,8 @@
     "kod": "1472",
     "postnummer": "54380",
     "telefon": "0504-18000",
-    "epost": "kommun@tibro.se",
-    "namn": "Tibro kommun",
+    "epost": "municipality@tibro.se",
+    "namn": "Tibro municipality",
     "geometry": {
       "coordinates": [
         [
@@ -21926,8 +21926,8 @@
     "kod": "1498",
     "postnummer": "52283",
     "telefon": "0502-606000",
-    "epost": "tidaholms.kommun@tidaholm.se",
-    "namn": "Tidaholms kommun",
+    "epost": "tidaholms.municipality@tidaholm.se",
+    "namn": "Tidaholms municipality",
     "geometry": {
       "coordinates": [
         [
@@ -21992,8 +21992,8 @@
     "kod": "0360",
     "postnummer": "81580",
     "telefon": "0293-18000",
-    "epost": "kommunstyrelsen@tierp.se",
-    "namn": "Tierps kommun",
+    "epost": "municipalitystyrelsen@tierp.se",
+    "namn": "Tierps municipality",
     "geometry": {
       "coordinates": [
         [
@@ -22093,8 +22093,8 @@
     "kod": "2262",
     "postnummer": "86182",
     "telefon": "060-163100",
-    "epost": "timra.kommun@timra.se",
-    "namn": "Timrå kommun",
+    "epost": "timra.municipality@timra.se",
+    "namn": "Timrå municipality",
     "geometry": {
       "coordinates": [
         [
@@ -22173,8 +22173,8 @@
     "postadress": "Box 88",
     "postnummer": "36222",
     "telefon": "0477-44100",
-    "epost": "kommunen@tingsryd.se",
-    "namn": "Tingsryds kommun",
+    "epost": "municipalityen@tingsryd.se",
+    "namn": "Tingsryds municipality",
     "geometry": {
       "coordinates": [
         [
@@ -22272,8 +22272,8 @@
     "kod": "1419",
     "postnummer": "47180",
     "telefon": "0304-601000",
-    "epost": "kommun@tjorn.se",
-    "namn": "Tjörns kommun",
+    "epost": "municipality@tjorn.se",
+    "namn": "Tjörns municipality",
     "geometry": {
       "coordinates": [
         [
@@ -22313,8 +22313,8 @@
     "kod": "1270",
     "postnummer": "27380",
     "telefon": "0417-18000",
-    "epost": "kommun@tomelilla.se",
-    "namn": "Tomelilla kommun",
+    "epost": "municipality@tomelilla.se",
+    "namn": "Tomelilla municipality",
     "geometry": {
       "coordinates": [
         [
@@ -22402,8 +22402,8 @@
     "kod": "1737",
     "postnummer": "68580",
     "telefon": "0560-16000",
-    "epost": "torsby.kommun@torsby.se",
-    "namn": "Torsby kommun",
+    "epost": "torsby.municipality@torsby.se",
+    "namn": "Torsby municipality",
     "geometry": {
       "coordinates": [
         [
@@ -22503,7 +22503,7 @@
     "postnummer": "38525",
     "telefon": "0486-33100",
     "epost": "info@torsas.se",
-    "namn": "Torsås kommun",
+    "namn": "Torsås municipality",
     "geometry": {
       "coordinates": [
         [
@@ -22557,8 +22557,8 @@
     "kod": "1452",
     "postnummer": "51480",
     "telefon": "0325-576000",
-    "epost": "kommun@tranemo.se",
-    "namn": "Tranemo kommun",
+    "epost": "municipality@tranemo.se",
+    "namn": "Tranemo municipality",
     "geometry": {
       "coordinates": [
         [
@@ -22664,8 +22664,8 @@
     "kod": "0687",
     "postnummer": "57382",
     "telefon": "0140-68100",
-    "epost": "tranaskommun@tranas.se",
-    "namn": "Tranås kommun",
+    "epost": "tranasmunicipality@tranas.se",
+    "namn": "Tranås municipality",
     "geometry": {
       "coordinates": [
         [
@@ -22738,8 +22738,8 @@
     "kod": "1287",
     "postnummer": "23183",
     "telefon": "0410-733000",
-    "epost": "trelleborgs.kommun@trelleborg.se",
-    "namn": "Trelleborgs kommun",
+    "epost": "trelleborgs.municipality@trelleborg.se",
+    "namn": "Trelleborgs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -22985,7 +22985,7 @@
     "postnummer": "61980",
     "telefon": "0156-52000",
     "epost": "trosa@trosa.se",
-    "namn": "Trosa kommun",
+    "namn": "Trosa municipality",
     "geometry": {
       "coordinates": [
         [
@@ -23034,8 +23034,8 @@
     "kod": "0138",
     "postnummer": "13581",
     "telefon": "08-57829100",
-    "epost": "kommun@tyreso.se",
-    "namn": "Tyresö kommun",
+    "epost": "municipality@tyreso.se",
+    "namn": "Tyresö municipality",
     "geometry": {
       "coordinates": [
         [
@@ -23156,8 +23156,8 @@
     "kod": "0160",
     "postnummer": "18380",
     "telefon": "08-55559000",
-    "epost": "tabykommun@taby.se",
-    "namn": "Täby kommun",
+    "epost": "tabymunicipality@taby.se",
+    "namn": "Täby municipality",
     "geometry": {
       "coordinates": [
         [
@@ -23242,8 +23242,8 @@
     "postadress": "Box 83",
     "postnummer": "54522",
     "telefon": "0506-18000",
-    "epost": "kommunen@toreboda.se",
-    "namn": "Töreboda kommun",
+    "epost": "municipalityen@toreboda.se",
+    "namn": "Töreboda municipality",
     "geometry": {
       "coordinates": [
         [
@@ -23325,8 +23325,8 @@
     "kod": "1485",
     "postnummer": "45181",
     "telefon": "0522-696000",
-    "epost": "kommunen@uddevalla.se",
-    "namn": "Uddevalla kommun",
+    "epost": "municipalityen@uddevalla.se",
+    "namn": "Uddevalla municipality",
     "geometry": {
       "coordinates": [
         [
@@ -23413,8 +23413,8 @@
     "kod": "1491",
     "postnummer": "52386",
     "telefon": "0321-595000",
-    "epost": "kommun@ulricehamn.se",
-    "namn": "Ulricehamns kommun",
+    "epost": "municipality@ulricehamn.se",
+    "namn": "Ulricehamns municipality",
     "geometry": {
       "coordinates": [
         [
@@ -23518,8 +23518,8 @@
     "kod": "2480",
     "postnummer": "90184",
     "telefon": "090-161000",
-    "epost": "umea.kommun@umea.se",
-    "namn": "Umeå kommun",
+    "epost": "umea.municipality@umea.se",
+    "namn": "Umeå municipality",
     "geometry": {
       "coordinates": [
         [
@@ -23654,8 +23654,8 @@
     "kod": "0114",
     "postnummer": "19480",
     "telefon": "08-59097000",
-    "epost": "upplands.vasby.kommun@upplandsvasby.se",
-    "namn": "Upplands Väsby kommun",
+    "epost": "upplands.vasby.municipality@upplandsvasby.se",
+    "namn": "Upplands Väsby municipality",
     "geometry": {
       "coordinates": [
         [
@@ -23790,8 +23790,8 @@
     "kod": "0139",
     "postnummer": "19681",
     "telefon": "08-58169000",
-    "epost": "upplands-bro.kommun@upplands-bro.se",
-    "namn": "Upplands-Bro kommun",
+    "epost": "upplands-bro.municipality@upplands-bro.se",
+    "namn": "Upplands-Bro municipality",
     "geometry": {
       "coordinates": [
         [
@@ -23906,8 +23906,8 @@
     "kod": "0380",
     "postnummer": "75375",
     "telefon": "018-7270000",
-    "epost": "uppsala.kommun@uppsala.se",
-    "namn": "Uppsala kommun",
+    "epost": "uppsala.municipality@uppsala.se",
+    "namn": "Uppsala municipality",
     "geometry": {
       "coordinates": [
         [
@@ -24073,7 +24073,7 @@
     "postnummer": "36070",
     "telefon": "0474-47000",
     "epost": "ledningskontoret@uppvidinge.se",
-    "namn": "Uppvidinge kommun",
+    "namn": "Uppvidinge municipality",
     "geometry": {
       "coordinates": [
         [
@@ -24188,8 +24188,8 @@
     "kod": "0584",
     "postnummer": "59280",
     "telefon": "0143-15000",
-    "epost": "vadstena.kommun@vadstena.se",
-    "namn": "Vadstena kommun",
+    "epost": "vadstena.municipality@vadstena.se",
+    "namn": "Vadstena municipality",
     "geometry": {
       "coordinates": [
         [
@@ -24244,8 +24244,8 @@
     "postadress": "Box 43",
     "postnummer": "56821",
     "telefon": "0370-678000",
-    "epost": "kommunstyrelsen@vaggeryd.se",
-    "namn": "Vaggeryds kommun",
+    "epost": "municipalitystyrelsen@vaggeryd.se",
+    "namn": "Vaggeryds municipality",
     "geometry": {
       "coordinates": [
         [
@@ -24335,8 +24335,8 @@
     "kod": "0563",
     "postnummer": "61580",
     "telefon": "0123-19100",
-    "epost": "kommun@valdemarsvik.se",
-    "namn": "Valdemarsviks kommun",
+    "epost": "municipality@valdemarsvik.se",
+    "namn": "Valdemarsviks municipality",
     "geometry": {
       "coordinates": [
         [
@@ -24437,8 +24437,8 @@
     "kod": "0115",
     "postnummer": "18686",
     "telefon": "08-58785000",
-    "epost": "kommun@vallentuna.se",
-    "namn": "Vallentuna kommun",
+    "epost": "municipality@vallentuna.se",
+    "namn": "Vallentuna municipality",
     "geometry": {
       "coordinates": [
         [
@@ -24633,8 +24633,8 @@
     "postadress": "Medborgarhuset",
     "postnummer": "78050",
     "telefon": "0281-75000",
-    "epost": "vansbro.kommun@vansbro.se",
-    "namn": "Vansbro kommun",
+    "epost": "vansbro.municipality@vansbro.se",
+    "namn": "Vansbro municipality",
     "geometry": {
       "coordinates": [
         [
@@ -24688,8 +24688,8 @@
     "kod": "1470",
     "postnummer": "53481",
     "telefon": "0512-31000",
-    "epost": "vara.kommun@vara.se",
-    "namn": "Vara kommun",
+    "epost": "vara.municipality@vara.se",
+    "namn": "Vara municipality",
     "geometry": {
       "coordinates": [
         [
@@ -24791,8 +24791,8 @@
     "kod": "1383",
     "postnummer": "43280",
     "telefon": "0340-88000",
-    "epost": "ks@kommunen.varberg.se",
-    "namn": "Varbergs kommun",
+    "epost": "ks@municipalityen.varberg.se",
+    "namn": "Varbergs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -24997,8 +24997,8 @@
     "kod": "1233",
     "postnummer": "23581",
     "telefon": "040-425000",
-    "epost": "vellinge.kommun@vellinge.se",
-    "namn": "Vellinge kommun",
+    "epost": "vellinge.municipality@vellinge.se",
+    "namn": "Vellinge municipality",
     "geometry": {
       "coordinates": [
         [
@@ -25093,8 +25093,8 @@
     "kod": "0685",
     "postnummer": "57480",
     "telefon": "0383-97100",
-    "epost": "kommun@vetlanda.se",
-    "namn": "Vetlanda kommun",
+    "epost": "municipality@vetlanda.se",
+    "namn": "Vetlanda municipality",
     "geometry": {
       "coordinates": [
         [
@@ -25232,8 +25232,8 @@
     "kod": "2462",
     "postnummer": "91281",
     "telefon": "0940-14000",
-    "epost": "vilhelmina.kommun@vilhelmina.se",
-    "namn": "Vilhelmina kommun",
+    "epost": "vilhelmina.municipality@vilhelmina.se",
+    "namn": "Vilhelmina municipality",
     "geometry": {
       "coordinates": [
         [
@@ -25315,8 +25315,8 @@
     "postadress": "Stadshuset",
     "postnummer": "59881",
     "telefon": "0492-769000",
-    "epost": "kommun@vimmerby.se",
-    "namn": "Vimmerby kommun",
+    "epost": "municipality@vimmerby.se",
+    "namn": "Vimmerby municipality",
     "geometry": {
       "coordinates": [
         [
@@ -25426,8 +25426,8 @@
     "kod": "2404",
     "postnummer": "92281",
     "telefon": "0933-14000",
-    "epost": "vindelns.kommun@vindeln.se",
-    "namn": "Vindelns kommun",
+    "epost": "vindelns.municipality@vindeln.se",
+    "namn": "Vindelns municipality",
     "geometry": {
       "coordinates": [
         [
@@ -25533,8 +25533,8 @@
     "kod": "0428",
     "postnummer": "64380",
     "telefon": "0151-19100",
-    "epost": "kommunstyrelsen@vingaker.se",
-    "namn": "Vingåkers kommun",
+    "epost": "municipalitystyrelsen@vingaker.se",
+    "namn": "Vingåkers municipality",
     "geometry": {
       "coordinates": [
         [
@@ -25602,8 +25602,8 @@
     "kod": "1442",
     "postnummer": "44780",
     "telefon": "0322-600600",
-    "epost": "kommunen@vargarda.se",
-    "namn": "Vårgårda kommun",
+    "epost": "municipalityen@vargarda.se",
+    "namn": "Vårgårda municipality",
     "geometry": {
       "coordinates": [
         [
@@ -25670,8 +25670,8 @@
     "kod": "1487",
     "postnummer": "46285",
     "telefon": "0521-721000",
-    "epost": "kommun@vanersborg.se",
-    "namn": "Vänersborgs kommun",
+    "epost": "municipality@vanersborg.se",
+    "namn": "Vänersborgs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -25762,8 +25762,8 @@
     "kod": "2460",
     "postnummer": "91181",
     "telefon": "0935-14000",
-    "epost": "vannas.kommun@vannas.se",
-    "namn": "Vännäs kommun",
+    "epost": "vannas.municipality@vannas.se",
+    "namn": "Vännäs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -25842,8 +25842,8 @@
     "kod": "0120",
     "postnummer": "13481",
     "telefon": "08-57047000",
-    "epost": "varmdo.kommun@varmdo.se",
-    "namn": "Värmdö kommun",
+    "epost": "varmdo.municipality@varmdo.se",
+    "namn": "Värmdö municipality",
     "geometry": {
       "coordinates": [
         [
@@ -26041,8 +26041,8 @@
     "postadress": "Stadshuset",
     "postnummer": "33183",
     "telefon": "0370-377000",
-    "epost": "kommunen@varnamo.se",
-    "namn": "Värnamo kommun",
+    "epost": "municipalityen@varnamo.se",
+    "namn": "Värnamo municipality",
     "geometry": {
       "coordinates": [
         [
@@ -26164,8 +26164,8 @@
     "kod": "0883",
     "postnummer": "59380",
     "telefon": "0490-254000",
-    "epost": "vasterviks.kommun@vastervik.se",
-    "namn": "Västerviks kommun",
+    "epost": "vasterviks.municipality@vastervik.se",
+    "namn": "Västerviks municipality",
 
     "geometry": {
       "coordinates": [
@@ -26383,8 +26383,8 @@
     "postadress": "Box 1222",
     "postnummer": "35112",
     "telefon": "0470-41000",
-    "epost": "kommunstyrelsen@vaxjo.se",
-    "namn": "Växjö kommun",
+    "epost": "municipalitystyrelsen@vaxjo.se",
+    "namn": "Växjö municipality",
     "geometry": {
       "coordinates": [
         [
@@ -26532,8 +26532,8 @@
     "kod": "0512",
     "postnummer": "57060",
     "telefon": "0381-661200",
-    "epost": "ydre.kommun@ydre.se",
-    "namn": "Ydre kommun",
+    "epost": "ydre.municipality@ydre.se",
+    "namn": "Ydre municipality",
     "geometry": {
       "coordinates": [
         [
@@ -26606,8 +26606,8 @@
     "kod": "1286",
     "postnummer": "27180",
     "telefon": "0411-577000",
-    "epost": "kommunen@ystad.se",
-    "namn": "Ystads kommun",
+    "epost": "municipalityen@ystad.se",
+    "namn": "Ystads municipality",
     "geometry": {
       "coordinates": [
         [
@@ -26726,8 +26726,8 @@
     "postadress": "Box 62",
     "postnummer": "66222",
     "telefon": "0532-17000",
-    "epost": "kommun@amal.se",
-    "namn": "Åmåls kommun",
+    "epost": "municipality@amal.se",
+    "namn": "Åmåls municipality",
     "geometry": {
       "coordinates": [
         [
@@ -26795,7 +26795,7 @@
     "postnummer": "84181",
     "telefon": "0690-250100",
     "epost": "ange@ange.se",
-    "namn": "Ånge kommun",
+    "namn": "Ånge municipality",
     "geometry": {
       "coordinates": [
         [
@@ -26863,7 +26863,7 @@
     "postnummer": "83005",
     "telefon": "0647-16100",
     "epost": "kundtjanst@are.se",
-    "namn": "Åre kommun",
+    "namn": "Åre municipality",
     "geometry": {
       "coordinates": [
         [
@@ -27004,8 +27004,8 @@
     "postadress": "Box 906",
     "postnummer": "67229",
     "telefon": "0573-14100",
-    "epost": "kommun@arjang.se",
-    "namn": "Årjängs kommun",
+    "epost": "municipality@arjang.se",
+    "namn": "Årjängs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -27105,8 +27105,8 @@
     "kod": "2463",
     "postnummer": "91985",
     "telefon": "0941-14000",
-    "epost": "kommun@asele.se",
-    "namn": "Åsele kommun",
+    "epost": "municipality@asele.se",
+    "namn": "Åsele municipality",
     "geometry": {
       "coordinates": [
         [
@@ -27167,8 +27167,8 @@
     "kod": "1277",
     "postnummer": "26580",
     "telefon": "042-64000",
-    "epost": "kommun@astorp.se",
-    "namn": "Åstorps kommun",
+    "epost": "municipality@astorp.se",
+    "namn": "Åstorps municipality",
     "geometry": {
       "coordinates": [
         [
@@ -27221,8 +27221,8 @@
     "postadress": "Box 206",
     "postnummer": "59725",
     "telefon": "0120-83000",
-    "epost": "kommun@atvidaberg.se",
-    "namn": "Åtvidabergs kommun",
+    "epost": "municipality@atvidaberg.se",
+    "namn": "Åtvidabergs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -27318,7 +27318,7 @@
     "postnummer": "34323",
     "telefon": "0476-55000",
     "epost": "info@almhult.se",
-    "namn": "Älmhults kommun",
+    "namn": "Älmhults municipality",
     "geometry": {
       "coordinates": [
         [
@@ -27434,8 +27434,8 @@
     "postadress": "Box 100",
     "postnummer": "79622",
     "telefon": "0251-80000",
-    "epost": "kommun@alvdalen.se",
-    "namn": "Älvdalens kommun",
+    "epost": "municipality@alvdalen.se",
+    "namn": "Älvdalens municipality",
     "geometry": {
       "coordinates": [
         [
@@ -27520,8 +27520,8 @@
     "postadress": "Box 4",
     "postnummer": "81421",
     "telefon": "026-83000",
-    "epost": "kommun@alvkarleby.se",
-    "namn": "Älvkarleby kommun",
+    "epost": "municipality@alvkarleby.se",
+    "namn": "Älvkarleby municipality",
     "geometry": {
       "coordinates": [
         [
@@ -27561,8 +27561,8 @@
     "kod": "2560",
     "postnummer": "94285",
     "telefon": "0929-17000",
-    "epost": "kommunen@alvsbyn.se",
-    "namn": "Älvsbyns kommun",
+    "epost": "municipalityen@alvsbyn.se",
+    "namn": "Älvsbyns municipality",
     "geometry": {
       "coordinates": [
         [
@@ -27619,7 +27619,7 @@
     "postnummer": "26280",
     "telefon": "0431-87000",
     "epost": "info@engelholm.se",
-    "namn": "Ängelholms kommun",
+    "namn": "Ängelholms municipality",
     "geometry": {
       "coordinates": [
         [
@@ -27701,8 +27701,8 @@
     "kod": "1407",
     "postnummer": "47580",
     "telefon": "031-976200",
-    "epost": "kommun@ockero.se",
-    "namn": "Öckerö kommun",
+    "epost": "municipality@ockero.se",
+    "namn": "Öckerö municipality",
     "geometry": {
       "coordinates": [
         [
@@ -27730,8 +27730,8 @@
     "kod": "0509",
     "postnummer": "59980",
     "telefon": "0144-35000",
-    "epost": "kommun@odeshog.se",
-    "namn": "Ödeshögs kommun",
+    "epost": "municipality@odeshog.se",
+    "namn": "Ödeshögs municipality",
     "geometry": {
       "coordinates": [
         [
@@ -27802,8 +27802,8 @@
     "postadress": "Box 30000",
     "postnummer": "70135",
     "telefon": "019-211000",
-    "epost": "kommun@orebro.se",
-    "namn": "Örebro kommun",
+    "epost": "municipality@orebro.se",
+    "namn": "Örebro municipality",
     "geometry": {
       "coordinates": [
         [
@@ -27927,8 +27927,8 @@
     "kod": "1257",
     "postnummer": "28680",
     "telefon": "0435-55000",
-    "epost": "kommunkontor@orkelljunga.se",
-    "namn": "Örkelljunga kommun",
+    "epost": "municipalitykontor@orkelljunga.se",
+    "namn": "Örkelljunga municipality",
     "geometry": {
       "coordinates": [
         [
@@ -27991,8 +27991,8 @@
     "kod": "2284",
     "postnummer": "89188",
     "telefon": "0660-88000",
-    "epost": "kommunen@ornskoldsvik.se",
-    "namn": "Örnsköldsviks kommun",
+    "epost": "municipalityen@ornskoldsvik.se",
+    "namn": "Örnsköldsviks municipality",
     "geometry": {
       "coordinates": [
         [
@@ -28107,8 +28107,8 @@
     "postadress": "Rådhuset",
     "postnummer": "83182",
     "telefon": "063-143000",
-    "epost": "kommunstyrelsen@ostersund.se",
-    "namn": "Östersunds kommun",
+    "epost": "municipalitystyrelsen@ostersund.se",
+    "namn": "Östersunds municipality",
     "geometry": {
       "coordinates": [
         [
@@ -28246,8 +28246,8 @@
     "kod": "0117",
     "postnummer": "18486",
     "telefon": "08-54081000",
-    "epost": "kommun@osteraker.se",
-    "namn": "Österåkers kommun",
+    "epost": "municipality@osteraker.se",
+    "namn": "Österåkers municipality",
     "geometry": {
       "coordinates": [
         [
@@ -28465,8 +28465,8 @@
     "postadress": "Box 66",
     "postnummer": "74221",
     "telefon": "0173-86000",
-    "epost": "kommunen@osthammar.se",
-    "namn": "Östhammars kommun",
+    "epost": "municipalityen@osthammar.se",
+    "namn": "Östhammars municipality",
     "geometry": {
       "coordinates": [
         [
@@ -28576,8 +28576,8 @@
     "postadress": "Storgatan 4",
     "postnummer": "28060",
     "telefon": "044-7756000",
-    "epost": "kommun@ostragoinge.se",
-    "namn": "Östra Göinge kommun",
+    "epost": "municipality@ostragoinge.se",
+    "namn": "Östra Göinge municipality",
     "geometry": {
       "coordinates": [
         [
@@ -28657,8 +28657,8 @@
     "kod": "2513",
     "postnummer": "95681",
     "telefon": "0926-74000",
-    "epost": "kommun@overkalix.se",
-    "namn": "Överkalix kommun",
+    "epost": "municipality@overkalix.se",
+    "namn": "Överkalix municipality",
     "geometry": {
       "coordinates": [
         [
@@ -28737,8 +28737,8 @@
     "kod": "2518",
     "postnummer": "95785",
     "telefon": "0927-72000",
-    "epost": "kommun@overtornea.se",
-    "namn": "Övertorneå kommun",
+    "epost": "municipality@overtornea.se",
+    "namn": "Övertorneå municipality",
     "geometry": {
       "coordinates": [
         [

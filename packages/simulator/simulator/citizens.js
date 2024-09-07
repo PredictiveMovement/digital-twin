@@ -7,7 +7,7 @@ const { getAddressesInArea } = require('./address')
 const getCitizensInSquare = (
   { position, area, population },
   workplaces,
-  kommunName
+  municipalityName
 ) => {
   const nrOfCitizens = Math.floor(population * 0.01) // sample x% of the population
   if (nrOfCitizens === 0) return from([])
@@ -27,7 +27,7 @@ const getCitizensInSquare = (
           home,
           // age: ages[Math.floor(Math.random() * ages.length)],
           workplace,
-          kommun: kommunName,
+          municipality: municipalityName,
           position: home.position,
         })
       )

@@ -44,8 +44,8 @@ const engine = {
         shareReplay()
       ),
       postombud: regions.pipe(mergeMap((region) => region.postombud)),
-      kommuner: regions.pipe(
-        mergeMap((region) => region.kommuner),
+      municipalities: regions.pipe(
+        mergeMap((region) => region.municipalities),
         shareReplay()
       ),
       subscriptions: [],

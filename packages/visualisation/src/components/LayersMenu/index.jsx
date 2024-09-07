@@ -206,11 +206,11 @@ export default function LayersMenu({
           <FormControlLabel
             control={
               <Switch
-                checked={activeLayers.kommunLayer}
-                onChange={() => activeLayers.setKommunLayer((on) => !on)}
+                checked={activeLayers.municipalityLayer}
+                onChange={() => activeLayers.setMunicipalityLayer((on) => !on)}
               />
             }
-            label="Kommungränser"
+            label="Municipalitygränser"
           />
         </MenuItem>
         <Divider />

@@ -27,7 +27,7 @@ function execute() {
         frequency: LevFrekv,
         id: DB_ID,
         type: Omb_TYP,
-        kommun: KOMMUNNAMN,
+        municipality: KOMMUNNAMN,
       })
     ),
     filter((ombud) => ombud.type === 'Postombud'),

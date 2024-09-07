@@ -27,7 +27,7 @@ const App = () => {
   const [recycleCollectionLayer, setRecycleCollectionLayer] = useState(false)
   const [commercialAreasLayer, setCommercialAreasLayer] = useState(false)
   const [busLineLayer, setBusLineLayer] = useState(true)
-  const [kommunLayer, setKommunLayer] = useState(true)
+  const [municipalityLayer, setMunicipalityLayer] = useState(true)
   const [experimentParameters, setExperimentParameters] = useState({})
   const [currentParameters, setCurrentParameters] = useState({})
   const [fleets, setFleets] = useState({})
@@ -58,8 +58,8 @@ const App = () => {
     setBusStopLayer,
     commercialAreasLayer,
     setCommercialAreasLayer,
-    kommunLayer,
-    setKommunLayer,
+    municipalityLayer,
+    setMunicipalityLayer,
     busLineLayer,
     setBusLineLayer,
   }
@@ -74,7 +74,7 @@ const App = () => {
     setBookings([])
     setPassengers([])
     setCars([])
-    setKommuner([])
+    setmunicipalities([])
     setPostombud([])
     setRecycleCollection([])
     setBusStops([])
@@ -197,12 +197,12 @@ const App = () => {
     setLineShapes(lineShapes)
   })
 
-  const [kommuner, setKommuner] = React.useState([])
-  useSocket('kommun', (kommun) => {
+  const [municipalities, setmunicipalities] = React.useState([])
+  useSocket('municipality', (municipality) => {
     setReset(false)
-    setKommuner((current) => {
-      console.log('Received kommun data:', kommun)
-      return upsert(current, kommun, 'id', true)
+    setmunicipalities((current) => {
+      console.log('Received municipality data:', municipality)
+      return upsert(current, municipality, 'id', true)
     })
   })
 
@@ -222,7 +222,7 @@ const App = () => {
       passengers: setPassengerLayer,
       postombud: setPostombudLayer,
       recycleCollection: setRecycleCollectionLayer,
-      kommuner: setKommunLayer,
+      municipalities: setMunicipalityLayer,
       commercialAreas: setCommercialAreasLayer,
     }
 
@@ -304,7 +304,7 @@ const App = () => {
           cars={cars.length}
           bookings={bookings.length}
           busStops={busStops.length}
-          kommuner={kommuner.length}
+          municipalities={municipalities.length}
           lineShapes={lineShapes.length}
           parameters={currentParameters}
         />
@@ -346,7 +346,7 @@ const App = () => {
           postombud={postombud}
           recycleCollectionPoints={recycleCollectionPoints}
           busStops={busStops}
-          kommuner={kommuner}
+          municipalities={municipalities}
           activeCar={activeCar}
           time={time}
           setActiveCar={setActiveCar}
