@@ -6,7 +6,7 @@ const {
   catchError,
   first,
 } = require('rxjs/operators')
-const { dispatch } = require('./dispatch/dispatchCentral')
+const { dispatch } = require('./dispatch/manual')
 const RecycleTruck = require('./vehicles/recycleTruck')
 const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')

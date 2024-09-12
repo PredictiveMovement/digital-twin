@@ -13,10 +13,10 @@ const { searchOne } = require('../../lib/pelias')
 const Position = require('../../lib/models/position')
 const Booking = require('../../lib/models/booking')
 const { error } = require('../../lib/log')
-const { tr } = require('date-fns/locale')
+//const { tr } = require('date-fns/locale')
 
 function read() {
-  const rutter = require('../../data/telge/ruttdata_2024-09-03.json')
+  const rutter = require('../../data/telge/test.json')
   console.log('TELGE -> read')
   console.log('TELGE -> read: Loaded data with', rutter.length, 'entries')
   // TODO: add error handling

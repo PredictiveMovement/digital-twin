@@ -37,6 +37,34 @@ const findBestRouteToPickupBookings = async (truck, bookings) => {
     })
 }
 
+// Helper function to format booking details for logging
+function formatBooking(booking) {
+  if (!booking) return 'Booking is undefined or null'
+  return {
+    id: booking.id,
+    type: booking.type,
+    pickup: {
+      name: booking.pickup?.name,
+      date: booking.pickup?.date,
+      position: formatPosition(booking.pickup?.position),
+    },
+    destination: {
+      name: booking.destination?.name,
+      position: formatPosition(booking.destination?.position),
+    },
+    status: booking.status,
+  }
+}
+
+// Helper function to format position details
+function formatPosition(position) {
+  if (!position) return 'Position not available'
+  return {
+    lat: position.lat,
+    lon: position.lon,
+  }
+}
+
 module.exports = {
   findBestRouteToPickupBookings,
 }
