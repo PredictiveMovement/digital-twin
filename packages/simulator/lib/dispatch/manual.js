@@ -32,9 +32,9 @@ const dispatch = (cars, bookings) => {
               }
 
               // Assign the booking to the car
-              info(
+              /*info(
                 `Dispatching booking ${booking.id} to car ${car.id} at ${car.position}`
-              )
+              )*/
 
               // Increment to process the next booking in the next iteration
               currentBookingIndex++

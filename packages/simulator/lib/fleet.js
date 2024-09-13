@@ -5,12 +5,24 @@ const {
   share,
   catchError,
   first,
+  tap,
 } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/manual')
 const RecycleTruck = require('./vehicles/recycleTruck')
 const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')
 const { error, debug, info } = require('./log')
+const { de } = require('date-fns/locale')
+
+const truckStopsData = JSON.parse(fs.readFileSync('./truckStops.json', 'utf8'))
+
+// A map to group stops by truck id ('Bil')
+const stopsByTruck = truckStopsData.reduce((acc, stop) => {
+  const truckId = stop.Bil
+  if (!acc[truckId]) acc[truckId] = []
+  acc[truckId].push(stop)
+  return acc
+}, {})
 
 const vehicleTypes = {
   recycleTruck: {
@@ -44,6 +56,7 @@ class Fleet {
     this.percentageHomeDelivery = (percentageHomeDelivery || 0) / 100 || 0.15 // based on guestimates from workshop with transport actors in oct 2021
     this.percentageReturnDelivery = 0.1
     this.municipality = municipality
+    console.log(`🚗 Fleet ${this.name} created. Vehicles: `, vehicles)
     this.cars = from(Object.entries(vehicles)).pipe(
       mergeMap(([type, count]) =>
         range(0, count).pipe(
@@ -67,6 +80,7 @@ class Fleet {
           })
         )
       ),
+      tap((car) => info(`🚛 Fleet ${this.name} created vehicle ${car.id}`)),
       shareReplay()
     )
     this.unhandledBookings = new Subject()
