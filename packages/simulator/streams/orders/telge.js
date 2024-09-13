@@ -8,6 +8,7 @@ const {
   filter,
   take,
   share,
+  tap
 } = require('rxjs/operators')
 const { searchOne } = require('../../lib/pelias')
 const Position = require('../../lib/models/position')
@@ -59,6 +60,7 @@ function read() {
     mergeAll(),
     take(5), // Start with just 500 bookings
     map((row) => new Booking({ type: 'recycle', ...row })),
+    tap((booking) => console.log('TELGE -> booking', booking)),
     share(),
     catchError((err) => {
       error('TELGE -> from CSV', err)

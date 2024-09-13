@@ -12,14 +12,7 @@
         {
           "name": "Telge Återvinning AB",
           "vehicles": {
-            "recycleTruck": 3
-          },
-          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
-        },
-        {
-          "name": "Telge Återvinning Klon",
-          "vehicles": {
-            "recycleTruck": 3
+            "recycleTruck": 2
           },
           "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
         }

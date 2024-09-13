@@ -236,6 +236,7 @@ const GenericInfo = ({ data }) => {
 }
 
 const HoverInfoBox = ({ data }) => {
+  console.log(data.type)
   switch (data.type) {
     case 'car':
       return <CarInfo data={data} />

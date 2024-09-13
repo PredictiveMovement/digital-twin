@@ -376,7 +376,44 @@ const Map = ({
 
   const bookingLayer = new ScatterplotLayer({
     id: 'booking-layer',
-    data: bookings.filter((b) => b.type !== 'busstop'), //.filter((b) => !b.assigned), // TODO: revert change
+    data: bookings.filter((b) => b.type === 'recycle'), //.filter((b) => !b.assigned), // TODO: revert change
+    opacity: 1,
+    stroked: false,
+    filled: true,
+    radiusScale: 1,
+    radiusUnits: 'pixels',
+    getPosition: (c) => {
+      return c.pickup
+    },
+    getRadius: () => 4,
+    // #fab
+    getFillColor: (
+      { status } // TODO: Different colors for IKEA & HM
+    ) =>
+      status === 'Delivered'
+        ? [170, 255, 187]
+        : status === 'Picked up'
+        ? [170, 187, 255, 55]
+        : [255, 170, 187, 55],
+    pickable: true,
+    onHover: ({ object, x, y, viewport }) => {
+      if (!object) return setHoverInfo(null)
+      setHoverInfo({
+        ...object,
+        title: object.sender,
+        subTitle: object.isCommercial
+          ? '(företag)'
+          : ' Status: ' + getStatusLabel(object.status),
+        x,
+        y,
+        viewport,
+      })
+    },
+  })
+
+  const recycleCollectionLayer = new ScatterplotLayer({
+    id: 'recycle-center-layer',
+    data: bookings.filter((b) => b.type === 'recycleCenter'),
     opacity: 1,
     stroked: false,
     filled: true,
@@ -400,7 +437,7 @@ const Map = ({
       if (!object) return setHoverInfo(null)
       setHoverInfo({
         ...object,
-        title: object.sender,
+        title: "Återvinningsstation",
         subTitle: object.isCommercial
           ? '(företag)'
           : ' Status: ' + getStatusLabel(object.status),
@@ -443,7 +480,7 @@ const Map = ({
     marker: { x: 0, y: 0, width: 128, height: 128, anchorY: 150, mask: true },
   }
 
-  const recycleCollectionLayer = new ScatterplotLayer({
+  const recycleCollectionLayers = new ScatterplotLayer({
     id: 'recycle-collection-layer',
     data: recycleCollectionPoints, // your data source here
     getPosition: (d) => [d.longitude, d.latitude],
@@ -587,7 +624,7 @@ const Map = ({
         // The order of these layers matter, roughly equal to increasing z-index by 1
         activeLayers.municipalityLayer && municipalityLayer, // TODO: This hides some items behind it, sort of
         activeLayers.postombudLayer && postombudLayer,
-        activeLayers.recycleCollectionLayer && recycleCollectionLayer,
+        recycleCollectionLayer,
         bookingLayer,
         showArcLayer && arcLayer,
         (showAssignedBookings || showActiveDeliveries) && routesLayer,
