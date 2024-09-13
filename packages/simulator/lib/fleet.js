@@ -1,6 +1,6 @@
 const { Subject, filter, from, merge, of, firstValueFrom } = require('rxjs')
 const { shareReplay, mergeMap, share, tap, first } = require('rxjs/operators')
-const { dispatch } = require('./dispatch/manual')
+const { dispatch } = require('./dispatch/dispatchCentral')
 const RecycleTruck = require('./vehicles/recycleTruck')
 const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')

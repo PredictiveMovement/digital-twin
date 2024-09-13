@@ -90,8 +90,8 @@ function read({ fleets }) {
         pickupPositions,
         fleets,
       }) => {
-        console.log('Processing municipality', name)
-        console.log('Municipality fleets', fleets)
+        console.log('🏢 Processing municipality', name)
+        //console.log('Municipality fleets', fleets)
         const squares = getPopulationSquares({ geometry })
         const commercialAreas = getCommercialAreas(kod)
 
