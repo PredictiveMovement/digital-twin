@@ -413,7 +413,7 @@ const Map = ({
 
   const recycleCollectionLayer = new ScatterplotLayer({
     id: 'recycle-center-layer',
-    data: bookings.filter((b) => b.type === 'recycleCenter'),
+    data: bookings.filter((b) => b.type === 'recycle'),
     opacity: 1,
     stroked: false,
     filled: true,
