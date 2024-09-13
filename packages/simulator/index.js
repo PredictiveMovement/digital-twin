@@ -73,8 +73,13 @@ const engine = {
 
       // Adding recycle collection points
       recycleCollectionPoints: regions.pipe(
-        mergeMap((region) => region.recycleCollectionPoints),
-        catchError((err) => error('Experiment -> RecycleCollectionPoints', err))
+        mergeMap((region) => {
+          console.log(
+            'Region recycleCollectionPoints:',
+            region.recycleCollectionPoints
+          )
+          return region.recycleCollectionPoints
+        })
       ),
     }
     experiment.passengers

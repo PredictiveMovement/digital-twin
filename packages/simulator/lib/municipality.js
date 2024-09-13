@@ -8,6 +8,8 @@ const {
   filter,
   catchError,
   first,
+  take,
+  tap,
 } = require('rxjs')
 const Fleet = require('./fleet')
 const { error } = require('./log')
@@ -49,6 +51,8 @@ class Municipality {
     this.co2 = 0
     this.citizens = citizens
 
+    console.log('Fleet:', fleets)
+
     this.fleets = from(fleets).pipe(
       mergeMap(async (fleet) => {
         const hub = fleet.hubAddress
@@ -59,6 +63,9 @@ class Municipality {
 
         return new Fleet({ hub, ...fleet, municipality: this })
       }),
+      tap((processedFleet) =>
+        console.log('Fleet processed: ', processedFleet.name)
+      ), // Log each processed fleet
       shareReplay()
     )
 

@@ -1,16 +1,12 @@
-const { Subject, range, from, merge, of, firstValueFrom } = require('rxjs')
-const {
-  shareReplay,
-  mergeMap,
-  share,
-  catchError,
-  first,
-} = require('rxjs/operators')
+const { Subject, filter, from, merge, of, firstValueFrom } = require('rxjs')
+const { shareReplay, mergeMap, share, tap, first } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
 const RecycleTruck = require('./vehicles/recycleTruck')
 const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')
 const { error, debug, info } = require('./log')
+
+const vehicleData = require('../data/telge/test.json')
 
 const vehicleTypes = {
   recycleTruck: {
@@ -44,31 +40,32 @@ class Fleet {
     this.percentageHomeDelivery = (percentageHomeDelivery || 0) / 100 || 0.15 // based on guestimates from workshop with transport actors in oct 2021
     this.percentageReturnDelivery = 0.1
     this.municipality = municipality
-    this.cars = from(Object.entries(vehicles)).pipe(
-      mergeMap(([type, count]) =>
-        range(0, count).pipe(
-          mergeMap(() => {
-            const Vehicle = vehicleTypes[type].class
+    console.log(`🚢 Fleet ${this.name} created. Vehicles loaded from file}`)
 
-            return of(
-              new Vehicle({
-                ...vehicleTypes[type],
-                fleet: this,
-                position: this.hub.position,
-              })
-            )
-          }),
-          catchError((err) => {
-            error(
-              `Error creating vehicle for fleet ${name}: ${err}\n\n${
-                new Error().stack
-              }\n\n`
-            )
+    // Create vehicles based on the JSON data
+    this.cars = from(vehicleData).pipe(
+      mergeMap((vehicleEntry) => {
+        const Vehicle = vehicleTypes['recycleTruck'].class
+
+        if (!Vehicle) {
+          error(`Unknown vehicle class for vehicle ID ${vehicleEntry.Bil}`)
+          return of(null) // Skip this vehicle if the type is unknown
+        }
+
+        return of(
+          new Vehicle({
+            ...vehicleTypes['recycleTruck'],
+            id: `recycleTruck-${vehicleEntry.Bil}`, // Use Bil as the unique vehicle ID
+            fleet: this,
+            position: this.hub.position,
           })
         )
-      ),
+      }),
+      filter((car) => car !== null),
+      tap((car) => info(`🚛 Fleet ${this.name} created vehicle ${car.id}`)),
       shareReplay()
     )
+
     this.unhandledBookings = new Subject()
     this.manualDispatchedBookings = new Subject()
     this.dispatchedBookings = merge(

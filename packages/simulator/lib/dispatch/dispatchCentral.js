@@ -15,7 +15,7 @@ const { clusterPositions } = require('../kmeans')
 const dispatch = (cars, bookings) => {
   return cars.pipe(
     toArray(),
-    tap((cars) => info(`🚚 Dispatch ${cars.length} vehicles`)),
+    tap((cars) => info(`🚚 Dispatch ${cars.length} vehicle`)),
     tap((cars) => {
       if (!cars.length) {
         warn('Fleet has no cars, dispatch is not possible.')
