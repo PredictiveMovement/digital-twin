@@ -411,79 +411,16 @@ const Map = ({
     },
   })
 
-  const recycleCollectionLayer = new ScatterplotLayer({
-    id: 'recycle-center-layer',
-    data: bookings.filter((b) => b.type === 'recycle'),
-    opacity: 1,
-    stroked: false,
-    filled: true,
-    radiusScale: 1,
-    radiusUnits: 'pixels',
-    getPosition: (c) => {
-      return c.destination
-    },
-    getRadius: () => 4,
-    // #fab
-    getFillColor: (
-      { status } // TODO: Different colors for IKEA & HM
-    ) =>
-      status === 'Delivered'
-        ? [170, 255, 187]
-        : status === 'Picked up'
-        ? [170, 187, 255, 55]
-        : [255, 170, 187, 55],
-    pickable: true,
-    onHover: ({ object, x, y, viewport }) => {
-      if (!object) return setHoverInfo(null)
-      setHoverInfo({
-        ...object,
-        title: "Återvinningsstation",
-        subTitle: object.isCommercial
-          ? '(företag)'
-          : ' Status: ' + getStatusLabel(object.status),
-        x,
-        y,
-        viewport,
-      })
-    },
-  })
-
-  const postombudLayer = new ScatterplotLayer({
-    id: 'postombud-layer',
-    data: postombud,
-    opacity: 0.4,
-    stroked: false,
-    filled: true,
-    radiusScale: 5,
-    radiusUnits: 'pixels',
-    radiusMinPixels: 2,
-    radiusMaxPixels: 5,
-    getPosition: (c) => {
-      return c.position
-    },
-    // #127DBD
-    getFillColor: [0, 255, 128, 120],
-    pickable: true,
-    onHover: ({ object, x, y, viewport }) => {
-      if (!object) return setHoverInfo(null)
-      setHoverInfo({
-        type: 'postombud',
-        title: 'Paketombud för ' + object.operator,
-        x,
-        y,
-        viewport,
-      })
-    },
-  })
-
   const ICON_MAPPING = {
     marker: { x: 0, y: 0, width: 128, height: 128, anchorY: 150, mask: true },
   }
 
-  const recycleCollectionLayers = new ScatterplotLayer({
+  const recycleCollectionLayer = new ScatterplotLayer({
     id: 'recycle-collection-layer',
-    data: recycleCollectionPoints, // your data source here
-    getPosition: (d) => [d.longitude, d.latitude],
+    data: bookings.filter((b) => b.type === 'recycle'),
+    getPosition: (c) => {
+      return c.destination
+    },
     getFillColor: (d) => (d.isFull ? [255, 0, 0, 160] : [0, 128, 0, 160]), // Red for full, green for empty
     getRadius: 10,
     pickable: true,
