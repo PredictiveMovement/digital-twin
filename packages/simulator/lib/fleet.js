@@ -6,6 +6,8 @@ const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')
 const { error, debug, info } = require('./log')
 
+const vehicleData = require('../data/telge/ruttdata_2024-09-03.json')
+
 const vehicleTypes = {
   recycleTruck: {
     weight: 10 * 1000,
@@ -25,7 +27,6 @@ class Fleet {
     name,
     marketshare,
     percentageHomeDelivery,
-    vehicles,
     hub,
     type,
     municipality,
@@ -38,34 +39,43 @@ class Fleet {
     this.percentageHomeDelivery = (percentageHomeDelivery || 0) / 100 || 0.15 // based on guestimates from workshop with transport actors in oct 2021
     this.percentageReturnDelivery = 0.1
     this.municipality = municipality
-    console.log(`🚢 Fleet ${this.name} created.}`)
+    console.log(`🚢 Fleet ${this.name} created. Vehicles loaded from file}`)
+
+    const getOrdersFromCar = () => {
+      return vehicleData.reduce((vehicles, route) => {
+        const vehicle = route.Bil.trim();
+        if (!vehicles[vehicle]) {
+          vehicles[vehicle] = [];
+        }
+        vehicles[vehicle].push(route);
+        return vehicles;
+      }, {});
+    };
+
+    const vehicles = getOrdersFromCar();
 
     // Create vehicles based on the JSON data
     this.cars = from(Object.entries(vehicles)).pipe(
-      mergeMap(([vehicleEntry, amount]) => {
-        const Vehicle = vehicleTypes[vehicleEntry].class
-        console.log("Vehicle")
+      mergeMap(([id, orders]) => {
+        const Vehicle = vehicleTypes['recycleTruck'].class
 
         if (!Vehicle) {
-          error(`Unknown vehicle class for vehicle ID ${vehicleEntry.Bil}`)
+          error(`Unknown vehicle class for vehicle ID ${id}`)
           return of(null) // Skip this vehicle if the type is unknown
         }
 
-        return from(Array(amount).fill(null)).pipe(
-          mergeMap((_, index) =>
-            of(
-              new Vehicle({
-                ...vehicleTypes['recycleTruck'],
-                id: `recycleTruck-${index + 1}`,
-                fleet: this,
-                position: this.hub.position,
-              })
-            )
-          )
+        return of(
+          new Vehicle({
+            ...vehicleTypes['recycleTruck'],
+            id: `recycleTruck-${id}`, // Use Bil as the unique vehicle ID
+            fleet: this,
+            position: this.hub.position,
+            orders: orders,
+          })
         )
       }),
       filter((car) => car !== null),
-      tap((car) => info(`🚛 Fleet ${this.name} created vehicle ${car.id}`)),
+      //tap((car) => info(`🚛 Fleet ${this.name} created vehicle ${car.id}`)),
       shareReplay()
     )
 
