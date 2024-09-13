@@ -6,8 +6,6 @@ const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')
 const { error, debug, info } = require('./log')
 
-const vehicleData = require('../data/telge/test.json')
-
 const vehicleTypes = {
   recycleTruck: {
     weight: 10 * 1000,
@@ -40,25 +38,30 @@ class Fleet {
     this.percentageHomeDelivery = (percentageHomeDelivery || 0) / 100 || 0.15 // based on guestimates from workshop with transport actors in oct 2021
     this.percentageReturnDelivery = 0.1
     this.municipality = municipality
-    console.log(`🚢 Fleet ${this.name} created. Vehicles loaded from file}`)
+    console.log(`🚢 Fleet ${this.name} created.}`)
 
     // Create vehicles based on the JSON data
-    this.cars = from(vehicleData).pipe(
-      mergeMap((vehicleEntry) => {
-        const Vehicle = vehicleTypes['recycleTruck'].class
+    this.cars = from(Object.entries(vehicles)).pipe(
+      mergeMap(([vehicleEntry, amount]) => {
+        const Vehicle = vehicleTypes[vehicleEntry].class
+        console.log("Vehicle")
 
         if (!Vehicle) {
           error(`Unknown vehicle class for vehicle ID ${vehicleEntry.Bil}`)
           return of(null) // Skip this vehicle if the type is unknown
         }
 
-        return of(
-          new Vehicle({
-            ...vehicleTypes['recycleTruck'],
-            id: `recycleTruck-${vehicleEntry.Bil}`, // Use Bil as the unique vehicle ID
-            fleet: this,
-            position: this.hub.position,
-          })
+        return from(Array(amount).fill(null)).pipe(
+          mergeMap((_, index) =>
+            of(
+              new Vehicle({
+                ...vehicleTypes['recycleTruck'],
+                id: `recycleTruck-${index + 1}`,
+                fleet: this,
+                position: this.hub.position,
+              })
+            )
+          )
         )
       }),
       filter((car) => car !== null),

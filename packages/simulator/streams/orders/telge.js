@@ -17,7 +17,7 @@ const { error } = require('../../lib/log')
 //const { tr } = require('date-fns/locale')
 
 function read() {
-  const rutter = require('../../data/telge/test.json')
+  const rutter = require('../../data/telge/ruttdata_2024-09-03.json')
   console.log('TELGE -> read: Loaded data with', rutter.length, 'entries')
   // TODO: add error handling
 
@@ -67,11 +67,10 @@ function read() {
         }))
       }, 1),
       mergeAll(),
-      take(5), // Start with just 500 bookings
       map((row) => new Booking({ type: 'recycle', ...row })),
-      tap((booking) =>
-        console.log('📋 Booking created:', booking.id, 'type: ', booking.type)
-      ), // Log each booking
+      //tap((booking) =>
+      //  console.log('📋 Booking created:', booking.id, 'type: ', booking.type)
+      //), // Log each booking
       share(),
       catchError((err) => {
         error('TELGE -> from JSON', err)
