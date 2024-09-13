@@ -45,7 +45,7 @@ const dispatch = (cars, bookings) => {
         mergeAll()
       )
     ),
-    catchError((err) => error('dispatchCentral -> dispatch', err))
+    catchError((err) => error('manual dispatch -> dispatch', err))
   )
 }
 

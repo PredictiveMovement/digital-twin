@@ -63,7 +63,9 @@ class Municipality {
 
         return new Fleet({ hub, ...fleet, municipality: this })
       }),
-      tap((processedFleet) => console.log('Processed Fleet:', processedFleet)), // Log each processed fleet
+      tap((processedFleet) =>
+        console.log('Fleet processed: ', processedFleet.name)
+      ), // Log each processed fleet
       shareReplay()
     )
 

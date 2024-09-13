@@ -71,7 +71,13 @@ class RecycleTruck extends Vehicle {
   }
 
   async handleBooking(booking) {
-    if (this.queue.indexOf(booking) > -1) throw new Error('Already queued')
+    console.log('🚛 Handling booking', booking.id)
+    /*if (this.queue.indexOf(booking) > -1)
+      throw new Error(
+        `Booking ${booking.id} is already in the queue (${this.queue.indexOf(
+          booking
+        )})`
+      )*/
     this.queue.push(booking)
     booking.assign(this)
     booking.queued(this)
