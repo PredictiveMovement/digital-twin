@@ -69,7 +69,7 @@ const vroom = (module.exports = {
   async plan({ jobs, shipments, vehicles }) {
     if (shipments.length > 200) throw new Error('Too many shipments to plan')
     if (vehicles.length > 200) throw new Error('Too many vehicles to plan')
-    if (vehicles.length < 2) throw new Error('Need at least 2 vehicles to plan')
+    //if (vehicles.length < 2) throw new Error('Need at least 2 vehicles to plan')
 
     const result = await getFromCache({ jobs, shipments, vehicles })
     if (result) {

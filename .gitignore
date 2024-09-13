@@ -8,3 +8,4 @@ node_modules
 .vscode/
 .cache
 k8s/dependencies
+.aider.tags.cache.v3

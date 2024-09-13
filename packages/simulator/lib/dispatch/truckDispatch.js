@@ -3,6 +3,7 @@ const { error } = require('../log')
 
 const findBestRouteToPickupBookings = async (truck, bookings) => {
   const vehicles = [truckToVehicle(truck, 0)]
+  console.log(`vehicles:`, vehicles)
   const shipments = bookings.map(bookingToShipment)
 
   const result = await plan({ shipments, vehicles })
