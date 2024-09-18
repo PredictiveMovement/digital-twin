@@ -200,10 +200,18 @@ const PassengerInfo = ({ data }) => {
 }
 
 const GenericInfo = ({ data }) => {
+  console.log('Data:')
+  console.log(data)
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <Paragraph>
         <strong>{data.id}</strong>
+      </Paragraph>
+      <Paragraph>
+        Latitude: <strong>{data.pickup[1]}</strong>
+      </Paragraph>
+      <Paragraph>
+        Longitude: <strong>{data.pickup[0]}</strong>
       </Paragraph>
       <Paragraph>&nbsp;</Paragraph>
       <Paragraph>{data.title}</Paragraph>

@@ -36,6 +36,7 @@ function read() {
           Tjtyp: serviceType,
           Lat: lat,
           Lng: lon,
+          Bil: carId
         }) => ({
           id,
           pickup: {
@@ -45,6 +46,7 @@ function read() {
           },
           sender: 'TELGE',
           serviceType,
+          carId
         })
       ),
       filter(({ pickup }) => pickup.position.isValid()),
@@ -67,6 +69,7 @@ function read() {
         }))
       }, 1),
       mergeAll(),
+      take(10),
       map((row) => new Booking({ type: 'recycle', ...row })),
       //tap((booking) =>
       //  console.log('📋 Booking created:', booking.id, 'type: ', booking.type)
