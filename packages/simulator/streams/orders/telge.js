@@ -29,7 +29,6 @@ function read() {
 
   try {
     return from(rutter).pipe(
-      take(25),
       map(
         ({
           Turid: id,
@@ -74,7 +73,7 @@ function read() {
       }, 1),
       mergeAll(),
       map((row) => new Booking({ type: 'recycle', ...row })),
-      tap((booking) => console.log('📋 Booking created:', booking.id)), // Log each booking
+      //tap((booking) => console.log('📋 Booking created:', booking.id)), // Log each booking
       share(),
       catchError((err) => {
         error('TELGE -> from JSON', err)

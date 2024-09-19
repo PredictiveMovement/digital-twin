@@ -1,15 +1,18 @@
 const { from } = require('rxjs')
-const { tap, filter, mergeMap } = require('rxjs/operators')
-const { info } = require('../log')
+const { filter, mergeMap } = require('rxjs/operators')
 
+const handleBooking = (car) => (source) => {
+  return source.pipe(
+    filter((booking) => !car.queue.find((b) => b.id === booking.id)),
+    filter((booking) => car.canHandleBooking(booking)),
+    mergeMap((booking) => car.handleBooking(booking))
+  )
+}
 const dispatch = (cars, bookings) => {
-  return cars.pipe(
-    tap((car) => info(`🚛 Dispatching vehicle ${car.id}`)),
+  return from(cars).pipe(
     mergeMap((car) =>
       from(bookings).pipe(
-        filter((booking) => !car.queue.find((b) => b.id === booking.id)),
-        filter((booking) => car.canHandleBooking(booking)),
-        mergeMap((booking) => car.handleBooking(booking))
+        handleBooking(car)
       )
     )
   )
