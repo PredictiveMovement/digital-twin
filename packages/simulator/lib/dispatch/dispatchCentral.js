@@ -8,6 +8,7 @@ const {
   bufferTime,
   retryWhen,
   toArray,
+  map
 } = require('rxjs/operators')
 const { info, error, warn, debug } = require('../log')
 const { clusterPositions } = require('../kmeans')
@@ -33,25 +34,11 @@ const dispatch = (cars, bookings) => {
         bufferTime(5000, null, 300),
         filter((b) => b.length > 0),
         //mergeMap((bookings) => getVroomPlan(cars, bookings)),
-        mergeMap(async (bookings) => {
-          if (bookings.length < cars.length) {
-            return [
-              {
-                car: cars[0],
-                bookings,
-              },
-            ]
-          }
-
-          info(
-            `Clustering ${bookings.length} bookings into ${cars.length} cars`
+        mergeMap((bookings) =>
+          from(cars).pipe(
+            map((car) => ({ car, bookings })) // Pair each car with the full list of bookings
           )
-          const clusters = await clusterPositions(bookings, cars.length)
-          return clusters.map(({ items: bookings }, i) => ({
-            car: cars[i],
-            bookings,
-          }))
-        }),
+        ),
         catchError((err) => error('cluster err', err)),
         mergeAll(),
         filter(({ bookings }) => bookings.length > 0),
@@ -62,6 +49,7 @@ const dispatch = (cars, bookings) => {
         ),
         mergeMap(({ car, bookings }) =>
           from(bookings).pipe(
+            filter((booking) => !car.queue.find((b) => b.id === booking.id)),
             filter((booking) => car.canHandleBooking(booking)),
             mergeMap((booking) => car.handleBooking(booking))
           )
