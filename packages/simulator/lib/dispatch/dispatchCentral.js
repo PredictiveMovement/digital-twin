@@ -37,9 +37,6 @@ const dispatch = (cars, bookings) => {
                   return EMPTY
                 })
               )
-            } else {
-              warn(`🚫 Car ${car.id} cannot handle booking ${booking.id}`)
-              return EMPTY
             }
           } else {
             warn(
