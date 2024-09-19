@@ -69,14 +69,9 @@ class RecycleTruck extends Vehicle {
   }
 
   canHandleBooking(booking) {
-    if (!booking.type === 'recycle') return false
+    if (booking.type !== 'recycle') return false
     const hasCapacity = this.cargo.length < this.parcelCapacity
     const isCorrectCar = booking.carId === this.carId
-    if(hasCapacity && isCorrectCar){
-      console.log(`🚛 Truck ${this.carId} can handle booking ${booking.id}, ${booking.carId}`)
-    } else {
-      console.log(`🚛 Truck ${this.carId} cannot handle booking ${booking.id}`)
-    }
     return hasCapacity && isCorrectCar
   }
 
