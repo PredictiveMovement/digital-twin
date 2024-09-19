@@ -29,6 +29,7 @@ function read() {
 
   try {
     return from(rutter).pipe(
+      take(25),
       map(
         ({
           Turid: id,
@@ -38,6 +39,7 @@ function read() {
           Lng: lon,
           Bil: carId,
           Turordningsnr: order,
+          Avftyp: recyclingType,
         }) => ({
           id,
           pickup: {
@@ -47,8 +49,9 @@ function read() {
           },
           sender: 'TELGE',
           serviceType,
-          carId,
+          carId: carId.trim(),
           order,
+          recyclingType,
         })
       ),
       filter(({ pickup }) => pickup.position.isValid()),

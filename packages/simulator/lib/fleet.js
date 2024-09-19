@@ -43,11 +43,16 @@ class Fleet {
 
     const getOrdersFromCar = () => {
       return vehicleData.reduce((vehicles, route) => {
-        const vehicle = route.Bil.trim()
-        if (!vehicles[vehicle]) {
-          vehicles[vehicle] = []
+        const vehicleId = route.Bil.trim() // Bil is vehicle id
+
+        // If the vehicle does not exist, create it
+        if (!vehicles[vehicleId]) {
+          vehicles[vehicleId] = {
+            id: vehicleId,
+            avftyp: route.Avftyp,
+          }
         }
-        vehicles[vehicle].push(route)
+
         return vehicles
       }, {})
     }
@@ -56,7 +61,7 @@ class Fleet {
 
     // Create vehicles based on the JSON data
     this.cars = from(Object.entries(vehicles)).pipe(
-      mergeMap(([id, orders]) => {
+      mergeMap(([id, vehicleData]) => {
         const Vehicle = vehicleTypes['recycleTruck'].class
 
         if (!Vehicle) {
@@ -70,15 +75,16 @@ class Fleet {
             id: `recycleTruck-${id}`, // Use Bil as the unique vehicle ID
             fleet: this,
             position: this.hub.position,
-            orders: orders,
+            plan: vehicleData.routes,
             carId: id,
+            recyclingType: vehicleData.avftyp,
           })
         )
       }),
       filter((car) => car !== null),
       tap((car) =>
         info(
-          `🚛 Fleet ${this.name} created vehicle ${car.id} with orders: ${car.orders}`
+          `🚛 Fleet ${this.name} created vehicle ${car.id} (${car.recyclingType})`
         )
       ),
       shareReplay()

@@ -15,6 +15,7 @@ class Booking {
     this.co2 = 0 //TODO: initialvärde?
     this.passenger = booking.passenger
     this.type = booking.type
+    this.recyclingType = booking.recyclingType
     this.cost = 0 // startkostnad?
     this.distance = 0 //TODO: räkna med sträcka innan?
     this.weight = Math.random() * 10 // kg TODO: find reference kg // TODO: passagerare väger mer..

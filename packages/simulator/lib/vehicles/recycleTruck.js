@@ -15,6 +15,7 @@ class RecycleTruck extends Vehicle {
     this.startPosition = args.startPosition || args.position
 
     this.carId = args.carId
+    this.recyclingType = args.recyclingType
   }
 
   async pickNextInstructionFromPlan() {
