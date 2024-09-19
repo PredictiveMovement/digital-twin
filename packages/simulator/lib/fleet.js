@@ -6,7 +6,7 @@ const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')
 const { error, debug, info } = require('./log')
 
-const vehicleData = require('../data/telge/test.json')
+const vehicleData = require('../data/telge/ruttdata_2024-09-03.json')
 
 const vehicleTypes = {
   recycleTruck: {

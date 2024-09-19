@@ -17,7 +17,7 @@ const { error } = require('../../lib/log')
 //const { tr } = require('date-fns/locale')
 
 function read() {
-  const rutter = require('../../data/telge/test.json')
+  const rutter = require('../../data/telge/ruttdata_2024-09-03.json')
   console.log('TELGE -> read: Loaded data with', rutter.length, 'entries')
   // TODO: add error handling
 
@@ -29,6 +29,7 @@ function read() {
 
   try {
     return from(rutter).pipe(
+      take(200),
       map(
         ({
           Turid: id,
