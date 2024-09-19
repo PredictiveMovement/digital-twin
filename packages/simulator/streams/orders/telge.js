@@ -69,7 +69,6 @@ function read() {
         }))
       }, 1),
       mergeAll(),
-      take(10),
       map((row) => new Booking({ type: 'recycle', ...row })),
       //tap((booking) =>
       //  console.log('📋 Booking created:', booking.id, 'type: ', booking.type)

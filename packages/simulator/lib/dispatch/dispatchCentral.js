@@ -62,7 +62,8 @@ const dispatch = (cars, bookings) => {
         ),
         mergeMap(({ car, bookings }) =>
           from(bookings).pipe(
-            mergeMap((booking) => car.handleBooking(booking), 1)
+            filter((booking) => car.canHandleBooking(booking)),
+            mergeMap((booking) => car.handleBooking(booking))
           )
         ),
         // tap((bookings) => info('dispatched', bookings)),
