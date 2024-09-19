@@ -17,7 +17,7 @@ const { error } = require('../../lib/log')
 //const { tr } = require('date-fns/locale')
 
 function read() {
-  const rutter = require('../../data/telge/ruttdata_2024-09-03.json')
+  const rutter = require('../../data/telge/test.json')
   console.log('TELGE -> read: Loaded data with', rutter.length, 'entries')
   // TODO: add error handling
 
@@ -36,7 +36,7 @@ function read() {
           Tjtyp: serviceType,
           Lat: lat,
           Lng: lon,
-          Bil: carId
+          Bil: carId,
         }) => ({
           id,
           pickup: {
@@ -46,7 +46,7 @@ function read() {
           },
           sender: 'TELGE',
           serviceType,
-          carId
+          carId,
         })
       ),
       filter(({ pickup }) => pickup.position.isValid()),
@@ -70,9 +70,9 @@ function read() {
       }, 1),
       mergeAll(),
       map((row) => new Booking({ type: 'recycle', ...row })),
-      //tap((booking) =>
-      //  console.log('📋 Booking created:', booking.id, 'type: ', booking.type)
-      //), // Log each booking
+      tap((booking) =>
+        console.log('📋 Booking created:', booking.id, 'type: ', booking.type)
+      ), // Log each booking
       share(),
       catchError((err) => {
         error('TELGE -> from JSON', err)
