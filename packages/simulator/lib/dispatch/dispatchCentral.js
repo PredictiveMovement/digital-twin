@@ -1,6 +1,6 @@
-const { from, EMPTY } = require('rxjs')
-const { tap, filter, mergeMap, catchError, map } = require('rxjs/operators')
-const { info, error, warn, debug } = require('../log')
+const { from } = require('rxjs')
+const { tap, filter, mergeMap } = require('rxjs/operators')
+const { info } = require('../log')
 
 const dispatch = (cars, bookings) => {
   return cars.pipe(
