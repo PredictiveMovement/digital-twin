@@ -72,16 +72,16 @@ class RecycleTruck extends Vehicle {
     if (!booking.type === 'recycle') return false
     const hasCapacity = this.cargo.length < this.parcelCapacity
     const isCorrectCar = booking.carId === this.carId
-    if(hasCapacity && isCorrectCar){
-      console.log(`🚛 Truck ${this.carId} can handle booking ${booking.id}, ${booking.carId}`)
+    if (hasCapacity && isCorrectCar) {
+      //console.log(`🚛 Truck ${this.carId} can handle booking ${booking.id}, ${booking.carId}`)
     } else {
-      console.log(`🚛 Truck ${this.carId} cannot handle booking ${booking.id}`)
+      //onsole.log(`🚛 Truck ${this.carId} cannot handle booking ${booking.id}`)
     }
     return hasCapacity && isCorrectCar
   }
 
   async handleBooking(booking) {
-    //console.log('🚛 Handling booking', booking.id)
+    console.log('🚛 Handling booking', booking.id)
     if (this.queue.indexOf(booking) > -1)
       throw new Error(
         `Booking ${booking.id} is already in the queue (${this.queue.indexOf(

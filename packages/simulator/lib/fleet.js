@@ -6,7 +6,7 @@ const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')
 const { error, debug, info } = require('./log')
 
-const vehicleData = require('../data/telge/ruttdata_2024-09-03.json')
+const vehicleData = require('../data/telge/test.json')
 
 const vehicleTypes = {
   recycleTruck: {
@@ -43,16 +43,16 @@ class Fleet {
 
     const getOrdersFromCar = () => {
       return vehicleData.reduce((vehicles, route) => {
-        const vehicle = route.Bil.trim();
+        const vehicle = route.Bil.trim()
         if (!vehicles[vehicle]) {
-          vehicles[vehicle] = [];
+          vehicles[vehicle] = []
         }
-        vehicles[vehicle].push(route);
-        return vehicles;
-      }, {});
-    };
+        vehicles[vehicle].push(route)
+        return vehicles
+      }, {})
+    }
 
-    const vehicles = getOrdersFromCar();
+    const vehicles = getOrdersFromCar()
 
     // Create vehicles based on the JSON data
     this.cars = from(Object.entries(vehicles)).pipe(
@@ -71,12 +71,16 @@ class Fleet {
             fleet: this,
             position: this.hub.position,
             orders: orders,
-            carId: id
+            carId: id,
           })
         )
       }),
       filter((car) => car !== null),
-      //tap((car) => info(`🚛 Fleet ${this.name} created vehicle ${car.id}`)),
+      tap((car) =>
+        info(
+          `🚛 Fleet ${this.name} created vehicle ${car.id} with orders: ${car.orders}`
+        )
+      ),
       shareReplay()
     )
 
