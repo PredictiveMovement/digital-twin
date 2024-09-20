@@ -91,76 +91,6 @@ const Map = ({
     },
   })
 
-  const busStopLayer = new ScatterplotLayer({
-    id: 'busStop-layer',
-    data: busStops,
-    stroked: false,
-    filled: true,
-    radiusScale: 3,
-    radiusMinPixels: 1,
-    radiusMaxPixels: 3,
-    getPosition: (c) => {
-      return c.position
-    },
-    getRadius: () => 4,
-    getFillColor: [255, 255, 255, 20],
-    pickable: true,
-    onHover: ({ object, x, y, viewport }) => {
-      if (!object) return setHoverInfo(null)
-      setHoverInfo({
-        type: 'busStop',
-        title: 'Busshållplats ' + object.name,
-        x,
-        y,
-        viewport,
-      })
-    },
-  })
-
-  const geoJsonFromBusLine = ({ stops, lineNumber, from, to }) => ({
-    type: 'Feature',
-    geometry: {
-      type: 'LineString',
-      coordinates: stops.map(({ lon, lat }) => [lon, lat]),
-    },
-    properties: {
-      name: `Buss, linje #${lineNumber}`,
-      from,
-      to,
-    },
-  })
-  const geoJsonFromBusLines = (lineShapes) => {
-    return lineShapes.map((line) => geoJsonFromBusLine(line))
-  }
-  const busLineLayer = new GeoJsonLayer({
-    id: 'busLineLayer',
-    data: geoJsonFromBusLines(lineShapes),
-    onHover: ({ object, x, y, viewport }) => {
-      if (!object) return setHoverInfo(null)
-      setHoverInfo({
-        type: 'busLine',
-        title: object.properties.name,
-        x,
-        y,
-        viewport,
-      })
-    },
-    pickable: true,
-    lineWidthScale: 3,
-    lineWidthMinPixels: 2,
-    lineWidthMaxPixels: 6,
-    getLineColor: (e) => {
-      if (hoverInfo && hoverInfo.title === e.properties.name) {
-        return [240, 10, 30]
-      }
-      return [240, 10, 30, 6]
-    },
-    getLineWidth: 4,
-    pointType: 'circle',
-    lineJointRounded: true,
-    lineCapRounded: true,
-  })
-
   const getColorBasedOnFleet = ({ fleet }) => {
     const opacity = Math.round((4 / 5) * 255)
     switch (fleet.toLowerCase()) {
@@ -200,48 +130,15 @@ const Map = ({
       case 'assigned':
         return 'Tilldelad'
       case 'delivered':
-        return 'Levererad'
+        return 'Återvinningsfordon tömt'
       case 'picked up':
-        return 'Leverans pågår'
+        return 'Tömd'
       case 'queued':
-        return 'Väntar på upphämtning'
+        return 'Väntar på tömning'
       default:
         return status
     }
   }
-  /*
-  const droneLayer = new ScenegraphLayer({
-    id: 'drone-layer',
-    data: cars,
-    sizeMinPixels: 1,
-    sizeMaxPixels: 15,
-    scenegraph: '/airplane.glb',
-    opacity: 0.9,
-    getOrientation: c => [c.bearing, -c.bearing, 90],
-    getPosition: (c) => {
-      return c.position
-    },
-    pickable: true,
-    onHover: ({ object, x, y, viewport }) => {
-      if (!object) return setHoverInfo(null)
-      setHoverInfo({
-        ...object,
-        type: 'car',
-        x,
-        y,
-        viewport,
-      })
-    },
-    onClick: ({ object }) => {
-      setMapState({
-        ...mapState,
-        zoom: 14,
-        longitude: object.position[0],
-        latitude: object.position[1],
-      })
-      setActiveCar(object)
-    },
-  })*/
 
   const carLayer = new ScatterplotLayer({
     id: 'car-layer',
@@ -275,102 +172,6 @@ const Map = ({
         latitude: object.position[1],
       })
       setActiveCar(object)
-    },
-  })
-
-  const taxiLayer = new ScatterplotLayer({
-    id: 'taxi-layer',
-    data: cars.filter((v) => v.vehicleType === 'taxi'),
-    //opacity: 0.7,
-    stroked: false,
-    filled: true,
-    radiusScale: 6,
-    radiusUnits: 'pixels',
-    getPosition: (c) => {
-      return c.position
-    },
-    //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
-    getFillColor: getColorBasedOnFleet,
-    pickable: true,
-    onHover: ({ object, x, y, viewport }) => {
-      if (!object) return setHoverInfo(null)
-      setHoverInfo({
-        ...object,
-        type: 'car',
-        x,
-        y,
-        viewport,
-      })
-    },
-    onClick: ({ object }) => {
-      setMapState({
-        ...mapState,
-        zoom: 14,
-        longitude: object.position[0],
-        latitude: object.position[1],
-      })
-      setActiveCar(object)
-    },
-  })
-
-  const busLayer = new ScatterplotLayer({
-    id: 'bus-layer',
-    data: cars.filter((v) => v.vehicleType === 'bus'),
-    stroked: false,
-    filled: true,
-    radiusScale: 6,
-    radiusUnits: 'pixels',
-    getPosition: (c) => {
-      return c.position
-    },
-    getFillColor: getColorBasedOnFleet,
-    pickable: true,
-    onHover: ({ object, x, y, viewport }) => {
-      if (!object) return setHoverInfo(null)
-      setHoverInfo({
-        ...object,
-        type: 'car',
-        x,
-        y,
-        viewport,
-      })
-    },
-    onClick: ({ object }) => {
-      setMapState({
-        ...mapState,
-        zoom: 14,
-        longitude: object.position[0],
-        latitude: object.position[1],
-      })
-      setActiveCar(object)
-    },
-  })
-
-  const passengerLayer = new ScatterplotLayer({
-    id: 'passenger-layer',
-    data: passengers.filter((p) => !p.inVehicle),
-    //opacity: 0.7,
-    stroked: false,
-    filled: true,
-    radiusScale: 2,
-    radiusUnits: 'pixels',
-    getPosition: ({ position }) => {
-      return position
-    },
-    //getRadius: (c) => (c.fleet === 'Privat' ? 4 : 8),
-    getFillColor: ({ inVehicle }) =>
-      inVehicle ? [0, 0, 0, 0] : [0, 128, 255, 170],
-
-    pickable: true,
-    onHover: ({ object, x, y, viewport }) => {
-      if (!object) return setHoverInfo(null)
-      setHoverInfo({
-        ...object,
-        type: 'passenger',
-        x,
-        y,
-        viewport,
-      })
     },
   })
 
@@ -415,34 +216,12 @@ const Map = ({
     marker: { x: 0, y: 0, width: 128, height: 128, anchorY: 150, mask: true },
   }
 
-  const recycleCollectionLayer = new ScatterplotLayer({
-    id: 'recycle-collection-layer',
-    data: bookings.filter((b) => b.type === 'recycle'),
-    getPosition: (c) => {
-      return c.destination
-    },
-    getFillColor: (d) => (d.isFull ? [255, 0, 0, 160] : [0, 128, 0, 160]), // Red for full, green for empty
-    getRadius: 10,
-    pickable: true,
-    onHover: ({ object, x, y }) => {
-      if (object) {
-        setHoverInfo({
-          title: 'Recycle Bin',
-          description: `Status: ${object.isFull ? 'Full' : 'Empty'}`,
-          x,
-          y,
-        })
-      }
-    },
-  })
-
   const [showAssignedBookings, setShowAssignedBookings] = useState(false)
   const [showActiveDeliveries, setShowActiveDeliveries] = useState(false)
 
   const routesData =
     (showActiveDeliveries || showAssignedBookings) &&
     bookings
-      .filter((b) => b.type !== 'busstop')
       .map((booking) => {
         if (!cars) return null
         const car = cars.find((car) => car.id === booking.carId)
@@ -463,15 +242,15 @@ const Map = ({
               showAssignedBookings && {
                 inbound: getColorBasedOnFleet(car),
                 outbound: getColorBasedOnFleet(car),
-                from: booking.pickup,
-                to: booking.destination,
+                from: car.position,
+                to: booking.pickup,
               }
             )
           case 'Queued':
             return (
               showAssignedBookings && {
-                inbound: [90, 40, 200, 0],
-                outbound: [90, 40, 200, 100],
+                inbound: [220, 40, 200, 0],
+                outbound: [220, 20, 20, 100],
                 from: booking.pickup,
                 to: booking.destination,
               }
@@ -560,17 +339,10 @@ const Map = ({
       layers={[
         // The order of these layers matter, roughly equal to increasing z-index by 1
         activeLayers.municipalityLayer && municipalityLayer, // TODO: This hides some items behind it, sort of
-        activeLayers.postombudLayer && postombudLayer,
-        recycleCollectionLayer,
         bookingLayer,
         showArcLayer && arcLayer,
         (showAssignedBookings || showActiveDeliveries) && routesLayer,
-        activeLayers.busLineLayer && busLineLayer,
-        activeLayers.busStopLayer && busStopLayer,
         activeLayers.carLayer && carLayer,
-        activeLayers.taxiLayer && taxiLayer,
-        activeLayers.busLayer && busLayer,
-        activeLayers.passengerLayer && passengerLayer,
       ]}
     >
       <div

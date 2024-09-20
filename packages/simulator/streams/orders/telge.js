@@ -29,6 +29,7 @@ function read() {
 
   try {
     return from(rutter).pipe(
+      take(100),
       map(
         ({
           Turid: id,
@@ -59,7 +60,7 @@ function read() {
         return rows.map((row) => ({
           ...row,
           destination: {
-            name: "LERHAGA 50, 151 66 Södertälje",
+            name: 'LERHAGA 50, 151 66 Södertälje',
             position: new Position({ lat: 59.135449, lon: 17.571239 }),
           },
         }))
