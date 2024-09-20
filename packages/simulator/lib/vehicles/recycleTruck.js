@@ -24,13 +24,8 @@ class RecycleTruck extends Vehicle {
     return hasCapacity && isCorrectCar;
   }
 
-  async handleBooking(booking) {
-    info(`RecycleTruck ${this.id} handling booking ${booking.id}`);
-    return super.handleBooking(booking);
-  }
-
   async waitAtPickup() {
-    return; // NOTE: Trucks don't wait at pickup
+    return;
   }
 
   async pickup() {
@@ -49,7 +44,6 @@ class RecycleTruck extends Vehicle {
         this.status = 'toPickup';
         this.statusEvents.next(this);
         this.navigateTo(this.booking.pickup.position);
-        console.log(this.booking.destination.position);
       } else {
         // Inga fler hämtningar, åk till destinationen
         this.status = 'toDelivery';
@@ -69,15 +63,6 @@ class RecycleTruck extends Vehicle {
     this.status = 'ready';
     this.booking = null;
     this.statusEvents.next(this);
-  }
-
-  pickNextFromCargo() {
-    info(`RecycleTruck ${this.id} picking next booking from cargo`);
-    return super.pickNextFromCargo();
-  }
-
-  stopped() {
-    return super.stopped();
   }
 }
 
