@@ -249,10 +249,10 @@ const Map = ({
           case 'Queued':
             return (
               showAssignedBookings && {
-                inbound: [220, 40, 200, 0],
-                outbound: [220, 20, 20, 100],
-                from: booking.pickup,
-                to: booking.destination,
+                inbound: [255, 255, 255, 50],
+                outbound: [255, 255, 255, 50],
+                from: car.position,
+                to: booking.pickup,
               }
             )
           case 'Delivered':

@@ -29,7 +29,6 @@ function read() {
 
   try {
     return from(rutter).pipe(
-      take(100),
       map(
         ({
           Turid: id,
