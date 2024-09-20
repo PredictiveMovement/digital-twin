@@ -56,19 +56,12 @@ function read() {
       filter(({ pickup }) => pickup.position.isValid()),
       toArray(),
       mergeMap(async (rows) => {
-        // TODO: Where do we leave the trash?
-        const recyleCenters = [
-          'Pålhagsvägen 4, Södertälje',
-          'Bovallsvägen 5, 152 42 Södertälje',
-        ]
-        const deliveryPoints = await Promise.all(
-          recyleCenters.map((addr) =>
-            searchOne(addr).then(({ name, position }) => ({ name, position }))
-          )
-        )
-        return rows.map((row, i) => ({
+        return rows.map((row) => ({
           ...row,
-          destination: deliveryPoints[i % deliveryPoints.length],
+          destination: {
+            name: "LERHAGA 50, 151 66 Södertälje",
+            position: new Position({ lat: 59.135449, lon: 17.571239 }),
+          },
         }))
       }, 1),
       mergeAll(),

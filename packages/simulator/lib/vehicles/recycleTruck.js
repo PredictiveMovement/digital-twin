@@ -1,106 +1,84 @@
-const { findBestRouteToPickupBookings } = require('../dispatch/truckDispatch')
-const { info, warn, debug } = require('../log')
-const Vehicle = require('./vehicle')
+const { info } = require('../log');
+const Vehicle = require('./vehicle');
 
 class RecycleTruck extends Vehicle {
   constructor(args) {
-    super(args)
-    this.vehicleType = 'recycleTruck'
-    this.isPrivateCar = false
-    this.co2PerKmKg = 0.1201 // NOTE: From a quick google. Needs to be verified.
-    this.parcelCapacity = args.parcelCapacity
-    this.plan = []
+    super(args);
+    this.vehicleType = 'recycleTruck';
+    this.isPrivateCar = false;
+    this.co2PerKmKg = 0.1201; // NOTE: From a quick google. Needs to be verified.
+    this.parcelCapacity = args.parcelCapacity;
+    this.plan = [];
 
-    this.position = args.position
-    this.startPosition = args.startPosition || args.position
+    this.position = args.position;
+    this.startPosition = args.startPosition || args.position;
 
-    this.carId = args.carId
-    this.recyclingType = args.recyclingType
-  }
-
-  async pickNextInstructionFromPlan() {
-    this.instruction = this.plan.shift()
-    this.booking = this.instruction?.booking
-    this.status = this.instruction?.action || 'returning'
-    this.statusEvents.next(this)
-    switch (this.status) {
-      case 'start':
-        return this.navigateTo(this.startPosition)
-      case 'pickup':
-        this.status = 'toPickup'
-        return this.navigateTo(this.booking.pickup.position)
-      case 'delivery':
-        this.status = 'toDelivery'
-        return this.navigateTo(this.booking.destination.position)
-      case 'ready':
-      case 'returning':
-        this.status = 'ready'
-        return
-      default:
-        warn('Unknown status', this.status, this.instruction)
-        if (!this.plan.length) this.status = 'returning'
-        return this.navigateTo(this.startPosition)
-    }
-  }
-
-  stopped() {
-    super.stopped()
-    this.pickNextInstructionFromPlan()
-  }
-
-  async pickup() {
-    // Wait 1 minute to simulate loading/unloading
-    // this.simulate(false) // pause interpolation while we wait
-    // await virtualTime.wait(60_000)
-    if (!this.booking) return warn('No booking to pickup', this.id)
-    if (this.cargo.indexOf(this.booking) > -1)
-      return warn('Already picked up', this.id, this.booking.id)
-
-    debug('Pickup cargo', this.id, this.booking.id)
-    // this.cargo = [...this.cargo, this.booking?.passenger]
-    this.cargo.push(this.booking)
-    this.cargoEvents.next(this)
-    this.booking.pickedUp(this.position)
-  }
-
-  async dropOff() {
-    this.cargo = this.cargo.filter((p) => p !== this.booking)
-    this.cargoEvents.next(this)
-    this.booking.delivered(this.position)
+    this.carId = args.carId;
+    this.recyclingType = args.recyclingType;
   }
 
   canHandleBooking(booking) {
-    if (booking.type !== 'recycle') return false
-    const hasCapacity = this.cargo.length < this.parcelCapacity
-    const isCorrectCar = booking.carId === this.carId
-    return hasCapacity && isCorrectCar
+    if (booking.type !== 'recycle') return false;
+    const hasCapacity = this.cargo.length < this.parcelCapacity;
+    const isCorrectCar = booking.carId === this.carId;
+    return hasCapacity && isCorrectCar;
   }
 
   async handleBooking(booking) {
-    //console.log('🚛 Handling booking', booking.id)
-    if (this.queue.indexOf(booking) > -1)
-      throw new Error(
-        `Booking ${booking.id} is already in the queue (${this.queue.indexOf(
-          booking
-        )})`
-      )
-    this.queue.push(booking)
-    booking.assign(this)
-    booking.queued(this)
-
-    clearTimeout(this._timeout)
-    this._timeout = setTimeout(async () => {
-      this.plan = await findBestRouteToPickupBookings(this, this.queue)
-
-      if (!this.instruction) await this.pickNextInstructionFromPlan()
-    }, 2000)
-
-    return booking
+    info(`RecycleTruck ${this.id} handling booking ${booking.id}`);
+    return super.handleBooking(booking);
   }
 
   async waitAtPickup() {
-    return // NOTE: Trucks don't wait at pickup
+    return; // NOTE: Trucks don't wait at pickup
+  }
+
+  async pickup() {
+    if (this._disposed) return;
+
+    if (this.booking && this.booking.pickup) {
+      // Lägg till bokningen i lasten
+      this.booking.pickedUp(this.position);
+      this.cargo.push(this.booking);
+      this.cargoEvents.next(this);
+
+      // Kontrollera om det finns fler hämtningar i kön
+      if (this.queue.length > 0) {
+        // Hämta nästa bokning
+        this.booking = this.queue.shift();
+        this.status = 'toPickup';
+        this.statusEvents.next(this);
+        this.navigateTo(this.booking.pickup.position);
+        console.log(this.booking.destination.position);
+      } else {
+        // Inga fler hämtningar, åk till destinationen
+        this.status = 'toDelivery';
+        this.statusEvents.next(this);
+        this.navigateTo(this.booking.destination.position);
+      }
+    }
+  }
+
+  dropOff() {
+    info(`RecycleTruck ${this.id} dropping off all cargo at destination`);
+    this.cargo.forEach((booking) => {
+      booking.delivered(this.position);
+    });
+    this.cargo = [];
+    this.cargoEvents.next(this);
+    this.status = 'ready';
+    this.booking = null;
+    this.statusEvents.next(this);
+  }
+
+  pickNextFromCargo() {
+    info(`RecycleTruck ${this.id} picking next booking from cargo`);
+    return super.pickNextFromCargo();
+  }
+
+  stopped() {
+    return super.stopped();
   }
 }
 
-module.exports = RecycleTruck
+module.exports = RecycleTruck;
