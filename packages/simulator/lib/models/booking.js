@@ -5,14 +5,17 @@ const { ReplaySubject, merge } = require('rxjs')
 class Booking {
   constructor(booking) {
     Object.assign(this, booking)
-    this.id =
-      `${
-        booking.sender ? booking.sender.replace(/&/g, '').toLowerCase() : 'b'
-      }-` + safeId()
+    this.id = [
+      booking.sender ? booking.sender.replace(/&/g, '').toLowerCase() : 'b',
+      booking.id || 'no-id',
+      booking.carId || 'no-carId',
+      booking.order || safeId(),
+    ].join('-')
     this.status = 'New'
     this.co2 = 0 //TODO: initialvärde?
     this.passenger = booking.passenger
     this.type = booking.type
+    this.recyclingType = booking.recyclingType
     this.cost = 0 // startkostnad?
     this.distance = 0 //TODO: räkna med sträcka innan?
     this.weight = Math.random() * 10 // kg TODO: find reference kg // TODO: passagerare väger mer..

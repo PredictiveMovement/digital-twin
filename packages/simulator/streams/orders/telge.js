@@ -36,6 +36,9 @@ function read() {
           Tjtyp: serviceType,
           Lat: lat,
           Lng: lon,
+          Bil: carId,
+          Turordningsnr: order,
+          Avftyp: recyclingType,
         }) => ({
           id,
           pickup: {
@@ -45,32 +48,25 @@ function read() {
           },
           sender: 'TELGE',
           serviceType,
+          carId: carId.trim(),
+          order,
+          recyclingType,
         })
       ),
       filter(({ pickup }) => pickup.position.isValid()),
       toArray(),
       mergeMap(async (rows) => {
-        // TODO: Where do we leave the trash?
-        const recyleCenters = [
-          'Pålhagsvägen 4, Södertälje',
-          'Bovallsvägen 5, 152 42 Södertälje',
-        ]
-        const deliveryPoints = await Promise.all(
-          recyleCenters.map((addr) =>
-            searchOne(addr).then(({ name, position }) => ({ name, position }))
-          )
-        )
-        return rows.map((row, i) => ({
+        return rows.map((row) => ({
           ...row,
-          id: row.id + '_' + i,
-          destination: deliveryPoints[i % deliveryPoints.length],
+          destination: {
+            name: "LERHAGA 50, 151 66 Södertälje",
+            position: new Position({ lat: 59.135449, lon: 17.571239 }),
+          },
         }))
       }, 1),
       mergeAll(),
       map((row) => new Booking({ type: 'recycle', ...row })),
-      //tap((booking) =>
-      //  console.log('📋 Booking created:', booking.id, 'type: ', booking.type)
-      //), // Log each booking
+      //tap((booking) => console.log('📋 Booking created:', booking.id)), // Log each booking
       share(),
       catchError((err) => {
         error('TELGE -> from JSON', err)
