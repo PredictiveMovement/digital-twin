@@ -51,6 +51,16 @@ const Map = ({
   const [hoverInfo, setHoverInfo] = useState(null)
   const hoverInfoRef = useRef(null)
   const [municipalityInfo, setMunicipalityInfo] = useState(null)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (hoverInfo) {
+        setHoverInfo((prev) => ({ ...prev }))
+      }
+    }, 1000) // Update every second
+
+    return () => clearInterval(interval)
+  }, [hoverInfo])
   const municipalityLayer = new PolygonLayer({
     id: 'municipality-layer',
     data: municipalities,
