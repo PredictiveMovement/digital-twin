@@ -54,15 +54,15 @@ const vehicleName = (vehicleType) => {
 const cargoName = (vehicleType) => {
   switch (vehicleType) {
     case 'bus':
-      return 'passagerare'
+      return 'tömningar'
     case 'taxi':
-      return 'passagerare'
+      return 'tömningar'
     case 'car':
       return 'tömningar'
     case 'truck':
-      return 'kollin'
+      return 'soptunnor'
     default:
-      return 'paket'
+      return 'tömningar'
   }
 }
 
@@ -112,7 +112,7 @@ const CarInfo = ({ data }) => {
         <Paragraph>&nbsp;</Paragraph>
         {data.passengerCapacity && (
           <Paragraph>
-            Kapacitet: <strong>{data.passengerCapacity} passagerare</strong>
+            Kapacitet: <strong>{data.passengerCapacity} tömningar</strong>
           </Paragraph>
         )}
         {data.parcelCapacity && (
@@ -130,7 +130,7 @@ const CarInfo = ({ data }) => {
         </Paragraph>
         {data.passengerCapacity && (
           <Paragraph>
-            Lastat: <strong>{data.passengers} passagerare</strong>
+            Lastat: <strong>{data.passengers} tömningar</strong>
           </Paragraph>
         )}
         {data.parcelCapacity && (
