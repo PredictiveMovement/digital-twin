@@ -130,11 +130,11 @@ const Map = ({
       case 'assigned':
         return 'Tilldelad'
       case 'delivered':
-        return 'Återvinningsfordon tömt'
+        return 'Återvinningsfordon tömt tömningar'
       case 'picked up':
-        return 'Tömd'
+        return 'Tömd tömningar'
       case 'queued':
-        return 'Väntar på tömning'
+        return 'Väntar på tömning tömningar'
       default:
         return status
     }
@@ -204,7 +204,7 @@ const Map = ({
         title: object.sender,
         subTitle: object.isCommercial
           ? '(företag)'
-          : ' Status: ' + getStatusLabel(object.status),
+          : ' Status: ' + getStatusLabel(object.status) + ' tömningar',
         x,
         y,
         viewport,
