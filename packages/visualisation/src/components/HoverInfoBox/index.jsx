@@ -206,12 +206,6 @@ const GenericInfo = ({ data }) => {
       <Paragraph>{data.subTitle}</Paragraph>
       <Paragraph>Typ: {data.type}</Paragraph>
       <Paragraph>Bil: {data.carId}</Paragraph>
-      <Paragraph>
-        Från: <strong>{data.from}</strong>
-      </Paragraph>
-      <Paragraph>
-        Till: <strong>{data.to}</strong>
-      </Paragraph>
       {data.deliveryTime ? (
         <Paragraph>
           Leveranstid: {Math.ceil((10 * data.deliveryTime) / 60 / 60) / 10} h
