@@ -30,6 +30,7 @@ class RecycleTruck extends Vehicle {
   }
 
   async pickup() {
+    await new Promise((resolve) => setTimeout(resolve, 2 * 60 * 1000)) // 2 minutes delay
     if (this._disposed) return
 
     if (this.booking && this.booking.pickup) {
