@@ -103,34 +103,12 @@ const CarInfo = ({ data }) => {
         </Paragraph>
 
         <Paragraph>&nbsp;</Paragraph>
-        {data.passengerCapacity && (
-          <Paragraph>
-            Kapacitet: <strong>{data.passengerCapacity} tömningar</strong>
-          </Paragraph>
-        )}
-        {data.parcelCapacity && (
-          <Paragraph>
-            Kapacitet: <strong>{data.parcelCapacity} tömningar</strong>
-          </Paragraph>
-        )}
-
-        <Paragraph>&nbsp;</Paragraph>
         <Paragraph>
-          Köat:{' '}
-          <strong>
-            {data.queue || 0} {cargoName(data.vehicleType)}
-          </strong>
+          Upphämtat: <strong>{data.pickedUp || 0} tömningar</strong>
         </Paragraph>
-        {data.passengerCapacity && (
-          <Paragraph>
-            Tömt: <strong>{data.passengers} tömningar</strong>
-          </Paragraph>
-        )}
-        {data.parcelCapacity && (
-          <Paragraph>
-            Tömt: <strong>{data.cargo} tömningar</strong>
-          </Paragraph>
-        )}
+        <Paragraph>
+          Tömt: <strong>{data.emptied || 0} tömningar</strong>
+        </Paragraph>
       </div>
 
       <Paragraph>&nbsp;</Paragraph>
