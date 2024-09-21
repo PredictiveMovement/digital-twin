@@ -143,49 +143,6 @@ export default function LayersMenu({
         </MenuItem>
         <MenuItem>
           <ListItemIcon>
-            <AirportShuttle fontSize="small" />
-          </ListItemIcon>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={activeLayers.busLayer}
-                onChange={() => activeLayers.setBusLayer((on) => !on)}
-              />
-            }
-            label="Bussar"
-          />
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <AirportShuttle fontSize="small" />
-          </ListItemIcon>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={activeLayers.busStopLayer}
-                onChange={() => activeLayers.setBusStopLayer((on) => !on)}
-              />
-            }
-            label="Busshållplatser"
-          />
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <AirportShuttle fontSize="small" />
-          </ListItemIcon>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={activeLayers.busLineLayer}
-                onChange={() => activeLayers.setBusLineLayer((on) => !on)}
-              />
-            }
-            label="Busslinjer"
-          />
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <ListItemIcon>
             <Person fontSize="small" />
           </ListItemIcon>
           <FormControlLabel

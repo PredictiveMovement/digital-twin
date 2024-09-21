@@ -24,8 +24,6 @@ const Map = ({
   bookings,
   postombud,
   recycleCollectionPoints,
-  busStops,
-  lineShapes,
   municipalities,
   activeCar,
   setActiveCar,

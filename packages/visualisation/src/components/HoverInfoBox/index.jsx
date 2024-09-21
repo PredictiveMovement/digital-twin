@@ -38,8 +38,6 @@ const Wrapper = styled.div.attrs((props) => ({
 
 const vehicleName = (vehicleType) => {
   switch (vehicleType) {
-    case 'bus':
-      return 'Buss'
     case 'taxi':
       return 'Taxi'
     case 'car':
