@@ -192,7 +192,7 @@ const Map = ({
       { status } // TODO: Different colors for IKEA & HM
     ) =>
       status === 'Delivered'
-        ? [170, 255, 187, 255] // Increase opacity for delivered items
+        ? [170, 255, 187, 128] // Set opacity to around 50 for delivered items
         : status === 'Picked up'
         ? [170, 187, 255, 55]
         : [255, 170, 187, 55],
