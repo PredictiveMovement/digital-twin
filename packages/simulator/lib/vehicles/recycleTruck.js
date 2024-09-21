@@ -1,5 +1,5 @@
 const { info } = require('../log')
-const virtualTime = require('../virtualTime')
+const virtualTime = require('../virtualTime') // Import the instance directly
 const Vehicle = require('./vehicle')
 
 class RecycleTruck extends Vehicle {

@@ -80,7 +80,4 @@ class VirtualTime {
   }
 }
 
-module.exports = {
-  virtualTime: new VirtualTime(), // static global time
-  VirtualTime,
-}
+module.exports = new VirtualTime() // Export an instance directly
