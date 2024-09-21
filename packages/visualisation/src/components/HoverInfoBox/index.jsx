@@ -130,12 +130,12 @@ const CarInfo = ({ data }) => {
         </Paragraph>
         {data.passengerCapacity && (
           <Paragraph>
-            Lastat: <strong>{data.passengers} tömningar</strong>
+            Tömt: <strong>{data.passengers} tömningar</strong>
           </Paragraph>
         )}
         {data.parcelCapacity && (
           <Paragraph>
-            Lastat: <strong>{data.cargo} tömningar</strong>
+            Tömt: <strong>{data.cargo} tömningar</strong>
           </Paragraph>
         )}
       </div>
