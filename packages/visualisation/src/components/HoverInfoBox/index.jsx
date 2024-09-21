@@ -104,10 +104,10 @@ const CarInfo = ({ data }) => {
 
         <Paragraph>&nbsp;</Paragraph>
         <Paragraph>
-          Upphämtat: <strong>{data.pickedUp || 0} tömningar</strong>
+          Upphämtat: <strong>{data.pickedUp || 0} kärl</strong>
         </Paragraph>
         <Paragraph>
-          Tömt: <strong>{data.emptied || 0} tömningar</strong>
+          Tömt: <strong>{data.emptied || 0} kärl</strong>
         </Paragraph>
       </div>
 
