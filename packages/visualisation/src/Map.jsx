@@ -49,6 +49,7 @@ const Map = ({
   }, [])
 
   const [hoverInfo, setHoverInfo] = useState(null)
+  const hoverInfoRef = useRef(null)
   const [municipalityInfo, setMunicipalityInfo] = useState(null)
   const municipalityLayer = new PolygonLayer({
     id: 'municipality-layer',
@@ -153,7 +154,7 @@ const Map = ({
     getFillColor: getColorBasedOnFleet,
     pickable: true,
     onHover: ({ object, x, y, viewport }) => {
-      if (!object) return setHoverInfo(null)
+      if (!object && !hoverInfoRef.current) return setHoverInfo(null)
       setHoverInfo({
         ...object,
         type: 'car',
@@ -370,7 +371,15 @@ const Map = ({
         mapStyle="mapbox://styles/mapbox/dark-v10"
         mapboxApiAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
       />
-      {hoverInfo && mapState.zoom > 6 && <HoverInfoBox data={hoverInfo} />}
+      {hoverInfo && mapState.zoom > 6 && (
+        <div
+          ref={hoverInfoRef}
+          onMouseEnter={() => hoverInfoRef.current = true}
+          onMouseLeave={() => hoverInfoRef.current = false}
+        >
+          <HoverInfoBox data={hoverInfo} />
+        </div>
+      )}
 
       {/* Time progress bar. */}
       <TimeProgressBar time={time} />
