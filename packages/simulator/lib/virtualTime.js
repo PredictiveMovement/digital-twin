@@ -71,7 +71,7 @@ class VirtualTime {
 
   async wait(ms) {
     const now = await this.getTimeInMillisecondsAsPromise()
-    this.waitUntil(now + ms)
+    return this.waitUntil(now + ms)
   }
 
   // Set the speed in which time should advance
