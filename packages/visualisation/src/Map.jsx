@@ -134,7 +134,7 @@ const Map = ({
       case 'picked up':
         return 'Tömd tömningar'
       case 'queued':
-        return 'Väntar på tömning tömningar'
+        return 'Väntar på tömning'
       default:
         return status
     }
