@@ -188,11 +188,13 @@ const Map = ({
     },
     getRadius: () => 4,
     // #fab
-    getFillColor: ({ status }) =>
+    getFillColor: (
+      { status } // TODO: Different colors for IKEA & HM
+    ) =>
       status === 'Delivered'
-        ? [0, 100, 0, 55] // Dark green with lower opacity
+        ? [170, 255, 187]
         : status === 'Picked up'
-        ? [0, 255, 0, 255] // Bright green
+        ? [170, 187, 255, 55]
         : [255, 170, 187, 55],
     pickable: true,
     onHover: ({ object, x, y, viewport }) => {
