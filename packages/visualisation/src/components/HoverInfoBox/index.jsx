@@ -94,11 +94,6 @@ const CarInfo = ({ data }) => {
         <Paragraph>
           Avstånd till destination: <strong>{data.ema} m</strong>
         </Paragraph>
-        <Paragraph>
-          Anländer kl:{' '}
-          <strong>{new Date(data.eta).toLocaleTimeString().slice(0, 5)}</strong>
-        </Paragraph>
-
         <Paragraph>&nbsp;</Paragraph>
         <Paragraph>
           Körsträcka:{' '}
