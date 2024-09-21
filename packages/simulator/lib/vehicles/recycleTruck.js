@@ -31,9 +31,7 @@ class RecycleTruck extends Vehicle {
   }
 
   async pickup() {
-    const currentTime = await virtualTime.getTimeInMillisecondsAsPromise()
-    const twoMinutesLater = currentTime + 2 * 60 * 1000
-    await virtualTime.waitUntil(twoMinutesLater)
+    await virtualTime.wait(2 * 60 * 1000) // Wait for 2 virtual minutes
     if (this._disposed) return
 
     if (this.booking && this.booking.pickup) {
