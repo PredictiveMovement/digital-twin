@@ -202,13 +202,6 @@ const GenericInfo = ({ data }) => {
       <Paragraph>
         <strong>{data.id}</strong>
       </Paragraph>
-      <Paragraph>
-        Latitude: <strong>{data.pickup[1]}</strong>
-      </Paragraph>
-      <Paragraph>
-        Longitude: <strong>{data.pickup[0]}</strong>
-      </Paragraph>
-      <Paragraph>&nbsp;</Paragraph>
       <Paragraph>{data.title}</Paragraph>
       <Paragraph>{data.subTitle}</Paragraph>
       <Paragraph>Typ: {data.type}</Paragraph>
