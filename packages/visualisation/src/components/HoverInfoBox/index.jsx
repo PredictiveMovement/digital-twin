@@ -58,7 +58,7 @@ const cargoName = (vehicleType) => {
     case 'taxi':
       return 'passagerare'
     case 'car':
-      return 'paket'
+      return 'tömningar'
     case 'truck':
       return 'kollin'
     default:
@@ -117,7 +117,7 @@ const CarInfo = ({ data }) => {
         )}
         {data.parcelCapacity && (
           <Paragraph>
-            Kapacitet: <strong>{data.parcelCapacity} paket</strong>
+            Kapacitet: <strong>{data.parcelCapacity} tömningar</strong>
           </Paragraph>
         )}
 
@@ -135,7 +135,7 @@ const CarInfo = ({ data }) => {
         )}
         {data.parcelCapacity && (
           <Paragraph>
-            Lastat: <strong>{data.cargo} paket</strong>
+            Lastat: <strong>{data.cargo} tömningar</strong>
           </Paragraph>
         )}
       </div>
@@ -154,7 +154,7 @@ const CarInfo = ({ data }) => {
       )}
       {data.parcelCapacity && (
         <div>
-          <Paragraph>Paketfyllnadsgrad:</Paragraph>
+          <Paragraph>Tömningsfyllnadsgrad:</Paragraph>
           <ProgressBar
             completed={Math.round(
               Math.min(100, (data.cargo / data.parcelCapacity) * 100) || 0
