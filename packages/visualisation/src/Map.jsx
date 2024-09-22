@@ -120,6 +120,46 @@ const Map = ({
     }
   }
 
+  const getColorBasedOnType = ({ id }) => {
+    const [carrier, type, car, order] = id.split('-')
+    const types = ['HEM', 'KRA', '2FA', 'SOP', 'ORD', 'MAT', 'BLB']
+
+    const opacity = Math.round((4 / 5) * 255)
+    const colors = [
+      [205, 127, 50, opacity],
+      [99, 20, 145, opacity],
+      [189, 197, 129, opacity],
+      [249, 202, 36, opacity],
+      [57, 123, 184, opacity],
+      [235, 77, 75, opacity],
+      [232, 67, 147, opacity],
+      [119, 155, 172, opacity],
+      [34, 166, 179, opacity],
+      [255, 255, 0, opacity],
+      [254, 254, 254, opacity],
+    ]
+    return colors[types.indexOf(type.slice(0, 3)) % colors.length]
+  }
+
+  const getColorBasedOnCar = ({ id }) => {
+    const [carrier, type, car, order] = id.split('-')
+    const opacity = Math.round((4 / 5) * 255)
+    const colors = [
+      [205, 127, 50, opacity],
+      [99, 20, 145, opacity],
+      [189, 197, 129, opacity],
+      [249, 202, 36, opacity],
+      [57, 123, 184, opacity],
+      [235, 77, 75, opacity],
+      [232, 67, 147, opacity],
+      [119, 155, 172, opacity],
+      [34, 166, 179, opacity],
+      [255, 255, 0, opacity],
+      [254, 254, 254, opacity],
+    ]
+    return colors[parseInt(car) % colors.length]
+  }
+
   const getStatusLabel = (status) => {
     switch (status.toLowerCase()) {
       case 'assigned':
@@ -184,13 +224,13 @@ const Map = ({
     getRadius: () => 4,
     // #fab
     getFillColor: (
-      { status } // TODO: Different colors for IKEA & HM
+      { id, status } // TODO: Different colors for IKEA & HM
     ) =>
       status === 'Delivered'
         ? [170, 187, 255, 55]
         : status === 'Picked up'
         ? [170, 255, 187, 128] // Set opacity to around 50 for delivered items
-        : [255, 170, 187, 55],
+        : getColorBasedOnType({ id }),
     pickable: true,
     onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
@@ -227,7 +267,7 @@ const Map = ({
             return (
               showActiveDeliveries && {
                 inbound: [169, 178, 237, 55],
-                outbound: getColorBasedOnFleet(car),
+                outbound: getColorBasedOnCar(booking),
                 from: car.position,
                 to: booking.destination,
               }
@@ -235,8 +275,8 @@ const Map = ({
           case 'Assigned':
             return (
               showAssignedBookings && {
-                inbound: getColorBasedOnFleet(car),
-                outbound: getColorBasedOnFleet(car),
+                inbound: getColorBasedOnCar(booking),
+                outbound: getColorBasedOnCar(booking),
                 from: car.position,
                 to: booking.pickup,
               }
@@ -244,8 +284,8 @@ const Map = ({
           case 'Queued':
             return (
               showAssignedBookings && {
-                inbound: [255, 255, 255, 50],
-                outbound: [255, 255, 255, 50],
+                inbound: getColorBasedOnCar(booking),
+                outbound: getColorBasedOnCar(booking),
                 from: car.position,
                 to: booking.pickup,
               }

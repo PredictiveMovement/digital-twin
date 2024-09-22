@@ -44,25 +44,10 @@ const vehicleName = (vehicleType) => {
       return 'Bil'
     case 'truck':
       return 'Lastbil'
+    case 'recycleTruck':
+      return 'Återvinningsfordon'
     default:
       return 'Fordon'
-  }
-}
-
-const cargoName = (vehicleType) => {
-  switch (vehicleType) {
-    case 'bus':
-      return 'resenärer'
-    case 'taxi':
-      return 'passagerare'
-    case 'car':
-      return 'passagerare'
-    case 'truck':
-      return 'kollin'
-    case 'recycleTruck':
-      return 'kärl'
-    default:
-      return 'paket'
   }
 }
 
