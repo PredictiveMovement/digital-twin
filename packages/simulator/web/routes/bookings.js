@@ -14,6 +14,7 @@ const cleanBookings = () =>
         co2,
         cost,
         deliveryTime,
+        pickupDateTime,
         car,
         type,
       }) => ({
@@ -24,6 +25,7 @@ const cleanBookings = () =>
         status,
         isCommercial,
         deliveryTime,
+        pickupDateTime,
         co2,
         cost,
         carId: car?.id,

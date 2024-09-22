@@ -5,9 +5,7 @@ import DeckGL, {
   ScatterplotLayer,
   ArcLayer,
   LinearInterpolator,
-  IconLayer,
 } from 'deck.gl'
-import { GeoJsonLayer } from '@deck.gl/layers'
 import inside from 'point-in-polygon'
 import { ParagraphLarge } from './components/Typography'
 import MunicipalityStatisticsBox from './components/MunicipalityStatisticsBox'
@@ -19,11 +17,8 @@ const transitionInterpolator = new LinearInterpolator(['bearing'])
 
 const Map = ({
   activeLayers,
-  passengers,
   cars,
   bookings,
-  postombud,
-  recycleCollectionPoints,
   municipalities,
   activeCar,
   setActiveCar,
@@ -52,15 +47,6 @@ const Map = ({
   const hoverInfoRef = useRef(null)
   const [municipalityInfo, setMunicipalityInfo] = useState(null)
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (hoverInfo) {
-        setHoverInfo((prev) => ({ ...prev }))
-      }
-    }, 1000) // Update every second
-
-    return () => clearInterval(interval)
-  }, [hoverInfo])
   const municipalityLayer = new PolygonLayer({
     id: 'municipality-layer',
     data: municipalities,
@@ -139,11 +125,11 @@ const Map = ({
       case 'assigned':
         return 'Tilldelad'
       case 'delivered':
-        return 'Avlastad'
-      case 'picked up':
         return 'Tömd'
+      case 'picked up':
+        return 'Upphämtad'
       case 'queued':
-        return 'Väntar på tömning'
+        return 'Väntar på upphämtning'
       default:
         return status
     }
@@ -164,7 +150,7 @@ const Map = ({
     getFillColor: getColorBasedOnFleet,
     pickable: true,
     onHover: ({ object, x, y, viewport }) => {
-      if (!object && !hoverInfoRef.current) return setHoverInfo(null)
+      if (!object) return setHoverInfo(null)
       setHoverInfo({
         ...object,
         type: 'car',
@@ -384,8 +370,8 @@ const Map = ({
       {hoverInfo && mapState.zoom > 6 && (
         <div
           ref={hoverInfoRef}
-          onMouseEnter={() => hoverInfoRef.current = true}
-          onMouseLeave={() => hoverInfoRef.current = false}
+          onMouseEnter={() => (hoverInfoRef.current = true)}
+          onMouseLeave={() => (hoverInfoRef.current = false)}
         >
           <HoverInfoBox data={hoverInfo} />
         </div>

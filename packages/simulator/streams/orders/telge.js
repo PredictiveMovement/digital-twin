@@ -6,11 +6,8 @@ const {
   toArray,
   mergeAll,
   filter,
-  take,
   share,
-  tap,
 } = require('rxjs/operators')
-const { searchOne } = require('../../lib/pelias')
 const Position = require('../../lib/models/position')
 const Booking = require('../../lib/models/booking')
 const { error } = require('../../lib/log')
@@ -46,6 +43,7 @@ function read() {
             date: pickupDate,
             position: new Position({ lat, lon }),
           },
+          weight: 10, // 10kg
           sender: 'TELGE',
           serviceType,
           carId: carId.trim(),

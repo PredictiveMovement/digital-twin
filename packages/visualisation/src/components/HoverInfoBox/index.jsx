@@ -104,10 +104,13 @@ const CarInfo = ({ data }) => {
 
         <Paragraph>&nbsp;</Paragraph>
         <Paragraph>
-          Upphämtat: <strong>{data.pickedUp || 0} kärl</strong>
+          Köat: <strong>{data.queue || 0} kärl</strong>
         </Paragraph>
         <Paragraph>
-          Tömt: <strong>{data.emptied || 0} kärl</strong>
+          Upphämtat: <strong>{data.cargo || 0} kärl</strong>
+        </Paragraph>
+        <Paragraph>
+          Tömt: <strong>{data.delivered || 0} kärl</strong>
         </Paragraph>
       </div>
 
@@ -125,7 +128,7 @@ const CarInfo = ({ data }) => {
       )}
       {data.parcelCapacity && (
         <div>
-          <Paragraph>Tömningsfyllnadsgrad:</Paragraph>
+          <Paragraph>Fyllnadsgrad 2 kärl:</Paragraph>
           <ProgressBar
             completed={Math.round(
               Math.min(100, (data.cargo / data.parcelCapacity) * 100) || 0
@@ -180,11 +183,18 @@ const GenericInfo = ({ data }) => {
       </Paragraph>
       <Paragraph>{data.title}</Paragraph>
       <Paragraph>{data.subTitle}</Paragraph>
-      <Paragraph>Typ: {data.type}</Paragraph>
+      <Paragraph>
+        Typ: {data.type === 'recycle' ? 'återvinningskärl' : data.type}
+      </Paragraph>
       <Paragraph>Bil: {data.carId}</Paragraph>
       {data.deliveryTime ? (
         <Paragraph>
           Leveranstid: {Math.ceil((10 * data.deliveryTime) / 60 / 60) / 10} h
+        </Paragraph>
+      ) : null}
+      {data.pickupDateTime ? (
+        <Paragraph>
+          Hämtades kl: {moment(data.pickupDateTime).format('HH:mm')}
         </Paragraph>
       ) : null}
       {data.co2 ? (

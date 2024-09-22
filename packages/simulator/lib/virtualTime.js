@@ -80,4 +80,7 @@ class VirtualTime {
   }
 }
 
-module.exports = new VirtualTime() // Export an instance directly
+module.exports = {
+  VirtualTime,
+  virtualTime: new VirtualTime(), // Export an instance directly
+}

@@ -9,3 +9,4 @@ node_modules
 .cache
 k8s/dependencies
 .aider.tags.cache.v3
+.aider*
