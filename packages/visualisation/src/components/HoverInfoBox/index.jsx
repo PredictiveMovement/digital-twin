@@ -52,15 +52,17 @@ const vehicleName = (vehicleType) => {
 const cargoName = (vehicleType) => {
   switch (vehicleType) {
     case 'bus':
-      return 'tömningar'
+      return 'resenärer'
     case 'taxi':
-      return 'tömningar'
+      return 'passagerare'
     case 'car':
-      return 'tömningar'
+      return 'passagerare'
     case 'truck':
-      return 'soptunnor'
+      return 'kollin'
+    case 'recycleTruck':
+      return 'kärl'
     default:
-      return 'tömningar'
+      return 'paket'
   }
 }
 
