@@ -10,12 +10,12 @@ const fleet = {
 class Taxi extends Vehicle {
   id
   position
-  heading
+  destination
   constructor({ id = 't-' + safeId(), position, startPosition, ...vehicle }) {
     super({ position, id, fleet, ...vehicle })
     this.id = id
     this.position = position
-    this.heading = null
+    this.destination = null
     this.cargo = []
     this.passengers = []
     this.queue = []

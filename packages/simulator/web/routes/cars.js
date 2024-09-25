@@ -13,7 +13,7 @@ const cleanCars = ({
   position: { lon, lat },
   id,
   altitude,
-  heading,
+  destination,
   speed,
   bearing,
   status,
@@ -30,7 +30,7 @@ const cleanCars = ({
   vehicleType,
 }) => ({
   id,
-  heading: (heading && [heading.lon, heading.lat]) || null, // contains route to plot or interpolate on client side.
+  destination: (destination && [destination.lon, destination.lat]) || null, // contains route to plot or interpolate on client side.
   speed,
   bearing,
   position: [lon, lat, altitude || 0],
