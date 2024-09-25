@@ -1,4 +1,5 @@
 const { info } = require('../log')
+const { virtualTime } = require('../virtualTime') // Import the instance directly
 const Vehicle = require('./vehicle')
 
 class RecycleTruck extends Vehicle {
@@ -6,7 +7,7 @@ class RecycleTruck extends Vehicle {
     super(args)
     this.vehicleType = 'recycleTruck'
     this.isPrivateCar = false
-    this.co2PerKmKg = 0.1201 // NOTE: From a quick google. Needs to be verified.
+    this.co2PerKmKg = 0.000065 // NOTE: From a quick google. Needs to be verified.
     this.parcelCapacity = args.parcelCapacity
     this.plan = []
 
@@ -26,7 +27,8 @@ class RecycleTruck extends Vehicle {
   }
 
   async waitAtPickup() {
-    return
+    const minutes = 1.5 * Math.random()
+    await virtualTime.wait(minutes * 60 * 1000) // Wait for 2 virtual minutes
   }
 
   async pickup() {

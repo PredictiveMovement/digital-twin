@@ -80,7 +80,7 @@ const Loading = ({
           <StepLabel>Hämtar experimentparametrar...</StepLabel>
         </Step>
         <Step key={3}>
-          <StepLabel>Hämtar {municipalities} municipalities...</StepLabel>
+          <StepLabel>Hämtar {municipalities} kommuner...</StepLabel>
         </Step>
         <Step key={4}>
           <StepLabel>Skapar {cars} fordon...</StepLabel>

@@ -71,7 +71,7 @@ class VirtualTime {
 
   async wait(ms) {
     const now = await this.getTimeInMillisecondsAsPromise()
-    this.waitUntil(now + ms)
+    return this.waitUntil(now + ms)
   }
 
   // Set the speed in which time should advance
@@ -81,6 +81,6 @@ class VirtualTime {
 }
 
 module.exports = {
-  virtualTime: new VirtualTime(), // static global time
   VirtualTime,
+  virtualTime: new VirtualTime(), // Export an instance directly
 }

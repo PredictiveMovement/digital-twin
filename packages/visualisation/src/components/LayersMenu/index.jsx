@@ -8,14 +8,7 @@ import LayersIcon from '@mui/icons-material/Layers'
 import { FormControlLabel, ListItemText, Switch } from '@mui/material'
 import ContentPaste from '@mui/icons-material/ContentPaste'
 
-import {
-  AddLocation,
-  AirportShuttle,
-  Hail,
-  Info,
-  Map,
-  Person,
-} from '@mui/icons-material'
+import { Hail, Info, Map, Person } from '@mui/icons-material'
 import RouteIcon from '@mui/icons-material/Route'
 
 export default function LayersMenu({
@@ -129,78 +122,6 @@ export default function LayersMenu({
         <Divider />
         <MenuItem>
           <ListItemIcon>
-            <Hail fontSize="small" />
-          </ListItemIcon>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={activeLayers.taxiLayer}
-                onChange={() => activeLayers.setTaxiLayer((on) => !on)}
-              />
-            }
-            label="Anropsstyrd kollektivtrafik"
-          />
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <AirportShuttle fontSize="small" />
-          </ListItemIcon>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={activeLayers.busLayer}
-                onChange={() => activeLayers.setBusLayer((on) => !on)}
-              />
-            }
-            label="Bussar"
-          />
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <AirportShuttle fontSize="small" />
-          </ListItemIcon>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={activeLayers.busStopLayer}
-                onChange={() => activeLayers.setBusStopLayer((on) => !on)}
-              />
-            }
-            label="Busshållplatser"
-          />
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <AirportShuttle fontSize="small" />
-          </ListItemIcon>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={activeLayers.busLineLayer}
-                onChange={() => activeLayers.setBusLineLayer((on) => !on)}
-              />
-            }
-            label="Busslinjer"
-          />
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <ListItemIcon>
-            <Person fontSize="small" />
-          </ListItemIcon>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={activeLayers.passengerLayer}
-                onChange={() => activeLayers.setPassengerLayer((on) => !on)}
-              />
-            }
-            label="Passagerare"
-          />
-        </MenuItem>
-
-        <MenuItem>
-          <ListItemIcon>
             <Map fontSize="small" />
           </ListItemIcon>
           <FormControlLabel
@@ -210,7 +131,7 @@ export default function LayersMenu({
                 onChange={() => activeLayers.setMunicipalityLayer((on) => !on)}
               />
             }
-            label="Municipalitygränser"
+            label="Kommungränser"
           />
         </MenuItem>
         <Divider />

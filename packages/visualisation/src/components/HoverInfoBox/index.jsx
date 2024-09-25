@@ -38,31 +38,16 @@ const Wrapper = styled.div.attrs((props) => ({
 
 const vehicleName = (vehicleType) => {
   switch (vehicleType) {
-    case 'bus':
-      return 'Buss'
     case 'taxi':
       return 'Taxi'
     case 'car':
       return 'Bil'
     case 'truck':
       return 'Lastbil'
+    case 'recycleTruck':
+      return 'Återvinningsfordon'
     default:
       return 'Fordon'
-  }
-}
-
-const cargoName = (vehicleType) => {
-  switch (vehicleType) {
-    case 'bus':
-      return 'passagerare'
-    case 'taxi':
-      return 'passagerare'
-    case 'car':
-      return 'paket'
-    case 'truck':
-      return 'kollin'
-    default:
-      return 'paket'
   }
 }
 
@@ -94,11 +79,6 @@ const CarInfo = ({ data }) => {
         <Paragraph>
           Avstånd till destination: <strong>{data.ema} m</strong>
         </Paragraph>
-        <Paragraph>
-          Anländer kl:{' '}
-          <strong>{new Date(data.eta).toLocaleTimeString().slice(0, 5)}</strong>
-        </Paragraph>
-
         <Paragraph>&nbsp;</Paragraph>
         <Paragraph>
           Körsträcka:{' '}
@@ -110,34 +90,15 @@ const CarInfo = ({ data }) => {
         </Paragraph>
 
         <Paragraph>&nbsp;</Paragraph>
-        {data.passengerCapacity && (
-          <Paragraph>
-            Kapacitet: <strong>{data.passengerCapacity} passagerare</strong>
-          </Paragraph>
-        )}
-        {data.parcelCapacity && (
-          <Paragraph>
-            Kapacitet: <strong>{data.parcelCapacity} paket</strong>
-          </Paragraph>
-        )}
-
-        <Paragraph>&nbsp;</Paragraph>
         <Paragraph>
-          Köat:{' '}
-          <strong>
-            {data.queue || 0} {cargoName(data.vehicleType)}
-          </strong>
+          Köat: <strong>{data.queue || 0} kärl</strong>
         </Paragraph>
-        {data.passengerCapacity && (
-          <Paragraph>
-            Lastat: <strong>{data.passengers} passagerare</strong>
-          </Paragraph>
-        )}
-        {data.parcelCapacity && (
-          <Paragraph>
-            Lastat: <strong>{data.cargo} paket</strong>
-          </Paragraph>
-        )}
+        <Paragraph>
+          Upphämtat: <strong>{data.cargo || 0} kärl</strong>
+        </Paragraph>
+        <Paragraph>
+          Tömt: <strong>{data.delivered || 0} kärl</strong>
+        </Paragraph>
       </div>
 
       <Paragraph>&nbsp;</Paragraph>
@@ -154,7 +115,7 @@ const CarInfo = ({ data }) => {
       )}
       {data.parcelCapacity && (
         <div>
-          <Paragraph>Paketfyllnadsgrad:</Paragraph>
+          <Paragraph>Fyllnadsgrad 2 kärl:</Paragraph>
           <ProgressBar
             completed={Math.round(
               Math.min(100, (data.cargo / data.parcelCapacity) * 100) || 0
@@ -207,26 +168,20 @@ const GenericInfo = ({ data }) => {
       <Paragraph>
         <strong>{data.id}</strong>
       </Paragraph>
-      <Paragraph>
-        Latitude: <strong>{data.pickup[1]}</strong>
-      </Paragraph>
-      <Paragraph>
-        Longitude: <strong>{data.pickup[0]}</strong>
-      </Paragraph>
-      <Paragraph>&nbsp;</Paragraph>
       <Paragraph>{data.title}</Paragraph>
       <Paragraph>{data.subTitle}</Paragraph>
-      <Paragraph>Typ: {data.type}</Paragraph>
+      <Paragraph>
+        Typ: {data.type === 'recycle' ? 'återvinningskärl' : data.type}
+      </Paragraph>
       <Paragraph>Bil: {data.carId}</Paragraph>
-      <Paragraph>
-        Från: <strong>{data.from}</strong>
-      </Paragraph>
-      <Paragraph>
-        Till: <strong>{data.to}</strong>
-      </Paragraph>
       {data.deliveryTime ? (
         <Paragraph>
           Leveranstid: {Math.ceil((10 * data.deliveryTime) / 60 / 60) / 10} h
+        </Paragraph>
+      ) : null}
+      {data.pickupDateTime ? (
+        <Paragraph>
+          Hämtades kl: {moment(data.pickupDateTime).format('HH:mm')}
         </Paragraph>
       ) : null}
       {data.co2 ? (

@@ -11,7 +11,7 @@ const vehicleData = require('../data/telge/ruttdata_2024-09-03.json')
 const vehicleTypes = {
   recycleTruck: {
     weight: 10 * 1000,
-    parcelCapacity: 500,
+    parcelCapacity: 300,
     class: RecycleTruck,
   },
   taxi: {

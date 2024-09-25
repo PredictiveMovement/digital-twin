@@ -11,6 +11,7 @@ const engine = {
   subscriptions: [],
   createExperiment: ({ defaultEmitters, id = safeId() } = {}) => {
     console.log('Creating experiment')
+    engine.subscriptions.forEach((subscription) => subscription.unsubscribe())
     const savedParams = read()
     info(`*** Starting experiment ${id} with params:`, {
       id: savedParams.id,

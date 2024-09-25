@@ -26,6 +26,7 @@ const cleanCars = ({
   co2,
   distance,
   ema,
+  eta,
   lineNumber,
   vehicleType,
 }) => ({
@@ -39,6 +40,7 @@ const cleanCars = ({
   co2,
   distance,
   ema,
+  eta,
   cargo: cargo.length,
   passengers: passengers?.length,
   queue: queue.length,
