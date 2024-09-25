@@ -5,9 +5,6 @@ const findBestRouteToPickupBookings = async (truck, bookings) => {
   // Check if bookings is an array and log its length and content
   if (Array.isArray(bookings)) {
     console.log('Bookings dispatch: Array with length:', bookings.length)
-    /*bookings.forEach((booking, index) => {
-      console.log(`Booking [${index}]:`, formatBooking(booking))
-    })*/
   } else {
     console.log('Bookings dispatch: Not an array, value:', bookings)
   }
@@ -33,34 +30,6 @@ const findBestRouteToPickupBookings = async (truck, bookings) => {
       }
       return instruction
     })
-}
-
-// Helper function to format booking details for logging
-function formatBooking(booking) {
-  if (!booking) return 'Booking is undefined or null'
-  return {
-    id: booking.id,
-    type: booking.type,
-    pickup: {
-      name: booking.pickup?.name,
-      date: booking.pickup?.date,
-      position: formatPosition(booking.pickup?.position),
-    },
-    destination: {
-      name: booking.destination?.name,
-      position: formatPosition(booking.destination?.position),
-    },
-    status: booking.status,
-  }
-}
-
-// Helper function to format position details
-function formatPosition(position) {
-  if (!position) return 'Position not available'
-  return {
-    lat: position.lat,
-    lon: position.lon,
-  }
 }
 
 module.exports = {

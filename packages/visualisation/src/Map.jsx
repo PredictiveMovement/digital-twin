@@ -310,7 +310,7 @@ const Map = ({
         inbound: [167, 55, 255],
         outbound: [167, 55, 255],
         from: car.position,
-        to: car.heading,
+        to: car.destination,
       }
     })
     .filter(({ from, to }) => from && to)

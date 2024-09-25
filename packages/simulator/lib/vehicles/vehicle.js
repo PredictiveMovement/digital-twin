@@ -91,7 +91,7 @@ class Vehicle {
               route.started,
               currentTimeInMs,
               prevRemainingPointsInRoute
-            ) ?? this.heading
+            ) ?? this.destination
           const newPosition = new Position(position)
           if (route.started > currentTimeInMs) {
             return []
@@ -103,18 +103,18 @@ class Vehicle {
       .subscribe(() => null)
   }
 
-  navigateTo(position) {
-    this.heading = position
+  navigateTo(destination) {
+    this.destination = destination
 
-    if (this.position.distanceTo(position) < 100) {
+    if (this.position.distanceTo(destination) < 5) {
       // Do not route if we are close enough.
 
       this.stopped()
-      return position
+      return destination
     }
 
     return osrm
-      .route(this.position, this.heading)
+      .route(this.position, this.destination)
       .then(async (route) => {
         route.started = await this.time()
         this.route = route
@@ -122,17 +122,17 @@ class Vehicle {
           throw new Error(
             `Route not found from: ${JSON.stringify(
               this.position
-            )} to: ${JSON.stringify(this.heading)} from: ${JSON.stringify(
+            )} to: ${JSON.stringify(this.destination)} from: ${JSON.stringify(
               this.position
             )}`
           )
         this.simulate(this.route)
-        return this.heading
+        return this.destination
       })
       .catch(
         (err) =>
           error('Route error, retrying in 1s...', err) ||
-          wait(1000).then(() => this.navigateTo(position))
+          wait(1000).then(() => this.navigateTo(destination))
       )
   }
 
@@ -282,7 +282,7 @@ class Vehicle {
     this.speed = Math.round(km / h || 0)
     this.position = position
     this.lastPositionUpdate = time
-    this.ema = haversine(this.heading, this.position)
+    this.ema = haversine(this.destination, this.position)
     if (metersMoved > 0) {
       this.bearing = bearing(lastPosition, position) || 0
       this.movedEvents.next(this)
