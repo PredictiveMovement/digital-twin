@@ -106,7 +106,7 @@ class Vehicle {
   navigateTo(position) {
     this.heading = position
 
-    if (this.position.distanceTo(position) < 100) {
+    if (this.position.distanceTo(position) < 5) {
       // Do not route if we are close enough.
 
       this.stopped()
