@@ -25,10 +25,10 @@ spec:
       containers:
         - name: simulator
           image: ghcr.io/predictivemovement/telge-twin-simulator:2.6.33 # {"$imagepolicy": "flux-system:simulator"}
-          resources:
-            requests:
-              cpu: "1"
-              memory: "1Gi"
+          # resources:
+          #   requests:
+          #     cpu: "1"
+          #     memory: "1Gi"
           ports:
             - containerPort: 4000
           env:
