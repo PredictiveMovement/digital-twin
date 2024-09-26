@@ -19,9 +19,6 @@ const App = () => {
   const [speed, setSpeed] = useState(60)
   const [time, setTime] = useState(-3600000) // 00:00
   const [carLayer, setCarLayer] = useState(true)
-  const [busLayer, setBusLayer] = useState(true)
-  const [taxiLayer, setTaxiLayer] = useState(true)
-  const [busStopLayer, setBusStopLayer] = useState(true)
   const [passengerLayer, setPassengerLayer] = useState(true)
   const [postombudLayer, setPostombudLayer] = useState(false)
   const [recycleCollectionLayer, setRecycleCollectionLayer] = useState(false)
@@ -50,8 +47,6 @@ const App = () => {
     setPostombudLayer,
     recycleCollectionLayer,
     setRecycleCollectionLayer,
-    taxiLayer,
-    setTaxiLayer,
     passengerLayer,
     setPassengerLayer,
     busStopLayer,
@@ -215,7 +210,6 @@ const App = () => {
 
     setCurrentParameters(currentParameters)
     const layerSetFunctions = {
-      buses: setBusLayer,
       cars: setCarLayer,
       busStops: setBusStopLayer,
       busLines: setBusLineLayer,

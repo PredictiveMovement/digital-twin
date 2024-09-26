@@ -57,8 +57,6 @@ const engine = {
 
       // VEHICLES
       cars: regions.pipe(mergeMap((region) => region.cars)),
-      buses: regions.pipe(mergeMap((region) => region.buses)),
-      taxis: regions.pipe(mergeMap((region) => region.taxis)),
       recycleTrucks: regions.pipe(
         mergeMap((region) => region.recycleTrucks),
         catchError((err) => error('Experiment -> RecycleTrucks', err))

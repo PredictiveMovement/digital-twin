@@ -112,7 +112,6 @@ const Map = ({
         return [119, 155, 172, opacity]
       case 'privat':
         return [34, 166, 179, opacity]
-      case 'taxi':
       case 'anropsstyrd kollektivtrafik':
         return [255, 255, 0, opacity]
       default:

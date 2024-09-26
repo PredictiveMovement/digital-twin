@@ -1,4 +1,3 @@
-const { stops } = require('../publicTransport')('sl')
 const { filter, shareReplay } = require('rxjs')
 const Region = require('../../lib/region')
 
@@ -16,7 +15,6 @@ const stockholm = (municipalitiesStream) => {
     id: 'stockholm',
     name: 'Stockholm',
     municipalities: municipalities,
-    stops,
   })
 }
 

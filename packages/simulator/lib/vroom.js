@@ -44,15 +44,6 @@ const vroom = (module.exports = {
       },
     }
   },
-  taxiToVehicle({ position, passengerCapacity, destination, passengers }, i) {
-    return {
-      id: i,
-      //description: id,
-      capacity: [Math.max(1, passengerCapacity - (passengers?.length || 0))], // HACK: sometimes we will arrive here with -1 or 0 in capacity - we should fix that
-      start: [position.lon, position.lat],
-      end: destination ? [destination.lon, destination.lat] : undefined,
-    }
-  },
   truckToVehicle({ position, parcelCapacity, destination, cargo }, i) {
     return {
       id: i,

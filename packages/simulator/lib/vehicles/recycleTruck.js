@@ -6,7 +6,6 @@ class RecycleTruck extends Vehicle {
   constructor(args) {
     super(args)
     this.vehicleType = 'recycleTruck'
-    this.isPrivateCar = false
     this.co2PerKmKg = 0.000065 // NOTE: From a quick google. Needs to be verified.
     this.parcelCapacity = args.parcelCapacity
     this.plan = []

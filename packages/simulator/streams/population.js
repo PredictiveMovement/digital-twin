@@ -1,5 +1,5 @@
 const { from, shareReplay, filter } = require('rxjs')
-const { map } = require('rxjs/operators')
+const { map, take } = require('rxjs/operators')
 const { readCsv } = require('../adapters/csv')
 const coords = require('swe-coords')
 const { convertPosition } = require('../lib/distance')
@@ -12,6 +12,7 @@ function parseRuta(ruta) {
 
 function read() {
   return from(readCsv(process.cwd() + '/data/5arsklasser_1km.csv')).pipe(
+    take(10),
     map(({ id, rutstorl: area, ruta, beftotalt: population, ...ages }) => ({
       id,
       area,
