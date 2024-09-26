@@ -41,16 +41,12 @@ const App = () => {
   const activeLayers = {
     carLayer,
     setCarLayer,
-    busLayer,
-    setBusLayer,
     postombudLayer,
     setPostombudLayer,
     recycleCollectionLayer,
     setRecycleCollectionLayer,
     passengerLayer,
     setPassengerLayer,
-    busStopLayer,
-    setBusStopLayer,
     commercialAreasLayer,
     setCommercialAreasLayer,
     municipalityLayer,
@@ -72,7 +68,6 @@ const App = () => {
     setmunicipalities([])
     setPostombud([])
     setRecycleCollection([])
-    setBusStops([])
     setLineShapes([])
     setLatestLogMessage('')
     socket.emit('speed', speed) // reset speed on server
@@ -176,17 +171,6 @@ const App = () => {
     )
   })
 
-  const [busStops, setBusStops] = React.useState([])
-  useSocket('busStops', (busStops) => {
-    setReset(false)
-    setBusStops(
-      busStops.map(({ position, ...rest }) => ({
-        position: [position.lon, position.lat].map((s) => parseFloat(s)),
-        ...rest,
-      }))
-    )
-  })
-
   const [lineShapes, setLineShapes] = React.useState([])
   useSocket('lineShapes', (lineShapes) => {
     setLineShapes(lineShapes)
@@ -211,8 +195,6 @@ const App = () => {
     setCurrentParameters(currentParameters)
     const layerSetFunctions = {
       cars: setCarLayer,
-      busStops: setBusStopLayer,
-      busLines: setBusLineLayer,
       passengers: setPassengerLayer,
       postombud: setPostombudLayer,
       recycleCollection: setRecycleCollectionLayer,
@@ -297,7 +279,6 @@ const App = () => {
           passengers={passengers.length}
           cars={cars.length}
           bookings={bookings.length}
-          busStops={busStops.length}
           municipalities={municipalities.length}
           lineShapes={lineShapes.length}
           parameters={currentParameters}
@@ -339,7 +320,6 @@ const App = () => {
           bookings={bookings}
           postombud={postombud}
           recycleCollectionPoints={recycleCollectionPoints}
-          busStops={busStops}
           municipalities={municipalities}
           activeCar={activeCar}
           time={time}

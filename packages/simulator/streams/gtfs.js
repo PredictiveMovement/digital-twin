@@ -218,26 +218,7 @@ function gtfs(operator) {
     return new Date(year, month, day, +hour, +minute, +second)
   }
 
-  const busStops = gtfsStream('stop_times').pipe(
-    map(
-      ({
-        stop_id: stopId,
-        stop_headsign: finalStop,
-        trip_id: tripId,
-        arrival_time: arrivalTime,
-        departure_time: departureTime,
-      }) => ({
-        stopId,
-        tripId,
-        arrivalTime: correctTime(arrivalTime), // adjust for 27 hour clock
-        departureTime: correctTime(departureTime), // adjust for 27 hour clock
-        finalStop,
-      })
-    ),
-    shareReplay()
-  )
   return {
-    busStops,
     stops,
     trips,
     serviceDates,
