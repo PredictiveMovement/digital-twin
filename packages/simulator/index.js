@@ -34,11 +34,6 @@ const engine = {
     statistics.collectExperimentMetadata(parameters)
     const experiment = {
       logStream,
-      busStops: regions.pipe(
-        filter((region) => region.stops),
-        mergeMap((region) => region.stops),
-        shareReplay()
-      ),
       lineShapes: regions.pipe(
         filter((region) => region.lineShapes),
         mergeMap((region) => region.lineShapes),
@@ -57,8 +52,6 @@ const engine = {
 
       // VEHICLES
       cars: regions.pipe(mergeMap((region) => region.cars)),
-      buses: regions.pipe(mergeMap((region) => region.buses)),
-      taxis: regions.pipe(mergeMap((region) => region.taxis)),
       recycleTrucks: regions.pipe(
         mergeMap((region) => region.recycleTrucks),
         catchError((err) => error('Experiment -> RecycleTrucks', err))

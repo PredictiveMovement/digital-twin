@@ -322,9 +322,7 @@ class Vehicle {
     let co2
 
     switch (this.vehicleType) {
-      case 'bus':
       case 'car':
-      case 'taxi':
         co2 = distance * this.co2PerKmKg
         break
       default:

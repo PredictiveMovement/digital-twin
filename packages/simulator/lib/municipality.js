@@ -8,8 +8,8 @@ const {
   filter,
   catchError,
   first,
-  take,
   tap,
+  of,
 } = require('rxjs')
 const Fleet = require('./fleet')
 const { error } = require('./log')
@@ -69,14 +69,6 @@ class Municipality {
       shareReplay()
     )
 
-    this.buses = this.fleets.pipe(
-      mergeMap((fleet) => fleet.cars),
-      filter((car) => car.type === 'bus'),
-      catchError((err) => {
-        error('buses -> fleet', err)
-      })
-    )
-
     this.recycleTrucks = this.fleets.pipe(
       mergeMap((fleet) => fleet.cars),
       filter((car) => car.vehicleType === 'recycleTruck'),
@@ -86,17 +78,28 @@ class Municipality {
     )
 
     this.dispatchedBookings = merge(
-      // add recycle collection points to fleet of recycle trucks
       this.recycleCollectionPoints.pipe(
         mergeMap((booking) =>
           this.fleets.pipe(
-            first((fleet) => fleet.canHandleBooking(booking)),
-            mergeMap((fleet) => fleet.handleBooking(booking))
+            mergeMap((fleet) => 
+              from(fleet.canHandleBooking(booking)).pipe(
+                filter(Boolean),
+                mergeMap(() => from(fleet.handleBooking(booking))),
+                catchError((err) => {
+                  error(`Error handling booking ${booking.id}:`, err)
+                  return of(null)
+                })
+              )
+            ),
+            first((result) => result !== null, null)
           )
         ),
-        catchError((err) => error('municipality dispatchedBookings err', err))
+        filter((result) => result !== null),
+        catchError((err) => {
+          error('municipality dispatchedBookings err', err)
+          return of(null)
+        })
       )
-      // Should we add more types of bookings?
     )
 
     this.cars = merge(

@@ -11,8 +11,6 @@ function subscribe(experiment, socket) {
   return [
     defaultEmitters.includes('bookings') &&
       require('./routes/bookings').register(experiment, socket),
-    defaultEmitters.includes('buses') &&
-      require('./routes/buses').register(experiment, socket),
     defaultEmitters.includes('cars') &&
       require('./routes/cars').register(experiment, socket),
     defaultEmitters.includes('municipalities') &&
@@ -63,8 +61,6 @@ function register(io) {
 
     socket.emit('parameters', socket.data.experiment.parameters)
     socket.data.emitCars = defaultEmitters.includes('cars')
-    socket.data.emitTaxiUpdates = defaultEmitters.includes('taxis')
-    socket.data.emitBusUpdates = defaultEmitters.includes('buses')
 
     socket.emit('init')
     socket.on('reset', () => {
@@ -73,8 +69,6 @@ function register(io) {
     })
 
     socket.on('carLayer', (val) => (socket.data.emitCars = val))
-    socket.on('taxiUpdatesToggle', (val) => (socket.data.emitTaxiUpdates = val))
-    socket.on('busUpdatesToggle', (val) => (socket.data.emitBusUpdates = val))
     socket.on('experimentParameters', (value) => {
       info('New expiriment settings: ', value)
       save(value)

@@ -41,7 +41,6 @@ const Loading = ({
   connected,
   cars,
   bookings,
-  busStops,
   municipalities,
   parameters,
 }) => {
@@ -102,26 +101,6 @@ const Loading = ({
               bor och därefter slår vi upp adresser från Lantmäteriet och
               genererar därefter fiktiva personer som bor och arbetar på olika
               adresser och rör sig på ett regelbundet sätt.
-            </Typography>
-          </StepContent>
-        </Step>
-        <Step key={6}>
-          <StepLabel>
-            Skapar {busStops} avgångar och beräknar rutter...
-          </StepLabel>
-          <StepContent>
-            <Typography
-              color="white"
-              sx={{
-                color: 'white',
-                fontSize: '0.9rem',
-                maxWidth: '300px',
-              }}
-            >
-              Vi hämtar data från Trafiklab och beräknar rutter för varje
-              avgång. Dessa matchas mot de fordon som finns i varje municipality
-              så att fordonen utnyttjas optimalt. Du kan redigera hur många
-              fordon som finns i varje municipality i inställningarna.
             </Typography>
           </StepContent>
         </Step>

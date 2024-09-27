@@ -1,10 +1,9 @@
-const { Subject, filter, from, merge, of, firstValueFrom } = require('rxjs')
-const { shareReplay, mergeMap, share, tap, first } = require('rxjs/operators')
+const { Subject, from, merge, of, firstValueFrom } = require('rxjs')
+const { shareReplay, mergeMap, share, tap, filter, first } = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
 const RecycleTruck = require('./vehicles/recycleTruck')
-const Taxi = require('./vehicles/taxi')
 const Position = require('./models/position')
-const { error, debug, info } = require('./log')
+const { error, info, debug } = require('./log')
 
 const vehicleData = require('../data/telge/ruttdata_2024-09-03.json')
 
@@ -13,12 +12,6 @@ const vehicleTypes = {
     weight: 10 * 1000,
     parcelCapacity: 300,
     class: RecycleTruck,
-  },
-  taxi: {
-    weight: 1000,
-    parcelCapacity: 0,
-    passengerCapacity: 4,
-    class: Taxi,
   },
 }
 
@@ -66,7 +59,7 @@ class Fleet {
 
         if (!Vehicle) {
           error(`Unknown vehicle class for vehicle ID ${id}`)
-          return of(null) // Skip this vehicle if the type is unknown
+          return of(null)
         }
 
         return of(
@@ -102,8 +95,7 @@ class Fleet {
     debug(`🚗 Fleet ${this.name} checking booking ${booking.id}`)
     return firstValueFrom(
       this.cars.pipe(
-        first((car) => car.canHandleBooking(booking), false /* defaultValue */)
-        // TODO: handle case when all cars are busy or full?
+        first((car) => car.canHandleBooking(booking), false)
       )
     )
   }

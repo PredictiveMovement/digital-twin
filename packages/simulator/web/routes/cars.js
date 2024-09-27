@@ -9,7 +9,6 @@ const {
 } = require('rxjs')
 
 const cleanCars = ({
-  // TODO: Replace cleanCars with .toObject() on Vehicle
   position: { lon, lat },
   id,
   altitude,
@@ -19,19 +18,16 @@ const cleanCars = ({
   status,
   fleet,
   cargo,
-  passengers,
-  passengerCapacity,
   parcelCapacity,
   queue,
   co2,
   distance,
   ema,
   eta,
-  lineNumber,
   vehicleType,
 }) => ({
   id,
-  destination: (destination && [destination.lon, destination.lat]) || null, // contains route to plot or interpolate on client side.
+  destination: (destination && [destination.lon, destination.lat]) || null,
   speed,
   bearing,
   position: [lon, lat, altitude || 0],
@@ -42,11 +38,8 @@ const cleanCars = ({
   ema,
   eta,
   cargo: cargo.length,
-  passengers: passengers?.length,
   queue: queue.length,
-  passengerCapacity,
   parcelCapacity,
-  lineNumber,
   vehicleType,
 })
 
@@ -57,19 +50,15 @@ const register = (experiment, socket) => {
     }),
     experiment.carUpdates
       .pipe(
-        windowTime(100), // start a window every x ms
+        windowTime(100),
         mergeMap((win) =>
           win.pipe(
-            groupBy((car) => car.id), // create a stream for each car in this window
-            mergeMap((cars) => cars.pipe(last())) // take the last update in this window
+            groupBy((car) => car.id),
+            mergeMap((cars) => cars.pipe(last()))
           )
         ),
         filter((car) => {
           if (!car) return false
-          if (car.vehicleType === 'bus' && !socket.data.emitBusUpdates)
-            return false
-          if (car.vehicleType === 'taxi' && !socket.data.emitTaxiUpdates)
-            return false
           if (car.vehicleType === 'car' && !socket.data.emitCars) return false
           return true
         }),
@@ -83,17 +72,6 @@ const register = (experiment, socket) => {
       .subscribe((cars) => {
         if (!cars.length) return
         socket.volatile.emit('cars', cars)
-      }),
-    experiment.buses
-      .pipe(
-        map(cleanCars),
-        map((vehicle) => ({
-          experimentId: experiment.parameters.id,
-          ...vehicle,
-        }))
-      )
-      .subscribe((car) => {
-        socket.volatile.emit('cars', [car])
       }),
   ]
 }
