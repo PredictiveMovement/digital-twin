@@ -10,6 +10,9 @@ const {
   first,
   tap,
   of,
+  bufferCount,
+  groupBy,
+  take,
 } = require('rxjs')
 const Fleet = require('./fleet')
 const { error } = require('./log')
@@ -79,22 +82,63 @@ class Municipality {
 
     this.dispatchedBookings = merge(
       this.recycleCollectionPoints.pipe(
-        mergeMap((booking) =>
-          this.fleets.pipe(
-            mergeMap((fleet) => 
-              from(fleet.canHandleBooking(booking)).pipe(
-                filter(Boolean),
-                mergeMap(() => from(fleet.handleBooking(booking))),
-                catchError((err) => {
-                  error(`Error handling booking ${booking.id}:`, err)
-                  return of(null)
+        // Buffra 1000 bokningar innan vi processar dem
+        bufferCount(1000),
+        // Gruppera bokningarna baserat på postnummer
+        mergeMap((bookings) =>
+          from(bookings).pipe(
+            groupBy((booking) => booking.pickup.postalcode),
+            // För varje postnummergrupp
+            mergeMap((group$) =>
+              group$.pipe(
+                // Ta den första bokningen i varje grupp
+                take(1),
+                mergeMap((firstBooking) => {
+                  // Här skulle vi skicka till Vroom för planering
+                  // TODO: Implementera Vroom-integrering
+
+                  // Simulerar att vi får tillbaka en planerad rutt
+                  return of(firstBooking).pipe(
+                    mergeMap((plannedBooking) =>
+                      // Hitta alla bokningar med samma postnummer
+                      from(bookings).pipe(
+                        filter(
+                          (b) =>
+                            b.pickup.postalcode ===
+                            plannedBooking.pickup.postalcode
+                        ),
+                        // Skicka alla matchande bokningar till samma flotta
+                        mergeMap((booking) =>
+                          this.fleets.pipe(
+                            mergeMap((fleet) =>
+                              from(fleet.canHandleBooking(booking)).pipe(
+                                filter(Boolean),
+                                mergeMap(() =>
+                                  from(fleet.handleBooking(booking))
+                                ),
+                                catchError((err) => {
+                                  error(
+                                    `Error handling booking ${booking.id}:`,
+                                    err
+                                  )
+                                  return of(null)
+                                })
+                              )
+                            ),
+                            first((result) => result !== null, null)
+                          )
+                        )
+                      )
+                    )
+                  )
                 })
               )
-            ),
-            first((result) => result !== null, null)
+            )
           )
         ),
+        // Filtrera bort null-resultat
         filter((result) => result !== null),
+        // Hantera eventuella fel i hela processen
         catchError((err) => {
           error('municipality dispatchedBookings err', err)
           return of(null)
