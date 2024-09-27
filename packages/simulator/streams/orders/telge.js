@@ -11,6 +11,7 @@ const {
 const Position = require('../../lib/models/position')
 const Booking = require('../../lib/models/booking')
 const { error } = require('../../lib/log')
+const { nearest } = require('../../lib/pelias')
 //const { tr } = require('date-fns/locale')
 
 function read() {
@@ -52,17 +53,23 @@ function read() {
         })
       ),
       filter(({ pickup }) => pickup.position.isValid()),
-      toArray(),
-      mergeMap(async (rows) => {
-        return rows.map((row) => ({
+      map((row) => ({
+        ...row,
+        destination: {
+          name: 'LERHAGA 50, 151 66 Södertälje',
+          position: new Position({ lat: 59.135449, lon: 17.571239 }),
+        },
+      })),
+      mergeMap(async (row) => {
+        const pickup = await nearest(row.pickup.position, 'address')
+        return {
           ...row,
-          destination: {
-            name: 'LERHAGA 50, 151 66 Södertälje',
-            position: new Position({ lat: 59.135449, lon: 17.571239 }),
+          pickup: {
+            ...row.pickup,
+            postalcode: pickup.postalcode,
           },
-        }))
-      }, 1),
-      mergeAll(),
+        }
+      }, 10),
       map((row) => new Booking({ type: 'recycle', ...row })),
       //tap((booking) => console.log('📋 Booking created:', booking.id)), // Log each booking
       share(),

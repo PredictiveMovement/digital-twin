@@ -2,6 +2,7 @@ const fetch = require('node-fetch')
 const { info, error, write } = require('./log')
 const Position = require('./models/position')
 const peliasUrl = process.env.PELIAS_URL || 'https://pelias.telge.iteam.pub'
+const queue = require('./queueSubject')
 
 info('Pelias URL', peliasUrl)
 
@@ -9,7 +10,7 @@ const nearest = (position, layers = 'address,venue') => {
   const { lon, lat } = position
 
   const url = `${peliasUrl}/v1/reverse?point.lat=${lat}&point.lon=${lon}&size=1&layers=${layers}`
-  const promise = fetch(url)
+  const promise = queue(() => fetch(url))
     .then((response) => {
       if (!response.ok) throw 'pelias error: ' + response.statusText
       return response.json()
@@ -24,7 +25,14 @@ const nearest = (position, layers = 'address,venue') => {
         features: [
           {
             geometry,
-            properties: { name, street, houseNumber, localadmin, label },
+            properties: {
+              name,
+              street,
+              houseNumber,
+              localadmin,
+              label,
+              postalcode,
+            },
           } = {},
         ] = [],
       }) => ({
@@ -37,11 +45,12 @@ const nearest = (position, layers = 'address,venue') => {
           lon: geometry.coordinates[0],
           lat: geometry.coordinates[1],
         }),
+        postalcode,
       })
     )
     .catch((e) => {
-      const error = new Error().stack
-      error(`Error in pelias nearest\n${error}\n${e}\n\n`)
+      const err = new Error().stack
+      error(`Error in pelias nearest\n${err}\n${e}\n\n`)
     })
 
   return promise
@@ -53,7 +62,7 @@ const search = (name, near = null, layers = 'address,venue', size = 1000) => {
     : ''
   const url = `${peliasUrl}/v1/search?text=${encodedName}${focus}&size=${size}`
   write('p')
-  return fetch(url)
+  return queue(() => fetch(url))
     .then((response) => {
       if (!response.ok) throw 'pelias error: ' + response.statusText
       return response.json()
