@@ -18,6 +18,8 @@ const encodePolyline = function (geometry) {
   return polyline.encode(geometry.map(({ lat, lon }) => [lat, lon]))
 }
 
+const queue = require('./queueSubject')
+
 module.exports = {
   route(from, to) {
     // http://{server}/route/v1/{profile}/{coordinates}?alternatives={true|false}&steps={true|false}&geometries={polyline|geojson}&overview={full|simplified|false}&annotations={true|false}
@@ -25,7 +27,7 @@ module.exports = {
       [from.lon, from.lat],
       [to.lon, to.lat],
     ].join(';')
-    return (
+    return queue(() =>
       fetch(
         `${osrmUrl}/route/v1/driving/${coordinates}?steps=true&alternatives=false&overview=full&annotations=true`
       )
