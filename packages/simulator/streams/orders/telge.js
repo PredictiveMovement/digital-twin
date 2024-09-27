@@ -1,9 +1,10 @@
-const { from } = require('rxjs')
+const { from, pipe } = require('rxjs')
 const { map, mergeMap, catchError, filter, share } = require('rxjs/operators')
 const Position = require('../../lib/models/position')
 const Booking = require('../../lib/models/booking')
 const { error } = require('../../lib/log')
 const { nearest } = require('../../lib/pelias')
+const fs = require('fs')
 
 function read() {
   const rutter = require('../../data/telge/ruttdata_2024-09-03.json')
@@ -16,7 +17,7 @@ function read() {
 
   const LERHAGA_POSITION = new Position({ lat: 59.135449, lon: 17.571239 })
 
-  return from(rutter).pipe(
+  const output = pipe(
     map(
       ({
         Turid: id,
@@ -61,7 +62,11 @@ function read() {
         error(`Error fetching nearest address for row ${row.id}:`, err)
         return row
       }
-    }),
+    })
+  )
+  const cache = require('./output.json')
+
+  return from(cache).pipe(
     map((row) => new Booking({ type: 'recycle', ...row })),
     share(),
     catchError((err) => {
