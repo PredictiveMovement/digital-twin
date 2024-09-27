@@ -1,7 +1,7 @@
-const { Subject, mergeMap, catchError, from } = require('rxjs')
+const { Subject, mergeMap, catchError, from, tap } = require('rxjs')
 const { debug, error } = require('./log')
 
-const API_CALL_LIMIT = 10
+const API_CALL_LIMIT = 100
 
 const queueSubject = new Subject()
 
@@ -11,7 +11,10 @@ function queue(fn) {
   queueLength++
   return new Promise((resolve, reject) => {
     queueSubject.next({
-      fn,
+      fn: () => {
+        console.log('fn', queueLength)
+        return fn()
+      },
       resolve,
       reject,
     })
@@ -21,6 +24,7 @@ function queue(fn) {
 queueSubject
   .pipe(
     // Begränsa antalet samtidiga anrop med mergeMap
+    tap(() => console.log('queueLength', queueLength)),
     mergeMap(
       ({ fn, resolve, reject }) =>
         from(fn()).pipe(
