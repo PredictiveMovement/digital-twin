@@ -28,7 +28,7 @@ const commercialAreas = from(require('../data/scb_companyAreas.json').features)
 const activeMunicipalities = municipalities()
 
 const bookings = {
-  telge: require('./orders/telge.js'),
+  'Södertälje kommun': require('./orders/telge.js'),
 }
 
 function getPopulationSquares({ geometry: { coordinates } }) {
@@ -127,7 +127,7 @@ function read({ fleets }) {
           zip: postnummer,
           telephone: telefon,
           fleets: fleets || [],
-          recycleCollectionPoints: bookings.telge, // if södertälje..
+          recycleCollectionPoints: bookings[name],
           center,
           pickupPositions: pickupPositions || [],
           squares,

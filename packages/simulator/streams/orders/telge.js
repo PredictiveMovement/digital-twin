@@ -87,12 +87,12 @@ function read() {
       writeToCache('bookingsCache.json')
     )
 
-  const cacheExists = fs.existsSync('bookingsCache.jsonw')
+  const cacheExists = fs.existsSync('bookingsCache.json')
   const bookingsCache = cacheExists && fs.readFileSync('bookingsCache.json')
   const cache = !bookingsCache ? from([]) : from(JSON.parse(bookingsCache))
 
   return (cacheExists ? cache : from(rutter())).pipe(
-    map((row, i) => new Booking({ type: 'recycle', order: i * 5, ...row })),
+    map((row) => new Booking({ type: 'recycle', ...row })),
     shareReplay(),
     catchError((err) => {
       error('TELGE -> from JSON', err)
