@@ -97,7 +97,7 @@ class Booking {
       sender: this.sender,
       position: this.position?.toObject(),
       pickup: this.pickup,
-      carId: this.car?.id,
+      carId: this.car?.id || this.carId,
       destination: this.destination,
       pickupPosition: this.pickupPosition?.toObject(),
       deliveredPosition: this.deliveredPosition?.toObject(),

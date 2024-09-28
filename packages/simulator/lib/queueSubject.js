@@ -12,7 +12,6 @@ function queue(fn) {
   return new Promise((resolve, reject) => {
     queueSubject.next({
       fn: () => {
-        console.log('fn', queueLength)
         return fn()
       },
       resolve,
@@ -24,7 +23,6 @@ function queue(fn) {
 queueSubject
   .pipe(
     // Begränsa antalet samtidiga anrop med mergeMap
-    tap(() => console.log('queueLength', queueLength)),
     mergeMap(
       ({ fn, resolve, reject }) =>
         from(fn()).pipe(

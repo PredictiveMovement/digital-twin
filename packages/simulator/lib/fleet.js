@@ -1,11 +1,20 @@
 const { Subject, from, merge, of, firstValueFrom } = require('rxjs')
-const { shareReplay, mergeMap, share, tap, filter, first } = require('rxjs/operators')
+const {
+  shareReplay,
+  mergeMap,
+  share,
+  tap,
+  filter,
+  first,
+  groupBy,
+  map,
+  find,
+} = require('rxjs/operators')
 const { dispatch } = require('./dispatch/dispatchCentral')
 const RecycleTruck = require('./vehicles/recycleTruck')
 const Position = require('./models/position')
 const { error, info, debug } = require('./log')
-
-const vehicleData = require('../data/telge/ruttdata_2024-09-03.json')
+const telge = require('../streams/orders/telge')
 
 const vehicleTypes = {
   recycleTruck: {
@@ -32,29 +41,17 @@ class Fleet {
     this.percentageHomeDelivery = (percentageHomeDelivery || 0) / 100 || 0.15 // based on guestimates from workshop with transport actors in oct 2021
     this.percentageReturnDelivery = 0.1
     this.municipality = municipality
-    console.log(`🚢 Fleet ${this.name} created. Vehicles loaded from file}`)
 
-    const getOrdersFromCar = () => {
-      return vehicleData.reduce((vehicles, route) => {
-        const vehicleId = route.Bil.trim() // Bil is vehicle id
-
-        // If the vehicle does not exist, create it
-        if (!vehicles[vehicleId]) {
-          vehicles[vehicleId] = {
-            id: vehicleId,
-            avftyp: route.Avftyp,
-          }
-        }
-
-        return vehicles
-      }, {})
-    }
-
-    const vehicles = getOrdersFromCar()
+    const vehicleIds = telge.pipe(
+      filter((booking) => booking.carId),
+      groupBy((booking) => booking.carId),
+      mergeMap((group) => group.pipe(first())),
+      map((booking) => [booking.carId, booking])
+    )
 
     // Create vehicles based on the JSON data
-    this.cars = from(Object.entries(vehicles)).pipe(
-      mergeMap(([id, vehicleData]) => {
+    this.cars = vehicleIds.pipe(
+      mergeMap(([id, { recyclingType }]) => {
         const Vehicle = vehicleTypes['recycleTruck'].class
 
         if (!Vehicle) {
@@ -65,16 +62,13 @@ class Fleet {
         return of(
           new Vehicle({
             ...vehicleTypes['recycleTruck'],
-            id: `recycleTruck-${id}`, // Use Bil as the unique vehicle ID
+            id,
             fleet: this,
             position: this.hub.position,
-            plan: vehicleData.routes,
-            carId: id,
-            recyclingType: vehicleData.avftyp,
+            recyclingType,
           })
         )
       }),
-      filter((car) => car !== null),
       tap((car) =>
         info(
           `🚛 Fleet ${this.name} created vehicle ${car.id} (${car.recyclingType})`
@@ -92,16 +86,21 @@ class Fleet {
   }
 
   async canHandleBooking(booking) {
-    debug(`🚗 Fleet ${this.name} checking booking ${booking.id}`)
+    return true // We can handle all bookings - we only use one fleet in this simulation
     return firstValueFrom(
-      this.cars.pipe(
-        first((car) => car.canHandleBooking(booking), false)
-      )
+      this.cars.pipe(first((car) => car.canHandleBooking(booking), false))
     )
   }
 
   async handleBooking(booking, car) {
+    info(`🚗 Fleet ${this.name} handling booking ${booking.id}`)
     booking.fleet = this
+    if (booking.carId) {
+      car = await firstValueFrom(
+        from(this.cars).pipe(find((car) => car.id === booking.carId))
+      )
+    }
+
     if (car) {
       debug(`📦 Dispatching ${booking.id} to ${this.name} (manual)`)
       this.manualDispatchedBookings.next(booking)

@@ -8,21 +8,18 @@ class RecycleTruck extends Vehicle {
     this.vehicleType = 'recycleTruck'
     this.co2PerKmKg = 0.000065 // NOTE: From a quick google. Needs to be verified.
     this.parcelCapacity = args.parcelCapacity
-    this.plan = []
 
     this.position = args.position
     this.startPosition = args.startPosition || args.position
 
-    this.carId = args.carId
-    this.id = args.carId
+    this.id = args.id
     this.recyclingType = args.recyclingType
   }
 
   canHandleBooking(booking) {
     if (booking.type !== 'recycle') return false
     const hasCapacity = this.cargo.length < this.parcelCapacity
-    const isCorrectCar = booking.carId === this.carId
-    return hasCapacity && isCorrectCar
+    return hasCapacity
   }
 
   async waitAtPickup() {

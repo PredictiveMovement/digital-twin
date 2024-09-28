@@ -1,23 +1,25 @@
 const { from, pipe } = require('rxjs')
-const { map, mergeMap, catchError, filter, share } = require('rxjs/operators')
+const {
+  map,
+  mergeMap,
+  catchError,
+  filter,
+  shareReplay,
+  raceWith,
+  toArray,
+  mergeAll,
+  tap,
+  take,
+} = require('rxjs/operators')
 const Position = require('../../lib/models/position')
 const Booking = require('../../lib/models/booking')
 const { error } = require('../../lib/log')
 const { nearest } = require('../../lib/pelias')
 const fs = require('fs')
+const LERHAGA_POSITION = new Position({ lat: 59.135449, lon: 17.571239 })
 
-function read() {
-  const rutter = require('../../data/telge/ruttdata_2024-09-03.json')
-  console.log('TELGE -> read: Loaded data with', rutter.length, 'entries')
-
-  if (!Array.isArray(rutter) || rutter.length === 0) {
-    console.error('Error: No data loaded from the JSON file.')
-    return from([])
-  }
-
-  const LERHAGA_POSITION = new Position({ lat: 59.135449, lon: 17.571239 })
-
-  const output = pipe(
+const mapper = () =>
+  pipe(
     map(
       ({
         Turid: id,
@@ -64,11 +66,34 @@ function read() {
       }
     })
   )
-  const cache = require('./output.json')
 
-  return from(cache).pipe(
-    map((row) => new Booking({ type: 'recycle', ...row })),
-    share(),
+function writeToCache(filename) {
+  return pipe(
+    toArray(),
+    tap((rows) => fs.writeFileSync(filename, JSON.stringify(rows))),
+    tap(() => console.log(`TELGE -> writeToCache: ${filename}`)),
+    mergeAll(),
+    catchError((err) => {
+      error('TELGE -> writeToCache', err)
+      return from([])
+    })
+  )
+}
+
+function read() {
+  const rutter = () =>
+    from(require('../../data/telge/ruttdata_2024-09-03.json')).pipe(
+      mapper(),
+      writeToCache('bookingsCache.json')
+    )
+
+  const cacheExists = fs.existsSync('bookingsCache.jsonw')
+  const bookingsCache = cacheExists && fs.readFileSync('bookingsCache.json')
+  const cache = !bookingsCache ? from([]) : from(JSON.parse(bookingsCache))
+
+  return (cacheExists ? cache : from(rutter())).pipe(
+    map((row, i) => new Booking({ type: 'recycle', order: i * 5, ...row })),
+    shareReplay(),
     catchError((err) => {
       error('TELGE -> from JSON', err)
       return from([])
