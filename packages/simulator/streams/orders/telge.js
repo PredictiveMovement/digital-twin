@@ -83,6 +83,7 @@ function writeToCache(filename) {
 function read() {
   const rutter = () =>
     from(require('../../data/telge/ruttdata_2024-09-03.json')).pipe(
+      tap('NO CACHE. Generating. This might take a few minutes...'),
       mapper(),
       writeToCache('bookingsCache.json')
     )
