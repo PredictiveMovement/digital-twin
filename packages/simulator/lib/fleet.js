@@ -93,7 +93,7 @@ class Fleet {
   }
 
   async handleBooking(booking, car) {
-    info(`🚗 Fleet ${this.name} handling booking ${booking.id}`)
+    //info(`🚗 Fleet ${this.name} handling booking ${booking.id}`)
     booking.fleet = this
     if (booking.carId) {
       car = await firstValueFrom(

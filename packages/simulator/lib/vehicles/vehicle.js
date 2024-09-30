@@ -104,6 +104,7 @@ class Vehicle {
   }
 
   navigateTo(destination) {
+    console.log('Navigating')
     this.destination = destination
 
     if (this.position.distanceTo(destination) < 5) {
