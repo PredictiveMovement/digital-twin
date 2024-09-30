@@ -58,32 +58,38 @@ class Municipality {
 
     console.log('Fleet:', fleets)
 
-    this.clusterBookingsByPostalCode = (bookings) => {
-      return bookings.reduce((clusters, booking) => {
-        const postalCode = booking.pickup.postalcode || 'unknown'
-        if (!clusters[postalCode]) {
-          clusters[postalCode] = []
-        }
-        clusters[postalCode].push(booking)
-        return clusters
-      }, {})
-    }
+    this.initializeFleets()
+  }
 
-    // Hämta unika bilar från Telge-bokningar
-    this.uniqueVehicles = telge.pipe(
+  initializeFleets() {
+    this.uniqueVehicles = this.getUniqueVehicles()
+
+    this.fleets = this.createFleets()
+
+    this.recycleTrucks = this.getRecycleTrucks()
+
+    this.dispatchedBookings = this.dispatchBookings()
+
+    this.cars = this.getAllCars()
+  }
+
+  getUniqueVehicles() {
+    return telge.pipe(
       filter((booking) => booking.carId),
       groupBy((booking) => booking.carId),
       mergeMap((group) => group.pipe(first())),
-      map((booking) => [booking.carId, booking])
+      map((booking) => [booking.carId, booking]),
+      toArray(),
+      shareReplay(1)
     )
+  }
 
-    // Skapa en fleet per postnummer
-    this.fleets = this.recycleCollectionPoints.pipe(
+  createFleets() {
+    return this.recycleCollectionPoints.pipe(
       toArray(),
       mergeMap((bookings) => {
         const clusters = this.clusterBookingsByPostalCode(bookings)
         return this.uniqueVehicles.pipe(
-          toArray(),
           mergeMap((uniqueVehicles) => {
             info(`Totalt antal unika fordon: ${uniqueVehicles.length}`)
             const totalBookings = Object.values(clusters).reduce(
@@ -93,44 +99,13 @@ class Municipality {
             info(`Totalt antal bokningar: ${totalBookings}`)
 
             const groupedClusters = this.groupClustersByProximity(clusters)
-
-            // Beräkna ideal fördelning av fordon
-            let idealVehicleDistribution = Object.entries(groupedClusters).map(
-              ([groupName, groupData]) => {
-                return {
-                  groupName,
-                  bookings: groupData.bookings.length,
-                  vehicles: 0,
-                }
-              }
+            const fleetDistribution = this.calculateFleetDistribution(
+              groupedClusters,
+              uniqueVehicles.length
             )
 
-            // Säkerställ att varje fleet får minst ett fordon
-            let remainingVehicles = uniqueVehicles.length
-            idealVehicleDistribution.forEach((group) => {
-              group.vehicles = 1
-              remainingVehicles--
-            })
-
-            // Fördela resterande fordon baserat på bokningar
-            while (remainingVehicles > 0) {
-              const totalUnallocatedBookings = idealVehicleDistribution.reduce(
-                (sum, group) => sum + group.bookings,
-                0
-              )
-              const groupToAllocate = idealVehicleDistribution.reduce(
-                (max, current) =>
-                  current.bookings / current.vehicles >
-                  max.bookings / max.vehicles
-                    ? current
-                    : max
-              )
-              groupToAllocate.vehicles++
-              remainingVehicles--
-            }
-
-            return from(idealVehicleDistribution).pipe(
-              map(({ groupName, vehicles }, index) => {
+            return from(Object.entries(fleetDistribution)).pipe(
+              map(([groupName, { vehicles }], index) => {
                 const groupData = groupedClusters[groupName]
                 const fleetName = `Fleet-${index}`
                 const fleetVehicles = uniqueVehicles.splice(0, vehicles)
@@ -160,16 +135,20 @@ class Municipality {
       }),
       shareReplay()
     )
+  }
 
-    this.recycleTrucks = this.fleets.pipe(
+  getRecycleTrucks() {
+    return this.fleets.pipe(
       mergeMap((fleet) => fleet.cars),
       catchError((err) => {
         error('recycleTrucks -> fleet', err)
         return of(null)
       })
     )
+  }
 
-    this.dispatchedBookings = this.fleets.pipe(
+  dispatchBookings() {
+    return this.fleets.pipe(
       toArray(),
       mergeMap((fleets) => dispatch(fleets, this.recycleCollectionPoints)),
       catchError((err) => {
@@ -177,11 +156,24 @@ class Municipality {
         return of(null)
       })
     )
+  }
 
-    this.cars = merge(
+  getAllCars() {
+    return merge(
       this.privateCars,
       this.fleets.pipe(mergeMap((fleet) => fleet.cars))
     ).pipe(shareReplay())
+  }
+
+  clusterBookingsByPostalCode(bookings) {
+    return bookings.reduce((clusters, booking) => {
+      const postalCode = booking.pickup.postalcode || 'unknown'
+      if (!clusters[postalCode]) {
+        clusters[postalCode] = []
+      }
+      clusters[postalCode].push(booking)
+      return clusters
+    }, {})
   }
 
   groupClustersByProximity(clusters) {
@@ -200,55 +192,43 @@ class Municipality {
     return groupedClusters
   }
 
-  createBalancedFleets(sortedClusters, fleetCount) {
-    const fleets = {}
-    for (let i = 0; i < fleetCount; i++) {
-      fleets[`Fleet-${i}`] = { postalCodes: [], bookings: [] }
+  calculateFleetDistribution(groupedClusters, totalVehicles) {
+    const fleetDistribution = {}
+    let remainingVehicles = totalVehicles
+
+    // Först, ge varje grupp minst ett fordon
+    Object.keys(groupedClusters).forEach((groupName) => {
+      fleetDistribution[groupName] = { vehicles: 1 }
+      remainingVehicles--
+    })
+
+    // Fördela resterande fordon baserat på antalet bokningar
+    const totalBookings = Object.values(groupedClusters).reduce(
+      (sum, group) => sum + group.bookings.length,
+      0
+    )
+
+    while (remainingVehicles > 0) {
+      const groupToAllocate = Object.entries(groupedClusters).reduce(
+        (max, [groupName, groupData]) => {
+          const currentVehicles = fleetDistribution[groupName].vehicles
+          const bookingsPerVehicle = groupData.bookings.length / currentVehicles
+          return bookingsPerVehicle > max.bookingsPerVehicle
+            ? { groupName, bookingsPerVehicle }
+            : max
+        },
+        { groupName: null, bookingsPerVehicle: -1 }
+      )
+
+      if (groupToAllocate.groupName) {
+        fleetDistribution[groupToAllocate.groupName].vehicles++
+        remainingVehicles--
+      } else {
+        break
+      }
     }
 
-    sortedClusters.forEach(([postalCode, bookings], index) => {
-      const fleetIndex = index % fleetCount
-      const fleetName = `Fleet-${fleetIndex}`
-      fleets[fleetName].postalCodes.push(postalCode)
-      fleets[fleetName].bookings = fleets[fleetName].bookings.concat(bookings)
-    })
-
-    return fleets
-  }
-
-  groupClusters(sortedClusters, desiredFleetCount) {
-    const groupedClusters = {}
-    const clusterCount = sortedClusters.length
-    const clustersPerFleet = Math.ceil(clusterCount / desiredFleetCount)
-
-    sortedClusters.forEach(([postalCode, bookings], index) => {
-      const fleetIndex = Math.floor(index / clustersPerFleet)
-      const fleetName = `Fleet-${fleetIndex}`
-
-      if (!groupedClusters[fleetName]) {
-        groupedClusters[fleetName] = { postalCodes: [], bookings: [] }
-      }
-
-      groupedClusters[fleetName].postalCodes.push(postalCode)
-      groupedClusters[fleetName].bookings =
-        groupedClusters[fleetName].bookings.concat(bookings)
-    })
-
-    return groupedClusters
-  }
-
-  groupPostalCodesToFleets(postalCodes, desiredFleetCount) {
-    const fleetPostalCodes = {}
-    postalCodes.forEach((pc, index) => {
-      const fleetName = `Fleet-${Math.floor(
-        index / Math.ceil(postalCodes.length / desiredFleetCount)
-      )}`
-      if (!fleetPostalCodes[fleetName]) {
-        fleetPostalCodes[fleetName] = []
-      }
-      fleetPostalCodes[fleetName].push(pc)
-    })
-    return fleetPostalCodes
+    return fleetDistribution
   }
 }
 
