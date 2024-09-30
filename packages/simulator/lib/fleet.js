@@ -84,8 +84,7 @@ class Fleet {
       filter((cars) => cars.some((car) => car.canHandleBooking(booking))),
       mergeMap((cars) => {
         const availableCar = cars.find(
-          (car) =>
-            car.status === 'ready' || (car.queue && car.queue.length < 500)
+          (car) => car.status === 'ready' && car.canHandleBooking(booking)
         )
         if (availableCar) {
           return from(availableCar.handleBooking(booking))
