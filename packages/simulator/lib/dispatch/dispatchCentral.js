@@ -1,19 +1,25 @@
-const { from } = require('rxjs')
-const { mergeMap, find, tap, filter } = require('rxjs/operators')
-const { info } = require('../log')
+const { from, of } = require('rxjs')
+const { mergeMap, catchError } = require('rxjs/operators')
+const { info, error } = require('../log')
 
-const dispatch = (cars, bookings) => {
+const dispatch = (fleets, bookings) => {
   return from(bookings).pipe(
-    filter((booking) => booking.carId),
-    mergeMap((booking) =>
-      cars.pipe(
-        tap((car) => info(`🚗 Finding car for ${booking.carId} === ${car.id}`)),
-        find((car) => car.id === booking.carId),
-        filter(Boolean),
-        tap((car) => info(`🎯 Dispatching ${booking.id} to ${car.id}`)),
-        mergeMap((car) => car.handleBooking(booking))
-      )
-    )
+    mergeMap((booking) => {
+      const postalCode = booking.pickup.postalcode || 'unknown'
+      const fleet = fleets.find((f) => f.postalCodes.includes(postalCode))
+
+      if (!fleet) {
+        info(`❌ Ingen fleet hittades för postnummer ${postalCode}`)
+        return of(booking)
+      }
+
+      //info(`🎯 Tilldelar bokning ${booking.id} till fleet ${fleet.name}`)
+      return fleet.handleBooking(booking)
+    }),
+    catchError((err) => {
+      error(`Fel vid tilldelning av bokning:`, err)
+      return of(null)
+    })
   )
 }
 
