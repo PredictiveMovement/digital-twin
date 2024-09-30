@@ -88,7 +88,8 @@ class Municipality {
     return this.recycleCollectionPoints.pipe(
       toArray(),
       mergeMap((bookings) => {
-        const clusters = this.clusterBookingsByPostalCode(bookings)
+        const clusters =
+          this.clusterBookingsByPostalCodeAndRecyclingType(bookings)
         return this.uniqueVehicles.pipe(
           mergeMap((uniqueVehicles) => {
             info(`Totalt antal unika fordon: ${uniqueVehicles.length}`)
@@ -98,20 +99,21 @@ class Municipality {
             )
             info(`Totalt antal bokningar: ${totalBookings}`)
 
-            const groupedClusters = this.groupClustersByProximity(clusters)
+            const groupedClusters =
+              this.groupClustersByProximityAndRecyclingType(clusters)
             const fleetDistribution = this.calculateFleetDistribution(
               groupedClusters,
-              uniqueVehicles.length
+              uniqueVehicles
             )
 
             return from(Object.entries(fleetDistribution)).pipe(
-              map(([groupName, { vehicles }], index) => {
+              map(([groupName, { vehicles, recyclingType }], index) => {
                 const groupData = groupedClusters[groupName]
-                const fleetName = `Fleet-${index}`
-                const fleetVehicles = uniqueVehicles.splice(0, vehicles)
+                const fleetName = `Fleet-${index}-${recyclingType}`
+                const fleetVehicles = vehicles
 
                 info(
-                  `${fleetName}: ${groupData.postalCodes.length} postnummer - ${groupData.bookings.length} bokningar, tilldelat ${vehicles} fordon`
+                  `${fleetName}: ${groupData.postalCodes.length} postnummer - ${groupData.bookings.length} bokningar, tilldelat ${vehicles.length} fordon`
                 )
 
                 return new Fleet({
@@ -122,6 +124,7 @@ class Municipality {
                   postalCodes: groupData.postalCodes,
                   bookings: groupData.bookings,
                   vehicles: fleetVehicles,
+                  recyclingType: recyclingType,
                 })
               }),
               tap((fleet) =>
@@ -165,24 +168,31 @@ class Municipality {
     ).pipe(shareReplay())
   }
 
-  clusterBookingsByPostalCode(bookings) {
+  clusterBookingsByPostalCodeAndRecyclingType(bookings) {
     return bookings.reduce((clusters, booking) => {
       const postalCode = booking.pickup.postalcode || 'unknown'
-      if (!clusters[postalCode]) {
-        clusters[postalCode] = []
+      const recyclingType = booking.recyclingType
+      const key = `${postalCode}-${recyclingType}`
+      if (!clusters[key]) {
+        clusters[key] = []
       }
-      clusters[postalCode].push(booking)
+      clusters[key].push(booking)
       return clusters
     }, {})
   }
 
-  groupClustersByProximity(clusters) {
+  groupClustersByProximityAndRecyclingType(clusters) {
     const groupedClusters = {}
 
-    Object.entries(clusters).forEach(([postalCode, bookings]) => {
-      const groupKey = postalCode.substring(0, 3)
+    Object.entries(clusters).forEach(([key, bookings]) => {
+      const [postalCode, recyclingType] = key.split('-')
+      const groupKey = `${postalCode.substring(0, 3)}-${recyclingType}`
       if (!groupedClusters[groupKey]) {
-        groupedClusters[groupKey] = { postalCodes: [], bookings: [] }
+        groupedClusters[groupKey] = {
+          postalCodes: [],
+          bookings: [],
+          recyclingType,
+        }
       }
       groupedClusters[groupKey].postalCodes.push(postalCode)
       groupedClusters[groupKey].bookings =
@@ -192,41 +202,66 @@ class Municipality {
     return groupedClusters
   }
 
-  calculateFleetDistribution(groupedClusters, totalVehicles) {
+  calculateFleetDistribution(groupedClusters, uniqueVehicles) {
     const fleetDistribution = {}
-    let remainingVehicles = totalVehicles
 
-    // Först, ge varje grupp minst ett fordon
-    Object.keys(groupedClusters).forEach((groupName) => {
-      fleetDistribution[groupName] = { vehicles: 1 }
-      remainingVehicles--
+    // Group vehicles by recyclingType
+    const vehiclesByType = uniqueVehicles.reduce((acc, vehicle) => {
+      const recyclingType = vehicle[1].recyclingType
+      if (!acc[recyclingType]) {
+        acc[recyclingType] = []
+      }
+      acc[recyclingType].push(vehicle)
+      return acc
+    }, {})
+
+    Object.entries(groupedClusters).forEach(([groupName, groupData]) => {
+      const { recyclingType } = groupData
+      if (
+        vehiclesByType[recyclingType] &&
+        vehiclesByType[recyclingType].length > 0
+      ) {
+        fleetDistribution[groupName] = {
+          vehicles: [vehiclesByType[recyclingType].pop()],
+          recyclingType,
+        }
+      }
     })
 
-    // Fördela resterande fordon baserat på antalet bokningar
-    const totalBookings = Object.values(groupedClusters).reduce(
-      (sum, group) => sum + group.bookings.length,
-      0
-    )
+    // Distribute remaining vehicles
+    Object.entries(vehiclesByType).forEach(([recyclingType, vehicles]) => {
+      while (vehicles.length > 0) {
+        const groupToAllocate = Object.entries(groupedClusters)
+          .filter(([_, data]) => data.recyclingType === recyclingType)
+          .reduce(
+            (max, [groupName, groupData]) => {
+              const currentVehicles = (
+                fleetDistribution[groupName]?.vehicles || []
+              ).length
+              const bookingsPerVehicle =
+                groupData.bookings.length / (currentVehicles || 1)
+              return bookingsPerVehicle > max.bookingsPerVehicle
+                ? { groupName, bookingsPerVehicle }
+                : max
+            },
+            { groupName: null, bookingsPerVehicle: -1 }
+          )
 
-    while (remainingVehicles > 0) {
-      const groupToAllocate = Object.entries(groupedClusters).reduce(
-        (max, [groupName, groupData]) => {
-          const currentVehicles = fleetDistribution[groupName].vehicles
-          const bookingsPerVehicle = groupData.bookings.length / currentVehicles
-          return bookingsPerVehicle > max.bookingsPerVehicle
-            ? { groupName, bookingsPerVehicle }
-            : max
-        },
-        { groupName: null, bookingsPerVehicle: -1 }
-      )
-
-      if (groupToAllocate.groupName) {
-        fleetDistribution[groupToAllocate.groupName].vehicles++
-        remainingVehicles--
-      } else {
-        break
+        if (groupToAllocate.groupName) {
+          if (!fleetDistribution[groupToAllocate.groupName]) {
+            fleetDistribution[groupToAllocate.groupName] = {
+              vehicles: [],
+              recyclingType,
+            }
+          }
+          fleetDistribution[groupToAllocate.groupName].vehicles.push(
+            vehicles.pop()
+          )
+        } else {
+          break
+        }
       }
-    }
+    })
 
     return fleetDistribution
   }

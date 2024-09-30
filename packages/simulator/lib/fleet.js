@@ -29,6 +29,7 @@ class Fleet {
     postalCodes,
     bookings,
     vehicles,
+    recyclingType,
   }) {
     this.name = name
     this.type = type
@@ -37,6 +38,7 @@ class Fleet {
     this.postalCodes = postalCodes
     this.bookings = bookings
     this.vehicles = vehicles
+    this.recyclingType = recyclingType
 
     this.cars = from(this.vehicles).pipe(
       mergeMap((vehicle) => {
@@ -47,13 +49,13 @@ class Fleet {
             id: vehicle[0], // Använd carId som id
             fleet: this,
             position: this.hub.position,
-            recyclingType: vehicle[1].recyclingType,
+            recyclingType: this.recyclingType,
           })
         )
       }),
       tap((car) =>
         info(
-          `🚛 Fleet ${this.name} skapade fordon ${car.id} med reycleType ${car.recyclingType}`
+          `🚛 Fleet ${this.name} skapade fordon ${car.id} med recycleType ${car.recyclingType}`
         )
       ),
       shareReplay()
@@ -81,17 +83,19 @@ class Fleet {
   handleBooking(booking) {
     return this.cars.pipe(
       toArray(),
-      filter((cars) => cars.some((car) => car.canHandleBooking(booking))),
       mergeMap((cars) => {
-        const availableCar = cars.find(
-          (car) => car.status === 'ready' && car.canHandleBooking(booking)
+        const availableCars = cars.filter((car) =>
+          car.canHandleBooking(booking)
         )
-        if (availableCar) {
-          return from(availableCar.handleBooking(booking))
-        } else {
-          warn(
-            `❌ Fleet ${this.name}: Ingen lämplig bil hittades för bokning ${booking.id}`
+        if (availableCars.length > 0) {
+          const carWithLeastBookings = availableCars.reduce((min, car) =>
+            car.queue.length + (car.booking ? 1 : 0) <
+            min.queue.length + (min.booking ? 1 : 0)
+              ? car
+              : min
           )
+          return from(carWithLeastBookings.handleBooking(booking))
+        } else {
           this.unhandledBookings.next(booking)
           return of(booking)
         }
