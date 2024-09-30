@@ -61,11 +61,9 @@ async function cachedFetch(method, params, fetchFunc) {
   const cachedData = await getFromCache(cacheKey)
 
   if (cachedData) {
-    console.log(`Cache hit for ${method}`)
     return cachedData
   }
 
-  console.log(`Cache miss for ${method}`)
   const data = await fetchFunc()
   await saveToCache(cacheKey, data)
   return data
