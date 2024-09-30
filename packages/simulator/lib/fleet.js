@@ -51,7 +51,11 @@ class Fleet {
           })
         )
       }),
-      tap((car) => info(`🚛 Fleet ${this.name} skapade fordon ${car.id}`)),
+      tap((car) =>
+        info(
+          `🚛 Fleet ${this.name} skapade fordon ${car.id} med reycleType ${car.recyclingType}`
+        )
+      ),
       shareReplay()
     )
 
@@ -77,6 +81,7 @@ class Fleet {
   handleBooking(booking) {
     return this.cars.pipe(
       toArray(),
+      filter((cars) => cars.some((car) => car.canHandleBooking(booking))),
       mergeMap((cars) => {
         const availableCar = cars.find(
           (car) =>

@@ -17,9 +17,9 @@ class RecycleTruck extends Vehicle {
   }
 
   canHandleBooking(booking) {
-    if (booking.type !== 'recycle') return false
+    const canHandleRecyclingType = booking.recyclingType === this.recyclingType
     const hasCapacity = this.cargo.length < this.parcelCapacity
-    return hasCapacity
+    return canHandleRecyclingType && hasCapacity
   }
 
   async waitAtPickup() {

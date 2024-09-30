@@ -50,6 +50,7 @@ const vehicleName = (vehicleType) => {
 }
 
 const CarInfo = ({ data }) => {
+  console.log(data)
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <div>
@@ -68,6 +69,9 @@ const CarInfo = ({ data }) => {
         </Paragraph>
         <Paragraph>
           Status: <strong>{data.status}</strong>
+        </Paragraph>
+        <Paragraph>
+          Återvinningstyp: <strong>{data.recyclingType}</strong>
         </Paragraph>
 
         <Paragraph>&nbsp;</Paragraph>
@@ -171,6 +175,7 @@ const GenericInfo = ({ data }) => {
       <Paragraph>
         Typ: {data.type === 'recycle' ? 'återvinningskärl' : data.type}
       </Paragraph>
+      <Paragraph>Återvinningstyp: {data.recyclingType}</Paragraph>
       <Paragraph>Bil: {data.carId}</Paragraph>
       {data.deliveryTime ? (
         <Paragraph>
