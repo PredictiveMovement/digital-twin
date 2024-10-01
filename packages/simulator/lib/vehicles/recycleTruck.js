@@ -15,6 +15,7 @@ class RecycleTruck extends Vehicle {
     this.startPosition = args.startPosition || args.position
 
     this.id = args.id
+    this.carId = args.carId
     this.recyclingTypes = args.recyclingTypes
   }
 

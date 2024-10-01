@@ -71,7 +71,7 @@ const CarInfo = ({ data }) => {
           Status: <strong>{data.status}</strong>
         </Paragraph>
         <Paragraph>
-          Återvinningstyp: <strong>{data.recyclingType}</strong>
+          Återvinningstyper: <strong>{data?.recyclingTypes.join(', ')}</strong>
         </Paragraph>
 
         <Paragraph>&nbsp;</Paragraph>

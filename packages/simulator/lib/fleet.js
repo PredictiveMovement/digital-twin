@@ -48,6 +48,7 @@ class Fleet {
           new Vehicle({
             ...vehicleTypes[this.type],
             id: vehicleData.id,
+            carId: vehicleData.carId,
             fleet: this,
             position: this.hub.position,
             recyclingTypes: vehicleData.recyclingTypes,
@@ -56,7 +57,7 @@ class Fleet {
       }),
       tap((car) =>
         info(
-          `🚛 Fleet ${this.name} skapade fordon ${car.id} med recycleTypes ${car.recyclingTypes}`
+          `🚛 Fleet ${this.name} skapade fordon ${car.carId} med recycleTypes ${car.recyclingTypes}`
         )
       ),
       shareReplay()
