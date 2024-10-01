@@ -1,3 +1,5 @@
+// telge.js
+
 const { from, pipe } = require('rxjs')
 const {
   map,
@@ -5,11 +7,8 @@ const {
   catchError,
   filter,
   shareReplay,
-  raceWith,
   toArray,
-  mergeAll,
   tap,
-  take,
 } = require('rxjs/operators')
 const Position = require('../../lib/models/position')
 const Booking = require('../../lib/models/booking')

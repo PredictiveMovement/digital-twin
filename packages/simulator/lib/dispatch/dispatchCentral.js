@@ -1,3 +1,5 @@
+// dispatchCentral.js
+
 const { from, of } = require('rxjs')
 const { mergeMap, catchError } = require('rxjs/operators')
 const { info, error } = require('../log')
@@ -8,14 +10,14 @@ const dispatch = (fleets, bookings) => {
       const postalCode = booking.pickup.postalcode || 'unknown'
       const fleet = fleets.find(
         (f) =>
-          f.postalCodes.includes(postalCode) &&
-          f.recyclingType === booking.recyclingType
+          f.postalCodes.includes(postalCode.substring(0, 2)) &&
+          f.recyclingTypes.includes(booking.recyclingType)
       )
 
       if (!fleet) {
-        info(
-          `❌ Ingen fleet hittades för postnummer ${postalCode} och recyclingType ${booking.recyclingType}`
-        )
+        //info(
+        //  `❌ Ingen fleet hittades för postnummer ${postalCode} och recyclingType ${booking.recyclingType}`
+        //)
         return of(booking)
       }
 

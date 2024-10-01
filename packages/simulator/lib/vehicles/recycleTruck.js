@@ -1,3 +1,5 @@
+// recycleTruck.js
+
 const { info } = require('../log')
 const { virtualTime } = require('../virtualTime') // Import the instance directly
 const Vehicle = require('./vehicle')
@@ -13,47 +15,45 @@ class RecycleTruck extends Vehicle {
     this.startPosition = args.startPosition || args.position
 
     this.id = args.id
-    this.recyclingType = args.recyclingType
+    this.recyclingTypes = args.recyclingTypes
   }
 
   canHandleBooking(booking) {
-    const canHandleRecyclingType = booking.recyclingType === this.recyclingType
+    const canHandleRecyclingType = this.recyclingTypes.includes(
+      booking.recyclingType
+    )
     const hasCapacity = this.cargo.length < this.parcelCapacity
     return canHandleRecyclingType && hasCapacity
   }
 
   async waitAtPickup() {
     const minutes = 1.5 * Math.random()
-    await virtualTime.wait(minutes * 60 * 1000) // Wait for 2 virtual minutes
+    await virtualTime.wait(minutes * 60 * 1000) // Wait for up to 1.5 virtual minutes
   }
 
   async pickup() {
     if (this._disposed) return
 
     if (this.booking && this.booking.pickup) {
-      // Lägg till bokningen i lasten
       this.booking.pickedUp(this.position)
       this.cargo.push(this.booking)
       this.cargoEvents.next(this)
 
-      // Kontrollera om det finns fler hämtningar i kön
       if (this.queue.length > 0) {
-        // Hämta nästa bokning
         this.booking = this.queue.shift()
         this.status = 'toPickup'
         this.statusEvents.next(this)
         this.navigateTo(this.booking.pickup.position)
       } else {
-        // Inga fler hämtningar, åk till destinationen
         this.status = 'toDelivery'
         this.statusEvents.next(this)
-        this.navigateTo(this.booking.destination.position)
+        this.navigateTo(this.fleet.hub.position)
       }
     }
   }
 
   dropOff() {
-    info(`RecycleTruck ${this.id} dropping off all cargo at destination`)
+    info(`RecycleTruck ${this.id} dropping off all cargo at hub`)
     this.cargo.forEach((booking) => {
       booking.delivered(this.position)
     })

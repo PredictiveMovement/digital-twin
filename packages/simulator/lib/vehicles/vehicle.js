@@ -1,3 +1,5 @@
+// vehicle.js
+
 const { ReplaySubject } = require('rxjs')
 const { scan } = require('rxjs/operators')
 const moment = require('moment')
@@ -231,7 +233,8 @@ class Vehicle {
     this.cargoEvents.next(this)
 
     if (booking) {
-      this.navigateTo(this.booking.destination.position)
+      this.navigateTo(booking.destination.position)
+      this.booking = booking
     } else {
       // If we have no more packages to deliver in cargo, go to the nearest booking in the queue or back to origin
       this.queue.sort(
@@ -331,6 +334,11 @@ class Vehicle {
 
     this.co2 += co2
     return co2
+  }
+
+  setRoute(route) {
+    this.plannedRoute = route
+    // Implement logic to follow the planned route
   }
 }
 

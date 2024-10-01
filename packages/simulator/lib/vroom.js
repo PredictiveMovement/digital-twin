@@ -1,5 +1,6 @@
+// vroom.js
+
 const fetch = require('node-fetch')
-// eslint-disable-next-line no-undef
 const vroomUrl = process.env.VROOM_URL || 'https://vroom.telge.iteam.pub/'
 const moment = require('moment')
 const { debug, error, info } = require('./log')
@@ -8,102 +9,130 @@ const queue = require('./queueSubject')
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
+const skillMap = {}
+let nextSkillId = 1
+
+function getSkillId(recyclingType) {
+  if (!skillMap[recyclingType]) {
+    skillMap[recyclingType] = nextSkillId++
+  }
+  return skillMap[recyclingType]
+}
+
 const vroom = (module.exports = {
-  bookingToShipment({ id, pickup, destination }, i) {
+  bookingToShipment(booking, i) {
     return {
       id: i,
-      //description: id,
       amount: [1],
+      required_skills: [getSkillId(booking.recyclingType)],
       pickup: {
-        time_windows: pickup.departureTime?.length
-          ? [
-              [
-                moment(pickup.departureTime, 'hh:mm:ss').unix(),
-                moment(pickup.departureTime, 'hh:mm:ss')
-                  .add(5, 'minutes')
-                  .unix(),
-              ],
-            ]
-          : undefined,
         id: i,
-        location: [pickup.position.lon, pickup.position.lat],
+        location: [booking.pickup.position.lon, booking.pickup.position.lat],
       },
       delivery: {
         id: i,
-        location: [destination.position.lon, destination.position.lat],
-        time_windows: destination.arrivalTime?.length
-          ? [
-              [
-                moment(destination.arrivalTime, 'hh:mm:ss').unix(),
-                moment(destination.arrivalTime, 'hh:mm:ss')
-                  .add(5, 'minutes')
-                  .unix(),
-              ],
-            ]
-          : undefined,
+        location: [
+          booking.destination.position.lon,
+          booking.destination.position.lat,
+        ],
       },
     }
   },
-  truckToVehicle({ position, parcelCapacity, destination, cargo }, i) {
+  truckToVehicle(vehicle, i) {
     return {
       id: i,
-      //description: id,
       time_window: [
         moment('05:00:00', 'hh:mm:ss').unix(),
         moment('18:00:00', 'hh:mm:ss').unix(),
       ],
-      capacity: [parcelCapacity - cargo.length],
-      start: [position.lon, position.lat],
-      end: destination ? [destination.lon, destination.lat] : undefined,
+      capacity: [vehicle.parcelCapacity - vehicle.cargo.length],
+      start: [vehicle.position.lon, vehicle.position.lat],
+      skills: vehicle.recyclingTypes.map(getSkillId),
     }
   },
   async plan({ jobs, shipments, vehicles }) {
-    if (shipments.length > 500) throw new Error('Too many shipments to plan')
-    if (vehicles.length > 200) throw new Error('Too many vehicles to plan')
-    //if (vehicles.length < 2) throw new Error('Need at least 2 vehicles to plan')
+    const maxVehiclesPerBatch = 200
+    const maxShipmentsPerBatch = 500
 
-    const result = await getFromCache({ jobs, shipments, vehicles })
-    if (result) {
-      debug('Vroom cache hit')
-      return result
-    }
-    debug('Vroom cache miss')
+    const totalVehicles = vehicles.length
+    const totalShipments = shipments.length
 
-    const before = Date.now()
-
-    return await queue(() =>
-      fetch(vroomUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          jobs,
-          shipments,
-          vehicles,
-          options: {
-            plan: true,
-          },
-        }),
-      })
-        .then(async (res) =>
-          !res.ok ? Promise.reject('Vroom error:' + (await res.text())) : res
-        )
-        .then((res) => res.json())
-        .then((json) =>
-          Date.now() - before > 10_000
-            ? updateCache({ jobs, shipments, vehicles }, json) // cache when it takes more than 10 seconds
-            : json
-        )
-        .catch((vroomError) => {
-          error(`Vroom error: ${vroomError} (enable debug logging for details)`)
-          info('Jobs', jobs?.length)
-          info('Shipments', shipments?.length)
-          info('Vehicles', vehicles?.length)
-          return delay(2000).then(() =>
-            vroom.plan({ jobs, shipments, vehicles })
-          )
-        })
+    const numBatches = Math.ceil(
+      Math.max(
+        totalVehicles / maxVehiclesPerBatch,
+        totalShipments / maxShipmentsPerBatch
+      )
     )
+
+    const allResults = { routes: [], summary: {} }
+
+    for (let batchIndex = 0; batchIndex < numBatches; batchIndex++) {
+      const batchVehicles = vehicles.slice(
+        batchIndex * maxVehiclesPerBatch,
+        (batchIndex + 1) * maxVehiclesPerBatch
+      )
+      const batchShipments = shipments.slice(
+        batchIndex * maxShipmentsPerBatch,
+        (batchIndex + 1) * maxShipmentsPerBatch
+      )
+
+      if (batchVehicles.length === 0 || batchShipments.length === 0) continue
+
+      const cacheKey = {
+        jobs,
+        shipments: batchShipments,
+        vehicles: batchVehicles,
+      }
+      const result = await getFromCache(cacheKey)
+      if (result) {
+        debug('Vroom cache hit for batch', batchIndex)
+        allResults.routes.push(...result.routes)
+        continue
+      }
+
+      debug('Vroom cache miss for batch', batchIndex)
+      const before = Date.now()
+
+      try {
+        const res = await queue(() =>
+          fetch(vroomUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              jobs,
+              shipments: batchShipments,
+              vehicles: batchVehicles,
+              options: {
+                plan: true,
+              },
+            }),
+          })
+        )
+
+        if (!res.ok) {
+          throw new Error('Vroom error:' + (await res.text()))
+        }
+
+        const json = await res.json()
+
+        if (Date.now() - before > 10_000) {
+          await updateCache(cacheKey, json)
+        }
+
+        allResults.routes.push(...json.routes)
+        Object.assign(allResults.summary, json.summary)
+      } catch (vroomError) {
+        error(
+          `Vroom error in batch ${batchIndex}: ${vroomError} (enable debug logging for details)`
+        )
+        info('Shipments', batchShipments.length)
+        info('Vehicles', batchVehicles.length)
+        continue
+      }
+    }
+
+    return allResults
   },
 })
