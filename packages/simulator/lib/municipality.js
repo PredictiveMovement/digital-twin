@@ -14,6 +14,7 @@ const {
   toArray,
   map,
   groupBy,
+  take,
 } = require('rxjs')
 const Fleet = require('./fleet')
 const { error, info } = require('./log')
@@ -68,7 +69,7 @@ class Municipality {
 
     this.dispatchedBookings = this.dispatchBookings()
 
-    this.cars = this.getAllCars()
+    this.cars = this.privateCars
   }
 
   getUniqueVehicles() {
@@ -103,45 +104,40 @@ class Municipality {
     return this.recycleCollectionPoints.pipe(
       toArray(),
       mergeMap((bookings) => {
-        const clusters = this.clusterBookingsByArea(bookings)
         return this.uniqueVehicles.pipe(
           mergeMap((uniqueVehicles) => {
             info(`Totalt antal unika fordon: ${uniqueVehicles.length}`)
-            const totalBookings = Object.values(clusters).reduce(
-              (sum, clusterData) => sum + clusterData.bookings.length,
-              0
-            )
-            info(`Totalt antal bokningar: ${totalBookings}`)
+            info(`Totalt antal bokningar: ${bookings.length}`)
 
             const fleetDistribution = this.calculateFleetDistribution(
-              clusters,
-              uniqueVehicles
+              ['BPLASTFÖRP', 'BRÄNN', 'HEMSORT', 'METFÖRP', 'BLANDAVF'],
+              uniqueVehicles,
+              bookings
             )
 
             return from(Object.entries(fleetDistribution)).pipe(
-              map(([groupName, { vehicles }], index) => {
-                const groupData = clusters[groupName]
-                const fleetName = `Fleet-${index}`
-                const fleetVehicles = vehicles
+              map(
+                (
+                  [groupName, { vehicles, recyclingTypes, filteredBookings }],
+                  index
+                ) => {
+                  const fleetName = `Fleet-${index}`
+                  const fleetVehicles = vehicles
 
-                info(
-                  `${fleetName}: ${groupData.postalCodes.length} områden - ${groupData.bookings.length} bokningar, tilldelat ${vehicles.length} fordon`
-                )
-
-                return new Fleet({
-                  name: fleetName,
-                  hub: this.center,
-                  type: 'recycleTruck',
-                  municipality: this,
-                  postalCodes: groupData.postalCodes,
-                  bookings: groupData.bookings,
-                  vehicles: fleetVehicles,
-                  recyclingTypes: Array.from(groupData.recyclingTypes),
-                })
-              }),
+                  return new Fleet({
+                    name: fleetName,
+                    hub: this.center,
+                    type: 'recycleTruck',
+                    municipality: this,
+                    bookings: filteredBookings,
+                    vehicles: fleetVehicles,
+                    recyclingTypes: Array.from(recyclingTypes),
+                  })
+                }
+              ),
               tap((fleet) =>
                 info(
-                  `Fleet skapad: ${fleet.name} med ${fleet.vehicles.length} fordon och ${fleet.bookings.length} bokningar`
+                  `✅ Fleet skapad: ${fleet.name} med ${fleet.vehicles.length} fordon och ${fleet.bookings.length} bokningar`
                 )
               )
             )
@@ -152,46 +148,42 @@ class Municipality {
     )
   }
 
-  calculateFleetDistribution(clusters, uniqueVehicles) {
+  //Create a fleet distribution with vehicles and their recyclingTypes
+  calculateFleetDistribution(recyclingTypes, uniqueVehicles, bookings) {
     const fleetDistribution = {}
-    const totalClusters = Object.keys(clusters).length
-    const vehiclesPerCluster = Math.ceil(uniqueVehicles.length / totalClusters)
+    const assignedBookings = new Set()
+    const assignedVehicles = new Set()
 
-    let vehicleIndex = 0
+    recyclingTypes.forEach((recyclingType, index) => {
+      //Hämta bilar som kan hantera denna typ av avfall
+      const clusterVehicles = uniqueVehicles.filter(
+        (vehicle) =>
+          vehicle.recyclingTypes.includes(recyclingType) &&
+          !assignedVehicles.has(vehicle.id)
+      )
 
-    Object.entries(clusters).forEach(([groupName, groupData]) => {
-      const vehiclesForCluster = []
-      for (
-        let i = 0;
-        i < vehiclesPerCluster && vehicleIndex < uniqueVehicles.length;
-        i++
-      ) {
-        vehiclesForCluster.push(uniqueVehicles[vehicleIndex++])
+      //Hämta bokningar som inte redan tilldelats en fleet
+      const filteredBookings = bookings.filter(
+        (booking) =>
+          booking.recyclingType === recyclingType &&
+          !assignedBookings.has(booking.id)
+      )
+
+      // Markera bokningar som tilldelats
+      filteredBookings.forEach((booking) => assignedBookings.add(booking.id))
+      clusterVehicles.forEach((vehicle) => assignedVehicles.add(vehicle.id))
+      fleetDistribution[`Cluster-${index}`] = {
+        vehicles: clusterVehicles,
+        recyclingTypes: [recyclingType],
+        filteredBookings: filteredBookings,
       }
-      fleetDistribution[groupName] = {
-        vehicles: vehiclesForCluster,
-      }
+
+      console.log(
+        `Cluster ${index} (${recyclingType}) bookings: ${filteredBookings.length}`
+      )
     })
 
     return fleetDistribution
-  }
-
-  clusterBookingsByArea(bookings) {
-    return bookings.reduce((clusters, booking) => {
-      const postalCode = booking.pickup.postalcode || 'unknown'
-      const areaCode = postalCode.substring(0, 4)
-      if (!clusters[areaCode]) {
-        clusters[areaCode] = {
-          postalCodes: [],
-          bookings: [],
-          recyclingTypes: new Set(),
-        }
-      }
-      clusters[areaCode].postalCodes.push(postalCode)
-      clusters[areaCode].bookings.push(booking)
-      clusters[areaCode].recyclingTypes.add(booking.recyclingType)
-      return clusters
-    }, {})
   }
 
   getRecycleTrucks() {
@@ -213,13 +205,6 @@ class Municipality {
         return of(null)
       })
     )
-  }
-
-  getAllCars() {
-    return merge(
-      this.privateCars,
-      this.fleets.pipe(mergeMap((fleet) => fleet.cars))
-    ).pipe(shareReplay())
   }
 }
 

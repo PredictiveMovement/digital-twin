@@ -7,11 +7,8 @@ const { info, error } = require('../log')
 const dispatch = (fleets, bookings) => {
   return from(bookings).pipe(
     mergeMap((booking) => {
-      const postalCode = booking.pickup.postalcode || 'unknown'
-      const fleet = fleets.find(
-        (f) =>
-          f.postalCodes.includes(postalCode.substring(0, 2)) &&
-          f.recyclingTypes.includes(booking.recyclingType)
+      const fleet = fleets.find((f) =>
+        f.recyclingTypes.includes(booking.recyclingType)
       )
 
       if (!fleet) {

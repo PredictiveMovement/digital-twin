@@ -63,10 +63,6 @@ class Fleet {
       shareReplay()
     )
 
-    info(
-      `Fleet ${this.name} skapad med ${this.vehicles.length} fordon och ${this.bookings.length} bokningar. Antal postnummer: ${this.postalCodes.length}`
-    )
-
     this.unhandledBookings = new Subject()
     this.planRoutesWithVroom()
     this.dispatchedBookings = this.handleAllBookings()
