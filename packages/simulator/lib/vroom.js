@@ -24,7 +24,7 @@ const vroom = (module.exports = {
     return {
       id: i,
       amount: [1],
-      required_skills: [getSkillId(booking.recyclingType)],
+      skills: [getSkillId(booking.recyclingType)],
       pickup: {
         id: i,
         location: [booking.pickup.position.lon, booking.pickup.position.lat],
