@@ -42,14 +42,18 @@ async function saveToCache(cacheKey, data) {
   }
 }
 
-async function cachedFetch(method, params, fetchFunc) {
+async function cachedFetch(method, params, fetchFunc, forceFetch = false) {
   const cacheKey = generateCacheKey(method, params)
-  const cachedData = await getFromCache(cacheKey)
 
-  if (cachedData) {
-    return cachedData
+  if (!forceFetch) {
+    const cachedData = await getFromCache(cacheKey)
+    if (cachedData) {
+      console.log('Using cached data for', method, params)
+      return cachedData
+    }
   }
 
+  console.log('NOT USING cached data for', method, params)
   const data = await fetchFunc()
   await saveToCache(cacheKey, data)
   return data
@@ -105,29 +109,33 @@ const nearest = (position, layers = 'address,venue') => {
   )
 }
 
-const reverseSearch = (lat, lon) => {
+const reverseSearch = (lat, lon, forceFetch = false) => {
   const url = `${peliasUrl}/v1/reverse?point.lat=${lat}&point.lon=${lon}&size=1`
 
-  return cachedFetch('reverseSearch', { lat, lon }, () =>
-    queue(() => fetch(url))
-      .then((response) => {
-        if (!response.ok) throw 'pelias error: ' + response.statusText
-        return response.json()
-      })
-      .then((data) => {
-        const postalCodeFeature = data.features.find(
-          (feature) => feature.properties.postalcode
-        )
-        if (!postalCodeFeature) {
-          throw new Error('No postal code found for the given location')
-        }
-        return postalCodeFeature.properties.postalcode
-      })
-      .catch((e) => {
-        const err = new Error().stack
-        error(`Error in pelias reverseSearch\n${err}\n${e}\n\n`)
-        return null
-      })
+  return cachedFetch(
+    'reverseSearch',
+    { lat, lon },
+    () =>
+      queue(() => fetch(url))
+        .then((response) => {
+          if (!response.ok) throw 'pelias error: ' + response.statusText
+          return response.json()
+        })
+        .then((data) => {
+          const postalCodeFeature = data.features.find(
+            (feature) => feature.properties.postalcode
+          )
+          if (!postalCodeFeature) {
+            throw new Error('No postal code found for the given location')
+          }
+          return postalCodeFeature.properties.postalcode
+        })
+        .catch((e) => {
+          const err = new Error().stack
+          error(`Error in pelias reverseSearch\n${err}\n${e}\n\n`)
+          return null
+        }),
+    forceFetch
   )
 }
 

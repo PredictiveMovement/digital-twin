@@ -20,8 +20,8 @@ const loadBookings = () => {
 describe('Clustering Tests', () => {
   it('should return postal code for a given location', async () => {
     // Define the test coordinates
-    const lat = 59.334591
-    const lon = 18.06324
+    const lat = 59.135449
+    const lon = 17.571239
 
     // Perform the reverse search and expect the postal code
     const postalCode = await reverseSearch(lat, lon)
