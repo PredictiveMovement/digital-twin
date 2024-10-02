@@ -1,6 +1,4 @@
-// telge.js
-
-const { from, pipe } = require('rxjs')
+const { from } = require('rxjs')
 const {
   map,
   mergeMap,
@@ -9,10 +7,11 @@ const {
   shareReplay,
   toArray,
   tap,
+  mergeAll,
 } = require('rxjs/operators')
 const Position = require('../../lib/models/position')
 const Booking = require('../../lib/models/booking')
-const { error } = require('../../lib/log')
+const { error, info } = require('../../lib/log')
 const { nearest } = require('../../lib/pelias')
 const fs = require('fs')
 const LERHAGA_POSITION = new Position({ lat: 59.135449, lon: 17.571239 })
@@ -71,10 +70,10 @@ function writeToCache(filename) {
     toArray(),
     tap((rows) => fs.writeFileSync(filename, JSON.stringify(rows))),
     tap(() => console.log(`TELGE -> writeToCache: ${filename}`)),
-    mergeAll(),
+    mergeAll(), // This ensures that all items are merged back after caching
     catchError((err) => {
       error('TELGE -> writeToCache', err)
-      return from([])
+      return from([]) // Return an empty observable in case of an error
     })
   )
 }
@@ -91,7 +90,7 @@ function read() {
   const bookingsCache = cacheExists && fs.readFileSync('bookingsCache.json')
   const cache = !bookingsCache ? from([]) : from(JSON.parse(bookingsCache))
 
-  return (cacheExists ? cache : from(rutter())).pipe(
+  return (cacheExists ? cache : rutter()).pipe(
     map((row) => new Booking({ type: 'recycle', ...row })),
     shareReplay(),
     catchError((err) => {

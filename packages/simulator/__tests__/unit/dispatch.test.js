@@ -2,19 +2,24 @@
 
 const fs = require('fs')
 const path = require('path')
-const { from } = require('rxjs')
+const { from, take } = require('rxjs')
 const { toArray } = require('rxjs/operators')
-const Booking = require('../../lib/models/booking') // Justera sökvägen efter din struktur
-const { reverseSearch } = require('../../lib/pelias') // Anta att du har en Pelias-modul
+const Booking = require('../../lib/models/booking')
+const { reverseSearch } = require('../../lib/pelias')
+const telge = require('../../streams/orders/telge')
 
-// Läs in bokningarna från JSON-filen
 const loadBookings = () => {
-  const bookingsData = JSON.parse(
-    fs.readFileSync(path.resolve(__dirname, '../../data/bookings.json'))
-  )
-
-  // Ta de första 100 bokningarna
-  return bookingsData.slice(0, 100).map((data) => new Booking(data))
+  telge // 'telge' is an observable
+    .pipe(
+      take(2), // Take only the first 10 bookings
+      toArray() // Collect all results into an array
+    )
+    .subscribe((bookings) => {
+      bookings.forEach((booking) => {
+        const bookingInstance = new Booking(booking)
+        console.log('Test LOG: ' + JSON.stringify(bookingInstance))
+      })
+    })
 }
 
 describe('Clustering Tests', () => {
@@ -26,10 +31,16 @@ describe('Clustering Tests', () => {
     // Perform the reverse search and expect the postal code
     const postalCode = await reverseSearch(lat, lon)
 
-    // Log the result (optional)
+    // Log the result
     console.log(`Postal code for location (${lat}, ${lon}) is: ${postalCode}`)
 
     // Assert that the postal code is what you expect
-    expect(postalCode).toBeDefined() // Modify this line based on the actual postal code you're expecting
+    expect(postalCode).toBeDefined()
+  })
+})
+
+describe('Booking Tests', () => {
+  it('should load bookings from JSON file', () => {
+    loadBookings()
   })
 })
