@@ -7,6 +7,11 @@ const {
   tap,
   catchError,
   toArray,
+  bufferTime,
+  zip,
+  repeat,
+  withLatestFrom,
+  map,
 } = require('rxjs/operators')
 const RecycleTruck = require('./vehicles/recycleTruck')
 const Position = require('./models/position')
@@ -109,9 +114,32 @@ class Fleet {
     }
   }
 
+  //Samla ihop alla bokningar, innan mergemap, buffertime.
+  //Samla ihop alla under 5 sekunder i en array.
+  //Merga ihop med cars, funktionen heter zip? T.ex this.cars.pipe, to array, zip av den. Gör en dispatch och skicka till plan i Vroom.
+  //Tar emot lista med bilar och bokningar.
+  //Kommer en ny ström tillbaka med bokning och bil som par.
+  //Sen tar man handleBooking på bilen.
   handleAllBookings() {
     return from(this.bookings).pipe(
-      mergeMap((booking) => this.handleBooking(booking)),
+      bufferTime(5000),
+      tap((bookingBatch) =>
+        info(`${bookingBatch.length} bokningar buffrade för ${this.name}`)
+      ),
+      withLatestFrom(this.cars.pipe(toArray())),
+      mergeMap(([bookingBatch, cars]) => {
+        const totalBookings = bookingBatch.length
+        const totalCars = cars.length
+        return from(Array(totalBookings).keys()).pipe(
+          map((index) => ({
+            booking: bookingBatch[index],
+            car: cars[index % totalCars],
+          })),
+          mergeMap(({ booking, car }) =>
+            this.handleBookingWithCar(booking, car)
+          )
+        )
+      }),
       catchError((err) => {
         error(`Fel vid hantering av bokningar för ${this.name}:`, err)
         return of(null)
@@ -120,35 +148,13 @@ class Fleet {
     )
   }
 
-  handleBooking(booking) {
-    return this.cars.pipe(
-      toArray(),
-      mergeMap((cars) => {
-        const availableCars = cars.filter((car) =>
-          car.canHandleBooking(booking)
-        )
-        if (availableCars.length > 0) {
-          const carWithLeastBookings = availableCars.reduce((min, car) =>
-            car.queue.length + (car.booking ? 1 : 0) <
-            min.queue.length + (min.booking ? 1 : 0)
-              ? car
-              : min
-          )
-          return from(carWithLeastBookings.handleBooking(booking))
-        } else {
-          this.unhandledBookings.next(booking)
-          return of(booking)
-        }
-      }),
-      catchError((err) => {
-        error(
-          `Fel vid tilldelning av bokning ${booking.id} i ${this.name}:`,
-          err
-        )
-        this.unhandledBookings.next(booking)
-        return of(booking)
-      })
-    )
+  handleBookingWithCar(booking, car) {
+    if (car.canHandleBooking(booking)) {
+      return from(car.handleBooking(booking))
+    } else {
+      this.unhandledBookings.next(booking)
+      return of(booking)
+    }
   }
 }
 

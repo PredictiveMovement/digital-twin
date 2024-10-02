@@ -110,7 +110,10 @@ class Municipality {
             info(`Totalt antal bokningar: ${bookings.length}`)
 
             const fleetDistribution = this.calculateFleetDistribution(
-              ['BPLASTFÖRP', 'BRÄNN', 'HEMSORT', 'METFÖRP', 'BLANDAVF'],
+              [
+                ['BPLASTFÖRP', 'BRÄNN'],
+                ['METFÖRP', 'BLANDAVF'],
+              ],
               uniqueVehicles,
               bookings
             )
@@ -149,23 +152,28 @@ class Municipality {
   }
 
   //Create a fleet distribution with vehicles and their recyclingTypes
-  calculateFleetDistribution(recyclingTypes, uniqueVehicles, bookings) {
+  calculateFleetDistribution(recyclingTypeGroups, uniqueVehicles, bookings) {
     const fleetDistribution = {}
     const assignedBookings = new Set()
     const assignedVehicles = new Set()
 
-    recyclingTypes.forEach((recyclingType, index) => {
+    recyclingTypeGroups.forEach((recyclingTypeGroup, index) => {
       //Hämta bilar som kan hantera denna typ av avfall
       const clusterVehicles = uniqueVehicles.filter(
         (vehicle) =>
-          vehicle.recyclingTypes.includes(recyclingType) &&
-          !assignedVehicles.has(vehicle.id)
+          recyclingTypeGroup.some((recyclingType) =>
+            vehicle.recyclingTypes.includes(recyclingType)
+          ) && !assignedVehicles.has(vehicle.id)
+      )
+
+      console.log(
+        `Cluster ${index} (${recyclingTypeGroup}) vehicles: ${clusterVehicles.length}`
       )
 
       //Hämta bokningar som inte redan tilldelats en fleet
       const filteredBookings = bookings.filter(
         (booking) =>
-          booking.recyclingType === recyclingType &&
+          recyclingTypeGroup.includes(booking.recyclingType) &&
           !assignedBookings.has(booking.id)
       )
 
@@ -174,12 +182,12 @@ class Municipality {
       clusterVehicles.forEach((vehicle) => assignedVehicles.add(vehicle.id))
       fleetDistribution[`Cluster-${index}`] = {
         vehicles: clusterVehicles,
-        recyclingTypes: [recyclingType],
+        recyclingTypes: recyclingTypeGroup,
         filteredBookings: filteredBookings,
       }
 
       console.log(
-        `Cluster ${index} (${recyclingType}) bookings: ${filteredBookings.length}`
+        `Cluster ${index} (${recyclingTypeGroup}) bookings: ${filteredBookings.length}`
       )
     })
 

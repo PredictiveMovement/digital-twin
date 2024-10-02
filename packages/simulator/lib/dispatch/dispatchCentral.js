@@ -7,18 +7,7 @@ const { info, error } = require('../log')
 const dispatch = (fleets, bookings) => {
   return from(bookings).pipe(
     mergeMap((booking) => {
-      const fleet = fleets.find((f) =>
-        f.recyclingTypes.includes(booking.recyclingType)
-      )
-
-      if (!fleet) {
-        //info(
-        //  `❌ Ingen fleet hittades för postnummer ${postalCode} och recyclingType ${booking.recyclingType}`
-        //)
-        return of(booking)
-      }
-
-      return fleet.handleBooking(booking)
+      return of(booking)
     }),
     catchError((err) => {
       error(`Fel vid tilldelning av bokning:`, err)
