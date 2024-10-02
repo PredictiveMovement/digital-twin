@@ -91,7 +91,7 @@ class Municipality {
       toArray(),
       map((vehicles) =>
         vehicles.map((vehicle, index) => ({
-          id: `vehicle-${index}`,
+          id: index,
           carId: vehicle.carId,
           recyclingTypes: vehicle.recyclingTypes,
         }))
@@ -102,6 +102,7 @@ class Municipality {
 
   createFleets() {
     return this.recycleCollectionPoints.pipe(
+      take(100),
       toArray(),
       mergeMap((bookings) => {
         return this.uniqueVehicles.pipe(
@@ -112,7 +113,7 @@ class Municipality {
             const fleetDistribution = this.calculateFleetDistribution(
               [
                 ['BPLASTFÖRP', 'BRÄNN'],
-                ['METFÖRP', 'BLANDAVF'],
+                //['METFÖRP', 'BLANDAVF'],
               ],
               uniqueVehicles,
               bookings

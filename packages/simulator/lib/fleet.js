@@ -12,11 +12,12 @@ const {
   repeat,
   withLatestFrom,
   map,
+  take,
 } = require('rxjs/operators')
 const RecycleTruck = require('./vehicles/recycleTruck')
 const Position = require('./models/position')
 const { error, info } = require('./log')
-const vroom = require('./vroom')
+const { plan, truckToVehicle, bookingToShipment } = require('./vroom')
 
 const vehicleTypes = {
   recycleTruck: {
@@ -69,57 +70,9 @@ class Fleet {
     )
 
     this.unhandledBookings = new Subject()
-    this.planRoutesWithVroom()
     this.dispatchedBookings = this.handleAllBookings()
   }
 
-  async planRoutesWithVroom() {
-    const bookingsArray = this.bookings
-    const shipments = bookingsArray.map((booking, i) =>
-      vroom.bookingToShipment(booking, i)
-    )
-    const vehiclesArray = await this.cars.pipe(toArray()).toPromise()
-    const totalVehicles = vehiclesArray.length
-    const maxVehiclesPerBatch = 100
-    const numVehicleBatches = Math.ceil(totalVehicles / maxVehiclesPerBatch)
-
-    for (let batchIndex = 0; batchIndex < numVehicleBatches; batchIndex++) {
-      const batchVehiclesArray = vehiclesArray.slice(
-        batchIndex * maxVehiclesPerBatch,
-        (batchIndex + 1) * maxVehiclesPerBatch
-      )
-      const vehicles = batchVehiclesArray.map((vehicle, i) =>
-        vroom.truckToVehicle(vehicle, i)
-      )
-
-      try {
-        const result = await vroom.plan({
-          shipments,
-          vehicles,
-        })
-        result.routes.forEach((route) => {
-          const vehicle = batchVehiclesArray.find(
-            (v) => v.id === vehicles[route.vehicle].id
-          )
-          if (vehicle) {
-            vehicle.setRoute(route)
-          }
-        })
-      } catch (err) {
-        error(
-          `Fel vid Vroom-planering för ${this.name} batch ${batchIndex}:`,
-          err
-        )
-      }
-    }
-  }
-
-  //Samla ihop alla bokningar, innan mergemap, buffertime.
-  //Samla ihop alla under 5 sekunder i en array.
-  //Merga ihop med cars, funktionen heter zip? T.ex this.cars.pipe, to array, zip av den. Gör en dispatch och skicka till plan i Vroom.
-  //Tar emot lista med bilar och bokningar.
-  //Kommer en ny ström tillbaka med bokning och bil som par.
-  //Sen tar man handleBooking på bilen.
   handleAllBookings() {
     return from(this.bookings).pipe(
       bufferTime(5000),
@@ -127,18 +80,31 @@ class Fleet {
         info(`${bookingBatch.length} bokningar buffrade för ${this.name}`)
       ),
       withLatestFrom(this.cars.pipe(toArray())),
-      mergeMap(([bookingBatch, cars]) => {
-        const totalBookings = bookingBatch.length
-        const totalCars = cars.length
-        return from(Array(totalBookings).keys()).pipe(
-          map((index) => ({
-            booking: bookingBatch[index],
-            car: cars[index % totalCars],
-          })),
-          mergeMap(({ booking, car }) =>
-            this.handleBookingWithCar(booking, car)
-          )
+      tap(([bookingBatch, cars]) => {
+        info(`Planerar ${bookingBatch.length} bokningar för ${this.name}`)
+      }),
+      mergeMap(async ([bookingBatch, cars]) => {
+        console.log('CarID: ', cars[0].id)
+        const vehicles = cars.map((car, i) => truckToVehicle(car, car.id))
+        const shipments = bookingBatch.map((booking, i) =>
+          bookingToShipment(booking, i)
         )
+        const vroomResponse = await plan({ shipments, vehicles })
+        return { vroomResponse, cars, bookingBatch }
+      }),
+      mergeMap(({ vroomResponse, cars, bookingBatch }) => {
+        const routes = this.getRoutes(vroomResponse)
+        console.log(routes)
+        return from(cars).pipe(
+          mergeMap((car) => {
+            return from(bookingBatch).pipe(
+              mergeMap((booking) => this.handleBookingWithCar(booking, car))
+            )
+          })
+        )
+      }),
+      tap(() => {
+        info(`Planerade rutter för ${this.name}`)
       }),
       catchError((err) => {
         error(`Fel vid hantering av bokningar för ${this.name}:`, err)
@@ -146,6 +112,20 @@ class Fleet {
       }),
       shareReplay()
     )
+  }
+
+  getRoutes(vroomResponse) {
+    return vroomResponse.routes.map((route) => ({
+      vehicle: route.vehicle,
+      steps: route.steps
+        .filter(({ type }) => ['pickup', 'delivery', 'start'].includes(type))
+        .map(({ id, type, arrival, departure }) => ({
+          id,
+          type,
+          arrival,
+          departure,
+        })),
+    }))
   }
 
   handleBookingWithCar(booking, car) {
