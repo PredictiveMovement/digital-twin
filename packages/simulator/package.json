@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon web/index.js",
     "test": "jest __tests__",
-    "test:dispatch": "jest __tests__/unit/dispatch.test.js",
+    "test:clustering": "jest __tests__/unit/clustering.test.js",
     "watch": "jest --watch __tests__",
     "preboot": "node preboot.js",
     "start": "node web/index.js"
