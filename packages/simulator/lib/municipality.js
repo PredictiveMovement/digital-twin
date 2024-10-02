@@ -91,7 +91,7 @@ class Municipality {
       toArray(),
       map((vehicles) =>
         vehicles.map((vehicle, index) => ({
-          id: `vehicle-${index}`,
+          id: index,
           carId: vehicle.carId,
           recyclingTypes: vehicle.recyclingTypes,
         }))

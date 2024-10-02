@@ -17,6 +17,7 @@ class RecycleTruck extends Vehicle {
     this.id = args.id
     this.carId = args.carId
     this.recyclingTypes = args.recyclingTypes
+    this.destination = args.destination
   }
 
   canHandleBooking(booking) {
