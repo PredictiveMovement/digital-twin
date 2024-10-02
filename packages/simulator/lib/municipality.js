@@ -102,7 +102,6 @@ class Municipality {
 
   createFleets() {
     return this.recycleCollectionPoints.pipe(
-      take(100),
       toArray(),
       mergeMap((bookings) => {
         return this.uniqueVehicles.pipe(
@@ -113,7 +112,7 @@ class Municipality {
             const fleetDistribution = this.calculateFleetDistribution(
               [
                 ['BPLASTFÖRP', 'BRÄNN'],
-                //['METFÖRP', 'BLANDAVF'],
+                ['METFÖRP', 'BLANDAVF'],
               ],
               uniqueVehicles,
               bookings

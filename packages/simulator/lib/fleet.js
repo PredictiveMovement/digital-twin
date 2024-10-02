@@ -13,6 +13,7 @@ const {
   withLatestFrom,
   map,
   take,
+  filter,
 } = require('rxjs/operators')
 const RecycleTruck = require('./vehicles/recycleTruck')
 const Position = require('./models/position')
@@ -84,7 +85,6 @@ class Fleet {
         info(`Planerar ${bookingBatch.length} bokningar för ${this.name}`)
       }),
       mergeMap(async ([bookingBatch, cars]) => {
-        console.log('CarID: ', cars[0].id)
         const vehicles = cars.map((car, i) => truckToVehicle(car, car.id))
         const shipments = bookingBatch.map((booking, i) =>
           bookingToShipment(booking, i)
@@ -94,17 +94,20 @@ class Fleet {
       }),
       mergeMap(({ vroomResponse, cars, bookingBatch }) => {
         const routes = this.getRoutes(vroomResponse)
-        console.log(routes)
-        return from(cars).pipe(
-          mergeMap((car) => {
+        return from(routes).pipe(
+          mergeMap((route) => {
+            const car = cars.find((car) => car.id === route.vehicle)
+            if (!car) {
+              error(`No car found for route ${route.vehicle}`)
+              return of(null)
+            }
             return from(bookingBatch).pipe(
-              mergeMap((booking) => this.handleBookingWithCar(booking, car))
+              mergeMap((booking) =>
+                this.handleBookingWithCar(booking, car, route)
+              )
             )
           })
         )
-      }),
-      tap(() => {
-        info(`Planerade rutter för ${this.name}`)
       }),
       catchError((err) => {
         error(`Fel vid hantering av bokningar för ${this.name}:`, err)
@@ -119,18 +122,21 @@ class Fleet {
       vehicle: route.vehicle,
       steps: route.steps
         .filter(({ type }) => ['pickup', 'delivery', 'start'].includes(type))
-        .map(({ id, type, arrival, departure }) => ({
+        .map(({ id, type, arrival, departure, location }) => ({
           id,
           type,
           arrival,
           departure,
+          location,
         })),
     }))
   }
 
-  handleBookingWithCar(booking, car) {
+  handleBookingWithCar(booking, car, route) {
     if (car.canHandleBooking(booking)) {
-      return from(car.handleBooking(booking))
+      return from(car.handleBooking(booking)).pipe(
+        tap(() => car.setRoute(route))
+      )
     } else {
       this.unhandledBookings.next(booking)
       return of(booking)
