@@ -304,31 +304,6 @@ class Vehicle {
     this.co2 += co2
     return co2
   }
-
-  setRoute(route) {
-    this.route = route.steps
-    this.processRoute()
-  }
-
-  async processRoute() {
-    for (const step of this.route) {
-      if (step.type === 'start' || step.type === 'end') continue
-
-      await this.navigateTo(new Position(step.location[1], step.location[0]))
-
-      if (step.type === 'pickup') {
-        await this.pickup()
-      } else if (step.type === 'delivery') {
-        const booking = this.cargo.find((b) => b.id === step.id)
-        if (booking) {
-          await this.dropOff()
-        }
-      }
-    }
-
-    this.status = 'ready'
-    this.statusEvents.next(this)
-  }
 }
 
 module.exports = Vehicle

@@ -3,6 +3,7 @@
 const { info } = require('../log')
 const { virtualTime } = require('../virtualTime') // Import the instance directly
 const Vehicle = require('./vehicle')
+const Position = require('../models/position')
 
 class RecycleTruck extends Vehicle {
   constructor(args) {
@@ -36,21 +37,20 @@ class RecycleTruck extends Vehicle {
   async pickup() {
     if (this._disposed) return
 
-    if (this.booking && this.booking.pickup) {
-      this.booking.pickedUp(this.position)
-      this.cargo.push(this.booking)
-      this.cargoEvents.next(this)
-
-      if (this.queue.length > 0) {
-        this.booking = this.queue.shift()
-        this.status = 'toPickup'
-        this.statusEvents.next(this)
-        this.navigateTo(this.booking.pickup.position)
-      } else {
-        this.status = 'toDelivery'
-        this.statusEvents.next(this)
-        this.navigateTo(this.fleet.hub.position)
-      }
+    if (this.queue.length > 0) {
+      this.booking = this.queue.shift()
+      this.status = 'toPickup'
+      this.statusEvents.next(this)
+      this.navigateTo(
+        new Position({
+          lat: this.queue[0].location[1],
+          lng: this.queue[0].location[0],
+        })
+      )
+    } else {
+      this.status = 'toDelivery'
+      this.statusEvents.next(this)
+      this.navigateTo(this.fleet.hub.position)
     }
   }
 
@@ -64,6 +64,44 @@ class RecycleTruck extends Vehicle {
     this.status = 'ready'
     this.booking = null
     this.statusEvents.next(this)
+  }
+
+  setRoute(route) {
+    this.queue = route.steps
+    this.status = 'toPickup'
+    this.statusEvents.next(this)
+    this.processRoute()
+  }
+
+  async processRoute() {
+    for (const step of this.queue) {
+      if (step.type === 'start' || step.type === 'end') continue
+      if (step.type === 'pickup') {
+        await this.pickup()
+      } else if (step.type === 'delivery') {
+        const booking = this.cargo.find((b) => b.id === step.id)
+        if (booking) {
+          await this.dropOff()
+        }
+      }
+    }
+
+    this.status = 'toPickup'
+    this.statusEvents.next(this)
+  }
+
+  stopped() {
+    this.speed = 0
+    this.statusEvents.next(this)
+    if (this.queue.length > 0) {
+      this.simulate(false)
+      if (this.status === 'toPickup') {
+        return this.pickup()
+      }
+      if (this.status === 'toDelivery') {
+        return this.dropOff()
+      }
+    }
   }
 }
 

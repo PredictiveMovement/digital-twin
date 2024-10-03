@@ -81,9 +81,6 @@ class Fleet {
         info(`${bookingBatch.length} bokningar buffrade för ${this.name}`)
       ),
       withLatestFrom(this.cars.pipe(toArray())),
-      tap(([bookingBatch, cars]) => {
-        info(`Planerar ${bookingBatch.length} bokningar för ${this.name}`)
-      }),
       mergeMap(async ([bookingBatch, cars]) => {
         const vehicles = cars.map((car, i) => truckToVehicle(car, car.id))
         const shipments = bookingBatch.map((booking, i) =>
@@ -94,20 +91,15 @@ class Fleet {
       }),
       mergeMap(({ vroomResponse, cars, bookingBatch }) => {
         const routes = this.getRoutes(vroomResponse)
-        return from(routes).pipe(
-          mergeMap((route) => {
-            const car = cars.find((car) => car.id === route.vehicle)
-            if (!car) {
-              error(`No car found for route ${route.vehicle}`)
-              return of(null)
-            }
-            return from(bookingBatch).pipe(
-              mergeMap((booking) =>
-                this.handleBookingWithCar(booking, car, route)
-              )
-            )
-          })
-        )
+        routes.forEach((route) => {
+          const car = cars.find((car) => car.id === route.vehicle)
+          if (car) {
+            car.setRoute(route)
+          } else {
+            error(`No car found for route ${route.vehicle}`)
+          }
+        })
+        return bookingBatch
       }),
       catchError((err) => {
         error(`Fel vid hantering av bokningar för ${this.name}:`, err)
@@ -130,17 +122,6 @@ class Fleet {
           location,
         })),
     }))
-  }
-
-  handleBookingWithCar(booking, car, route) {
-    if (car.canHandleBooking(booking)) {
-      return from(car.handleBooking(booking)).pipe(
-        tap(() => car.setRoute(route))
-      )
-    } else {
-      this.unhandledBookings.next(booking)
-      return of(booking)
-    }
   }
 }
 
