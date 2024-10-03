@@ -38,9 +38,21 @@ class RecycleTruck extends Vehicle {
     if (this._disposed) return
 
     if (this.queue.length > 0) {
-      this.booking = this.queue.shift()
+      const matchingBooking = this.bookings.find(
+        (booking) => booking.bookingId === this.queue[0].id
+      )
+      if (!matchingBooking) return
+
+      this.booking = matchingBooking
+      this.booking.pickedUp(this.position)
+      this.cargo.push(matchingBooking)
+      this.cargoEvents.next(this)
+
+      this.queue.shift()
+
       this.status = 'toPickup'
       this.statusEvents.next(this)
+
       this.navigateTo(
         new Position({
           lat: this.queue[0].location[1],
@@ -66,7 +78,8 @@ class RecycleTruck extends Vehicle {
     this.statusEvents.next(this)
   }
 
-  setRoute(route) {
+  setRoute(route, bookings) {
+    this.bookings = bookings
     this.queue = route.steps
     this.status = 'toPickup'
     this.statusEvents.next(this)
@@ -75,14 +88,14 @@ class RecycleTruck extends Vehicle {
 
   async processRoute() {
     for (const step of this.queue) {
-      if (step.type === 'start' || step.type === 'end') continue
+      if (
+        step.type === 'start' ||
+        step.type === 'end' ||
+        step.type === 'delivery'
+      )
+        continue
       if (step.type === 'pickup') {
         await this.pickup()
-      } else if (step.type === 'delivery') {
-        const booking = this.cargo.find((b) => b.id === step.id)
-        if (booking) {
-          await this.dropOff()
-        }
       }
     }
 
@@ -94,12 +107,12 @@ class RecycleTruck extends Vehicle {
     this.speed = 0
     this.statusEvents.next(this)
     if (this.queue.length > 0) {
+      if (this.booking) {
+        this.booking.pickedUp(this.position)
+      }
       this.simulate(false)
       if (this.status === 'toPickup') {
         return this.pickup()
-      }
-      if (this.status === 'toDelivery') {
-        return this.dropOff()
       }
     }
   }

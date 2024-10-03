@@ -9,9 +9,9 @@ const queue = require('./queueSubject')
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const vroom = (module.exports = {
-  bookingToShipment({ id, pickup, destination }, i) {
+  bookingToShipment({ id, pickup, destination, bookingId }, i) {
     return {
-      id: i,
+      id: bookingId,
       //description: id,
       amount: [1],
       pickup: {
@@ -25,11 +25,11 @@ const vroom = (module.exports = {
               ],
             ]
           : undefined,
-        id: i,
+        id: bookingId,
         location: [pickup.position.lon, pickup.position.lat],
       },
       delivery: {
-        id: i,
+        id: bookingId,
         location: [destination.position.lon, destination.position.lat],
         time_windows: destination.arrivalTime?.length
           ? [

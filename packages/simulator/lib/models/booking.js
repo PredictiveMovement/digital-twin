@@ -11,6 +11,7 @@ class Booking {
       booking.carId || 'no-carId',
       booking.order || safeId(),
     ].join('-')
+    this.bookingId = booking.bookingId
     this.status = 'New'
     this.co2 = 0 //TODO: initialvärde?
     this.passenger = booking.passenger

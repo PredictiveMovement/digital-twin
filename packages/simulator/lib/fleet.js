@@ -77,9 +77,6 @@ class Fleet {
   handleAllBookings() {
     return from(this.bookings).pipe(
       bufferTime(5000),
-      tap((bookingBatch) =>
-        info(`${bookingBatch.length} bokningar buffrade för ${this.name}`)
-      ),
       withLatestFrom(this.cars.pipe(toArray())),
       mergeMap(async ([bookingBatch, cars]) => {
         const vehicles = cars.map((car, i) => truckToVehicle(car, car.id))
@@ -94,7 +91,7 @@ class Fleet {
         routes.forEach((route) => {
           const car = cars.find((car) => car.id === route.vehicle)
           if (car) {
-            car.setRoute(route)
+            car.setRoute(route, bookingBatch)
           } else {
             error(`No car found for route ${route.vehicle}`)
           }
@@ -113,7 +110,7 @@ class Fleet {
     return vroomResponse.routes.map((route) => ({
       vehicle: route.vehicle,
       steps: route.steps
-        .filter(({ type }) => ['pickup', 'delivery', 'start'].includes(type))
+        .filter(({ type }) => ['pickup', 'delivery'].includes(type))
         .map(({ id, type, arrival, departure, location }) => ({
           id,
           type,

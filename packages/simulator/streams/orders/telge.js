@@ -91,7 +91,7 @@ function read() {
   const cache = !bookingsCache ? from([]) : from(JSON.parse(bookingsCache))
 
   return (cacheExists ? cache : rutter()).pipe(
-    map((row) => new Booking({ type: 'recycle', ...row })),
+    map((row, i) => new Booking({ type: 'recycle', ...row, bookingId: i })),
     shareReplay(),
     catchError((err) => {
       error('TELGE -> from JSON', err)
