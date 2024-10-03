@@ -2,7 +2,7 @@
 
 const fs = require('fs')
 const path = require('path')
-const { from, take } = require('rxjs')
+const { from, take, mergeMap } = require('rxjs')
 const { toArray } = require('rxjs/operators')
 const Booking = require('../../lib/models/booking')
 const { reverseSearch } = require('../../lib/pelias')
@@ -191,5 +191,69 @@ describe('Clustering - calculateCenters', () => {
 
       done()
     })
+  })
+})
+
+describe('Integration Test - Load and Process Telge Bookings', () => {
+  it('should load bookings, add postal codes, cluster them, and calculate centers', (done) => {
+    telge
+      .pipe(
+        take(3),
+        mergeMap((booking) => {
+          // Ensure each booking has a postal code
+          if (booking.pickup.postalcode) {
+            return from([booking])
+          } else {
+            return addPostalCode(booking)
+          }
+        }),
+        toArray(),
+        mergeMap((bookings) => {
+          console.log('--- Loaded Bookings with Postal Codes ---')
+          bookings.forEach((booking) => {
+            console.log(`Booking ID: ${booking.id}`)
+            console.log(`  Postal Code: ${booking.pickup.postalcode}`)
+            console.log(
+              `  Position: (${booking.pickup.position.lat}, ${booking.pickup.position.lon})`
+            )
+            console.log(`  Recycling Type: ${booking.recyclingType}`)
+            console.log('----------------------------------------')
+          })
+          return groupBookingsByPostalCode(from(bookings))
+        }),
+        mergeMap((groups) => {
+          console.log('\n--- Grouped Bookings by Postal Code ---')
+          groups.forEach((group) => {
+            console.log(`Postal Code: ${group.postalCode}`)
+            console.log(`  Number of Bookings: ${group.bookings.length}`)
+            group.bookings.forEach((booking) => {
+              console.log(`    Booking ID: ${booking.id}`)
+            })
+            console.log('--------------------------------------')
+          })
+          return calculateCenters(groups)
+        })
+      )
+      .subscribe(
+        (groupCenters) => {
+          console.log('\n--- Calculated Centers of Clusters ---')
+          groupCenters.forEach((group) => {
+            console.log(`Postal Code: ${group.postalCode}`)
+            console.log(
+              `  Center Position: (${group.center.lat}, ${group.center.lon})`
+            )
+            console.log(`  Number of Bookings: ${group.bookings.length}`)
+            console.log('--------------------------------------')
+          })
+        },
+        (err) => {
+          console.error('Error during integration test:', err)
+          done(err) // Fail the test
+        },
+        () => {
+          console.log('\nIntegration test completed.')
+          done() // Finish the test
+        }
+      )
   })
 })
