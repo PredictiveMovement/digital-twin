@@ -194,66 +194,28 @@ describe('Clustering - calculateCenters', () => {
   })
 })
 
-describe('Integration Test - Load and Process Telge Bookings', () => {
-  it('should load bookings, add postal codes, cluster them, and calculate centers', (done) => {
+describe('Integration Test - Load and Cluster Bookings', () => {
+  it('should load bookings and cluster them by postal code', (done) => {
+    // Subscribe to the telge stream, and pipe through processing
     telge
       .pipe(
-        take(3),
-        mergeMap((booking) => {
-          // Ensure each booking has a postal code
-          if (booking.pickup.postalcode) {
-            return from([booking])
-          } else {
-            return addPostalCode(booking)
-          }
-        }),
-        toArray(),
-        mergeMap((bookings) => {
-          console.log('--- Loaded Bookings with Postal Codes ---')
-          bookings.forEach((booking) => {
-            console.log(`Booking ID: ${booking.id}`)
-            console.log(`  Postal Code: ${booking.pickup.postalcode}`)
-            console.log(
-              `  Position: (${booking.pickup.position.lat}, ${booking.pickup.position.lon})`
-            )
-            console.log(`  Recycling Type: ${booking.recyclingType}`)
-            console.log('----------------------------------------')
-          })
-          return groupBookingsByPostalCode(from(bookings))
-        }),
-        mergeMap((groups) => {
-          console.log('\n--- Grouped Bookings by Postal Code ---')
-          groups.forEach((group) => {
-            console.log(`Postal Code: ${group.postalCode}`)
-            console.log(`  Number of Bookings: ${group.bookings.length}`)
-            group.bookings.forEach((booking) => {
-              console.log(`    Booking ID: ${booking.id}`)
-            })
-            console.log('--------------------------------------')
-          })
-          return calculateCenters(groups)
-        })
+        take(5), // Take only the first 5 bookings
+        mergeMap((booking) => addPostalCode(booking)), // Add postal codes to each booking
+        toArray(), // Collect all bookings with postal codes into an array
+        mergeMap((bookings) => groupBookingsByPostalCode(from(bookings))), // Group bookings by postal code
+        mergeMap((groups) => calculateCenters(from(groups))) // Calculate centers of clusters
       )
-      .subscribe(
-        (groupCenters) => {
-          console.log('\n--- Calculated Centers of Clusters ---')
-          groupCenters.forEach((group) => {
-            console.log(`Postal Code: ${group.postalCode}`)
-            console.log(
-              `  Center Position: (${group.center.lat}, ${group.center.lon})`
-            )
-            console.log(`  Number of Bookings: ${group.bookings.length}`)
-            console.log('--------------------------------------')
-          })
-        },
-        (err) => {
-          console.error('Error during integration test:', err)
-          done(err) // Fail the test
-        },
-        () => {
-          console.log('\nIntegration test completed.')
+      .subscribe({
+        next: (groupCenters) => {
+          console.log('Cluster centers:', groupCenters) // Output cluster centers
+          expect(groupCenters).toBeDefined() // Assert that cluster centers were calculated
+          expect(groupCenters.length).toBeGreaterThan(0) // Ensure we have clusters
           done() // Finish the test
-        }
-      )
+        },
+        error: (err) => {
+          console.error('Error during clustering:', err)
+          done(err) // Fail the test if there was an error
+        },
+      })
   })
 })
