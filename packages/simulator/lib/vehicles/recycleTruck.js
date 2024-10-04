@@ -1,8 +1,6 @@
 const { info } = require('../log')
 const { virtualTime } = require('../virtualTime') // Import the instance directly
 const Vehicle = require('./vehicle')
-const { assert } = require('console')
-const Booking = require('../models/booking')
 
 class RecycleTruck extends Vehicle {
   constructor(args) {
@@ -23,10 +21,8 @@ class RecycleTruck extends Vehicle {
   canHandleBooking(booking) {
     if (booking.type !== 'recycle') return false
     const hasCapacity = this.cargo.length < this.parcelCapacity
-    const canHandleWasteType = this.recyclingTypes.includes(
-      booking.recyclingType
-    )
-    return hasCapacity && canHandleWasteType
+    const isCorrectCar = booking.carId === this.carId
+    return hasCapacity && isCorrectCar
   }
 
   async waitAtPickup() {
@@ -36,8 +32,6 @@ class RecycleTruck extends Vehicle {
 
   async pickup() {
     if (this._disposed) return
-
-    await this.waitAtPickup()
 
     if (this.booking && this.booking.pickup) {
       // Lägg till bokningen i lasten
@@ -71,29 +65,6 @@ class RecycleTruck extends Vehicle {
     this.status = 'ready'
     this.booking = null
     this.statusEvents.next(this)
-  }
-
-  async handleBooking(booking) {
-    assert(booking instanceof Booking, 'Booking needs to be of type Booking')
-    this.queue.push(booking)
-    booking.assign(this)
-    booking.queued(this)
-    return booking
-  }
-
-  async startRouting() {
-    if (!this.booking) {
-      console.log('No booking')
-    }
-
-    if (!this.queue.length) {
-      console.log('No queue')
-    }
-
-    this.status = 'toPickup'
-    this.statusEvents.next(this)
-    this.booking = this.queue.shift()
-    this.navigateTo(booking.pickup.position)
   }
 }
 

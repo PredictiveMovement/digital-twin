@@ -50,7 +50,6 @@ const vehicleName = (vehicleType) => {
 }
 
 const CarInfo = ({ data }) => {
-  console.log(data)
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <div>
@@ -163,8 +162,6 @@ const PassengerInfo = ({ data }) => {
 }
 
 const GenericInfo = ({ data }) => {
-  console.log('Data:')
-  console.log(data)
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <Paragraph>
@@ -202,7 +199,6 @@ const GenericInfo = ({ data }) => {
 }
 
 const HoverInfoBox = ({ data }) => {
-  console.log(data.type)
   switch (data.type) {
     case 'car':
       return <CarInfo data={data} />
