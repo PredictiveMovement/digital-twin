@@ -20,6 +20,7 @@ const Fleet = require('./fleet')
 const { error, info } = require('./log')
 const telge = require('../streams/orders/telge')
 const { dispatch } = require('./dispatch/dispatchCentral')
+const { divideIntoClusters } = require('./clustering')
 
 class Municipality {
   constructor({
@@ -102,47 +103,52 @@ class Municipality {
 
   createFleets() {
     return this.recycleCollectionPoints.pipe(
+      divideIntoClusters,
       toArray(),
-      mergeMap((bookings) => {
+      mergeMap((clusteredBookings) => {
         return this.uniqueVehicles.pipe(
           mergeMap((uniqueVehicles) => {
             info(`Totalt antal unika fordon: ${uniqueVehicles.length}`)
-            info(`Totalt antal bokningar: ${bookings.length}`)
+            info(`Totalt antal kluster: ${clusteredBookings.length}`)
 
             const fleetDistribution = this.calculateFleetDistribution(
-              [
-                ['BPLASTFÖRP', 'BRÄNN'],
-                ['METFÖRP', 'BLANDAVF'],
-              ],
-              uniqueVehicles,
-              bookings
+              clusteredBookings,
+              uniqueVehicles
             )
 
             return from(Object.entries(fleetDistribution)).pipe(
-              map(
+              mergeMap(
                 (
-                  [groupName, { vehicles, recyclingTypes, filteredBookings }],
+                  [clusterName, { vehicles, recyclingTypes, bookings }],
                   index
                 ) => {
-                  const fleetName = `Fleet-${index}`
-                  const fleetVehicles = vehicles
-
-                  return new Fleet({
+                  const fleetName = `Fleet-${index}-${clusterName}`
+                  const fleet = new Fleet({
                     name: fleetName,
                     hub: this.center,
                     type: 'recycleTruck',
                     municipality: this,
-                    bookings: filteredBookings,
-                    vehicles: fleetVehicles,
+                    bookings: from(bookings),
+                    vehicles: vehicles,
                     recyclingTypes: Array.from(recyclingTypes),
                   })
+
+                  // Räkna antalet bokningar och logga sedan
+                  return from(bookings).pipe(
+                    toArray(),
+                    map((bookingsArray) => ({
+                      fleet,
+                      bookingsCount: bookingsArray.length,
+                    }))
+                  )
                 }
               ),
-              tap((fleet) =>
+              tap(({ fleet, bookingsCount }) =>
                 info(
-                  `✅ Fleet skapad: ${fleet.name} med ${fleet.vehicles.length} fordon och ${fleet.bookings.length} bokningar`
+                  `✅ Fleet skapad: ${fleet.name} med ${fleet.vehicles.length} fordon och ${bookingsCount} bokningar`
                 )
-              )
+              ),
+              map(({ fleet }) => fleet) // Returnera bara fleet-objektet
             )
           })
         )
@@ -151,43 +157,69 @@ class Municipality {
     )
   }
 
-  //Create a fleet distribution with vehicles and their recyclingTypes
-  calculateFleetDistribution(recyclingTypeGroups, uniqueVehicles, bookings) {
+  calculateFleetDistribution(clusteredBookings, uniqueVehicles) {
     const fleetDistribution = {}
-    const assignedBookings = new Set()
-    const assignedVehicles = new Set()
+    let totalBookings = 0
+    const clusterBookings = {}
 
-    recyclingTypeGroups.forEach((recyclingTypeGroup, index) => {
-      //Hämta bilar som kan hantera denna typ av avfall
-      const clusterVehicles = uniqueVehicles.filter(
-        (vehicle) =>
-          recyclingTypeGroup.some((recyclingType) =>
+    // Första passet: Räkna totala antalet bokningar och bokningar per kluster
+    clusteredBookings.forEach((cluster) => {
+      const clusterName = cluster.postalCode
+      const bookings = []
+      const recyclingTypes = new Set()
+
+      cluster.bookings.subscribe({
+        next: (booking) => {
+          bookings.push(booking)
+          recyclingTypes.add(booking.recyclingType)
+          totalBookings++
+        },
+        complete: () => {
+          clusterBookings[clusterName] = {
+            bookings,
+            recyclingTypes,
+            count: bookings.length,
+          }
+        },
+      })
+    })
+
+    // Beräkna antalet fordon per kluster baserat på andelen bokningar
+    const totalVehicles = uniqueVehicles.length
+    const vehiclesPerCluster = {}
+
+    Object.entries(clusterBookings).forEach(([clusterName, data]) => {
+      const proportion = data.count / totalBookings
+      const allocatedVehicles = Math.max(
+        1,
+        Math.round(proportion * totalVehicles)
+      )
+      vehiclesPerCluster[clusterName] = allocatedVehicles
+    })
+
+    // Andra passet: Fördela fordon till kluster
+    Object.entries(clusterBookings).forEach(([clusterName, data]) => {
+      const { bookings, recyclingTypes } = data
+      const allocatedVehicles = vehiclesPerCluster[clusterName]
+
+      const clusterVehicles = uniqueVehicles
+        .filter((vehicle) =>
+          Array.from(recyclingTypes).some((recyclingType) =>
             vehicle.recyclingTypes.includes(recyclingType)
-          ) && !assignedVehicles.has(vehicle.id)
-      )
+          )
+        )
+        .slice(0, allocatedVehicles)
 
-      console.log(
-        `Cluster ${index} (${recyclingTypeGroup}) vehicles: ${clusterVehicles.length}`
-      )
-
-      //Hämta bokningar som inte redan tilldelats en fleet
-      const filteredBookings = bookings.filter(
-        (booking) =>
-          recyclingTypeGroup.includes(booking.recyclingType) &&
-          !assignedBookings.has(booking.id)
-      )
-
-      // Markera bokningar som tilldelats
-      filteredBookings.forEach((booking) => assignedBookings.add(booking.id))
-      clusterVehicles.forEach((vehicle) => assignedVehicles.add(vehicle.id))
-      fleetDistribution[`Cluster-${index}`] = {
+      fleetDistribution[clusterName] = {
         vehicles: clusterVehicles,
-        recyclingTypes: recyclingTypeGroup,
-        filteredBookings: filteredBookings,
+        recyclingTypes: recyclingTypes,
+        bookings: bookings,
       }
 
-      console.log(
-        `Cluster ${index} (${recyclingTypeGroup}) bookings: ${filteredBookings.length}`
+      info(
+        `Kluster ${clusterName}: ${clusterVehicles.length} fordon, ${
+          bookings.length
+        } bokningar, RecyclingTypes: ${Array.from(recyclingTypes).join(', ')}`
       )
     })
 
@@ -213,6 +245,25 @@ class Municipality {
         return of(null)
       })
     )
+  }
+
+  redistributeUnassignedBookings(fleetDistribution, unassignedBookings) {
+    unassignedBookings.forEach((booking) => {
+      const suitableFleet = Object.values(fleetDistribution).find(
+        (fleet) =>
+          fleet.recyclingTypes.has(booking.recyclingType) &&
+          fleet.bookings.length < fleet.vehicles.length * 10
+      )
+
+      if (suitableFleet) {
+        suitableFleet.bookings.push(booking)
+        info(
+          `Omfördelad bokning till fleet med ${suitableFleet.bookings.length} bokningar`
+        )
+      } else {
+        //error(`Kunde inte omfördela bokning: ${booking.id}`)
+      }
+    })
   }
 }
 

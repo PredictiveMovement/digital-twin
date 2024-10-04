@@ -62,11 +62,6 @@ class Fleet {
           })
         )
       }),
-      tap((car) =>
-        info(
-          `🚛 Fleet ${this.name} skapade fordon ${car.carId} med recycleTypes ${car.recyclingTypes}`
-        )
-      ),
       shareReplay()
     )
 
@@ -91,7 +86,16 @@ class Fleet {
         routes.forEach((route) => {
           const car = cars.find((car) => car.id === route.vehicle)
           if (car) {
-            car.setRoute(route, bookingBatch)
+            route.steps.forEach((step) => {
+              const booking = bookingBatch.find(
+                (booking) => booking.bookingId === step.id
+              )
+              if (booking) {
+                car.handleBooking(booking)
+              } else {
+                error(`No booking found for step ${step.id}`)
+              }
+            })
           } else {
             error(`No car found for route ${route.vehicle}`)
           }
@@ -110,7 +114,7 @@ class Fleet {
     return vroomResponse.routes.map((route) => ({
       vehicle: route.vehicle,
       steps: route.steps
-        .filter(({ type }) => ['pickup', 'delivery'].includes(type))
+        .filter(({ type }) => ['pickup'].includes(type))
         .map(({ id, type, arrival, departure, location }) => ({
           id,
           type,

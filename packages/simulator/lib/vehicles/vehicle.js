@@ -1,5 +1,3 @@
-// vehicle.js
-
 const { ReplaySubject } = require('rxjs')
 const { scan } = require('rxjs/operators')
 const moment = require('moment')
@@ -25,6 +23,15 @@ class Vehicle {
     passengerCapacity,
     weight = 10000,
     fleet,
+
+    /*
+     * CO2
+     *
+     * https://www.naturvardsverket.se/data-och-statistik/klimat/vaxthusgaser-utslapp-fran-inrikes-transporter/
+     * https://www.trafa.se/globalassets/rapporter/2010-2015/2015/rapport-2015_12-lastbilars-klimateffektivitet-och-utslapp.pdf
+     *
+     * TODO: Move the co2 things to its own file.
+     */
     co2PerKmKg = 0.013 / 1000,
   } = {}) {
     this.id = id
@@ -35,8 +42,8 @@ class Vehicle {
     this.delivered = []
     this.parcelCapacity = parcelCapacity
     this.passengerCapacity = passengerCapacity
-    this.weight = weight
-    this.costPerHour = 3000 / 12
+    this.weight = weight // http://www.lastbilsteori.se/lastvikt.html
+    this.costPerHour = 3000 / 12 // ?
     this.co2 = 0
     this.distance = 0
     this.status = status
@@ -44,8 +51,8 @@ class Vehicle {
     this.created = this.time()
     this.co2PerKmKg = co2PerKmKg
     this.vehicleType = 'default'
-    this.route = []
 
+    // TODO: rename these to events.moved, events.cargo, events.status
     this.movedEvents = new ReplaySubject()
     this.cargoEvents = new ReplaySubject()
     this.statusEvents = new ReplaySubject()
@@ -100,6 +107,8 @@ class Vehicle {
     this.destination = destination
 
     if (this.position.distanceTo(destination) < 5) {
+      // Do not route if we are close enough.
+
       this.stopped()
       return destination
     }
@@ -138,8 +147,11 @@ class Vehicle {
 
       this.navigateTo(booking.pickup.position)
     } else {
+      // TODO: switch places with current booking if it makes more sense to pick this package up before picking up current
       this.queue.push(booking)
+      // TODO: use vroom to optimize the queue
       booking.assign(this)
+
       booking.queued(this)
     }
     return booking
@@ -155,20 +167,21 @@ class Vehicle {
     )
 
     if (waitingtime > 0) {
-      this.simulate(false)
+      this.simulate(false) // pause interpolation while we wait
       await virtualTime.waitUntil(departure)
     }
   }
-
   async pickup() {
     if (this._disposed) return
 
     await this.waitAtPickup()
 
     // wait one tick so the pickup event can be parsed before changing status
+    // eslint-disable-next-line no-undef
     setImmediate(() => {
       if (this.booking) this.booking.pickedUp(this.position)
       this.cargo.push(this.booking)
+      // see if we have more packages to pickup from this position
       this.queue
         .filter((b) => this.position.distanceTo(b.pickup.position) < 200)
         .forEach((booking) => {
@@ -181,6 +194,8 @@ class Vehicle {
         this.status = 'toDelivery'
         this.statusEvents.next(this)
 
+        // should we first pickup more bookings before going to the destination?
+        // TODO: call Vroom here instead of trying to do this manually..
         if (
           this.queue.length > 0 &&
           haversine(this.queue[0].pickup.position, this.position) <
@@ -206,6 +221,7 @@ class Vehicle {
   }
 
   pickNextFromCargo() {
+    // pick next from cargo
     this.cargo.sort(
       (a, b) =>
         haversine(this.position, a.destination.position) -
@@ -215,9 +231,9 @@ class Vehicle {
     this.cargoEvents.next(this)
 
     if (booking) {
-      this.navigateTo(booking.destination.position)
-      this.booking = booking
+      this.navigateTo(this.booking.destination.position)
     } else {
+      // If we have no more packages to deliver in cargo, go to the nearest booking in the queue or back to origin
       this.queue.sort(
         (a, b) =>
           haversine(this.position, a.destination.position) -
@@ -240,6 +256,7 @@ class Vehicle {
   }
 
   async updatePosition(position, pointsPassedSinceLastUpdate, time) {
+    //console.count(`updatePosition${this.id}`)
     const lastPosition = this.position || position
     const timeDiff = time - this.lastPositionUpdate
 
@@ -258,6 +275,8 @@ class Vehicle {
 
     const co2 = this.updateCarbonDioxide(km)
 
+    // TODO: Find which municipality the vehicle is moving in now and add the co2 for this position change to that municipality
+
     this.distance += km
     this.pointsPassedSinceLastUpdate = pointsPassedSinceLastUpdate
     this.speed = Math.round(km / h || 0)
@@ -267,18 +286,22 @@ class Vehicle {
     if (metersMoved > 0) {
       this.bearing = bearing(lastPosition, position) || 0
       this.movedEvents.next(this)
+      // NOTE: cargo is passengers or packages.
+      // eslint-disable-next-line no-unexpected-multiline
       const cargoAndPassengers = [...this.cargo, ...(this.passengers || [])]
       cargoAndPassengers.map((booking) => {
         booking.moved(
           this.position,
           metersMoved,
-          co2 / (this.cargo.length + 1),
+          co2 / (this.cargo.length + 1), // TODO: Why do we do +1 here? Because we have one active booking + cargo
           (h * this.costPerHour) / (this.cargo.length + 1),
           timeDiff
         )
       })
     }
   }
+
+  // start -> toPickup -> pickup -> toDelivery -> delivery -> start
 
   stopped() {
     this.speed = 0
@@ -290,6 +313,11 @@ class Vehicle {
     }
   }
 
+  /**
+   * Add carbon dioxide emissions to this vehicle according to the distance traveled.
+   * @param {number} Distance The distance traveled in km
+   * @returns {number} The amount of carbon dioxide emitted
+   */
   updateCarbonDioxide(distance) {
     let co2
 

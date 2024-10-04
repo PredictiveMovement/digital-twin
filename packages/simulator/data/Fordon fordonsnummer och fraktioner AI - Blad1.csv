@@ -1,0 +1,34 @@
+,REG.NR,Intern nr,Fordonstyp,Avfallstyp
+,TWK 730,1,"Baklastare, enfack",HUSHSORT
+,Hyr,2,"Baklastare, enfack",HUSHSORT
+,KMS 976,5,"Baklastare, enfack",HUSHSORT
+,BNX 707,12,"Baklastare, enfack",TRÄDGÅRD
+,TMW51J,13,"Matbil, enfack",MATAVF
+,DJD 430,14,"Matbil, enfack","MATAVF, ABP (ej samtidigt)"
+,,15,"Baklastare, enfack",Samtliga fraktioner (felsorterat)
+,COT 53N,16,Skåpbil,"Servicebil, utställning/hemtagning kärl m.m. ej tömmer avfall"
+,Hyr,17,Skåpbil,TEXTIL
+,HSL 07P,20,Fyrfack,HEMSORT (kärl 1)
+,PSA 95X,21,Fyrfack,HEMSORT (kärl 1)
+,RRK 873,22,Fyrfack,HEMSORT (kärl 2)
+,UER 89X,23,Fyrfack,HEMSORT (kärl 1)
+,LLT 365,24,Fyrfack,HEMSORT (kärl 1)
+,KPR704,25,Fyrfack,HEMSORT (kärl 2)
+,YKX819,40,2-fack,"Måndag: BMETFÖRP, METFÖRP, BPLASTFÖRP, PLASTFÖRP                           Tisdag: BPAPPFÖRP, PAPPFÖRP, BRETURPAPP, RETURPAPP, WELLPAPP Onsdag: BPAPPFÖRP, PAPPFÖRP, BRETURPAPP, RETURPAPP, WELLPAPP Torsdag: BMETFÖRP, METFÖRP, BPLASTFÖRP, PLASTFÖRP                          Fredag: BGLFÄ, GLFÄ, BGLOF, GLOF"
+,CBT 272,41,2-fack,"BMETFÖRP, METFÖRP, BPLASTFÖRP, PLASTFÖRP                       "
+,JNF 246,42,2-fack,"BPAPPFÖRP, PAPPFÖRP, BRETURPAPP, RETURPAPP, WELLPAPP "
+,TXE055,43,2-fack,"Måndag: BGLFÄ, GLFÄ, BGLOF, GLOF BPAPPFÖRP, PAPPFÖRP, BRETURPAPP, RETURPAPP, WELLPAPP                                                                                                    Tisdag: BMETFÖRP, METFÖRP, BPLASTFÖRP, PLASTFÖRP                                   Onsdag: BGLFÄ, GLFÄ, BGLOF, GLOF                                                                          Torsdag: BPAPPFÖRP, PAPPFÖRP, BRETURPAPP, RETURPAPP, WELLPAPP Fredag: BGLFÄ, GLFÄ, BGLOF, GLOF"
+,TWK 730,45,"Baklastare, enfack","BRÄNN, BLANDAVF, GROVAVF"
+,OBT 531,60,Skåpbil,"Servicebil, utställning/hemtagning kärl m.m. ej tömmer avfall"
+,PTY 473,70,Frontlastare,"Tömmer Vippcontainer, samma avfall som 2-fack"
+,ETO 289,71,Frontlastare,"Tömmer Vippcontainer, samma avfall som 2-fack"
+,OGF 913,81,Kranbil,
+,CZO269,82,Kranbil,
+,WPX 399,85,Fyrfack,HEMSORT (kärl 1)
+,BXZ 12C,90,Lastväxlare,"Tömmer Liftdumper, Rullflak, komprimatorer"
+,CYM 967,91,Lastväxlare,"Tömmer Liftdumper, Rullflak, komprimatorer"
+,YCF02B,92,Lastväxlare,"Tömmer Liftdumper, Rullflak, komprimatorer"
+,NET 334,93,Lastväxlare,"Tömmer Liftdumper, Rullflak, komprimatorer"
+,Trosa,87,"Baklastare, enfack",Externa kommuner
+,Gnesta/Trosa,88,"Baklastare, enfack",Externa kommuner
+,Gnesta/Trosa,89,"Baklastare, enfack",Externa kommuner
