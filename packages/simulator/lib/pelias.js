@@ -48,12 +48,9 @@ async function cachedFetch(method, params, fetchFunc, forceFetch = false) {
   if (!forceFetch) {
     const cachedData = await getFromCache(cacheKey)
     if (cachedData) {
-      console.log('Using cached data for', method, params)
       return cachedData
     }
   }
-
-  console.log('NOT USING cached data for', method, params)
   const data = await fetchFunc()
   await saveToCache(cacheKey, data)
   return data

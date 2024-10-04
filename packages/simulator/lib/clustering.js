@@ -4,6 +4,7 @@ const { from } = require('rxjs')
 const { map, mergeMap, groupBy, toArray } = require('rxjs/operators')
 const { reverseSearch } = require('./pelias')
 const Booking = require('./models/booking')
+const ClusteredBookings = require('./models/clusteredBookings')
 
 function addPostalCode(booking) {
   return from(
@@ -54,8 +55,46 @@ function calculateCenters(groups) {
   )
 }
 
+function clusterByPostalCode(bookings) {
+  return bookings.pipe(
+    groupBy((booking) => booking.pickup.postalcode), // Group by postal code
+    mergeMap((group$) => {
+      const postalCode = group$.key
+
+      // Calculate the center of the group of bookings
+      return group$.pipe(
+        toArray(),
+        map((groupedBookings) => {
+          const total = groupedBookings.length
+          const sumPosition = groupedBookings.reduce(
+            (acc, booking) => {
+              acc.lat += booking.pickup.position.lat
+              acc.lon += booking.pickup.position.lon
+              return acc
+            },
+            { lat: 0, lon: 0 }
+          )
+
+          const center = {
+            lat: sumPosition.lat / total,
+            lon: sumPosition.lon / total,
+          }
+
+          // Create a ClusteredBookings object with a stream of bookings
+          return new ClusteredBookings(
+            postalCode,
+            center,
+            from(groupedBookings)
+          )
+        })
+      )
+    })
+  )
+}
+
 module.exports = {
   addPostalCode,
   groupBookingsByPostalCode,
   calculateCenters,
+  clusterByPostalCode,
 }

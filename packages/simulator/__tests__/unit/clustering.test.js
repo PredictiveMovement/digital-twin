@@ -2,16 +2,18 @@
 
 const fs = require('fs')
 const path = require('path')
-const { from, take, mergeMap } = require('rxjs')
-const { toArray } = require('rxjs/operators')
+const { from, take, mergeMap, map, distinct } = require('rxjs')
+const { toArray, tap } = require('rxjs/operators')
 const Booking = require('../../lib/models/booking')
 const { reverseSearch } = require('../../lib/pelias')
 const {
   addPostalCode,
   groupBookingsByPostalCode,
   calculateCenters,
+  clusterByPostalCode,
 } = require('../../lib/clustering')
 const telge = require('../../streams/orders/telge')
+const { te } = require('date-fns/locale')
 
 /*const loadBookings = () => {
   telge // 'telge' is an observable
@@ -41,6 +43,45 @@ describe('Utility - reverseSearch', () => {
 
     // Assert that the postal code is what you expect
     expect(postalCode).toBeDefined()
+  })
+})
+
+describe('Count unique postal codes', () => {
+  it('should count unique postal codes from bookings', (done) => {
+    // Load the bookings using the read function
+    telge
+      .pipe(
+        // Extract postal codes from each booking
+        map((booking) => booking.pickup.postalcode),
+
+        // Ensure only unique postal codes are counted
+        distinct(),
+
+        // Collect all the distinct postal codes into an array
+        toArray()
+      )
+      .subscribe({
+        next: (uniquePostalCodes) => {
+          console.log(`Unique postal codes:`, uniquePostalCodes)
+
+          // Log the total number of unique postal codes
+          console.log(
+            `Total number of unique postal codes:`,
+            uniquePostalCodes.length
+          )
+
+          // Perform your test assertions
+          expect(uniquePostalCodes.length).toBeGreaterThan(0) // Example: Ensure there's at least one postal code
+          done()
+        },
+        error: (err) => {
+          console.error(
+            'Error loading bookings or extracting postal codes:',
+            err
+          )
+          done(err)
+        },
+      })
   })
 })
 
@@ -196,25 +237,159 @@ describe('Clustering - calculateCenters', () => {
 
 describe('Integration Test - Load and Cluster Bookings', () => {
   it('should load bookings and cluster them by postal code', (done) => {
-    // Subscribe to the telge stream, and pipe through processing
     telge
       .pipe(
         take(5), // Take only the first 5 bookings
-        mergeMap((booking) => addPostalCode(booking)), // Add postal codes to each booking
-        toArray(), // Collect all bookings with postal codes into an array
-        mergeMap((bookings) => groupBookingsByPostalCode(from(bookings))), // Group bookings by postal code
-        mergeMap((groups) => calculateCenters(from(groups))) // Calculate centers of clusters
+        mergeMap((booking) => addPostalCode(booking)), // Add postal code to each booking
+        toArray(), // Collect all bookings into an array
+        mergeMap((bookings) => clusterByPostalCode(from(bookings))) // Group bookings by postal code
       )
       .subscribe({
-        next: (groupCenters) => {
-          console.log('Cluster centers:', groupCenters) // Output cluster centers
-          expect(groupCenters).toBeDefined() // Assert that cluster centers were calculated
-          expect(groupCenters.length).toBeGreaterThan(0) // Ensure we have clusters
-          done() // Finish the test
+        next: (clusteredBooking) => {
+          // Each `clusteredBooking` is an instance of `ClusteredBookings`
+          console.log(`Cluster for postal code ${clusteredBooking.postalCode}:`)
+          //console.log('Center:', clusteredBooking.center)
+
+          // Subscribe to the stream of bookings within each cluster
+          clusteredBooking.bookings.subscribe({
+            complete: () => {
+              /*console.log(
+                `Completed processing cluster ${clusteredBooking.postalCode}`
+              )*/
+            },
+          })
         },
         error: (err) => {
           console.error('Error during clustering:', err)
-          done(err) // Fail the test if there was an error
+          done(err)
+        },
+        complete: () => {
+          console.log('Clustering process completed for all bookings.')
+          done()
+        },
+      })
+  })
+})
+
+describe('Integration Test - Count Clusters', () => {
+  it('should count how many different clusters (postal codes) exist', (done) => {
+    jest.setTimeout(10000) // Increase timeout to 10 seconds for this test
+
+    telge
+      .pipe(
+        mergeMap((booking) => addPostalCode(booking)), // Add postal code to each booking
+        toArray(), // Collect all bookings into an array
+        mergeMap((bookings) => clusterByPostalCode(from(bookings))), // Group bookings by postal code
+        toArray() // Collect all clusters into an array
+      )
+      .subscribe({
+        next: (clusters) => {
+          console.log(`Total number of clusters: ${clusters.length}`)
+
+          // Perform test assertion
+          expect(clusters.length).toBeGreaterThan(0) // Ensure there is at least 1 cluster
+
+          done()
+        },
+        error: (err) => {
+          console.error('Error during clustering:', err)
+          done(err)
+        },
+      })
+  })
+})
+
+describe('Integration Test - Postal Code and Booking Counts', () => {
+  let uniquePostalCodeCount = 0
+  let totalBookingsCount = 0
+  let clusters = []
+
+  // Step 1: Count unique postal codes and total bookings
+  it('should count unique postal codes and total bookings', (done) => {
+    jest.setTimeout(10000) // Increase timeout to 10 seconds for this test
+    telge
+      .pipe(
+        tap(() => totalBookingsCount++), // Increment total bookings count
+        map((booking) => booking.pickup.postalcode), // Extract postal codes
+        distinct(), // Ensure postal codes are unique
+        toArray() // Collect unique postal codes into an array
+      )
+      .subscribe({
+        next: (uniquePostalCodes) => {
+          uniquePostalCodeCount = uniquePostalCodes.length // Save unique postal code count
+          console.log(`Unique postal codes count: ${uniquePostalCodeCount}`)
+          done()
+        },
+        error: (err) => {
+          console.error('Error during postal code counting:', err)
+          done(err)
+        },
+      })
+  })
+
+  // Step 2: Create clusters
+  it('should create clusters by postal code', (done) => {
+    telge
+      .pipe(
+        take(totalBookingsCount), // Use total bookings count for clustering
+        mergeMap((booking) => addPostalCode(booking)), // Add postal code to each booking
+        toArray(), // Collect all bookings into an array
+        mergeMap((bookings) => clusterByPostalCode(from(bookings))), // Group bookings by postal code
+        toArray() // Collect clusters into an array
+      )
+      .subscribe({
+        next: (clusteredBookings) => {
+          clusters = clusteredBookings // Save clusters for later assertions
+          console.log(`Total number of clusters: ${clusters.length}`)
+          done()
+        },
+        error: (err) => {
+          console.error('Error during clustering:', err)
+          done(err)
+        },
+      })
+  })
+
+  // Step 3: Verify that number of clusters matches unique postal codes
+  it('should assert that number of clusters matches the number of unique postal codes', () => {
+    expect(clusters.length).toBe(uniquePostalCodeCount) // Assert that the number of clusters is the same as the number of unique postal codes
+    console.log(
+      `Number of clusters: ${clusters.length} matches unique postal codes: ${uniquePostalCodeCount}`
+    )
+  })
+
+  // Step 4: Count and list all the bookings for each cluster and verify total
+  it('should count and list bookings for each cluster', (done) => {
+    let totalClusteredBookingsCount = 0
+
+    from(clusters)
+      .pipe(
+        mergeMap((cluster) => {
+          return cluster.bookings.pipe(
+            toArray(), // Collect all bookings in the cluster
+            tap((bookings) => {
+              totalClusteredBookingsCount += bookings.length // Increment the total number of clustered bookings
+              console.log(
+                `Number of bookings for postal code ${cluster.postalCode}: ${bookings.length}`
+              )
+            })
+          )
+        }),
+        toArray() // Ensure we process all clusters
+      )
+      .subscribe({
+        next: () => {
+          // Verify the total number of bookings matches the total loaded initially
+          expect(totalClusteredBookingsCount).toBe(totalBookingsCount)
+          console.log(
+            `Total bookings in all clusters: ${totalClusteredBookingsCount}`
+          )
+          console.log(`Total bookings loaded initially: ${totalBookingsCount}`)
+          done()
+        },
+        error: (err) => {
+          console.error('Error counting bookings for clusters:', err)
+          done(err)
         },
       })
   })
