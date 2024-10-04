@@ -1,6 +1,8 @@
 const { info } = require('../log')
 const { virtualTime } = require('../virtualTime') // Import the instance directly
 const Vehicle = require('./vehicle')
+const { assert } = require('console')
+const Booking = require('../models/booking')
 
 class RecycleTruck extends Vehicle {
   constructor(args) {
@@ -69,6 +71,29 @@ class RecycleTruck extends Vehicle {
     this.status = 'ready'
     this.booking = null
     this.statusEvents.next(this)
+  }
+
+  async handleBooking(booking) {
+    assert(booking instanceof Booking, 'Booking needs to be of type Booking')
+    this.queue.push(booking)
+    booking.assign(this)
+    booking.queued(this)
+    return booking
+  }
+
+  async startRouting() {
+    if (!this.booking) {
+      console.log('No booking')
+    }
+
+    if (!this.queue.length) {
+      console.log('No queue')
+    }
+
+    this.status = 'toPickup'
+    this.statusEvents.next(this)
+    this.booking = this.queue.shift()
+    this.navigateTo(booking.pickup.position)
   }
 }
 

@@ -94,7 +94,6 @@ function clusterByPostalCode(bookings) {
   )
 }
 
-//Divide all bookings into 5 clusters based on their distance to each other, all close coordinates should be one cluster.
 function divideIntoClusters(bookings) {
   info('Startar klusterindelning av bokningar...')
 
@@ -105,7 +104,7 @@ function divideIntoClusters(bookings) {
 
       const MAX_ITERATIONS = 100
       const CONVERGENCE_THRESHOLD = 0.0001
-      const NUM_CLUSTERS = 20
+      const NUM_CLUSTERS = 50
 
       // Förbered data
       const bookingsWithDistances = allBookings.map((booking) => ({

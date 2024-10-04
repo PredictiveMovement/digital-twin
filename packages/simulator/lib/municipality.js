@@ -148,7 +148,17 @@ class Municipality {
                   `✅ Fleet skapad: ${fleet.name} med ${fleet.vehicles.length} fordon och ${bookingsCount} bokningar`
                 )
               ),
-              map(({ fleet }) => fleet) // Returnera bara fleet-objektet
+              map(({ fleet }) => fleet),
+              toArray(),
+              mergeMap((fleets) => {
+                // Start routing for all cars in all fleets
+                return from(fleets).pipe(
+                  mergeMap((fleet) => fleet.cars),
+                  mergeMap((car) => car.startRouting()),
+                  toArray(), // Wait for all cars to start routing
+                  map(() => fleets) // Return the fleets array
+                )
+              })
             )
           })
         )
@@ -159,10 +169,8 @@ class Municipality {
 
   calculateFleetDistribution(clusteredBookings, uniqueVehicles) {
     const fleetDistribution = {}
-    let totalBookings = 0
-    const clusterBookings = {}
+    const totalVehicles = uniqueVehicles.length
 
-    // Första passet: Räkna totala antalet bokningar och bokningar per kluster
     clusteredBookings.forEach((cluster) => {
       const clusterName = cluster.postalCode
       const bookings = []
@@ -172,55 +180,26 @@ class Municipality {
         next: (booking) => {
           bookings.push(booking)
           recyclingTypes.add(booking.recyclingType)
-          totalBookings++
         },
         complete: () => {
-          clusterBookings[clusterName] = {
-            bookings,
+          const suitableVehicles = uniqueVehicles.filter((vehicle) =>
+            Array.from(recyclingTypes).some((type) =>
+              vehicle.recyclingTypes.includes(type)
+            )
+          )
+
+          const neededVehicles = Math.min(
+            totalVehicles,
+            Math.max(1, Math.ceil(bookings.length / 10))
+          )
+
+          fleetDistribution[clusterName] = {
+            vehicles: suitableVehicles.slice(0, neededVehicles),
             recyclingTypes,
-            count: bookings.length,
+            bookings,
           }
         },
       })
-    })
-
-    // Beräkna antalet fordon per kluster baserat på andelen bokningar
-    const totalVehicles = uniqueVehicles.length
-    const vehiclesPerCluster = {}
-
-    Object.entries(clusterBookings).forEach(([clusterName, data]) => {
-      const proportion = data.count / totalBookings
-      const allocatedVehicles = Math.max(
-        1,
-        Math.round(proportion * totalVehicles)
-      )
-      vehiclesPerCluster[clusterName] = allocatedVehicles
-    })
-
-    // Andra passet: Fördela fordon till kluster
-    Object.entries(clusterBookings).forEach(([clusterName, data]) => {
-      const { bookings, recyclingTypes } = data
-      const allocatedVehicles = vehiclesPerCluster[clusterName]
-
-      const clusterVehicles = uniqueVehicles
-        .filter((vehicle) =>
-          Array.from(recyclingTypes).some((recyclingType) =>
-            vehicle.recyclingTypes.includes(recyclingType)
-          )
-        )
-        .slice(0, allocatedVehicles)
-
-      fleetDistribution[clusterName] = {
-        vehicles: clusterVehicles,
-        recyclingTypes: recyclingTypes,
-        bookings: bookings,
-      }
-
-      info(
-        `Kluster ${clusterName}: ${clusterVehicles.length} fordon, ${
-          bookings.length
-        } bokningar, RecyclingTypes: ${Array.from(recyclingTypes).join(', ')}`
-      )
     })
 
     return fleetDistribution
