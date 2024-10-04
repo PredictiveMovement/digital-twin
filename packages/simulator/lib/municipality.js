@@ -15,6 +15,7 @@ const {
   map,
   groupBy,
   take,
+  zip,
 } = require('rxjs')
 const Fleet = require('./fleet')
 const { error, info } = require('./log')
@@ -133,23 +134,14 @@ class Municipality {
                     recyclingTypes: Array.from(recyclingTypes),
                   })
 
-                  // Räkna antalet bokningar och logga sedan
-                  return from(bookings).pipe(
-                    toArray(),
-                    map((bookingsArray) => ({
-                      fleet,
-                      bookingsCount: bookingsArray.length,
-                    }))
-                  )
+                  // Vänta på att både fleet-skapandet och den initiala planeringen är klar
+                  return zip(
+                    of(fleet),
+                    fleet.dispatchedBookings.pipe(take(1))
+                  ).pipe(map(([fleet, _]) => fleet))
                 }
               ),
-              tap(({ fleet, bookingsCount }) =>
-                info(
-                  `✅ Fleet skapad: ${fleet.name} med ${fleet.vehicles.length} fordon och ${bookingsCount} bokningar`
-                )
-              ),
-              map(({ fleet }) => fleet),
-              toArray(),
+              toArray(), // Samla alla fleets i en array
               mergeMap((fleets) => {
                 // Start routing for all cars in all fleets
                 return from(fleets).pipe(
