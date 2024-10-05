@@ -39,8 +39,8 @@ function calculateCenters(groups) {
       // Beräkna medelvärdet för latitud och longitud
       const sumPosition = bookings.reduce(
         (acc, booking) => {
-          acc.lat += booking.pickup.position.lat
-          acc.lon += booking.pickup.position.lon
+          acc.lat += booking.pickup?.position?.lat || 0
+          acc.lon += booking.pickup?.position?.lon || 0
           return acc
         },
         { lat: 0, lon: 0 }
@@ -109,7 +109,7 @@ function clusterByPostalCode(maxClusters = 200) {
 
       // only cluster when needed
       return from(bookings).pipe(
-        groupBy((booking) => booking.pickup.postalcode),
+        groupBy((booking) => booking.pickup?.postalcode),
         mergeMap((group) =>
           group.pipe(
             toArray(),
