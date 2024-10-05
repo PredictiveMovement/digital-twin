@@ -1,12 +1,10 @@
 // lib/clustering.js
 
-const { from } = require('rxjs')
+const { from, pipe, of } = require('rxjs')
 const { map, mergeMap, groupBy, toArray } = require('rxjs/operators')
 const { reverseSearch } = require('./pelias')
-const Booking = require('./models/booking')
-const ClusteredBookings = require('./models/clusteredBookings')
-const { haversine } = require('./distance')
-const { info } = require('./log') // Add this line to import the info function
+const { plan, bookingToShipment, truckToVehicle } = require('./vroom')
+const { info } = require('./log')
 
 function addPostalCode(booking) {
   return from(
@@ -57,38 +55,72 @@ function calculateCenters(groups) {
   )
 }
 
-function clusterByPostalCode(bookings) {
-  return bookings.pipe(
-    groupBy((booking) => booking.pickup.postalcode), // Group by postal code
-    mergeMap((group$) => {
-      const postalCode = group$.key
+function convertToVroomCompatibleFormat() {
+  return pipe(
+    mergeMap(async ([bookings, cars]) => {
+      info(`Fleet ${this.name} received ${bookings.length} bookings`)
+      const shipments = bookings.map((booking, i) =>
+        bookingToShipment(booking, i)
+      )
+      const vehicles = cars.map((truck, i) => truckToVehicle(truck, i))
+      return { bookings, cars, shipments, vehicles }
+    })
+  )
+}
 
-      // Calculate the center of the group of bookings
-      return group$.pipe(
-        toArray(),
-        map((groupedBookings) => {
-          const total = groupedBookings.length
-          const sumPosition = groupedBookings.reduce(
-            (acc, booking) => {
-              acc.lat += booking.pickup.position.lat
-              acc.lon += booking.pickup.position.lon
-              return acc
-            },
-            { lat: 0, lon: 0 }
+function planWithVroom() {
+  return pipe(
+    mergeMap(async ({ bookings, cars, shipments, vehicles }) => {
+      const vroomResponse = await plan({ shipments, vehicles })
+      return { vroomResponse, cars, bookings }
+    })
+  )
+}
+
+function convertBackToBookings() {
+  return pipe(
+    mergeMap(({ vroomResponse, cars, bookings }) =>
+      from(vroomResponse.routes).pipe(
+        map((route) => {
+          const car = cars[route.vehicle]
+          const pickups = route.steps
+            .filter(({ type }) => type === 'pickup')
+            .map(({ id }) => bookings[id])
+          return { car, bookings: pickups }
+        }),
+        map(({ car, bookings }) => ({
+          car,
+          bookings: bookings.flatMap(
+            (booking) => booking?.groupedBookings || [booking]
+          ),
+        })),
+        mergeMap(({ car, bookings }) =>
+          from(bookings.map((booking) => ({ car, booking })))
+        )
+      )
+    )
+  )
+}
+
+function clusterByPostalCode(maxClusters = 200) {
+  return pipe(
+    mergeMap((bookings) => {
+      if (bookings.length < maxClusters) return of(bookings)
+
+      // only cluster when needed
+      return from(bookings).pipe(
+        groupBy((booking) => booking.pickup.postalcode),
+        mergeMap((group) =>
+          group.pipe(
+            toArray(),
+            map((bookings) => ({ postalcode: group.key, bookings }))
           )
-
-          const center = {
-            lat: sumPosition.lat / total,
-            lon: sumPosition.lon / total,
-          }
-
-          // Create a ClusteredBookings object with a stream of bookings
-          return new ClusteredBookings(
-            postalCode,
-            center,
-            from(groupedBookings)
-          )
-        })
+        ),
+        map(({ bookings }) => ({
+          ...bookings[0], // pick the first booking in the cluster
+          groupedBookings: bookings, // add the rest as grouped bookings so we can handle them later
+        })),
+        toArray()
       )
     })
   )
@@ -96,7 +128,10 @@ function clusterByPostalCode(bookings) {
 
 module.exports = {
   addPostalCode,
+  planWithVroom,
   groupBookingsByPostalCode,
+  convertToVroomCompatibleFormat,
+  convertBackToBookings,
   calculateCenters,
   clusterByPostalCode,
 }

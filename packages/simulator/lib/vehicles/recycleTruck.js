@@ -7,7 +7,7 @@ class RecycleTruck extends Vehicle {
     super(args)
     this.vehicleType = 'recycleTruck'
     this.co2PerKmKg = 0.000065 // NOTE: From a quick google. Needs to be verified.
-    this.parcelCapacity = args.parcelCapacity
+    this.parcelCapacity = args.parcelCapacity || 300
     this.plan = []
 
     this.position = args.position

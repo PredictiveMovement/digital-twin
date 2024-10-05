@@ -45,8 +45,8 @@ const engine = {
       ),
       subscriptions: [],
       virtualTime,
-      dispatchedBookings: merge(
-        regions.pipe(mergeMap((region) => region.dispatchedBookings))
+      dispatchedBookings: regions.pipe(
+        mergeMap((region) => region.dispatchedBookings)
       ),
 
       // VEHICLES

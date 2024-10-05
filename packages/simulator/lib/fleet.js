@@ -1,6 +1,6 @@
 // fleet.js
 
-const { Subject, from, of } = require('rxjs')
+const { Subject, from, of, ReplaySubject } = require('rxjs')
 const {
   shareReplay,
   mergeMap,
@@ -11,11 +11,19 @@ const {
   tap,
   mergeAll,
   map,
+  filter,
+  groupBy,
 } = require('rxjs/operators')
 const RecycleTruck = require('./vehicles/recycleTruck')
 const Position = require('./models/position')
 const { error, info, debug } = require('./log')
 const { plan, truckToVehicle, bookingToShipment } = require('./vroom')
+const {
+  clusterByPostalCode,
+  convertToVroomCompatibleFormat,
+  planWithVroom,
+  convertBackToBookings,
+} = require('./clustering')
 
 const vehicleClasses = {
   recycleTruck: {
@@ -74,7 +82,13 @@ class Fleet {
     this.recyclingTypes = recyclingTypes
     this.nrOfVehicles = 0
 
-    this.cars = from(Object.entries(vehicleTypes)).pipe(
+    this.cars = this.createCars(vehicleTypes)
+    this.unhandledBookings = new ReplaySubject()
+    //this.dispatchedBookings = this.dispatchBookings()
+  }
+
+  createCars(vehicleTypes) {
+    return from(Object.entries(vehicleTypes)).pipe(
       map(([type, nrOfVehicles]) => {
         const Vehicle = vehicleClasses[type]?.class
         if (!Vehicle) {
@@ -89,16 +103,13 @@ class Fleet {
               id: this.name + '-' + i,
               fleet: this,
               position: this.hub.position,
-              recyclingTypes: recyclingTypes,
+              recyclingTypes: this.recyclingTypes,
             })
         )
       }),
       mergeAll(), // platta ut arrayen
       shareReplay()
     )
-
-    this.unhandledBookings = new Subject()
-    this.dispatchedBookings = this.handleAllBookings()
   }
 
   canHandleBooking(booking) {
@@ -109,64 +120,31 @@ class Fleet {
   }
 
   handleBooking(booking) {
-    this.unhandledBookings.next(booking)
+    debug(`Fleet ${this.name} received booking ${booking.bookingId}`)
+    this.unhandledBookings.next(booking) // add to queue
     return booking
   }
 
-  handleAllBookings() {
-    return this.unhandledBookings.pipe(
-      bufferTime(5000),
+  // Handle all unhandled bookings via Vroom
+  startDispatcher() {
+    if (this.dispatchedBookings) throw new Error('Dispatcher already started')
+    this.dispatchedBookings = this.unhandledBookings.pipe(
+      bufferTime(1000),
+      filter((bookings) => bookings.length > 0),
+      clusterByPostalCode(200),
       withLatestFrom(this.cars.pipe(toArray())),
-      mergeMap(async ([bookingBatch, cars]) => {
-        const vehicles = cars.map((car, i) => truckToVehicle(car, car.id))
-        const shipments = bookingBatch.map((booking, i) =>
-          bookingToShipment(booking, i)
-        )
-        const vroomResponse = await plan({ shipments, vehicles })
-        return { vroomResponse, cars, bookingBatch }
-      }),
-      mergeMap(({ vroomResponse, cars, bookingBatch }) => {
-        const routes = this.getRoutes(vroomResponse)
-        routes.forEach((route) => {
-          const car = cars.find((car) => car.id === route.vehicle)
-          if (car) {
-            route.steps.forEach((step) => {
-              const booking = bookingBatch.find(
-                (booking) => booking.bookingId === step.id
-              )
-              if (booking) {
-                car.handleBooking(booking)
-              } else {
-                error(`No booking found for step ${step.id}`)
-              }
-            })
-          } else {
-            error(`No car found for route ${route.vehicle}`)
-          }
-        })
-        return bookingBatch
+      convertToVroomCompatibleFormat(),
+      planWithVroom(),
+      convertBackToBookings(),
+      mergeMap(({ car, booking }) => {
+        return car.handleBooking(booking)
       }),
       catchError((err) => {
         error(`Fel vid hantering av bokningar för ${this.name}:`, err)
         return of(null)
-      }),
-      shareReplay()
+      })
     )
-  }
-
-  getRoutes(vroomResponse) {
-    return vroomResponse.routes.map((route) => ({
-      vehicle: route.vehicle,
-      steps: route.steps
-        .filter(({ type }) => ['pickup'].includes(type))
-        .map(({ id, type, arrival, departure, location }) => ({
-          id,
-          type,
-          arrival,
-          departure,
-          location,
-        })),
-    }))
+    return this.dispatchedBookings
   }
 }
 

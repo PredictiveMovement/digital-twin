@@ -13,6 +13,7 @@ const {
   ReplaySubject,
   filter,
   map,
+  mergeAll,
 } = require('rxjs')
 const Fleet = require('./fleet')
 const { error, info } = require('./log')
@@ -139,6 +140,12 @@ Fleet 9: Baklastare, enfack
           map((fleet) => fleet.handleBooking(booking))
         )
       ),
+
+      toArray(), // this forces all bookings to be done before we continue
+      mergeMap((bookings) => {
+        info('All bookings are now added to queue:', bookings.length)
+        return this.fleets.pipe(mergeMap((fleet) => fleet.startDispatcher()))
+      }),
       catchError((err) => {
         error('dispatchedBookings:', err)
         throw err
