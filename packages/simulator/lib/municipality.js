@@ -38,6 +38,7 @@ class Municipality {
     this.bookings = bookings
     this.privateCars = new ReplaySubject()
     this.unhandledBookings = new Subject()
+    this.nrOfBookings = 0
 
     this.co2 = 0
     this.citizens = citizens
@@ -137,7 +138,10 @@ Fleet 9: Baklastare, enfack
             }
           }),
           filter((ok) => ok),
-          map((fleet) => fleet.handleBooking(booking))
+          map((fleet) => fleet.handleBooking(booking)),
+          tap(() => {
+            this.nrOfBookings++
+          })
         )
       ),
 

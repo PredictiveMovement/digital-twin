@@ -1,7 +1,7 @@
 // lib/clustering.js
 
 const { from, pipe, of } = require('rxjs')
-const { map, mergeMap, groupBy, toArray } = require('rxjs/operators')
+const { map, mergeMap, groupBy, toArray, tap } = require('rxjs/operators')
 const { reverseSearch } = require('./pelias')
 const { plan, bookingToShipment, truckToVehicle } = require('./vroom')
 const { info } = require('./log')
@@ -104,8 +104,8 @@ function convertBackToBookings() {
 
 function clusterByPostalCode(maxClusters = 200) {
   return pipe(
-    mergeMap((bookings) => {
-      if (bookings.length < maxClusters) return of(bookings)
+    mergeMap(({ bookings, cars }) => {
+      if (bookings.length < maxClusters) return of({ bookings, cars })
 
       // only cluster when needed
       return from(bookings).pipe(
@@ -113,13 +113,19 @@ function clusterByPostalCode(maxClusters = 200) {
         mergeMap((group) =>
           group.pipe(
             toArray(),
-            map((bookings) => ({ postalcode: group.key, bookings }))
+            map((bookings) => ({ postalcode: group.key, bookings })),
+            tap(({ postalcode, bookings }) =>
+              info(
+                `Cluster ${postalcode} with ${bookings.length} bookings created`
+              )
+            )
           )
         ),
         map(({ bookings }) => ({
           ...bookings[0], // pick the first booking in the cluster
           groupedBookings: bookings, // add the rest as grouped bookings so we can handle them later
         })),
+        // TODO: divide the cars in sizes proportional to the grouped booking size and send each pair of cars + bookings to the next step
         toArray()
       )
     })

@@ -1,6 +1,6 @@
 // fleet.js
 
-const { Subject, from, of, ReplaySubject } = require('rxjs')
+const { from, of, ReplaySubject } = require('rxjs')
 const {
   shareReplay,
   mergeMap,
@@ -8,16 +8,14 @@ const {
   toArray,
   bufferTime,
   withLatestFrom,
-  tap,
   mergeAll,
   map,
   filter,
-  groupBy,
 } = require('rxjs/operators')
 const RecycleTruck = require('./vehicles/recycleTruck')
+const Truck = require('./vehicles/truck')
 const Position = require('./models/position')
-const { error, info, debug } = require('./log')
-const { plan, truckToVehicle, bookingToShipment } = require('./vroom')
+const { error, debug } = require('./log')
 const {
   clusterByPostalCode,
   convertToVroomCompatibleFormat,
@@ -29,47 +27,47 @@ const vehicleClasses = {
   recycleTruck: {
     weight: 10 * 1000,
     parcelCapacity: 300,
-    class: RecycleTruck,
+    class: Truck,
   },
   baklastare: {
     weight: 10 * 1000,
     parcelCapacity: 300,
-    class: RecycleTruck,
+    class: Truck,
   },
   fyrfack: {
     weight: 10 * 1000,
     parcelCapacity: 300,
-    class: RecycleTruck,
+    class: Truck,
   },
   matbil: {
     weight: 10 * 1000,
     parcelCapacity: 300,
-    class: RecycleTruck,
+    class: Truck,
   },
   skåpbil: {
     weight: 10 * 1000,
     parcelCapacity: 300,
-    class: RecycleTruck,
+    class: Truck,
   },
   ['2-fack']: {
     weight: 10 * 1000,
     parcelCapacity: 300,
-    class: RecycleTruck,
+    class: Truck,
   },
   latrin: {
     weight: 10 * 1000,
     parcelCapacity: 300,
-    class: RecycleTruck,
+    class: Truck,
   },
   lastväxlare: {
     weight: 10 * 1000,
     parcelCapacity: 300,
-    class: RecycleTruck,
+    class: Truck,
   },
   kranbil: {
     weight: 10 * 1000,
     parcelCapacity: 300,
-    class: RecycleTruck,
+    class: Truck,
   },
 }
 
@@ -121,6 +119,7 @@ class Fleet {
 
   handleBooking(booking) {
     debug(`Fleet ${this.name} received booking ${booking.bookingId}`)
+    booking.fleet = this
     this.unhandledBookings.next(booking) // add to queue
     return booking
   }
@@ -131,8 +130,8 @@ class Fleet {
     this.dispatchedBookings = this.unhandledBookings.pipe(
       bufferTime(1000),
       filter((bookings) => bookings.length > 0),
-      clusterByPostalCode(200),
       withLatestFrom(this.cars.pipe(toArray())),
+      clusterByPostalCode(200),
       convertToVroomCompatibleFormat(),
       planWithVroom(),
       convertBackToBookings(),

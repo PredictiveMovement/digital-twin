@@ -42,6 +42,12 @@ class RecycleTruck extends Vehicle {
       // Kontrollera om det finns fler hämtningar i kön
       if (this.queue.length > 0) {
         // Hämta nästa bokning
+        this.queue.sort(
+          (a, b) =>
+            this.position.distanceTo(a.pickup.position) -
+            this.position.distanceTo(b.pickup.position)
+        )
+
         this.booking = this.queue.shift()
         this.status = 'toPickup'
         this.statusEvents.next(this)
