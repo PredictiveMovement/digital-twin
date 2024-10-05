@@ -125,8 +125,21 @@ function clusterByPostalCode(maxClusters = 200) {
           ...bookings[0], // pick the first booking in the cluster
           groupedBookings: bookings, // add the rest as grouped bookings so we can handle them later
         })),
-        // TODO: divide the cars in sizes proportional to the grouped booking size and send each pair of cars + bookings to the next step
-        toArray()
+        toArray(),
+        mergeMap((clusters) => {
+          const totalBookings = clusters.reduce(
+            (sum, cluster) => sum + cluster.bookings.length,
+            0
+          )
+          return from(clusters).pipe(
+            mergeMap((cluster) => {
+              const proportion = cluster.bookings.length / totalBookings
+              const carsForCluster = Math.ceil(proportion * cars.length)
+              const assignedCars = cars.splice(0, carsForCluster)
+              return of({ bookings: cluster.bookings, cars: assignedCars })
+            })
+          )
+        })
       )
     })
   )
