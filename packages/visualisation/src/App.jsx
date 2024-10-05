@@ -21,7 +21,6 @@ const App = () => {
   const [carLayer, setCarLayer] = useState(true)
   const [passengerLayer, setPassengerLayer] = useState(true)
   const [postombudLayer, setPostombudLayer] = useState(false)
-  const [recycleCollectionLayer, setRecycleCollectionLayer] = useState(false)
   const [commercialAreasLayer, setCommercialAreasLayer] = useState(false)
   const [busLineLayer, setBusLineLayer] = useState(true)
   const [municipalityLayer, setMunicipalityLayer] = useState(true)
@@ -43,8 +42,6 @@ const App = () => {
     setCarLayer,
     postombudLayer,
     setPostombudLayer,
-    recycleCollectionLayer,
-    setRecycleCollectionLayer,
     passengerLayer,
     setPassengerLayer,
     commercialAreasLayer,
@@ -67,7 +64,6 @@ const App = () => {
     setCars([])
     setmunicipalities([])
     setPostombud([])
-    setRecycleCollection([])
     setLineShapes([])
     setLatestLogMessage('')
     socket.emit('speed', speed) // reset speed on server
@@ -142,35 +138,6 @@ const App = () => {
     ])
   })
 
-  const [recycleCollectionPoints, setRecycleCollection] = React.useState([])
-  useSocket('recycleCollection', (newRecycleCollectionPoints) => {
-    setReset(false)
-    setRecycleCollection((current) => [
-      ...current,
-      ...newRecycleCollectionPoints.map(({ position, ...rest }) => ({
-        position: [position.lon, position.lat],
-        ...rest,
-      })),
-    ])
-  })
-
-  useSocket('recycleCollectionUpdates', (recycleCollectionUpdates) => {
-    setRecycleCollection((current) =>
-      current.map((recycleCollectionPoint) => {
-        const recycleCollectionIds = recycleCollectionUpdates.map(
-          ({ recycleCollectionId }) => recycleCollectionId
-        )
-        if (recycleCollectionIds.includes(recycleCollectionPoint.id)) {
-          return {
-            ...recycleCollectionPoint,
-            count: recycleCollectionPoint.count + 1,
-          }
-        }
-        return recycleCollectionPoint
-      })
-    )
-  })
-
   const [lineShapes, setLineShapes] = React.useState([])
   useSocket('lineShapes', (lineShapes) => {
     setLineShapes(lineShapes)
@@ -197,7 +164,6 @@ const App = () => {
       cars: setCarLayer,
       passengers: setPassengerLayer,
       postombud: setPostombudLayer,
-      recycleCollection: setRecycleCollectionLayer,
       municipalities: setMunicipalityLayer,
       commercialAreas: setCommercialAreasLayer,
     }
@@ -319,7 +285,6 @@ const App = () => {
           cars={cars}
           bookings={bookings}
           postombud={postombud}
-          recycleCollectionPoints={recycleCollectionPoints}
           municipalities={municipalities}
           activeCar={activeCar}
           time={time}

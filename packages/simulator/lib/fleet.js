@@ -4,24 +4,61 @@ const { Subject, from, of } = require('rxjs')
 const {
   shareReplay,
   mergeMap,
-  tap,
   catchError,
   toArray,
   bufferTime,
-  zip,
-  repeat,
   withLatestFrom,
+  tap,
+  mergeAll,
   map,
-  take,
-  filter,
 } = require('rxjs/operators')
 const RecycleTruck = require('./vehicles/recycleTruck')
 const Position = require('./models/position')
-const { error, info } = require('./log')
+const { error, info, debug } = require('./log')
 const { plan, truckToVehicle, bookingToShipment } = require('./vroom')
 
-const vehicleTypes = {
+const vehicleClasses = {
   recycleTruck: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  baklastare: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  fyrfack: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  matbil: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  skåpbil: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  ['2-fack']: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  latrin: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  lastväxlare: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  kranbil: {
     weight: 10 * 1000,
     parcelCapacity: 300,
     class: RecycleTruck,
@@ -29,39 +66,34 @@ const vehicleTypes = {
 }
 
 class Fleet {
-  constructor({
-    name,
-    hub,
-    type,
-    municipality,
-    postalCodes,
-    bookings,
-    vehicles,
-    recyclingTypes,
-  }) {
+  constructor({ name, hub, type, municipality, vehicleTypes, recyclingTypes }) {
     this.name = name
     this.type = type
     this.hub = { position: new Position(hub) }
     this.municipality = municipality
-    this.postalCodes = postalCodes
-    this.bookings = bookings
-    this.vehicles = vehicles
     this.recyclingTypes = recyclingTypes
+    this.nrOfVehicles = 0
 
-    this.cars = from(this.vehicles).pipe(
-      mergeMap((vehicleData) => {
-        const Vehicle = vehicleTypes[this.type].class
-        return of(
-          new Vehicle({
-            ...vehicleTypes[this.type],
-            id: vehicleData.id,
-            carId: vehicleData.carId,
-            fleet: this,
-            position: this.hub.position,
-            recyclingTypes: vehicleData.recyclingTypes,
-          })
+    this.cars = from(Object.entries(vehicleTypes)).pipe(
+      map(([type, nrOfVehicles]) => {
+        const Vehicle = vehicleClasses[type]?.class
+        if (!Vehicle) {
+          error(`No class found for vehicle type ${type}`)
+          return []
+        }
+        this.nrOfVehicles += nrOfVehicles
+        return Array.from({ length: nrOfVehicles }).map(
+          (_, i) =>
+            new Vehicle({
+              ...vehicleTypes[type],
+              id: this.name + '-' + i,
+              fleet: this,
+              position: this.hub.position,
+              recyclingTypes: recyclingTypes,
+            })
         )
       }),
+      mergeAll(), // platta ut arrayen
       shareReplay()
     )
 
@@ -69,8 +101,20 @@ class Fleet {
     this.dispatchedBookings = this.handleAllBookings()
   }
 
+  canHandleBooking(booking) {
+    debug(
+      `Checking if ${this.name} can handle booking ${booking.recyclingType}`
+    )
+    return this.recyclingTypes.includes(booking.recyclingType)
+  }
+
+  handleBooking(booking) {
+    this.unhandledBookings.next(booking)
+    return booking
+  }
+
   handleAllBookings() {
-    return from(this.bookings).pipe(
+    return this.unhandledBookings.pipe(
       bufferTime(5000),
       withLatestFrom(this.cars.pipe(toArray())),
       mergeMap(async ([bookingBatch, cars]) => {

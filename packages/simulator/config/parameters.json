@@ -4,11 +4,121 @@
     "Södertälje kommun": {
       "fleets": [
         {
-          "name": "Telge Återvinning AB",
+          "name": "Hushållsavfall",
+          "hubAddress": "LERHAGA 50, 151 66 Södertälje",
+          "recyclingTypes": ["HUSHSORT"],
           "vehicles": {
-            "recycleTruck": 32
-          },
-          "hubAddress": "Sydhamnsvägen 48, 151 38 Södertälje"
+            "baklastare": 3
+          }
+        },
+        {
+          "name": "Hemsortering",
+          "hubAddress": "LERHAGA 50, 151 66 Södertälje",
+          "recyclingTypes": ["HEMSORT", "BRÄNN"],
+          "vehicles": {
+            "fyrfack": 6
+          }
+        },
+        {
+          "name": "Matavfall",
+          "hubAddress": "LERHAGA 50, 151 66 Södertälje",
+          "recyclingTypes": ["MATAVF"],
+          "vehicles": {
+            "matbil": 2
+          }
+        },
+        {
+          "name": "Baklastare",
+          "hubAddress": "LERHAGA 50, 151 66 Södertälje",
+          "recyclingTypes": ["TRÄDGÅRD"],
+          "vehicles": {
+            "baklastare": 2
+          }
+        },
+        {
+          "name": "Skåpbil",
+          "hubAddress": "LERHAGA 50, 151 66 Södertälje",
+          "recyclingTypes": ["TEXTIL"],
+          "vehicles": {
+            "skåpbil": 3
+          }
+        },
+        {
+          "name": "Frontlastare",
+          "hubAddress": "LERHAGA 50, 151 66 Södertälje",
+          "recyclingTypes": [
+            "BMETFÖRP",
+            "METFÖRP",
+            "BPLASTFÖRP",
+            "PLASTFÖRP",
+            "BPAPPFÖRP",
+            "PAPPFÖRP",
+            "BRETURPAPP",
+            "RETURPAPP",
+            "WELLPAPP",
+            "BGLFÄ",
+            "GLFÄ",
+            "BGLOF",
+            "GLOF"
+          ],
+          "vehicles": {
+            "2-fack": 5
+          }
+        },
+        {
+          "name": "Latrin (Påhittad, ska tas bort när vi vet hur det ska hanteras)",
+          "hubAddress": "LERHAGA 50, 151 66 Södertälje",
+          "recyclingTypes": [
+            "FETT",
+            "SLAM",
+            "LATRIN",
+            "BLANDAVF",
+            "BRÄNNKL2",
+            "TRÄ",
+            "FA",
+            "DUMP",
+            "HAVREASKA",
+            "ANJORD",
+            "DEP",
+            "ELAVF",
+            "TRÄIMP",
+            "HÖGSMTRL"
+          ],
+          "vehicles": {
+            "latrin": 3
+          }
+        },
+        {
+          "name": "Lastväxlare",
+          "hubAddress": "LERHAGA 50, 151 66 Södertälje",
+          "recyclingTypes": ["Liftdumper", "Rullflak", "komprimatorer"],
+          "vehicles": {
+            "lastväxlare": 4
+          }
+        },
+        {
+          "name": "Kranbil",
+          "recyclingTypes": ["HEMSORT"],
+          "hubAddress": "LERHAGA 50, 151 66 Södertälje",
+          "vehicles": {
+            "kranbil": 3
+          }
+        },
+        {
+          "name": "Lastväxlare",
+          "recyclingTypes": ["Liftdumper", "Rullflak", "komprimatorer"],
+          "hubAddress": "LERHAGA 50, 151 66 Södertälje",
+          "vehicles": {
+            "lastväxlare": 4
+          }
+        },
+        {
+          "name": "Baklastare",
+          "recyclingTypes": ["Externa kommuner"],
+          "hubAddress": "LERHAGA 50, 151 66 Södertälje",
+          "vehicles": {
+            "baklastare": 3
+          }
         }
       ]
     }

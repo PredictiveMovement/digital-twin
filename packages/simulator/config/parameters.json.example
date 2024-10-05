@@ -12,8 +12,6 @@
     "measureStations",
     "passengers",
     "taxis",
-    "recycleTrucks",
-    "recycleCollectionPoints"
   ],
   "fleets": {
     "Södertälje municipality": {

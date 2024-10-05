@@ -2,7 +2,7 @@
 
 const { from, of } = require('rxjs')
 const { mergeMap, catchError } = require('rxjs/operators')
-const { info, error } = require('../log')
+const { error } = require('../log')
 
 const dispatch = (fleets, bookings) => {
   return from(bookings).pipe(

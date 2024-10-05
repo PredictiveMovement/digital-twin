@@ -14,7 +14,6 @@ const save = (value) => {
 const read = () => {
   const file = path.join(dataDir, paramsFileName)
   const result = JSON.parse(fs.readFileSync(file))
-  console.log('result', result)
   return result
 }
 

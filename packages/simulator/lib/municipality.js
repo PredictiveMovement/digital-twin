@@ -4,21 +4,18 @@ const {
   from,
   shareReplay,
   Subject,
-  ReplaySubject,
   mergeMap,
-  merge,
-  filter,
   catchError,
   tap,
   of,
   toArray,
+  find,
+  ReplaySubject,
+  filter,
   map,
-  groupBy,
-  take,
 } = require('rxjs')
 const Fleet = require('./fleet')
 const { error, info } = require('./log')
-const telge = require('../streams/orders/telge')
 const { dispatch } = require('./dispatch/dispatchCentral')
 
 class Municipality {
@@ -26,190 +23,127 @@ class Municipality {
     geometry,
     name,
     id,
-    packageVolumes,
-    email,
-    zip,
     center,
-    telephone,
-    postombud,
-    population,
-    recycleCollectionPoints,
+    bookings,
     citizens,
     squares,
-    fleets,
+    fleetsConfig,
   }) {
     this.squares = squares
     this.geometry = geometry
     this.name = name
     this.id = id
-    this.email = email
-    this.zip = zip
     this.center = center
-    this.telephone = telephone
-    this.postombud = postombud
-    this.recycleCollectionPoints = recycleCollectionPoints
-    this.packageVolumes = packageVolumes
-    this.busesPerCapita = 100 / 80_000
-    this.population = population
+    this.bookings = bookings
     this.privateCars = new ReplaySubject()
     this.unhandledBookings = new Subject()
 
     this.co2 = 0
     this.citizens = citizens
+    this.fleetsConfig = fleetsConfig
 
-    this.initializeFleets()
-  }
+    /*
+Fleet 1: Hushållsavfall
+        1	Baklastare, enfack	HUSHSORT
+        2	Baklastare, enfack	HUSHSORT
+        5	Baklastare, enfack	HUSHSORT
 
-  initializeFleets() {
-    this.uniqueVehicles = this.getUniqueVehicles()
+Fleet 2: Hemsortering
+        20	Fyrfack	HEMSORT (kärl 1)
+        21	Fyrfack	HEMSORT (kärl 1)
+        22	Fyrfack	HEMSORT (kärl 2)
+        23	Fyrfack	HEMSORT (kärl 1)
+        24	Fyrfack	HEMSORT (kärl 1)
+        25	Fyrfack	HEMSORT (kärl 2)
 
-    this.fleets = this.createFleets()
+Fleet 3: matavfall
+        13	Matbil, enfack	MATAVF
+        14	Matbil, enfack	MATAVF, ABP (ej samtidigt)
 
-    this.recycleTrucks = this.getRecycleTrucks()
+Fleet 4: Baklastare
+        15	Baklastare, enfack	Samtliga fraktioner (felsorterat)
+        12	Baklastare, enfack	TRÄDGÅRD
+       
+Fleet 5: Skåpbil
+        16	Skåpbil	Servicebil, utställning/hemtagning kärl m.m. ej tömmer avfall
+        17	Skåpbil	TEXTIL
+        60	Skåpbil	Servicebil, utställning/hemtagning kärl m.m. ej tömmer avfall
+        
+Fleet 6: Frontlastare
+        40	2-fack	Måndag: BMETFÖRP, METFÖRP, BPLASTFÖRP, PLASTFÖRP                           Tisdag: BPAPPFÖRP, PAPPFÖRP, BRETURPAPP, RETURPAPP, WELLPAPP Onsdag: BPAPPFÖRP, PAPPFÖRP, BRETURPAPP, RETURPAPP, WELLPAPP Torsdag: BMETFÖRP, METFÖRP, BPLASTFÖRP, PLASTFÖRP                          Fredag: BGLFÄ, GLFÄ, BGLOF, GLOF
+        41	2-fack	BMETFÖRP, METFÖRP, BPLASTFÖRP, PLASTFÖRP                       
+        42	2-fack	BPAPPFÖRP, PAPPFÖRP, BRETURPAPP, RETURPAPP, WELLPAPP 
+        43	2-fack	Måndag: BGLFÄ, GLFÄ, BGLOF, GLOF BPAPPFÖRP, PAPPFÖRP, BRETURPAPP, RETURPAPP, WELLPAPP                                                                                                    Tisdag: BMETFÖRP, METFÖRP, BPLASTFÖRP, PLASTFÖRP                                   Onsdag: BGLFÄ, GLFÄ, BGLOF, GLOF                                                                          Torsdag: BPAPPFÖRP, PAPPFÖRP, BRETURPAPP, RETURPAPP, WELLPAPP Fredag: BGLFÄ, GLFÄ, BGLOF, GLOF
+        45	Baklastare, enfack	BRÄNN, BLANDAVF, GROVAVF
+        70	Frontlastare	Tömmer Vippcontainer, samma avfall som 2-fack
+        71	Frontlastare	Tömmer Vippcontainer, samma avfall som 2-fack
 
-    this.dispatchedBookings = this.dispatchBookings()
+Fleet 7: Kranbil
+        81	Kranbil	
+        82	Kranbil	
+        85	Fyrfack	HEMSORT (kärl 1)
 
-    this.cars = this.privateCars
-  }
+Fleet 8: Lastväxlare
+        90	Lastväxlare	Tömmer Liftdumper, Rullflak, komprimatorer
+        91	Lastväxlare	Tömmer Liftdumper, Rullflak, komprimatorer
+        92	Lastväxlare	Tömmer Liftdumper, Rullflak, komprimatorer
+        93	Lastväxlare	Tömmer Liftdumper, Rullflak, komprimatorer
 
-  getUniqueVehicles() {
-    return telge.pipe(
-      filter((booking) => booking.carId),
-      groupBy((booking) => booking.carId.trim()),
-      mergeMap((group$) =>
-        group$.pipe(
-          toArray(),
-          map((bookings) => {
-            const carId = bookings[0].carId.trim()
-            const recyclingTypes = [
-              ...new Set(bookings.map((b) => b.recyclingType)),
-            ]
-            return { carId, recyclingTypes }
+Fleet 9: Baklastare, enfack
+        87	Baklastare, enfack	Externa kommuner
+        88	Baklastare, enfack	Externa kommuner
+        89	Baklastare, enfack	Externa kommuner
+
+*/
+    this.fleets = from(this.fleetsConfig).pipe(
+      map(
+        ({ name, recyclingTypes, vehicles, hubAddress }) =>
+          new Fleet({
+            name: name,
+            hub: this.center,
+            municipality: this,
+            hubAddress: hubAddress,
+            vehicleTypes: vehicles,
+            recyclingTypes: recyclingTypes,
           })
+      ),
+      tap((fleet) =>
+        info(
+          `✅ Fleet skapad: ${fleet.name} för att hantera [${fleet.recyclingTypes}] redo att ta emot bokningar`
         )
       ),
-      toArray(),
-      map((vehicles) =>
-        vehicles.map((vehicle, index) => ({
-          id: index,
-          carId: vehicle.carId,
-          recyclingTypes: vehicle.recyclingTypes,
-        }))
-      ),
-      shareReplay(1)
-    )
-  }
-
-  createFleets() {
-    return this.recycleCollectionPoints.pipe(
-      toArray(),
-      mergeMap((bookings) => {
-        return this.uniqueVehicles.pipe(
-          mergeMap((uniqueVehicles) => {
-            info(`Totalt antal unika fordon: ${uniqueVehicles.length}`)
-            info(`Totalt antal bokningar: ${bookings.length}`)
-            const fleetDistribution = this.calculateFleetDistribution(
-              [['METFÖRP'], ['BLANDAVF']],
-              uniqueVehicles,
-              bookings
-            )
-
-            return from(Object.entries(fleetDistribution)).pipe(
-              map(
-                (
-                  [groupName, { vehicles, recyclingTypes, filteredBookings }],
-                  index
-                ) => {
-                  const fleetName = `Fleet-${index}`
-                  const fleetVehicles = vehicles
-
-                  return new Fleet({
-                    name: fleetName,
-                    hub: this.center,
-                    type: 'recycleTruck',
-                    municipality: this,
-                    bookings: filteredBookings,
-                    vehicles: fleetVehicles,
-                    recyclingTypes: Array.from(recyclingTypes),
-                  })
-                }
-              ),
-              tap((fleet) =>
-                info(
-                  `✅ Fleet skapad: ${fleet.name} med ${fleet.vehicles.length} fordon och ${fleet.bookings.length} bokningar`
-                )
-              )
-            )
-          })
-        )
+      catchError((err) => {
+        error('Fleet creation error:', err)
+        throw err
       }),
       shareReplay()
     )
-  }
 
-  //Create a fleet distribution with vehicles and their recyclingTypes
-  calculateFleetDistribution(recyclingTypeGroups, uniqueVehicles, bookings) {
-    const fleetDistribution = {}
-    const assignedBookings = new Set()
-    const assignedVehicles = new Set()
+    this.cars = this.fleets.pipe(mergeMap((fleet) => fleet.cars))
 
-    recyclingTypeGroups.forEach((recyclingTypeGroup, index) => {
-      //Hämta bilar som kan hantera denna typ av avfall
-      const clusterVehicles = uniqueVehicles.filter(
-        (vehicle) =>
-          recyclingTypeGroup.some((recyclingType) =>
-            vehicle.recyclingTypes.includes(recyclingType)
-          ) && !assignedVehicles.has(vehicle.id)
-      )
-
-      console.log(
-        `Cluster ${index} (${recyclingTypeGroup}) vehicles: ${clusterVehicles.length}`
-      )
-
-      //Hämta bokningar som inte redan tilldelats en fleet
-      const filteredBookings = bookings.filter(
-        (booking) =>
-          recyclingTypeGroup.includes(booking.recyclingType) &&
-          !assignedBookings.has(booking.id)
-      )
-
-      // Markera bokningar som tilldelats
-      filteredBookings.forEach((booking) => assignedBookings.add(booking.id))
-      clusterVehicles.forEach((vehicle) => assignedVehicles.add(vehicle.id))
-      fleetDistribution[`Cluster-${index}`] = {
-        vehicles: clusterVehicles,
-        recyclingTypes: recyclingTypeGroup,
-        filteredBookings: filteredBookings,
-      }
-
-      console.log(
-        `Cluster ${index} (${recyclingTypeGroup}) bookings: ${filteredBookings.length}`
-      )
-    })
-
-    return fleetDistribution
-  }
-
-  getRecycleTrucks() {
-    return this.fleets.pipe(
-      mergeMap((fleet) => fleet.cars),
+    /**
+     * Take bookings and dispatch them to the first eligble fleet that can handle the booking
+     */
+    this.dispatchedBookings = this.bookings.pipe(
+      mergeMap((booking) =>
+        this.fleets.pipe(
+          find((fleet) => fleet.canHandleBooking(booking) && booking),
+          tap((ok) => {
+            if (!ok) {
+              error(
+                `No fleet can handle booking ${booking.id} of type ${booking.recyclingType}`
+              )
+            }
+          }),
+          filter((ok) => ok),
+          map((fleet) => fleet.handleBooking(booking))
+        )
+      ),
       catchError((err) => {
-        error('recycleTrucks -> fleet', err)
-        return of(null)
-      })
-    )
-  }
-
-  dispatchBookings() {
-    return this.fleets.pipe(
-      toArray(),
-      mergeMap((fleets) => dispatch(fleets, this.recycleCollectionPoints)),
-      catchError((err) => {
-        error('Fel i municipality dispatchedBookings:', err)
-        return of(null)
+        error('dispatchedBookings:', err)
+        throw err
       })
     )
   }
 }
-
 module.exports = Municipality

@@ -39,7 +39,6 @@ const engine = {
         mergeMap((region) => region.lineShapes),
         shareReplay()
       ),
-      postombud: regions.pipe(mergeMap((region) => region.postombud)),
       municipalities: regions.pipe(
         mergeMap((region) => region.municipalities),
         shareReplay()
@@ -52,44 +51,9 @@ const engine = {
 
       // VEHICLES
       cars: regions.pipe(mergeMap((region) => region.cars)),
-      recycleTrucks: regions.pipe(
-        mergeMap((region) => region.recycleTrucks),
-        catchError((err) => error('Experiment -> RecycleTrucks', err))
-      ),
 
       parameters,
-      passengers: regions.pipe(
-        filter((region) => region.citizens),
-        mergeMap((region) => region.citizens),
-        catchError((err) => error('Experiment -> Passengers', err)),
-        shareReplay()
-      ),
-
-      // Adding recycle collection points
-      recycleCollectionPoints: regions.pipe(
-        mergeMap((region) => {
-          console.log(
-            'Region recycleCollectionPoints:',
-            region.recycleCollectionPoints
-          )
-          return region.recycleCollectionPoints
-        })
-      ),
     }
-    experiment.passengers
-      .pipe(
-        mergeMap((passenger) => passenger.bookings),
-        catchError((err) => error('passenger statistics err', err)),
-        shareReplay()
-      )
-      // TODO:take care of this subscription so we know how to unsubscribe
-      .subscribe((booking) => {
-        try {
-          statistics.collectBooking(booking, parameters)
-        } catch (err) {
-          error('collectBooking err', err)
-        }
-      })
 
     experiment.bookingUpdates = experiment.dispatchedBookings.pipe(
       mergeMap((booking) => booking.statusEvents),
@@ -97,20 +61,11 @@ const engine = {
       share()
     )
 
-    experiment.passengerUpdates = experiment.passengers.pipe(
-      mergeMap(({ deliveredEvents, pickedUpEvents }) =>
-        merge(deliveredEvents, pickedUpEvents)
-      ),
-      catchError((err) => error('passengerUpdates', err)),
-      share()
-    )
-
     // TODO: Rename to vehicleUpdates
     experiment.carUpdates = merge(
       // experiment.buses,
-      // experiment.cars,
+      experiment.cars
       // experiment.taxis,
-      experiment.recycleTrucks
     ).pipe(
       mergeMap((car) => car.movedEvents),
       catchError((err) => error('car updates err', err)),

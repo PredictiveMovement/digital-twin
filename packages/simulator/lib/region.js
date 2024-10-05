@@ -1,32 +1,6 @@
-const { from, mergeMap, merge, Subject, of } = require('rxjs')
-const {
-  map,
-  groupBy,
-  tap,
-  filter,
-  mergeAll,
-  share,
-  toArray,
-  catchError,
-  shareReplay,
-  first,
-} = require('rxjs/operators')
-const { isInsideCoordinates } = require('../lib/polygon')
+const { mergeMap, merge, Subject } = require('rxjs')
+const { filter, share, catchError } = require('rxjs/operators')
 const { error } = require('./log')
-const Booking = require('./models/booking')
-
-const flattenProperty = (property) => (stream) =>
-  stream.pipe(
-    mergeMap((object) =>
-      object[property].pipe(
-        toArray(),
-        map((arr) => ({
-          ...object,
-          [property]: arr,
-        }))
-      )
-    )
-  )
 
 class Region {
   constructor({ id, name, geometry, municipalities }) {
@@ -36,29 +10,11 @@ class Region {
     this.municipalities = municipalities
 
     /**
-     * Static map objects.
-     */
-
-    this.postombud = municipalities.pipe(
-      mergeMap((municipality) => municipality.postombud)
-    )
-
-    /**
      * Vehicle streams.
      */
 
     this.cars = municipalities.pipe(
       mergeMap((municipality) => municipality.cars)
-    )
-
-    this.recycleTrucks = municipalities.pipe(
-      mergeMap((municipality) => municipality.recycleTrucks),
-      catchError((err) => error('recycle trucks err', err))
-    )
-
-    this.recycleCollectionPoints = municipalities.pipe(
-      mergeMap((municipality) => municipality.recycleCollectionPoints),
-      catchError((err) => error('recycleCollectionPoints err', err))
     )
 
     /**
@@ -81,10 +37,6 @@ class Region {
     this.dispatchedBookings = merge(
       this.municipalities.pipe(
         mergeMap((municipality) => municipality.dispatchedBookings)
-      ),
-      this.municipalities.pipe(
-        mergeMap((municipality) => municipality.fleets),
-        mergeMap((fleet) => fleet.dispatchedBookings)
       )
     ).pipe(share())
   }
