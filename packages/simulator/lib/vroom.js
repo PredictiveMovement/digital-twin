@@ -118,6 +118,7 @@ const vroom = (module.exports = {
           else return json
         })
         .catch((vroomError) => {
+          clearInterval(interval)
           error(`Vroom error: ${vroomError} (enable debug logging for details)`)
           info('Jobs', jobs?.length)
           info('Shipments', shipments?.length)
