@@ -106,36 +106,6 @@ const nearest = (position, layers = 'address,venue') => {
   )
 }
 
-const reverseSearch = (lat, lon, forceFetch = false) => {
-  const url = `${peliasUrl}/v1/reverse?point.lat=${lat}&point.lon=${lon}&size=1`
-
-  return cachedFetch(
-    'reverseSearch',
-    { lat, lon },
-    () =>
-      queue(() => fetch(url))
-        .then((response) => {
-          if (!response.ok) throw 'pelias error: ' + response.statusText
-          return response.json()
-        })
-        .then((data) => {
-          const postalCodeFeature = data.features.find(
-            (feature) => feature.properties.postalcode
-          )
-          if (!postalCodeFeature) {
-            throw new Error('No postal code found for the given location')
-          }
-          return postalCodeFeature.properties.postalcode
-        })
-        .catch((e) => {
-          const err = new Error().stack
-          error(`Error in pelias reverseSearch\n${err}\n${e}\n\n`)
-          return null
-        }),
-    forceFetch
-  )
-}
-
 const search = (name, near = null, layers = 'address,venue', size = 1000) => {
   const encodedName = encodeURIComponent(name)
   const focus = near
@@ -182,5 +152,4 @@ module.exports = {
   nearest,
   search,
   searchOne,
-  reverseSearch,
 }
