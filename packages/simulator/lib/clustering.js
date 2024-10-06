@@ -9,7 +9,12 @@ const {
   bufferCount,
   bufferTime,
 } = require('rxjs/operators')
-const { plan, bookingToShipment, truckToVehicle } = require('./vroom')
+const {
+  plan,
+  bookingToShipment,
+  truckToVehicle,
+  bookingToJob,
+} = require('./vroom')
 
 // Calculate the center of each cluster of bookings
 function calculateCenters(groups) {
@@ -36,25 +41,29 @@ function calculateCenters(groups) {
   )
 }
 
-function clusterByPostalCode(maxClusters = 200) {
+function clusterByPostalCode(maxClusters = 200, length = 4) {
   return pipe(
     mergeMap((bookings) => {
       // only cluster when needed
       if (bookings.length < maxClusters) return of(bookings)
 
       return from(bookings).pipe(
-        groupBy((booking) => booking.pickup?.postalcode.slice(0, -2)),
+        groupBy((booking) => booking.pickup?.postalcode.slice(0, length)),
         mergeMap((group) =>
           group.pipe(
             toArray(),
             map((bookings) => ({ postalcode: group.key, bookings }))
           )
         ),
-        map(({ bookings }) => ({
-          ...bookings[0], // pick the first booking in the cluster
-          groupedBookings: bookings, // add the rest as grouped bookings so we can handle them later
-        })),
-        bufferTime(1000)
+        map(({ bookings }) =>
+          bookings.length > 1
+            ? {
+                ...bookings[0], // pick the first booking in the cluster
+                groupedBookings: bookings, // add the rest as grouped bookings so we can handle them later
+              }
+            : bookings[0]
+        ),
+        toArray()
       )
     })
   )
@@ -63,19 +72,17 @@ function clusterByPostalCode(maxClusters = 200) {
 function convertToVroomCompatibleFormat() {
   return pipe(
     mergeMap(async ([bookings, cars]) => {
-      const shipments = bookings.map((booking, i) =>
-        bookingToShipment(booking, i)
-      )
+      const jobs = bookings.map((booking, i) => bookingToJob(booking, i))
       const vehicles = cars.map((truck, i) => truckToVehicle(truck, i))
-      return { bookings, cars, shipments, vehicles }
+      return { bookings, cars, jobs, vehicles }
     })
   )
 }
 
 function planWithVroom() {
   return pipe(
-    mergeMap(async ({ bookings, cars, shipments, vehicles }) => {
-      const vroomResponse = await plan({ shipments, vehicles })
+    mergeMap(async ({ bookings, cars, jobs, vehicles }) => {
+      const vroomResponse = await plan({ jobs, vehicles })
       return { vroomResponse, cars, bookings }
     })
   )
@@ -88,7 +95,7 @@ function convertBackToBookings() {
         map((route) => {
           const car = cars[route.vehicle]
           const pickups = route.steps
-            .filter(({ type }) => type === 'pickup')
+            .filter(({ type }) => type === 'job')
             .map(({ id }) => bookings[id])
           return { car, bookings: pickups }
         }),

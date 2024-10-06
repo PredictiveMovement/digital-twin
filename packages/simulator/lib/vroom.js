@@ -9,11 +9,11 @@ const queue = require('./queueSubject')
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const vroom = (module.exports = {
-  bookingToShipment({ id, pickup, destination }, i) {
-    return {
+  bookingToShipment({ id, pickup, destination, groupedBookings }, i) {
+    const shipment = {
       id: i,
       //description: id,
-      amount: [1],
+      amount: [groupedBookings?.length || 1],
       pickup: {
         id: i,
         time_windows: pickup.departureTime?.length
@@ -43,6 +43,16 @@ const vroom = (module.exports = {
           : undefined,
       },
     }
+    return shipment
+  },
+  bookingToJob({ pickup, groupedBookings }, i) {
+    const job = {
+      id: i,
+      //description: id,
+      location: [pickup.position.lon, pickup.position.lat],
+      pickup: [groupedBookings?.length || 1],
+    }
+    return job
   },
   truckToVehicle({ position, parcelCapacity, destination, cargo }, i) {
     return {
@@ -54,11 +64,15 @@ const vroom = (module.exports = {
       ],
       capacity: [parcelCapacity - cargo.length],
       start: [position.lon, position.lat],
-      end: destination ? [destination.lon, destination.lat] : undefined,
+      end: destination
+        ? [destination.lon, destination.lat]
+        : [position.lon, position.lat],
     }
   },
   async plan({ jobs, shipments, vehicles }) {
-    if (shipments.length > 800) throw new Error('Too many shipments to plan')
+    info('Vroom plan', jobs?.length, shipments?.length, vehicles?.length)
+    if (jobs?.length > 800) throw new Error('Too many jobs to plan')
+    if (shipments?.length > 800) throw new Error('Too many shipments to plan')
     if (vehicles.length > 200) throw new Error('Too many vehicles to plan')
 
     const result = await getFromCache({ jobs, shipments, vehicles })
@@ -69,7 +83,13 @@ const vroom = (module.exports = {
     debug('Vroom cache miss')
 
     const before = Date.now()
-
+    const interval = setInterval(() => {
+      info(
+        `${
+          shipments?.length || 0 + jobs?.length || 0
+        }: Vroom still planning... ${Math.round((Date.now() - before) / 1000)}s`
+      )
+    }, 1000)
     return await queue(() =>
       fetch(vroomUrl, {
         method: 'POST',
@@ -89,11 +109,14 @@ const vroom = (module.exports = {
           !res.ok ? Promise.reject('Vroom error:' + (await res.text())) : res
         )
         .then((res) => res.json())
-        .then((json) =>
-          Date.now() - before > 10_000
-            ? updateCache({ jobs, shipments, vehicles }, json) // cache when it takes more than 10 seconds
-            : json
-        )
+        .then((json) => {
+          clearInterval(interval)
+          info(`${shipments?.length || 0 + jobs?.length || 0}: Vroom done!`)
+          if (Date.now() - before > 10_000)
+            return updateCache({ jobs, shipments, vehicles }, json)
+          // cache when it takes more than 10 seconds
+          else return json
+        })
         .catch((vroomError) => {
           error(`Vroom error: ${vroomError} (enable debug logging for details)`)
           info('Jobs', jobs?.length)
