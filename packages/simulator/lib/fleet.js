@@ -14,6 +14,7 @@ const {
   tap,
   groupBy,
   find,
+  share,
 } = require('rxjs/operators')
 const RecycleTruck = require('./vehicles/recycleTruck')
 const Truck = require('./vehicles/truck')
@@ -29,47 +30,47 @@ const {
 const vehicleClasses = {
   recycleTruck: {
     weight: 10 * 1000,
-    parcelCapacity: 150,
-    class: RecycleTruck,
+    parcelCapacity: 200,
+    class: Truck,
   },
   baklastare: {
     weight: 10 * 1000,
-    parcelCapacity: 150,
-    class: RecycleTruck,
+    parcelCapacity: 200,
+    class: Truck,
   },
   fyrfack: {
     weight: 10 * 1000,
-    parcelCapacity: 150,
+    parcelCapacity: 200,
     class: Truck,
   },
   matbil: {
     weight: 10 * 1000,
-    parcelCapacity: 150,
-    class: RecycleTruck,
+    parcelCapacity: 200,
+    class: Truck,
   },
   skåpbil: {
     weight: 10 * 1000,
-    parcelCapacity: 150,
-    class: RecycleTruck,
+    parcelCapacity: 200,
+    class: Truck,
   },
   ['2-fack']: {
     weight: 10 * 1000,
-    parcelCapacity: 150,
+    parcelCapacity: 200,
     class: Truck,
   },
   latrin: {
     weight: 10 * 1000,
-    parcelCapacity: 150,
+    parcelCapacity: 200,
     class: Truck,
   },
   lastväxlare: {
     weight: 10 * 1000,
-    parcelCapacity: 150,
-    class: RecycleTruck,
+    parcelCapacity: 200,
+    class: Truck,
   },
   kranbil: {
     weight: 10 * 1000,
-    parcelCapacity: 150,
+    parcelCapacity: 200,
     class: Truck,
   },
 }
@@ -133,7 +134,7 @@ class Fleet {
     this.dispatchedBookings = this.unhandledBookings.pipe(
       bufferTime(1000),
       filter((bookings) => bookings.length > 0),
-      clusterByPostalCode(300, 5), // cluster bookings if we have more than what Vroom can handle for this fleet
+      clusterByPostalCode(200, 5), // cluster bookings if we have more than what Vroom can handle for this fleet
       withLatestFrom(this.cars.pipe(toArray())),
       tap(([bookings, cars]) => {
         info(
@@ -143,6 +144,7 @@ class Fleet {
       convertToVroomCompatibleFormat(),
       planWithVroom(),
       convertBackToBookings(),
+      filter(({ booking }) => !booking.assigned),
       mergeMap(({ car, booking }) => {
         return car.handleBooking(booking)
       }),

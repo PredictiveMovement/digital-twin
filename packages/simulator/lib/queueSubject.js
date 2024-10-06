@@ -1,7 +1,7 @@
 const { Subject, mergeMap, catchError, from, tap } = require('rxjs')
 const { debug, error } = require('./log')
 
-const API_CALL_LIMIT = 100
+const API_CALL_LIMIT = 30
 
 const queueSubject = new Subject()
 

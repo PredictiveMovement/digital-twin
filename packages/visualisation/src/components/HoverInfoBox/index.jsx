@@ -41,7 +41,7 @@ const vehicleName = (vehicleType) => {
     case 'car':
       return 'Bil'
     case 'truck':
-      return 'Lastbil'
+      return 'Smart fordon'
     case 'recycleTruck':
       return 'Återvinningsfordon'
     default:

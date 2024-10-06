@@ -176,7 +176,7 @@ const Map = ({
 
   const carLayer = new ScatterplotLayer({
     id: 'car-layer',
-    data: cars.filter((v) => v.vehicleType === 'recycleTruck'),
+    data: cars,
     //opacity: 0.7,
     stroked: false,
     filled: true,

@@ -41,6 +41,7 @@ class Booking {
   }
 
   async assign(car) {
+    if (this.assigned) throw new Error('Booking already assigned')
     this.assigned =
       this.assigned || (await virtualTime.getTimeInMillisecondsAsPromise())
     this.car = car

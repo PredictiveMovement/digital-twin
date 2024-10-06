@@ -1,11 +1,20 @@
 const { findBestRouteToPickupBookings } = require('../dispatch/truckDispatch')
 const { info, warn, debug } = require('../log')
+const { clusterPositions } = require('../../lib/kmeans')
 const Vehicle = require('./vehicle')
+const {
+  firstValueFrom,
+  merge,
+  from,
+  mergeMap,
+  mergeAll,
+  toArray,
+} = require('rxjs')
 
 class Truck extends Vehicle {
   constructor(args) {
     super(args)
-    this.vehicleType = 'recyleTruck'
+    this.vehicleType = 'truck'
     this.isPrivateCar = false
     this.co2PerKmKg = 0.000065 // NOTE: From a quick google. Needs to be verified.
     this.parcelCapacity = args.parcelCapacity || 250
@@ -30,10 +39,11 @@ class Truck extends Vehicle {
       case 'delivery':
         this.status = 'toDelivery'
         return this.navigateTo(this.booking.destination.position)
+      case 'end':
       case 'ready':
       case 'returning':
         this.status = 'ready'
-        return
+        return this.navigateTo(this.startPosition)
       default:
         warn('Unknown status', this.status, this.instruction)
         if (!this.plan.length) this.status = 'returning'
@@ -79,8 +89,32 @@ class Truck extends Vehicle {
 
     clearTimeout(this._timeout)
     this._timeout = setTimeout(async () => {
-      this.plan = await findBestRouteToPickupBookings(this, this.queue)
+      if (this.queue.length > 100) {
+        const clusters = (
+          await clusterPositions(this.queue, Math.ceil(this.queue.length / 70))
+        ).sort(
+          (a, b) =>
+            this.position.distanceTo(a.center) -
+            this.position.distanceTo(b.center)
+        )
 
+        this.plan = await firstValueFrom(
+          from(clusters).pipe(
+            mergeMap(
+              async (cluster) =>
+                await findBestRouteToPickupBookings(this, cluster.items, [
+                  'pickup',
+                ]),
+              1
+            ),
+            mergeAll(), // flatten the arrays
+            toArray()
+          )
+        )
+        //console.log('Plan', this.plan)
+      } else {
+        this.plan = await findBestRouteToPickupBookings(this, this.queue)
+      }
       if (!this.instruction) await this.pickNextInstructionFromPlan()
     }, 2000)
 
