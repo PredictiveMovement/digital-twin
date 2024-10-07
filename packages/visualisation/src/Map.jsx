@@ -159,21 +159,6 @@ const Map = ({
     return colors[parseInt(car) % colors.length]
   }
 
-  const getStatusLabel = (status) => {
-    switch (status.toLowerCase()) {
-      case 'assigned':
-        return 'Tilldelad'
-      case 'delivered':
-        return 'Tömd'
-      case 'picked up':
-        return 'Upphämtad'
-      case 'queued':
-        return 'Väntar på upphämtning'
-      default:
-        return status
-    }
-  }
-
   const carLayer = new ScatterplotLayer({
     id: 'car-layer',
     data: cars,

@@ -148,12 +148,9 @@ const GenericInfo = ({ data }) => {
       <Paragraph>
         <strong>{data.id}</strong>
       </Paragraph>
-      <Paragraph>{data.title}</Paragraph>
-      <Paragraph>{data.subTitle}</Paragraph>
-      <Paragraph>
-        Typ: {data.type === 'recycle' ? 'återvinningskärl' : data.type}
-      </Paragraph>
+      <Paragraph>Återvinningskärl</Paragraph>
       <Paragraph>Återvinningstyp: {data.recyclingType}</Paragraph>
+      <br />
       <Paragraph>Bil: {data.carId}</Paragraph>
       {data.deliveryTime ? (
         <Paragraph>
@@ -167,7 +164,7 @@ const GenericInfo = ({ data }) => {
       ) : null}
       {data.pickupDateTime ? (
         <Paragraph>
-          Hämtades kl: {moment(data.pickupDateTime).format('HH:mm')}
+          Tömdes kl: {moment(data.pickupDateTime).format('HH:mm')}
         </Paragraph>
       ) : null}
       {data.co2 ? (
