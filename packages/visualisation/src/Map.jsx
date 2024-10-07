@@ -191,7 +191,7 @@ const Map = ({
     onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
-        ...object,
+        id: object.id,
         type: 'car',
         x,
         y,
@@ -234,11 +234,8 @@ const Map = ({
     onHover: ({ object, x, y, viewport }) => {
       if (!object) return setHoverInfo(null)
       setHoverInfo({
-        ...object,
-        title: object.sender,
-        subTitle: object.isCommercial
-          ? '(företag)'
-          : ' Status: ' + getStatusLabel(object.status),
+        id: object.id,
+        type: 'booking',
         x,
         y,
         viewport,
@@ -407,12 +404,8 @@ const Map = ({
         mapboxApiAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
       />
       {hoverInfo && mapState.zoom > 6 && (
-        <div
-          ref={hoverInfoRef}
-          onMouseEnter={() => (hoverInfoRef.current = true)}
-          onMouseLeave={() => (hoverInfoRef.current = false)}
-        >
-          <HoverInfoBox data={hoverInfo} />
+        <div>
+          <HoverInfoBox data={hoverInfo} cars={cars} bookings={bookings} />
         </div>
       )}
 
