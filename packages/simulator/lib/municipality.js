@@ -1,112 +1,156 @@
+// municipality.js
+
 const {
   from,
   shareReplay,
   Subject,
-  ReplaySubject,
   mergeMap,
-  merge,
-  filter,
   catchError,
-  first,
   tap,
   of,
+  toArray,
+  find,
+  ReplaySubject,
+  filter,
+  map,
+  mergeAll,
 } = require('rxjs')
 const Fleet = require('./fleet')
-const { error } = require('./log')
-const { searchOne } = require('./pelias')
+const { error, info } = require('./log')
+const { dispatch } = require('./dispatch/dispatchCentral')
 
 class Municipality {
   constructor({
     geometry,
     name,
     id,
-    packageVolumes,
-    email,
-    zip,
     center,
-    telephone,
-    postombud,
-    population,
-    recycleCollectionPoints,
+    bookings,
     citizens,
     squares,
-    fleets,
+    fleetsConfig,
   }) {
     this.squares = squares
     this.geometry = geometry
     this.name = name
     this.id = id
-    this.email = email
-    this.zip = zip
     this.center = center
-    this.telephone = telephone
-    this.postombud = postombud
-    this.recycleCollectionPoints = recycleCollectionPoints
-    this.packageVolumes = packageVolumes
-    this.busesPerCapita = 100 / 80_000
-    this.population = population
+    this.bookings = bookings
     this.privateCars = new ReplaySubject()
     this.unhandledBookings = new Subject()
 
     this.co2 = 0
     this.citizens = citizens
+    this.fleetsConfig = fleetsConfig
 
-    console.log('Fleet:', fleets)
+    /*
+Fleet 1: Hushållsavfall
+        1	Baklastare, enfack	HUSHSORT
+        2	Baklastare, enfack	HUSHSORT
+        5	Baklastare, enfack	HUSHSORT
 
-    this.fleets = from(fleets).pipe(
-      mergeMap(async (fleet) => {
-        const hub = fleet.hubAddress
-          ? await searchOne(fleet.hubAddress)
-              .then((r) => r.position)
-              .catch((err) => error(err) || center)
-          : center
+Fleet 2: Hemsortering
+        20	Fyrfack	HEMSORT (kärl 1)
+        21	Fyrfack	HEMSORT (kärl 1)
+        22	Fyrfack	HEMSORT (kärl 2)
+        23	Fyrfack	HEMSORT (kärl 1)
+        24	Fyrfack	HEMSORT (kärl 1)
+        25	Fyrfack	HEMSORT (kärl 2)
 
-        return new Fleet({ hub, ...fleet, municipality: this })
+Fleet 3: matavfall
+        13	Matbil, enfack	MATAVF
+        14	Matbil, enfack	MATAVF, ABP (ej samtidigt)
+
+Fleet 4: Baklastare
+        15	Baklastare, enfack	Samtliga fraktioner (felsorterat)
+        12	Baklastare, enfack	TRÄDGÅRD
+       
+Fleet 5: Skåpbil
+        16	Skåpbil	Servicebil, utställning/hemtagning kärl m.m. ej tömmer avfall
+        17	Skåpbil	TEXTIL
+        60	Skåpbil	Servicebil, utställning/hemtagning kärl m.m. ej tömmer avfall
+        
+Fleet 6: Frontlastare
+        40	2-fack	Måndag: BMETFÖRP, METFÖRP, BPLASTFÖRP, PLASTFÖRP                           Tisdag: BPAPPFÖRP, PAPPFÖRP, BRETURPAPP, RETURPAPP, WELLPAPP Onsdag: BPAPPFÖRP, PAPPFÖRP, BRETURPAPP, RETURPAPP, WELLPAPP Torsdag: BMETFÖRP, METFÖRP, BPLASTFÖRP, PLASTFÖRP                          Fredag: BGLFÄ, GLFÄ, BGLOF, GLOF
+        41	2-fack	BMETFÖRP, METFÖRP, BPLASTFÖRP, PLASTFÖRP                       
+        42	2-fack	BPAPPFÖRP, PAPPFÖRP, BRETURPAPP, RETURPAPP, WELLPAPP 
+        43	2-fack	Måndag: BGLFÄ, GLFÄ, BGLOF, GLOF BPAPPFÖRP, PAPPFÖRP, BRETURPAPP, RETURPAPP, WELLPAPP                                                                                                    Tisdag: BMETFÖRP, METFÖRP, BPLASTFÖRP, PLASTFÖRP                                   Onsdag: BGLFÄ, GLFÄ, BGLOF, GLOF                                                                          Torsdag: BPAPPFÖRP, PAPPFÖRP, BRETURPAPP, RETURPAPP, WELLPAPP Fredag: BGLFÄ, GLFÄ, BGLOF, GLOF
+        45	Baklastare, enfack	BRÄNN, BLANDAVF, GROVAVF
+        70	Frontlastare	Tömmer Vippcontainer, samma avfall som 2-fack
+        71	Frontlastare	Tömmer Vippcontainer, samma avfall som 2-fack
+
+Fleet 7: Kranbil
+        81	Kranbil	
+        82	Kranbil	
+        85	Fyrfack	HEMSORT (kärl 1)
+
+Fleet 8: Lastväxlare
+        90	Lastväxlare	Tömmer Liftdumper, Rullflak, komprimatorer
+        91	Lastväxlare	Tömmer Liftdumper, Rullflak, komprimatorer
+        92	Lastväxlare	Tömmer Liftdumper, Rullflak, komprimatorer
+        93	Lastväxlare	Tömmer Liftdumper, Rullflak, komprimatorer
+
+Fleet 9: Baklastare, enfack
+        87	Baklastare, enfack	Externa kommuner
+        88	Baklastare, enfack	Externa kommuner
+        89	Baklastare, enfack	Externa kommuner
+
+*/
+    this.fleets = from(this.fleetsConfig).pipe(
+      map(
+        ({ name, recyclingTypes, vehicles, hubAddress }) =>
+          new Fleet({
+            name: name,
+            hub: this.center,
+            municipality: this,
+            hubAddress: hubAddress,
+            vehicleTypes: vehicles,
+            recyclingTypes: recyclingTypes,
+          })
+      ),
+      tap((fleet) =>
+        info(
+          `✅ Fleet skapad: ${fleet.name} för att hantera [${fleet.recyclingTypes}] redo att ta emot bokningar`
+        )
+      ),
+      catchError((err) => {
+        error('Fleet creation error:', err)
+        throw err
       }),
-      tap((processedFleet) =>
-        console.log('Fleet processed: ', processedFleet.name)
-      ), // Log each processed fleet
       shareReplay()
     )
 
-    this.recycleTrucks = this.fleets.pipe(
-      mergeMap((fleet) => fleet.cars),
-      filter((car) => car.vehicleType === 'recycleTruck'),
+    this.cars = this.fleets.pipe(mergeMap((fleet) => fleet.cars))
+
+    /**
+     * Take bookings and dispatch them to the first eligble fleet that can handle the booking
+     */
+    this.dispatchedBookings = this.bookings.pipe(
+      mergeMap((booking) =>
+        this.fleets.pipe(
+          find((fleet) => fleet.canHandleBooking(booking) && booking),
+          tap((ok) => {
+            if (!ok) {
+              error(
+                `No fleet can handle booking ${booking.id} of type ${booking.recyclingType}`
+              )
+            }
+          }),
+          filter((ok) => ok),
+          map((fleet) => fleet.handleBooking(booking))
+        )
+      ),
+
+      toArray(), // this forces all bookings to be done before we continue
+      mergeMap((bookings) => {
+        info('All bookings are now added to queue:', bookings.length)
+        return this.fleets.pipe(mergeMap((fleet) => fleet.startDispatcher()))
+      }),
       catchError((err) => {
-        error('recycleTrucks -> fleet', err)
+        error('dispatchedBookings:', err)
+        throw err
       })
     )
-
-    this.dispatchedBookings = merge(
-      this.recycleCollectionPoints.pipe(
-        mergeMap((booking) =>
-          this.fleets.pipe(
-            mergeMap((fleet) => 
-              from(fleet.canHandleBooking(booking)).pipe(
-                filter(Boolean),
-                mergeMap(() => from(fleet.handleBooking(booking))),
-                catchError((err) => {
-                  error(`Error handling booking ${booking.id}:`, err)
-                  return of(null)
-                })
-              )
-            ),
-            first((result) => result !== null, null)
-          )
-        ),
-        filter((result) => result !== null),
-        catchError((err) => {
-          error('municipality dispatchedBookings err', err)
-          return of(null)
-        })
-      )
-    )
-
-    this.cars = merge(
-      this.privateCars,
-      this.fleets.pipe(mergeMap((fleet) => fleet.cars))
-    ).pipe(shareReplay())
   }
 }
-
 module.exports = Municipality

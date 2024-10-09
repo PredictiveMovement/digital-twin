@@ -17,6 +17,7 @@ const cleanBookings = () =>
         pickupDateTime,
         car,
         type,
+        recyclingType,
       }) => ({
         id,
         pickup: pickup.position,
@@ -30,6 +31,7 @@ const cleanBookings = () =>
         cost,
         carId: car?.id,
         type,
+        recyclingType,
       })
     )
   )

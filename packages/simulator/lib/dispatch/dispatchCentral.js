@@ -1,29 +1,18 @@
-const { from } = require('rxjs')
-const { filter, mergeMap } = require('rxjs/operators')
+// dispatchCentral.js
 
-const filterUniqueBooking = (car) => (source) => {
-  return source.pipe(
-    filter((booking) => !car.queue.find((b) => b.id === booking.id))
-  )
-}
+const { from, of } = require('rxjs')
+const { mergeMap, catchError } = require('rxjs/operators')
+const { error } = require('../log')
 
-const filterCanHandleBooking = (car) => (source) => {
-  return source.pipe(filter((booking) => car.canHandleBooking(booking)))
-}
-
-const processBooking = (car) => (source) => {
-  return source.pipe(mergeMap((booking) => car.handleBooking(booking)))
-}
-
-const dispatch = (cars, bookings) => {
-  return from(cars).pipe(
-    mergeMap((car) =>
-      from(bookings).pipe(
-        filterUniqueBooking(car),
-        filterCanHandleBooking(car),
-        processBooking(car)
-      )
-    )
+const dispatch = (fleets, bookings) => {
+  return from(bookings).pipe(
+    mergeMap((booking) => {
+      return of(booking)
+    }),
+    catchError((err) => {
+      error(`Fel vid tilldelning av bokning:`, err)
+      return of(null)
+    })
   )
 }
 

@@ -19,8 +19,6 @@ function subscribe(experiment, socket) {
       require('./routes/passengers').register(experiment, socket),
     defaultEmitters.includes('postombud') &&
       require('./routes/postombud').register(experiment, socket),
-    /*   defaultEmitters.includes('recycleCollectionPoints') &&
-      require('./routes/recycleCollectionPoints').register(experiment, socket),*/
     require('./routes/time').register(experiment, socket),
     require('./routes/log').register(experiment, socket),
   ]
@@ -77,6 +75,13 @@ function register(io) {
 
     socket.emit('parameters', socket.data.experiment.parameters)
 
+    process.on('SIGINT', () => {
+      console.log('Server is shutting down')
+      io.close(() => {
+        console.log('All sockets closed')
+        process.exit(0)
+      })
+    })
     /* 
     
     This code is used to shut down the experiment if the client disconnects. it is currently disabled.
@@ -95,6 +100,7 @@ function register(io) {
     })*/
   })
 }
+
 module.exports = {
   register,
 }

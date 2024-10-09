@@ -15,6 +15,7 @@ const vroom = (module.exports = {
       //description: id,
       amount: [1],
       pickup: {
+        id: i,
         time_windows: pickup.departureTime?.length
           ? [
               [
@@ -25,7 +26,6 @@ const vroom = (module.exports = {
               ],
             ]
           : undefined,
-        id: i,
         location: [pickup.position.lon, pickup.position.lat],
       },
       delivery: {
@@ -50,7 +50,7 @@ const vroom = (module.exports = {
       //description: id,
       time_window: [
         moment('05:00:00', 'hh:mm:ss').unix(),
-        moment('18:00:00', 'hh:mm:ss').unix(),
+        moment('15:00:00', 'hh:mm:ss').unix(),
       ],
       capacity: [parcelCapacity - cargo.length],
       start: [position.lon, position.lat],
@@ -58,9 +58,15 @@ const vroom = (module.exports = {
     }
   },
   async plan({ jobs, shipments, vehicles }) {
+    info(
+      'Planning with Vroom',
+      jobs?.length,
+      shipments?.length,
+      vehicles?.length
+    )
     if (shipments.length > 500) throw new Error('Too many shipments to plan')
     if (vehicles.length > 200) throw new Error('Too many vehicles to plan')
-    //if (vehicles.length < 2) throw new Error('Need at least 2 vehicles to plan')
+    if (vehicles.length < 2) throw new Error('Need at least 2 vehicles to plan')
 
     const result = await getFromCache({ jobs, shipments, vehicles })
     if (result) {

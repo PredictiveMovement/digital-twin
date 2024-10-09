@@ -1,14 +1,72 @@
-const { Subject, from, merge, of, firstValueFrom } = require('rxjs')
-const { shareReplay, mergeMap, share, tap, filter, first } = require('rxjs/operators')
-const { dispatch } = require('./dispatch/dispatchCentral')
+// fleet.js
+
+const { Subject, from, of, ReplaySubject } = require('rxjs')
+const {
+  shareReplay,
+  mergeMap,
+  catchError,
+  toArray,
+  bufferTime,
+  withLatestFrom,
+  tap,
+  mergeAll,
+  map,
+  filter,
+  groupBy,
+} = require('rxjs/operators')
 const RecycleTruck = require('./vehicles/recycleTruck')
 const Position = require('./models/position')
 const { error, info, debug } = require('./log')
+const { plan, truckToVehicle, bookingToShipment } = require('./vroom')
+const {
+  clusterByPostalCode,
+  convertToVroomCompatibleFormat,
+  planWithVroom,
+  convertBackToBookings,
+} = require('./clustering')
 
-const vehicleData = require('../data/telge/ruttdata_2024-09-03.json')
-
-const vehicleTypes = {
+const vehicleClasses = {
   recycleTruck: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  baklastare: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  fyrfack: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  matbil: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  skåpbil: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  ['2-fack']: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  latrin: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  lastväxlare: {
+    weight: 10 * 1000,
+    parcelCapacity: 300,
+    class: RecycleTruck,
+  },
+  kranbil: {
     weight: 10 * 1000,
     parcelCapacity: 300,
     class: RecycleTruck,
@@ -16,101 +74,76 @@ const vehicleTypes = {
 }
 
 class Fleet {
-  constructor({
-    name,
-    marketshare,
-    percentageHomeDelivery,
-    hub,
-    type,
-    municipality,
-  }) {
+  constructor({ name, hub, type, municipality, vehicleTypes, recyclingTypes }) {
     this.name = name
     this.type = type
-    this.marketshare = marketshare
     this.hub = { position: new Position(hub) }
-
-    this.percentageHomeDelivery = (percentageHomeDelivery || 0) / 100 || 0.15 // based on guestimates from workshop with transport actors in oct 2021
-    this.percentageReturnDelivery = 0.1
     this.municipality = municipality
-    console.log(`🚢 Fleet ${this.name} created. Vehicles loaded from file}`)
+    this.recyclingTypes = recyclingTypes
+    this.vehiclesCount = 0
 
-    const getOrdersFromCar = () => {
-      return vehicleData.reduce((vehicles, route) => {
-        const vehicleId = route.Bil.trim() // Bil is vehicle id
+    this.cars = this.createCars(vehicleTypes)
+    this.unhandledBookings = new ReplaySubject()
+    this.dispatchedBookings = this.startDispatcher()
+  }
 
-        // If the vehicle does not exist, create it
-        if (!vehicles[vehicleId]) {
-          vehicles[vehicleId] = {
-            id: vehicleId,
-            avftyp: route.Avftyp,
-          }
-        }
-
-        return vehicles
-      }, {})
-    }
-
-    const vehicles = getOrdersFromCar()
-
-    // Create vehicles based on the JSON data
-    this.cars = from(Object.entries(vehicles)).pipe(
-      mergeMap(([id, vehicleData]) => {
-        const Vehicle = vehicleTypes['recycleTruck'].class
-
+  createCars(vehicleTypes) {
+    return from(Object.entries(vehicleTypes)).pipe(
+      map(([type, vehiclesCount]) => {
+        const Vehicle = vehicleClasses[type]?.class
         if (!Vehicle) {
-          error(`Unknown vehicle class for vehicle ID ${id}`)
-          return of(null)
+          error(`No class found for vehicle type ${type}`)
+          return []
         }
-
-        return of(
-          new Vehicle({
-            ...vehicleTypes['recycleTruck'],
-            id: `recycleTruck-${id}`, // Use Bil as the unique vehicle ID
-            fleet: this,
-            position: this.hub.position,
-            plan: vehicleData.routes,
-            carId: id,
-            recyclingType: vehicleData.avftyp,
-          })
+        this.vehiclesCount += vehiclesCount
+        return Array.from({ length: vehiclesCount }).map(
+          (_, i) =>
+            new Vehicle({
+              ...vehicleTypes[type],
+              id: this.name + '-' + i,
+              fleet: this,
+              position: this.hub.position,
+              recyclingTypes: this.recyclingTypes,
+            })
         )
       }),
-      filter((car) => car !== null),
-      tap((car) =>
-        info(
-          `🚛 Fleet ${this.name} created vehicle ${car.id} (${car.recyclingType})`
-        )
-      ),
+      mergeAll(), // platta ut arrayen
       shareReplay()
     )
-
-    this.unhandledBookings = new Subject()
-    this.manualDispatchedBookings = new Subject()
-    this.dispatchedBookings = merge(
-      this.manualDispatchedBookings,
-      dispatch(this.cars, this.unhandledBookings)
-    ).pipe(share())
   }
 
-  async canHandleBooking(booking) {
-    debug(`🚗 Fleet ${this.name} checking booking ${booking.id}`)
-    return firstValueFrom(
-      this.cars.pipe(
-        first((car) => car.canHandleBooking(booking), false)
-      )
+  canHandleBooking(booking) {
+    debug(
+      `Checking if ${this.name} can handle booking ${booking.recyclingType}`
     )
+    return this.recyclingTypes.includes(booking.recyclingType)
   }
 
-  async handleBooking(booking, car) {
-    booking.fleet = this
-    if (car) {
-      debug(`📦 Dispatching ${booking.id} to ${this.name} (manual)`)
-      this.manualDispatchedBookings.next(booking)
-      return await car.handleBooking(booking)
-    } else {
-      debug(`📦 Dispatching ${booking.id} to ${this.name}`)
-      this.unhandledBookings.next(booking)
-    }
+  handleBooking(booking) {
+    debug(`Fleet ${this.name} received booking ${booking.bookingId}`)
+    this.unhandledBookings.next(booking) // add to queue
     return booking
+  }
+
+  // Handle all unhandled bookings via Vroom
+  startDispatcher() {
+    this.dispatchedBookings = this.unhandledBookings.pipe(
+      bufferTime(1000),
+      filter((bookings) => bookings.length > 0),
+      clusterByPostalCode(200),
+      withLatestFrom(this.cars.pipe(toArray())),
+      convertToVroomCompatibleFormat(this.name),
+      planWithVroom(),
+      convertBackToBookings(),
+      mergeMap(({ car, booking }) => {
+        return car.handleBooking(booking)
+      }),
+      catchError((err) => {
+        error(`Fel vid hantering av bokningar för ${this.name}:`, err)
+        return of(null)
+      })
+    )
+    return this.dispatchedBookings
   }
 }
 

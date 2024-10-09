@@ -11,6 +11,7 @@ class Booking {
       booking.carId || 'no-carId',
       booking.order || safeId(),
     ].join('-')
+    this.bookingId = booking.bookingId
     this.status = 'New'
     this.co2 = 0 //TODO: initialvärde?
     this.passenger = booking.passenger
@@ -96,8 +97,9 @@ class Booking {
       weight: this.weight,
       sender: this.sender,
       position: this.position?.toObject(),
+      postalcode: this.postalcode,
       pickup: this.pickup,
-      carId: this.car?.id,
+      carId: this.car?.id || this.carId,
       destination: this.destination,
       pickupPosition: this.pickupPosition?.toObject(),
       deliveredPosition: this.deliveredPosition?.toObject(),

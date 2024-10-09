@@ -69,6 +69,9 @@ const CarInfo = ({ data }) => {
         <Paragraph>
           Status: <strong>{data.status}</strong>
         </Paragraph>
+        <Paragraph>
+          Återvinningstyper: <strong>{data?.recyclingTypes.join(', ')}</strong>
+        </Paragraph>
 
         <Paragraph>&nbsp;</Paragraph>
         <Paragraph>
@@ -159,8 +162,6 @@ const PassengerInfo = ({ data }) => {
 }
 
 const GenericInfo = ({ data }) => {
-  console.log('Data:')
-  console.log(data)
   return (
     <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
       <Paragraph>
@@ -171,6 +172,7 @@ const GenericInfo = ({ data }) => {
       <Paragraph>
         Typ: {data.type === 'recycle' ? 'återvinningskärl' : data.type}
       </Paragraph>
+      <Paragraph>Återvinningstyp: {data.recyclingType}</Paragraph>
       <Paragraph>Bil: {data.carId}</Paragraph>
       {data.deliveryTime ? (
         <Paragraph>
@@ -197,45 +199,14 @@ const GenericInfo = ({ data }) => {
 }
 
 const HoverInfoBox = ({ data }) => {
-  console.log(data.type)
   switch (data.type) {
     case 'car':
       return <CarInfo data={data} />
     case 'passenger':
       return <PassengerInfo data={data} />
-    case 'recycleCollectionPoint':
-      return <RecycleCollectionPointInfo data={data} />
     default:
       return <GenericInfo data={data} />
   }
-}
-
-const RecycleCollectionPointInfo = ({ data }) => {
-  return (
-    <Wrapper left={data.x} top={data.viewport.height - data.y + 20}>
-      <div>
-        <Paragraph>
-          ID: <strong>{data.id}</strong>{' '}
-          {/* Assuming each point has a unique ID */}
-        </Paragraph>
-        <Paragraph>
-          Status: <strong>{data.status}</strong> {/* e.g., 'Full', 'Empty' */}
-        </Paragraph>
-        <Paragraph>
-          Last Collected: <strong>{data.lastCollected}</strong>{' '}
-          {/* Last collection date/time */}
-        </Paragraph>
-        <Paragraph>
-          Frequency: <strong>{data.frequency}</strong>{' '}
-          {/* Collection frequency */}
-        </Paragraph>
-        <Paragraph>
-          Type of Waste: <strong>{data.wasteType}</strong>{' '}
-          {/* Type of waste the point collects */}
-        </Paragraph>
-      </div>
-    </Wrapper>
-  )
 }
 
 export default HoverInfoBox
