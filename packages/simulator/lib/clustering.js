@@ -69,6 +69,34 @@ function clusterByPostalCode(maxClusters = 200, length = 4) {
   )
 }
 
+function clusterByPostalCode(maxClusters = 200, length = 4) {
+  return pipe(
+    mergeMap((bookings) => {
+      // only cluster when needed
+      if (bookings.length < maxClusters) return of(bookings)
+
+      return from(bookings).pipe(
+        groupBy((booking) => booking.pickup?.postalcode.slice(0, length)),
+        mergeMap((group) =>
+          group.pipe(
+            toArray(),
+            map((bookings) => ({ postalcode: group.key, bookings }))
+          )
+        ),
+        map(({ bookings }) =>
+          bookings.length > 1
+            ? {
+                ...bookings[0], // pick the first booking in the cluster
+                groupedBookings: bookings, // add the rest as grouped bookings so we can handle them later
+              }
+            : bookings[0]
+        ),
+        toArray()
+      )
+    })
+  )
+}
+
 function convertToVroomCompatibleFormat() {
   return pipe(
     mergeMap(async ([bookings, cars]) => {

@@ -82,23 +82,23 @@ class Fleet {
     this.hub = { position: new Position(hub) }
     this.municipality = municipality
     this.recyclingTypes = recyclingTypes
-    this.nrOfVehicles = 0
+    this.vehiclesCount = 0
 
     this.cars = this.createCars(vehicleTypes)
     this.unhandledBookings = new ReplaySubject()
-    //this.dispatchedBookings = this.dispatchBookings()
+    this.dispatchedBookings = this.startDispatcher()
   }
 
   createCars(vehicleTypes) {
     return from(Object.entries(vehicleTypes)).pipe(
-      map(([type, nrOfVehicles]) => {
+      map(([type, vehiclesCount]) => {
         const Vehicle = vehicleClasses[type]?.class
         if (!Vehicle) {
           error(`No class found for vehicle type ${type}`)
           return []
         }
-        this.nrOfVehicles += nrOfVehicles
-        return Array.from({ length: nrOfVehicles }).map(
+        this.vehiclesCount += vehiclesCount
+        return Array.from({ length: vehiclesCount }).map(
           (_, i) =>
             new Vehicle({
               ...vehicleTypes[type],
@@ -130,7 +130,6 @@ class Fleet {
 
   // Handle all unhandled bookings via Vroom
   startDispatcher() {
-    if (this.dispatchedBookings) throw new Error('Dispatcher already started')
     this.dispatchedBookings = this.unhandledBookings.pipe(
       bufferTime(1000),
       filter((bookings) => bookings.length > 0),

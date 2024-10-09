@@ -12,7 +12,6 @@ function parseRuta(ruta) {
 
 function read() {
   return from(readCsv(process.cwd() + '/data/5arsklasser_1km.csv')).pipe(
-    take(10),
     map(({ id, rutstorl: area, ruta, beftotalt: population, ...ages }) => ({
       id,
       area,
