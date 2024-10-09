@@ -55,10 +55,10 @@ function calculateCenters(groups) {
   )
 }
 
-function convertToVroomCompatibleFormat() {
+function convertToVroomCompatibleFormat(fleetName) {
   return pipe(
     mergeMap(async ([bookings, cars]) => {
-      info(`Fleet ${this.name} received ${bookings.length} bookings`)
+      info(`Fleet ${fleetName} received ${bookings.length} bookings`)
       const shipments = bookings.map((booking, i) =>
         bookingToShipment(booking, i)
       )
