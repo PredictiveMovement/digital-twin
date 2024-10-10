@@ -11,7 +11,7 @@ on:
     # Sequence of patterns matched against refs/heads
     branches:
       - main
-      - 'releases/**'
+      - 'release/**'
   push:
     branches:
       - main
